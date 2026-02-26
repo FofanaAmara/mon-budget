@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Sections CRUD', () => {
   test('shows 6 seed sections', async ({ page }) => {
     await page.goto('/sections');
-    await expect(page.getByRole('heading', { name: 'Mes Sections' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Sections' })).toBeVisible();
     // Check two stable seed sections
     await expect(page.getByText('Maison')).toBeVisible();
     await expect(page.getByText('Perso')).toBeVisible();
@@ -24,7 +24,7 @@ test.describe('Sections CRUD', () => {
     // Click Sauvegarder directly
     await page.getByRole('button', { name: 'Sauvegarder' }).click();
 
-    await page.waitForTimeout(1500);
+    await page.waitForTimeout(4000);
     await page.reload();
     await expect(page.getByText('Sport').first()).toBeVisible();
   });
@@ -45,6 +45,6 @@ test.describe('Sections CRUD', () => {
         await page.waitForTimeout(1500);
       }
     }
-    await expect(page.getByRole('heading', { name: 'Mes Sections' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Sections' })).toBeVisible();
   });
 });

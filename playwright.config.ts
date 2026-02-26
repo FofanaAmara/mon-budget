@@ -9,6 +9,9 @@ export default defineConfig({
   retries: 1,
   workers: 1,
   reporter: 'html',
+  expect: {
+    timeout: 15000, // Match actionTimeout — Neon DB can cold-start in 5-10s on production
+  },
   use: {
     baseURL: PROD_URL,
     trace: 'on-first-retry',

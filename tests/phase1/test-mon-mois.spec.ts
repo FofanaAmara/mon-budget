@@ -3,58 +3,56 @@ import { test, expect } from '@playwright/test';
 test.describe('Mon Mois — Vue mensuelle', () => {
   test('page loads with current month heading', async ({ page }) => {
     await page.goto('/mon-mois');
-    // Heading contains the month navigation (prev/next + month label)
-    await expect(page.locator('h1, h2').first()).toBeVisible();
-    // Page should not show an error
-    await expect(page.locator('text=500')).not.toBeVisible();
-    await expect(page.locator('text=Error')).not.toBeVisible();
+    // h1 should show the current month name (e.g. "février 2026")
+    await expect(page.locator('h1')).toBeVisible();
+    await expect(page.locator('h1')).not.toHaveText('');
+    // No server error
+    await expect(page.locator('body')).not.toContainText('Application error');
   });
 
   test('progress bar section is visible', async ({ page }) => {
     await page.goto('/mon-mois');
-    // Progress bar container (the outer grey bar)
-    const progressContainer = page.locator('.rounded-full').first();
-    await expect(progressContainer).toBeVisible();
+    // Progress card shows "X/Y dépenses complétées"
+    await expect(page.locator('text=dépenses complétées')).toBeVisible();
   });
 
   test('month navigation backward works', async ({ page }) => {
     await page.goto('/mon-mois');
-    // Current URL has no ?month param (defaults to current month)
-    const prevBtn = page.getByRole('button', { name: '←' });
+    // Button uses aria-label="Mois précédent"
+    const prevBtn = page.getByRole('button', { name: 'Mois précédent' });
     await expect(prevBtn).toBeVisible();
     await prevBtn.click();
-    // After clicking previous, URL should contain a ?month= param
+    // After clicking previous, URL should contain ?month=
     await page.waitForURL(/\?month=/);
     expect(page.url()).toContain('?month=');
   });
 
   test('month navigation cannot go to future month', async ({ page }) => {
     await page.goto('/mon-mois');
-    // The "next month" button should be disabled when on current month
-    const nextBtn = page.getByRole('button', { name: '→' });
+    // Button uses aria-label="Mois suivant" and should be disabled on current month
+    const nextBtn = page.getByRole('button', { name: 'Mois suivant' });
     await expect(nextBtn).toBeVisible();
     await expect(nextBtn).toBeDisabled();
   });
 
   test('section filter chips are rendered', async ({ page }) => {
     await page.goto('/mon-mois');
-    // There should be at least one filter chip ("Toutes")
-    const toutesChip = page.getByRole('button', { name: 'Toutes' });
-    await expect(toutesChip).toBeVisible();
+    // "Tout" is the all-sections filter chip (not "Toutes")
+    const toutBtn = page.getByRole('button', { name: 'Tout' });
+    await expect(toutBtn).toBeVisible();
   });
 
   test('dashboard shows Mon mois widget with link', async ({ page }) => {
     await page.goto('/');
-    // Dashboard "Mon mois" widget (only shown if count > 0)
-    // At minimum, after deployment the widget link should be present
-    const monMoisLink = page.getByRole('link', { name: /Mon mois/i });
-    await expect(monMoisLink).toBeVisible();
+    // The widget is a Link to /mon-mois that contains "complétées" (vs the nav link which doesn't)
+    const widgetLink = page.locator('a[href="/mon-mois"]').filter({ hasText: /complétées/ });
+    await expect(widgetLink).toBeVisible();
   });
 
   test('dashboard Mon mois widget links to /mon-mois', async ({ page }) => {
     await page.goto('/');
-    const monMoisLink = page.getByRole('link', { name: /Mon mois/i });
-    await monMoisLink.click();
+    const widgetLink = page.locator('a[href="/mon-mois"]').filter({ hasText: /complétées/ });
+    await widgetLink.click();
     await expect(page).toHaveURL(/\/mon-mois/);
   });
 

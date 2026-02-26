@@ -11,21 +11,19 @@ test.describe('Navigation', () => {
 
   test('can navigate to /sections', async ({ page }) => {
     await page.goto('/sections');
-    await expect(page.getByRole('heading', { name: 'Mes Sections' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Sections' })).toBeVisible();
   });
 
   test('can navigate to /mon-mois', async ({ page }) => {
     await page.goto('/mon-mois');
-    // Page should load without error — check for the nav and progress bar
-    const nav = page.getByRole('navigation', { name: 'Navigation principale' });
-    await expect(nav).toBeVisible();
-    const toutesBtn = page.getByRole('button', { name: 'Toutes' });
-    await expect(toutesBtn).toBeVisible();
+    // Page should load: h1 shows the month name, filter chip "Tout" is visible
+    await expect(page.locator('h1')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Tout' })).toBeVisible();
   });
 
   test('can navigate to /cartes', async ({ page }) => {
     await page.goto('/cartes');
-    await expect(page.getByRole('heading', { name: 'Mes Cartes' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Cartes' })).toBeVisible();
   });
 
   test('can navigate to /depenses', async ({ page }) => {

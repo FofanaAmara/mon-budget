@@ -29,7 +29,7 @@ test.describe('Quick Add Expense', () => {
       if (add) add.click();
     });
 
-    await page.waitForTimeout(1500);
+    await page.waitForTimeout(4000);
     const elapsed = Date.now() - start;
 
     expect(elapsed).toBeLessThan(30000);

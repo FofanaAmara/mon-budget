@@ -33,7 +33,7 @@ test.describe('Expense ONE_TIME', () => {
       if (add) add.click();
     });
 
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(4000);
     await page.reload();
     await expect(page.getByText('Impôts').first()).toBeVisible();
   });

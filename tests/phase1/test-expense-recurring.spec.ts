@@ -28,7 +28,7 @@ test.describe('Expense RECURRING', () => {
       if (add) add.click();
     });
 
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(4000);
     await page.reload();
 
     // Use .first() to avoid strict mode when multiple Netflix expenses exist
