@@ -69,7 +69,7 @@ npx playwright test tests/phase1/ tests/phase2/ --project=chromium
   - → **MCP Playwright** : naviguer vers `/`, screenshot dashboard complet, vérifier widget projets présent, cliquer lien vers `/projets`, vérifier navigation
 - Mettre à jour `components/BottomNav.tsx` : ajouter accès à "Projets" (onglet ou lien depuis dashboard)
   - → **MCP Playwright** : tester navigation via bottom nav, screenshot mobile
-- Commit + push
+- `git add -A && git commit -m "feat: [feature]" && git push origin main`
 
 **Success Criteria**:
 
@@ -93,7 +93,8 @@ npx playwright test tests/phase1/ tests/phase2/ --project=chromium
   - → **MCP Playwright** : naviguer vers `/historique`, screenshot, changer le mois sélectionné, vérifier que les dépenses se mettent à jour, snapshot mobile 375px, vérifier console zéro erreur
 - Lien "Historique" accessible depuis la navigation (onglet ou menu)
   - → **MCP Playwright** : vérifier navigation vers `/historique` depuis le menu
-- Commit + push
+- `git add -A && git commit -m "feat: historique mensuel + export CSV" && git push origin main`
+- Attendre le deploy automatique Vercel : `vercel ls --scope amara-fofanas-projects` → statut "Ready"
 
 **Success Criteria**:
 
@@ -117,7 +118,7 @@ npx playwright test tests/phase1/ tests/phase2/ --project=chromium
   - Headers HTTP : `Content-Type: text/csv; charset=utf-8`, `Content-Disposition: attachment; filename="budget-YYYY-MM.csv"`
 - Utiliser le skill `frontend-design` pour ajouter bouton "Exporter CSV" sur `/historique` → appelle `/api/export?month=YYYY-MM` avec le mois sélectionné → déclenche le téléchargement
   - → **MCP Playwright** : naviguer vers `/historique`, screenshot avec bouton "Exporter" visible, cliquer le bouton, vérifier que le téléchargement se déclenche (pas d'erreur 500), console zéro erreur
-- Commit + push
+- `git add -A && git commit -m "feat: [feature]" && git push origin main`
 
 **Success Criteria**:
 
@@ -240,7 +241,7 @@ Output `<promise>PHASE3_COMPLETE</promise>` **UNIQUEMENT** quand **TOUTES** ces 
 
 ### B. Déploiement Vercel
 
-- [ ] `vercel deploy --prod` réussit
+- [ ] `git push origin main` déclenche le deploy Vercel → statut "Ready" confirmé
 - [ ] URL Vercel retourne HTTP 200 après deploy
 
 ### C. Base de Données Neon Vérifiée

@@ -64,14 +64,14 @@ Construire le MVP complet de l'app "Mon Budget" de zéro : infrastructure Next.j
 - Créer `lib/db.ts` : client Neon avec `POSTGRES_URL`
 - Créer `.env.example` avec toutes les variables (valeurs masquées)
 - Mettre à jour `.gitignore` : `.env.local`, `.vercel`, `.next/`, `node_modules/`, `test-results/`, `playwright-report/`
-- Premier deploy : `vercel deploy --prod --scope amara-fofanas-projects`
+- Premier deploy : `git push origin main`
 - Commit : `git add -A && git commit -m "chore: bootstrap Next.js 15 + Neon schema + Vercel deploy"`
 - Push : `git push origin main`
 
 **Success Criteria**:
 
 - [ ] `npm run build` retourne exit code 0
-- [ ] `vercel deploy --prod` réussit, URL de production disponible
+- [ ] `git push origin main` → deploy Vercel automatique → URL prod accessible HTTP 200
 - [ ] Query `SELECT COUNT(*) FROM sections` via Node retourne 6
 - [ ] Query `SELECT COUNT(*) FROM settings` retourne 1
 - [ ] `.env.local` contient POSTGRES_URL + VAPID_PUBLIC_KEY + VAPID_PRIVATE_KEY
@@ -104,7 +104,7 @@ Construire le MVP complet de l'app "Mon Budget" de zéro : infrastructure Next.j
   - → **MCP Playwright** : cliquer "Modifier" sur une dépense, vérifier le formulaire pré-rempli
 - Utiliser le skill `frontend-design` pour créer la page `/parametres` (Phase 1 minimal : devise + rappels par défaut)
   - → **MCP Playwright** : naviguer vers `/parametres`, screenshot, sauvegarder un paramètre, recharger et vérifier persistance
-- Commit + push après chaque entité complète
+- `git add -A && git commit -m "feat: [entity] CRUD" && git push origin main` après chaque entité complète
 
 **Success Criteria**:
 
@@ -134,9 +134,9 @@ Construire le MVP complet de l'app "Mon Budget" de zéro : infrastructure Next.j
 - Utiliser le skill `frontend-design` pour créer `components/NotificationPermission.tsx` : banner "Activer les notifications"
   - → **MCP Playwright** : naviguer vers `/`, vérifier le banner de permission visible, screenshot
 - Ajouter `vercel.json` avec headers PWA (pas de cron Phase 1)
-- Deploy : `vercel deploy --prod --scope amara-fofanas-projects`
-  - → **MCP Playwright** : naviguer vers l'URL Vercel prod, screenshot dashboard, vérifier que tout fonctionne en production (pas seulement localhost)
-- Commit + push
+- `git add -A && git commit -m "feat: dashboard + PWA + web push" && git push origin main`
+- Attendre le deploy automatique Vercel (~1-2 min) : `vercel ls --scope amara-fofanas-projects` → vérifier statut "Ready"
+- → **MCP Playwright** : naviguer vers `https://mon-budget-amara-fofanas-projects.vercel.app`, screenshot dashboard, vérifier que tout fonctionne en production (pas seulement localhost), console zéro erreur
 
 **Success Criteria**:
 
@@ -167,7 +167,7 @@ Construire le MVP complet de l'app "Mon Budget" de zéro : infrastructure Next.j
 - Écrire `tests/phase1/test-quick-add.spec.ts` : chronomètre ajout dépense via FAB "+" < 30 secondes
 - Écrire `tests/phase1/test-pwa.spec.ts` : manifest valide, SW enregistré
 - Exécuter : `npx playwright test tests/phase1/ --project=chromium`
-- Commit + push final
+- `git add -A && git commit -m "feat: playwright tests phase1" && git push origin main`
 
 **Success Criteria**:
 
@@ -218,7 +218,7 @@ Promise.all([
 - **Lint error** → `npm run lint -- --fix` pour les auto-fixables → corriger manuellement les autres → relancer
 - **Playwright test failure** → lire le screenshot dans `test-results/` → identifier l'élément manquant ou l'assertion fausse → corriger le code ou le test → redéployer si nécessaire → relancer
 - **DB query error** → vérifier que le schéma est bien appliqué → vérifier `POSTGRES_URL_NON_POOLING` dans `.env.local` → relancer le script de migration
-- **Vercel deploy failure** → `vercel logs --scope amara-fofanas-projects` → lire l'erreur → corriger → relancer `vercel deploy --prod`
+- **Deploy Vercel échoue** → vérifier les logs dans le Vercel Dashboard (Deployments → dernier deploy → Build Logs) → identifier l'erreur → corriger le code → `git push origin main` → attendre le redeploy automatique
 
 ### 3. If Tests Pass
 
@@ -252,7 +252,7 @@ Output `<promise>PHASE1_COMPLETE</promise>` **UNIQUEMENT** quand **TOUTES** ces 
 
 ### B. Déploiement Vercel
 
-- [ ] `vercel deploy --prod` réussit sans erreur
+- [ ] `git push origin main` déclenche le deploy → `vercel ls --scope amara-fofanas-projects` retourne statut "Ready"
 - [ ] URL Vercel retourne HTTP 200
 - [ ] Toutes les env vars présentes sur Vercel : `vercel env ls --scope amara-fofanas-projects`
 

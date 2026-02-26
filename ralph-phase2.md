@@ -61,7 +61,7 @@ npx playwright test tests/phase1/ --project=chromium
   - → **MCP Playwright** : vérifier la navigation vers `/revenus` depuis le menu, screenshot mobile 375px
 - Utiliser le skill `frontend-design` pour mettre à jour le dashboard : ajouter widget "Reste à vivre" = Revenus − Dépenses (vert si positif, rouge si négatif)
   - → **MCP Playwright** : naviguer vers `/`, screenshot, vérifier widget "Reste à vivre" présent avec couleur correcte (vert/rouge), vérifier console zéro erreur
-- Commit + push
+- `git add -A && git commit -m "feat: [feature]" && git push origin main`
 
 **Success Criteria**:
 
@@ -85,9 +85,9 @@ npx playwright test tests/phase1/ --project=chromium
 - Créer `app/api/notify/sms/route.ts` (Node.js runtime) : POST même payload → `twilio.messages.create()`
 - Utiliser le skill `frontend-design` pour mettre à jour `app/parametres/page.tsx` : ajouter champs email + téléphone + bouton "Envoyer notification test" (appelle les 2 routes)
   - → **MCP Playwright** : naviguer vers `/parametres`, screenshot, remplir email + téléphone, cliquer "Tester", vérifier le feedback UI (succès/erreur), recharger et vérifier persistance
-- Deploy : `vercel deploy --prod --scope amara-fofanas-projects`
-  - → **MCP Playwright** : naviguer vers l'URL Vercel prod, tester `/revenus` et le widget "Reste à vivre" en production
-- Commit + push
+- `git add -A && git commit -m "feat: revenus + reste-a-vivre + email + sms + parametres" && git push origin main`
+- Attendre le deploy automatique Vercel (~1-2 min) : `vercel ls --scope amara-fofanas-projects` → statut "Ready"
+- → **MCP Playwright** : naviguer vers `https://mon-budget-amara-fofanas-projects.vercel.app/revenus`, screenshot, tester le widget "Reste à vivre" sur le dashboard en production
 
 **Success Criteria**:
 
@@ -113,8 +113,9 @@ npx playwright test tests/phase1/ --project=chromium
   - Envoyer push/email/sms selon `notify_push`/`notify_email`/`notify_sms`
   - Insérer dans `notification_log`
 - Mettre à jour `vercel.json` : ajouter `"crons": [{"path": "/api/cron/reminders", "schedule": "0 9 * * *"}]`
-- Deploy + vérifier que le cron apparaît dans Vercel Dashboard > Cron Jobs
-- Commit + push
+- `git add -A && git commit -m "feat: cron reminders + notification log" && git push origin main`
+- Attendre le deploy automatique Vercel : `vercel ls --scope amara-fofanas-projects` → statut "Ready"
+- Vérifier que le cron apparaît dans Vercel Dashboard → Cron Jobs
 
 **Success Criteria**:
 
@@ -135,7 +136,7 @@ npx playwright test tests/phase1/ --project=chromium
   - → **MCP Playwright** : naviguer vers `/cartes/[id]` (avec un ID réel depuis la DB), screenshot, vérifier dépenses filtrées + total correct, snapshot mobile 375px
 - Utiliser le skill `frontend-design` pour mettre à jour `app/cartes/page.tsx` : chaque carte affiche son total mensuel + lien vers `/cartes/[id]`
   - → **MCP Playwright** : naviguer vers `/cartes`, screenshot, vérifier totaux affichés, cliquer sur une carte → vérifier navigation vers `/cartes/[id]`
-- Commit + push
+- `git add -A && git commit -m "feat: [feature]" && git push origin main`
 
 **Success Criteria**:
 
@@ -244,7 +245,7 @@ Output `<promise>PHASE2_COMPLETE</promise>` **UNIQUEMENT** quand **TOUTES** ces 
 
 ### B. Déploiement Vercel
 
-- [ ] `vercel deploy --prod` réussit
+- [ ] `git push origin main` déclenche le deploy Vercel → statut "Ready" confirmé
 - [ ] Cron `0 9 * * *` visible dans Vercel Dashboard > Cron Jobs
 - [ ] Toutes les env vars Phase 2 présentes : RESEND_API_KEY, TWILIO_*, CRON_SECRET
 
