@@ -60,8 +60,9 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
         <div className="flex-1 min-w-0">
           <p className="font-medium text-[#1E293B] text-sm truncate">{expense.name}</p>
           <p className="text-xs text-[#94A3B8] mt-0.5">
-            {expense.type === 'RECURRING' ? `${expense.recurrence_frequency?.toLowerCase()} · j.${expense.recurrence_day}` : 'Ponctuel'}
-            {expense.auto_debit ? ' · Prélèv. auto' : ''}
+            {expense.type === 'RECURRING'
+              ? `${expense.recurrence_frequency?.toLowerCase()} · j.${expense.recurrence_day}${expense.auto_debit ? ' · Prélèv. auto' : ''}`
+              : 'Ponctuel'}
           </p>
         </div>
 
@@ -107,7 +108,7 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
         {/* Group header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-[#F1F5F9]">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center text-base" style={{ backgroundColor: section.color + '20' }}>
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center text-base bg-[#F8FAFC]">
               {section.icon}
             </div>
             <span className="font-semibold text-[#1E293B] text-sm">{section.name}</span>
@@ -166,7 +167,7 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
         onClick={() => { setEditingExpense(undefined); setShowModal(true); }}
         className="fixed bottom-20 right-4 w-14 h-14 bg-[#1E293B] text-white rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-[#0F172A] transition-colors active:scale-95"
         aria-label="Ajouter une dépense"
-        style={{ boxShadow: '0 4px 20px rgba(37,99,235,0.4)' }}
+        style={{ boxShadow: '0 4px 20px rgba(30,41,59,0.25)' }}
       >
         +
       </button>
