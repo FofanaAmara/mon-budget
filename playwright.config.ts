@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PROD_URL = 'https://mon-budget-amara-fofanas-projects.vercel.app';
+const PROD_URL = 'https://mon-budget-seven.vercel.app';
 
 export default defineConfig({
   testDir: './tests',

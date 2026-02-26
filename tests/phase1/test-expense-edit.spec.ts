@@ -1,20 +1,18 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Expense Edit', () => {
-  test('edit button navigates to edit page', async ({ page }) => {
+  test('edit button opens edit modal', async ({ page }) => {
     await page.goto('/depenses');
 
-    // Check there are expenses
     const heading = page.getByRole('heading', { name: 'Dépenses' });
     await expect(heading).toBeVisible();
 
-    // Find first edit button
-    const editBtn = page.getByRole('button', { name: /Modifier/ }).first();
+    // The edit button has aria-label="Modifier"
+    const editBtn = page.getByRole('button', { name: 'Modifier' }).first();
     if (await editBtn.count() > 0) {
       await editBtn.click();
-      // Should navigate to edit page
-      await expect(page).toHaveURL(/\/depenses\/.+\/edit/);
-      await expect(page.getByRole('heading', { name: /Modifier|dépense/ })).toBeVisible();
+      // Edit opens a modal (not URL navigation)
+      await expect(page.getByRole('heading', { name: 'Modifier la dépense' })).toBeVisible();
     } else {
       // No expenses to edit — just verify page loaded
       await expect(heading).toBeVisible();
@@ -24,10 +22,10 @@ test.describe('Expense Edit', () => {
   test('edit form is pre-filled with expense data', async ({ page }) => {
     await page.goto('/depenses');
 
-    const editBtn = page.getByRole('button', { name: /Modifier/ }).first();
+    const editBtn = page.getByRole('button', { name: 'Modifier' }).first();
     if (await editBtn.count() > 0) {
       await editBtn.click();
-      await page.waitForURL(/\/depenses\/.+\/edit/);
+      await expect(page.getByRole('heading', { name: 'Modifier la dépense' })).toBeVisible();
 
       // Form should have a name input with a value
       const nameInput = page.getByPlaceholder(/Loyer, Netflix/);

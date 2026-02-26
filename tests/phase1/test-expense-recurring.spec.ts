@@ -31,15 +31,14 @@ test.describe('Expense RECURRING', () => {
     await page.waitForTimeout(2000);
     await page.reload();
 
-    await expect(page.getByText('Netflix')).toBeVisible();
-    await expect(page.getByText('17,99')).toBeVisible();
+    // Use .first() to avoid strict mode when multiple Netflix expenses exist
+    await expect(page.getByText('Netflix').first()).toBeVisible();
+    await expect(page.getByText('17,99').first()).toBeVisible();
   });
 
   test('recurring expense appears in expense list', async ({ page }) => {
     await page.goto('/depenses');
-    // Page should load without errors
     await expect(page.getByRole('heading', { name: 'Dépenses' })).toBeVisible();
-    // Check that expenses exist
     const countText = page.locator('p').filter({ hasText: /\d+ dépense/ }).first();
     await expect(countText).toBeVisible();
   });

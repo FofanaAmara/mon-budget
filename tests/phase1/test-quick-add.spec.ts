@@ -32,11 +32,10 @@ test.describe('Quick Add Expense', () => {
     await page.waitForTimeout(1500);
     const elapsed = Date.now() - start;
 
-    // Should complete well under 30 seconds
     expect(elapsed).toBeLessThan(30000);
 
-    // Verify it was added
     await page.reload();
-    await expect(page.getByText('Test Rapide')).toBeVisible();
+    // Use .first() to avoid strict mode when test runs multiple times
+    await expect(page.getByText('Test Rapide').first()).toBeVisible();
   });
 });

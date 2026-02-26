@@ -1,17 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function NotificationPermission() {
   const [show, setShow] = useState(false);
   const [permission, setPermission] = useState<NotificationPermission>('default');
+  const initialized = useRef(false);
 
   useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
     if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
-    setPermission(Notification.permission);
-    if (Notification.permission === 'default') {
-      setShow(true);
-    }
+    const perm = Notification.permission;
+    // Queue updates to avoid synchronous setState inside effect
+    Promise.resolve().then(() => {
+      setPermission(perm);
+      if (perm === 'default') setShow(true);
+    });
   }, []);
 
   async function requestPermission() {

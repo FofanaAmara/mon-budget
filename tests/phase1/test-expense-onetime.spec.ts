@@ -35,14 +35,14 @@ test.describe('Expense ONE_TIME', () => {
 
     await page.waitForTimeout(2000);
     await page.reload();
-    await expect(page.getByText('Impôts')).toBeVisible();
+    await expect(page.getByText('Impôts').first()).toBeVisible();
   });
 
   test('one-time expense appears in upcoming 7 days on dashboard', async ({ page }) => {
     await page.goto('/');
     // The "Prochaines (7 jours)" widget should be visible
     await expect(page.getByText('Prochaines (7 jours)')).toBeVisible();
-    // Impôts created with 3-day due date should appear
-    await expect(page.getByText('Impôts')).toBeVisible();
+    // Impôts created with 3-day due date should appear — use first() to avoid strict mode
+    await expect(page.getByText('Impôts').first()).toBeVisible();
   });
 });

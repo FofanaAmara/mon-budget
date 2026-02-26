@@ -63,7 +63,7 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
         {/* Reminders */}
         <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5">
           <h2 className="text-sm font-semibold text-[#1E293B] mb-1">Rappels par défaut</h2>
-          <p className="text-xs text-[#94A3B8] mb-3">Jours avant l'échéance</p>
+          <p className="text-xs text-[#94A3B8] mb-3">Jours avant l&apos;échéance</p>
           <div className="flex gap-2 flex-wrap">
             {REMINDER_OPTIONS.map((day) => (
               <button
