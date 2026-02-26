@@ -23,8 +23,8 @@ test.describe('Quick Add Expense', () => {
     await page.getByPlaceholder('0.00').press('Control+a');
     await page.getByPlaceholder('0.00').type('99');
 
-    // Submit — wait for button to become enabled then click
-    await page.getByRole('button', { name: 'Ajouter' }).click();
+    // Submit — exact: true to avoid matching FAB aria-label "Ajouter une dépense"
+    await page.getByRole('button', { name: 'Ajouter', exact: true }).click();
 
     await page.waitForTimeout(4000);
     const elapsed = Date.now() - start;

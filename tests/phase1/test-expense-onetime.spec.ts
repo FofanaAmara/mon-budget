@@ -29,8 +29,8 @@ test.describe('Expense ONE_TIME', () => {
     const dateInput = page.locator('input[type="date"]');
     await dateInput.fill(dateStr);
 
-    // Submit — wait for button to become enabled then click
-    await page.getByRole('button', { name: 'Ajouter' }).click();
+    // Submit — exact: true to avoid matching FAB aria-label "Ajouter une dépense"
+    await page.getByRole('button', { name: 'Ajouter', exact: true }).click();
 
     await page.waitForTimeout(4000);
     await page.reload();
