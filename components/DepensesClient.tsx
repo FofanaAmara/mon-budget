@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useSyncExternalStore } from 'react';
 import { useRouter } from 'next/navigation';
 import { deleteExpense } from '@/lib/actions/expenses';
 import { formatCAD, formatShortDate, daysUntil } from '@/lib/utils';
@@ -19,6 +19,8 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
   const [editingExpense, setEditingExpense] = useState<Expense | undefined>();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [, startTransition] = useTransition();
+  // useSyncExternalStore: returns false on SSR, true on client — no double-render
+  const isClient = useSyncExternalStore(() => () => {}, () => true, () => false);
 
   // Group expenses by section
   const grouped = sections.map((section) => ({
@@ -54,7 +56,8 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
   }
 
   const ExpenseRow = ({ expense }: { expense: Expense }) => {
-    const badge = getDueBadge(expense);
+    // Only compute date-based badge on client to prevent SSR/hydration mismatch
+    const badge = isClient ? getDueBadge(expense) : null;
     return (
       <div className="flex items-center gap-3 py-3 px-4">
         <div className="flex-1 min-w-0">
@@ -72,7 +75,7 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
           </span>
         )}
 
-        <span className="font-semibold text-[#2563EB] text-sm flex-shrink-0">{formatCAD(expense.amount)}</span>
+        <span className="font-semibold text-[#1E293B] text-sm flex-shrink-0">{formatCAD(expense.amount)}</span>
 
         {deletingId === expense.id ? (
           <div className="flex items-center gap-1.5 text-xs">
@@ -113,7 +116,7 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
             </div>
             <span className="font-semibold text-[#1E293B] text-sm">{section.name}</span>
           </div>
-          <span className="text-sm font-semibold text-[#2563EB]">{formatCAD(total)}/mois</span>
+          <span className="text-sm font-semibold text-[#1E293B]">{formatCAD(total)}/mois</span>
         </div>
         {/* Expense rows */}
         <div className="divide-y divide-[#F8FAFC]">
