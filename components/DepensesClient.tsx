@@ -102,7 +102,7 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
   };
 
   const SectionGroup = ({ section, sectionExpenses }: { section: Section; sectionExpenses: Expense[] }) => {
-    const total = sectionExpenses.reduce((sum, e) => sum + e.amount, 0);
+    const total = sectionExpenses.reduce((sum, e) => sum + Number(e.amount), 0);
     return (
       <div className="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
         {/* Group header */}
@@ -153,7 +153,7 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
           <div className="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
             <div className="flex items-center justify-between px-4 py-3 border-b border-[#F1F5F9]">
               <span className="font-semibold text-[#94A3B8] text-sm">Sans section</span>
-              <span className="text-sm font-semibold text-[#94A3B8]">{formatCAD(unsectioned.reduce((s, e) => s + e.amount, 0))}/mois</span>
+              <span className="text-sm font-semibold text-[#94A3B8]">{formatCAD(unsectioned.reduce((s, e) => s + Number(e.amount), 0))}/mois</span>
             </div>
             <div className="divide-y divide-[#F8FAFC]">
               {unsectioned.map((e) => <ExpenseRow key={e.id} expense={e} />)}
