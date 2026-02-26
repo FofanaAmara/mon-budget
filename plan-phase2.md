@@ -19,7 +19,9 @@
 
 **Approche** : 4 étapes internes (revenus → notifications multi-canal → cron → tests Playwright), chacune validée avant de passer à la suivante.
 
-**Impact** : ~15 nouveaux fichiers créés, ~5 fichiers existants modifiés (dashboard, parametres, sw.js, schema Supabase).
+**Impact** : ~15 nouveaux fichiers créés, ~5 fichiers existants modifiés (dashboard, parametres, sw.js, schema Neon).
+
+> ⚠️ **Convention UI** : Toute implémentation de composants et pages UI doit utiliser le skill `frontend-design`.
 
 ---
 
@@ -197,7 +199,7 @@
 
 ## Implementation Plan
 
-### Étape 1 — Revenus & "Reste à vivre"
+### Étape 1 — Revenus & "Reste à vivre" *(skill: `frontend-design`)*
 **Objectif** : Gérer les revenus et afficher le solde disponible sur le dashboard.
 
 | # | Tâche | Dépend de | Validation |
@@ -213,7 +215,7 @@
 
 ---
 
-### Étape 2 — Notifications Email & SMS
+### Étape 2 — Notifications Email & SMS *(skill: `frontend-design` pour les templates email)*
 **Objectif** : Routes API email (Resend) et SMS (Twilio) fonctionnelles et testées.
 
 | # | Tâche | Dépend de | Validation |
@@ -244,7 +246,7 @@
 
 ---
 
-### Étape 4 — Vue par Carte
+### Étape 4 — Vue par Carte *(skill: `frontend-design`)*
 **Objectif** : Page dédiée par carte de paiement.
 
 | # | Tâche | Dépend de | Validation |

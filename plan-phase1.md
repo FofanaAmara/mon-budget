@@ -21,6 +21,8 @@
 
 **Impact** : Création de ~35 fichiers, 0 fichier existant modifié.
 
+> ⚠️ **Convention UI** : Toute implémentation de composants et pages UI doit utiliser le skill `frontend-design`. Ce skill produit des interfaces de qualité production, distinctives et non génériques.
+
 ---
 
 ## Current State
@@ -230,7 +232,7 @@
 
 ---
 
-### Étape 3 — UI Shell & PWA
+### Étape 3 — UI Shell & PWA *(skill: `frontend-design`)*
 **Objectif** : Layout, navigation, design system, manifest, service worker.
 
 | # | Tâche | Dépend de | Validation |
@@ -247,7 +249,7 @@
 
 ---
 
-### Étape 4 — CRUD Sections, Cartes
+### Étape 4 — CRUD Sections, Cartes *(skill: `frontend-design`)*
 **Objectif** : Gestion des entités de configuration avant les dépenses.
 
 | # | Tâche | Dépend de | Validation |
@@ -264,7 +266,7 @@
 
 ---
 
-### Étape 5 — CRUD Dépenses (Récurrentes + Ponctuelles)
+### Étape 5 — CRUD Dépenses (Récurrentes + Ponctuelles) *(skill: `frontend-design`)*
 **Objectif** : Cœur du MVP — gestion des dépenses avec calcul de next_due_date.
 
 | # | Tâche | Dépend de | Validation |
@@ -282,7 +284,7 @@
 
 ---
 
-### Étape 6 — Dashboard
+### Étape 6 — Dashboard *(skill: `frontend-design`)*
 **Objectif** : Écran principal avec vue consolidée des dépenses du mois.
 
 | # | Tâche | Dépend de | Validation |

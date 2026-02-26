@@ -19,7 +19,9 @@
 
 **Approche** : 3 étapes fonctionnelles (planifiées → historique → export) + tests finaux E2E complets.
 
-**Impact** : ~10 nouveaux fichiers créés, ~3 fichiers existants modifiés (dashboard, formulaire dépense, schema Supabase si nécessaire).
+**Impact** : ~10 nouveaux fichiers créés, ~3 fichiers existants modifiés (dashboard, formulaire dépense, schema Neon si nécessaire).
+
+> ⚠️ **Convention UI** : Toute implémentation de composants et pages UI doit utiliser le skill `frontend-design`.
 
 ---
 
@@ -182,7 +184,7 @@ Aucune nouvelle dépendance externe. Toutes les intégrations (Supabase, Vercel,
 
 ## Implementation Plan
 
-### Étape 1 — Dépenses Planifiées (Type PLANNED)
+### Étape 1 — Dépenses Planifiées (Type PLANNED) *(skill: `frontend-design`)*
 **Objectif** : Permettre de créer des projets d'épargne et les suivre visuellement.
 
 | # | Tâche | Dépend de | Validation |
@@ -201,7 +203,7 @@ Aucune nouvelle dépendance externe. Toutes les intégrations (Supabase, Vercel,
 
 ---
 
-### Étape 2 — Historique Mensuel
+### Étape 2 — Historique Mensuel *(skill: `frontend-design`)*
 **Objectif** : Consulter les dépenses de n'importe quel mois passé.
 
 | # | Tâche | Dépend de | Validation |
