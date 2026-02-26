@@ -4,13 +4,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import webpush from 'web-push';
 import { sql } from '@/lib/db';
 
-webpush.setVapidDetails(
-  `mailto:${process.env.VAPID_EMAIL}`,
-  process.env.VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!
-);
-
 export async function POST(req: NextRequest) {
+  // Initialize VAPID inside the handler — env vars are not available at module eval time during Vercel builds
+  webpush.setVapidDetails(
+    `mailto:${process.env.VAPID_EMAIL}`,
+    process.env.VAPID_PUBLIC_KEY!,
+    process.env.VAPID_PRIVATE_KEY!
+  );
+
   try {
     const { title, body, url } = await req.json();
 
