@@ -44,8 +44,19 @@ playwright/.cache/
 plan-phase1.md
 plan-phase2.md
 plan-phase3.md
+plan-phase1-complement.md
+plan-phase2-new.md
+plan-phase3-new.md
 ralph-phase1.md
 ralph-phase2.md
 ralph-phase3.md
+ralph-phase1-complement.md
+ralph-phase2-new.md
+ralph-phase3-new.md
+prd-budget-tracker-3.md
+status-phase1.md
+
+# Playwright MCP browser logs
+.playwright-mcp/
 
 tsconfig.tsbuildinfo
