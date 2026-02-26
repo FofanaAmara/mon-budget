@@ -203,7 +203,7 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
       {/* Modal */}
       {modal.mode !== 'closed' && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
           onClick={(e) => e.target === e.currentTarget && closeModal()}
         >
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-5">

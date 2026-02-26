@@ -1,0 +1,9 @@
+[  120447ms] [ERROR] ./app/page.tsx:179:1
+Parsing ecmascript source code failed
+  177 |     </div>
+  178 |   );
+> 179 | }
+      | ^
+  180 |
+
+Unexpected token. Did you mean `{'}'}` or `&rbrace;`? @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
