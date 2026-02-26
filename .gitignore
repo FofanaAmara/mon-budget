@@ -32,3 +32,18 @@ yarn-error.log*
 test-results/
 playwright-report/
 playwright/.cache/
+.env*.local
+
+# Playwright
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# Planning docs (internal)
+plan-phase1.md
+plan-phase2.md
+plan-phase3.md
+ralph-phase1.md
+ralph-phase2.md
+ralph-phase3.md
