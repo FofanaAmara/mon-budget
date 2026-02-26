@@ -16,18 +16,15 @@ test.describe('Quick Add Expense', () => {
     // Open modal
     await page.getByRole('button', { name: /Ajouter/ }).click();
 
-    // Fill required fields
+    // Fill required fields (section is required for form validity)
+    await page.getByRole('combobox').selectOption('Maison');
     await page.getByPlaceholder(/Loyer, Netflix/).fill('Test Rapide');
     await page.getByPlaceholder('0.00').click();
     await page.getByPlaceholder('0.00').press('Control+a');
     await page.getByPlaceholder('0.00').type('99');
 
-    // Submit
-    await page.evaluate(() => {
-      const btns = Array.from(document.querySelectorAll('button'));
-      const add = btns.find(b => b.textContent?.trim() === 'Ajouter' && !b.disabled);
-      if (add) add.click();
-    });
+    // Submit — wait for button to become enabled then click
+    await page.getByRole('button', { name: 'Ajouter' }).click();
 
     await page.waitForTimeout(4000);
     const elapsed = Date.now() - start;

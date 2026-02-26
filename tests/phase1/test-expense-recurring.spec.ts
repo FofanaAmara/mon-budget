@@ -8,6 +8,9 @@ test.describe('Expense RECURRING', () => {
     await page.getByRole('button', { name: /Ajouter/ }).click();
     await expect(page.getByRole('heading', { name: 'Nouvelle dépense' })).toBeVisible();
 
+    // Select section (required for form to be valid)
+    await page.getByRole('combobox').selectOption('Maison');
+
     // Fill name
     await page.getByPlaceholder(/Loyer, Netflix/).fill('Netflix');
 
@@ -21,12 +24,8 @@ test.describe('Expense RECURRING', () => {
     const dayInput = page.getByRole('spinbutton').nth(1);
     await dayInput.fill('15');
 
-    // Submit via JS
-    await page.evaluate(() => {
-      const btns = Array.from(document.querySelectorAll('button'));
-      const add = btns.find(b => b.textContent?.trim() === 'Ajouter' && !b.disabled);
-      if (add) add.click();
-    });
+    // Submit — wait for button to become enabled then click
+    await page.getByRole('button', { name: 'Ajouter' }).click();
 
     await page.waitForTimeout(4000);
     await page.reload();

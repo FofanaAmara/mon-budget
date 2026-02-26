@@ -21,9 +21,8 @@ test.describe('Cartes CRUD', () => {
     await page.getByRole('button', { name: /Nouvelle|Ajouter/ }).first().click();
     await expect(page.getByRole('heading', { name: /Nouvelle carte/ })).toBeVisible();
 
-    // Fill name using click + type to ensure React state updates
-    const nameInput = page.getByPlaceholder(/Ex :/).first();
-    await nameInput.click();
+    // Fill name (cartes modal placeholder is "Visa principale")
+    const nameInput = page.getByPlaceholder('Visa principale');
     await nameInput.fill('Visa Test');
 
     // Click Sauvegarder directly (not via evaluate)
