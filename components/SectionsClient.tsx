@@ -18,40 +18,30 @@ type ModalState =
   | { mode: 'create' }
   | { mode: 'edit'; section: Section };
 
-type DeleteState = { id: string; name: string } | null;
-
 export default function SectionsClient({ sections: initial }: { sections: Section[] }) {
   const router = useRouter();
   const [sections, setSections] = useState(initial);
   const [modal, setModal] = useState<ModalState>({ mode: 'closed' });
-  const [deleting, setDeleting] = useState<DeleteState>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  // Form state
   const [name, setName] = useState('');
   const [icon, setIcon] = useState('🏠');
   const [color, setColor] = useState('#3B82F6');
 
-  // Drag state
   const dragIndex = useRef<number | null>(null);
 
   function openCreate() {
-    setName('');
-    setIcon('🏠');
-    setColor('#3B82F6');
+    setName(''); setIcon('🏠'); setColor('#3B82F6');
     setModal({ mode: 'create' });
   }
 
   function openEdit(section: Section) {
-    setName(section.name);
-    setIcon(section.icon);
-    setColor(section.color);
+    setName(section.name); setIcon(section.icon); setColor(section.color);
     setModal({ mode: 'edit', section });
   }
 
-  function closeModal() {
-    setModal({ mode: 'closed' });
-  }
+  function closeModal() { setModal({ mode: 'closed' }); }
 
   function handleSave() {
     if (!name.trim()) return;
@@ -75,9 +65,7 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
     });
   }
 
-  function handleDragStart(index: number) {
-    dragIndex.current = index;
-  }
+  function handleDragStart(index: number) { dragIndex.current = index; }
 
   function handleDragOver(e: React.DragEvent, index: number) {
     e.preventDefault();
@@ -93,35 +81,17 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
     startTransition(async () => {
       await reorderSections(sections.map((s) => s.id));
       dragIndex.current = null;
-      router.refresh();
     });
   }
 
   return (
-    <div className="px-4 pt-8 pb-6 min-h-screen">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-[#1E293B]">Mes Sections</h1>
-        <button
-          onClick={openCreate}
-          className="bg-[#2563EB] text-white rounded-xl px-4 py-2 text-sm font-medium flex items-center gap-1.5"
-        >
-          <span className="text-lg leading-none">+</span>
-          Nouvelle
-        </button>
-      </div>
+    <div className="px-4 pt-8 pb-32 min-h-screen">
+      {/* Header — titre seul, pas de bouton */}
+      <h1 className="text-2xl font-bold text-[#1E293B] mb-6">Sections</h1>
 
-      {/* List */}
       {sections.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="text-5xl mb-4">📂</div>
-          <p className="text-[#94A3B8] text-sm mb-4">Aucune section pour le moment</p>
-          <button
-            onClick={openCreate}
-            className="bg-[#2563EB] text-white rounded-xl px-5 py-3 text-sm font-medium"
-          >
-            Créer une section
-          </button>
+        <div className="flex flex-col items-center justify-center py-24 text-center">
+          <p className="text-[#94A3B8] text-sm">Aucune section — appuyez sur + pour commencer</p>
         </div>
       ) : (
         <ul className="space-y-2">
@@ -132,61 +102,52 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
               onDragStart={() => handleDragStart(i)}
               onDragOver={(e) => handleDragOver(e, i)}
               onDragEnd={handleDragEnd}
-              className="bg-white border border-[#E2E8F0] rounded-2xl p-4 flex items-center gap-3 cursor-grab active:cursor-grabbing active:shadow-md transition-shadow"
+              className="bg-white border border-[#E2E8F0] rounded-2xl px-4 py-3.5 flex items-center gap-3 cursor-grab active:cursor-grabbing active:opacity-70 transition-opacity"
             >
               {/* Drag handle */}
-              <span className="text-[#CBD5E1] select-none text-sm">⋮⋮</span>
+              <svg width="12" height="16" viewBox="0 0 12 16" fill="none" className="flex-shrink-0 text-[#CBD5E1]">
+                <circle cx="4" cy="4" r="1.5" fill="currentColor"/>
+                <circle cx="4" cy="8" r="1.5" fill="currentColor"/>
+                <circle cx="4" cy="12" r="1.5" fill="currentColor"/>
+                <circle cx="8" cy="4" r="1.5" fill="currentColor"/>
+                <circle cx="8" cy="8" r="1.5" fill="currentColor"/>
+                <circle cx="8" cy="12" r="1.5" fill="currentColor"/>
+              </svg>
 
-              {/* Icon with color bg */}
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-                style={{ backgroundColor: section.color + '20' }}
-              >
-                {section.icon}
-              </div>
+              {/* Icon — pas de fond coloré */}
+              <span className="text-lg leading-none flex-shrink-0">{section.icon}</span>
 
               {/* Name */}
-              <span className="flex-1 font-medium text-[#1E293B] text-sm">{section.name}</span>
+              <span className="flex-1 text-sm font-medium text-[#1E293B]">{section.name}</span>
 
-              {/* Color swatch */}
-              <div
-                className="w-4 h-4 rounded-full flex-shrink-0"
-                style={{ backgroundColor: section.color }}
-              />
+              {/* Color dot — discret */}
+              <div className="w-2 h-2 rounded-full flex-shrink-0 opacity-60" style={{ backgroundColor: section.color }} />
 
               {/* Actions */}
-              {deleting?.id === section.id ? (
+              {deleting === section.id ? (
                 <div className="flex items-center gap-2 text-xs">
                   <span className="text-[#94A3B8]">Supprimer ?</span>
-                  <button
-                    onClick={() => handleDelete(section.id)}
-                    disabled={isPending}
-                    className="text-red-500 font-semibold"
-                  >
-                    Oui
-                  </button>
-                  <button onClick={() => setDeleting(null)} className="text-[#94A3B8] font-semibold">
-                    Non
-                  </button>
+                  <button onClick={() => handleDelete(section.id)} disabled={isPending} className="text-red-500 font-semibold">Oui</button>
+                  <button onClick={() => setDeleting(null)} className="text-[#94A3B8]">Non</button>
                 </div>
               ) : (
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-0.5">
                   <button
                     onClick={() => openEdit(section)}
-                    className="p-2 text-[#94A3B8] hover:text-[#2563EB] rounded-lg transition-colors"
+                    className="p-2 text-[#CBD5E1] hover:text-[#1E293B] rounded-lg transition-colors"
                     aria-label="Modifier"
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                       <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" />
                     </svg>
                   </button>
                   <button
-                    onClick={() => setDeleting({ id: section.id, name: section.name })}
-                    className="p-2 text-[#94A3B8] hover:text-red-500 rounded-lg transition-colors"
+                    onClick={() => setDeleting(section.id)}
+                    className="p-2 text-[#CBD5E1] hover:text-red-400 rounded-lg transition-colors"
                     aria-label="Supprimer"
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="3 6 5 6 21 6" />
                       <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
                       <path d="M10 11v6M14 11v6" />
@@ -200,82 +161,87 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
         </ul>
       )}
 
+      {/* FAB — cohérent avec toutes les pages */}
+      <button
+        onClick={openCreate}
+        className="fixed bottom-20 right-4 w-14 h-14 bg-[#1E293B] text-white rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-[#0F172A] transition-colors active:scale-95"
+        aria-label="Nouvelle section"
+      >
+        +
+      </button>
+
       {/* Modal */}
       {modal.mode !== 'closed' && (
         <div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+          className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm"
           onClick={(e) => e.target === e.currentTarget && closeModal()}
         >
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-5">
-            <h2 className="text-lg font-bold text-[#1E293B]">
-              {modal.mode === 'create' ? 'Nouvelle section' : 'Modifier la section'}
-            </h2>
-
-            {/* Name */}
-            <div>
-              <label className="text-xs font-medium text-[#94A3B8] mb-1.5 block">Nom</label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Ex : Maison, Transport…"
-                className="w-full border border-[#E2E8F0] rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none"
-                autoFocus
-              />
+          <div className="bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:max-w-sm">
+            <div className="flex justify-center pt-3 pb-1 sm:hidden">
+              <div className="w-9 h-1 bg-[#E2E8F0] rounded-full" />
             </div>
 
-            {/* Icon picker */}
-            <div>
-              <label className="text-xs font-medium text-[#94A3B8] mb-1.5 block">Icône</label>
-              <div className="flex flex-wrap gap-2">
-                {EMOJIS.map((e) => (
-                  <button
-                    key={e}
-                    onClick={() => setIcon(e)}
-                    className={`w-10 h-10 rounded-xl text-xl transition-all ${
-                      icon === e
-                        ? 'bg-blue-50 ring-2 ring-[#2563EB]'
-                        : 'bg-[#F8FAFC] hover:bg-blue-50'
-                    }`}
-                  >
-                    {e}
-                  </button>
-                ))}
+            <div className="px-6 pt-4 pb-8 space-y-5">
+              <h2 className="text-base font-semibold text-[#1E293B]">
+                {modal.mode === 'create' ? 'Nouvelle section' : 'Modifier'}
+              </h2>
+
+              <div>
+                <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Nom *</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ex : Maison, Sport…"
+                  className="w-full border border-[#E2E8F0] rounded-xl px-4 py-3 text-sm focus:border-[#1E293B] outline-none"
+                />
               </div>
-            </div>
 
-            {/* Color picker */}
-            <div>
-              <label className="text-xs font-medium text-[#94A3B8] mb-1.5 block">Couleur</label>
-              <div className="flex gap-2">
-                {COLORS.map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => setColor(c)}
-                    className={`w-8 h-8 rounded-full transition-transform ${
-                      color === c ? 'scale-125 ring-2 ring-offset-2 ring-[#2563EB]' : 'hover:scale-110'
-                    }`}
-                    style={{ backgroundColor: c }}
-                  />
-                ))}
+              <div>
+                <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Icône</label>
+                <div className="flex flex-wrap gap-2">
+                  {EMOJIS.map((e) => (
+                    <button
+                      key={e}
+                      onClick={() => setIcon(e)}
+                      className={`w-10 h-10 rounded-xl text-xl transition-all ${
+                        icon === e ? 'bg-[#F1F5F9] ring-1 ring-[#1E293B]' : 'bg-[#F8FAFC]'
+                      }`}
+                    >
+                      {e}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Buttons */}
-            <div className="flex gap-3 pt-1">
-              <button
-                onClick={closeModal}
-                className="flex-1 border border-[#E2E8F0] text-[#1E293B] rounded-xl px-5 py-3 font-medium text-sm"
-              >
-                Annuler
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={isPending || !name.trim()}
-                className="flex-1 bg-[#2563EB] text-white rounded-xl px-5 py-3 font-medium text-sm disabled:opacity-50"
-              >
-                {isPending ? 'Sauvegarde…' : 'Sauvegarder'}
-              </button>
+              <div>
+                <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Couleur</label>
+                <div className="flex gap-2">
+                  {COLORS.map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => setColor(c)}
+                      className={`w-7 h-7 rounded-full transition-transform ${
+                        color === c ? 'scale-125 ring-2 ring-offset-1 ring-[#1E293B]' : 'hover:scale-110'
+                      }`}
+                      style={{ backgroundColor: c }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-1">
+                <button onClick={closeModal} className="flex-1 border border-[#E2E8F0] text-[#64748B] rounded-xl px-5 py-3 text-sm font-medium">
+                  Annuler
+                </button>
+                <button
+                  onClick={handleSave}
+                  disabled={isPending || !name.trim()}
+                  className="flex-1 bg-[#1E293B] text-white rounded-xl px-5 py-3 text-sm font-medium disabled:opacity-40"
+                >
+                  {isPending ? 'Enregistrement…' : 'Sauvegarder'}
+                </button>
+              </div>
             </div>
           </div>
         </div>

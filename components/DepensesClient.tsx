@@ -164,7 +164,7 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
       {/* FAB */}
       <button
         onClick={() => { setEditingExpense(undefined); setShowModal(true); }}
-        className="fixed bottom-20 right-4 w-14 h-14 bg-[#2563EB] text-white rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-[#1D4ED8] transition-colors active:scale-95"
+        className="fixed bottom-20 right-4 w-14 h-14 bg-[#1E293B] text-white rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-[#0F172A] transition-colors active:scale-95"
         aria-label="Ajouter une dépense"
         style={{ boxShadow: '0 4px 20px rgba(37,99,235,0.4)' }}
       >

@@ -50,8 +50,8 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
                 onClick={() => setCurrency(c)}
                 className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   currency === c
-                    ? 'bg-[#2563EB] text-white'
-                    : 'bg-[#F8FAFC] text-[#94A3B8] hover:bg-blue-50 hover:text-[#2563EB]'
+                    ? 'bg-[#1E293B] text-white'
+                    : 'bg-[#F8FAFC] text-[#94A3B8] hover:bg-[#F1F5F9] hover:text-[#1E293B]'
                 }`}
               >
                 {c}
@@ -71,8 +71,8 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
                 onClick={() => toggleReminder(day)}
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                   reminders.includes(day)
-                    ? 'bg-[#2563EB] text-white'
-                    : 'bg-[#F8FAFC] text-[#94A3B8] hover:bg-blue-50 hover:text-[#2563EB]'
+                    ? 'bg-[#1E293B] text-white'
+                    : 'bg-[#F8FAFC] text-[#94A3B8] hover:bg-[#F1F5F9] hover:text-[#1E293B]'
                 }`}
               >
                 {day}j
@@ -93,7 +93,7 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
                 <span className="text-sm text-[#1E293B]">{label}</span>
                 <button
                   onClick={() => onChange(!value)}
-                  className={`relative w-12 h-6 rounded-full transition-colors ${value ? 'bg-[#2563EB]' : 'bg-[#E2E8F0]'}`}
+                  className={`relative w-12 h-6 rounded-full transition-colors ${value ? 'bg-[#1E293B]' : 'bg-[#E2E8F0]'}`}
                 >
                   <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${value ? 'translate-x-7' : 'translate-x-1'}`} />
                 </button>
@@ -106,7 +106,7 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
         <button
           onClick={handleSave}
           disabled={isPending}
-          className="w-full bg-[#2563EB] text-white rounded-2xl py-4 font-semibold text-sm disabled:opacity-50 transition-all"
+          className="w-full bg-[#1E293B] text-white rounded-2xl py-4 font-semibold text-sm disabled:opacity-50 transition-all"
         >
           {saved ? '✓ Sauvegardé !' : isPending ? 'Sauvegarde…' : 'Sauvegarder les réglages'}
         </button>
