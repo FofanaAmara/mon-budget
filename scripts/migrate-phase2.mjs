@@ -17,6 +17,12 @@ async function migrate() {
   `;
   console.log('✅ ENUM income_frequency created (or already exists)');
 
+  // Add PLANNED columns to expenses (they may not exist from Phase 1)
+  await sql`ALTER TABLE expenses ADD COLUMN IF NOT EXISTS target_amount DECIMAL(10, 2)`;
+  await sql`ALTER TABLE expenses ADD COLUMN IF NOT EXISTS target_date DATE`;
+  await sql`ALTER TABLE expenses ADD COLUMN IF NOT EXISTS saved_amount DECIMAL(10, 2) DEFAULT 0`;
+  console.log('✅ PLANNED columns added to expenses (or already exist)');
+
   // Create incomes table
   await sql`
     CREATE TABLE IF NOT EXISTS incomes (

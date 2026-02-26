@@ -19,7 +19,7 @@ test.describe('Revenus', () => {
 
     await page.getByPlaceholder(/Salaire/).fill('Salaire principal');
     await page.locator('input[type="number"]').fill('3500');
-    await page.getByRole('button', { name: 'Ajouter' }).click();
+    await page.getByRole('button', { name: 'Ajouter', exact: true }).click();
 
     // After close, income should appear
     await expect(page.getByText('Salaire principal').first()).toBeVisible();
