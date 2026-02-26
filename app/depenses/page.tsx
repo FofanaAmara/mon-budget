@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getExpenses } from '@/lib/actions/expenses';
 import { getSections } from '@/lib/actions/sections';
 import { getCards } from '@/lib/actions/cards';

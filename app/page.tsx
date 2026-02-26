@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getMonthlySummaryBySection, getUpcomingExpenses } from '@/lib/actions/expenses';
 import { formatCAD, daysUntil } from '@/lib/utils';
 import NotificationPermission from '@/components/NotificationPermission';

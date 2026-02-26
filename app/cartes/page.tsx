@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getCards } from '@/lib/actions/cards';
 import CartesClient from '@/components/CartesClient';
 

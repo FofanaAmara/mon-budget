@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getSettings } from '@/lib/actions/settings';
 import ParametresClient from '@/components/ParametresClient';
 

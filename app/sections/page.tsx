@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getSections } from '@/lib/actions/sections';
 import SectionsClient from '@/components/SectionsClient';
 
