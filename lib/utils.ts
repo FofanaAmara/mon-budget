@@ -5,7 +5,9 @@ export function formatCAD(amount: number, currency = 'CAD'): string {
     style: 'currency',
     currency,
     minimumFractionDigits: 2,
-  }).format(amount);
+  })
+    .format(amount)
+    .replace(/\u202f/g, '\u00a0'); // normalize narrow no-break space to regular no-break space
 }
 
 export function formatDate(date: string | Date | null): string {
