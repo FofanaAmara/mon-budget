@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Vercel output and local env
     ".vercel/**",
+    // Migration scripts (CommonJS — intentionally use require)
+    "scripts/**",
   ]),
 ]);
 

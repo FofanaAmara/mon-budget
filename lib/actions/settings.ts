@@ -21,6 +21,8 @@ export async function getSettings(): Promise<Settings> {
 export async function updateSettings(
   id: string,
   data: Partial<{
+    email: string | null;
+    phone: string | null;
     default_currency: string;
     default_reminder_offsets: number[];
     notify_push: boolean;
@@ -30,6 +32,8 @@ export async function updateSettings(
 ): Promise<Settings> {
   const rows = await sql`
     UPDATE settings SET
+      email        = CASE WHEN ${data.email !== undefined} THEN ${data.email ?? null} ELSE email END,
+      phone        = CASE WHEN ${data.phone !== undefined} THEN ${data.phone ?? null} ELSE phone END,
       default_currency       = COALESCE(${data.default_currency ?? null}, default_currency),
       default_reminder_offsets = COALESCE(
         ${data.default_reminder_offsets ? JSON.stringify(data.default_reminder_offsets) : null}::integer[],

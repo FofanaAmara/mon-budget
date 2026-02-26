@@ -15,6 +15,8 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
   const [reminders, setReminders] = useState<number[]>(settings.default_reminder_offsets ?? [1, 3, 7]);
   const [notifyPush, setNotifyPush] = useState(settings.notify_push);
   const [notifyEmail, setNotifyEmail] = useState(settings.notify_email);
+  const [email, setEmail] = useState(settings.email ?? '');
+  const [phone, setPhone] = useState(settings.phone ?? '');
 
   function toggleReminder(day: number) {
     setReminders((prev) =>
@@ -25,6 +27,8 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
   function handleSave() {
     startTransition(async () => {
       await updateSettings(settings.id, {
+        email: email.trim() || null,
+        phone: phone.trim() || null,
         default_currency: currency,
         default_reminder_offsets: reminders,
         notify_push: notifyPush,
@@ -78,6 +82,34 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
                 {day}j
               </button>
             ))}
+          </div>
+        </div>
+
+        {/* Contact info for notifications */}
+        <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5">
+          <h2 className="text-sm font-semibold text-[#1E293B] mb-1">Contact</h2>
+          <p className="text-xs text-[#94A3B8] mb-3">Pour les notifications email et SMS</p>
+          <div className="space-y-3">
+            <div>
+              <label className="text-xs text-[#94A3B8] mb-1 block">📧 Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="votre@email.com"
+                className="w-full px-3 py-2.5 rounded-xl border border-[#E2E8F0] text-sm text-[#1E293B] placeholder:text-[#CBD5E1] focus:outline-none focus:border-[#2563EB] bg-[#F8FAFC]"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-[#94A3B8] mb-1 block">📱 Téléphone (SMS)</label>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+1 514 000 0000"
+                className="w-full px-3 py-2.5 rounded-xl border border-[#E2E8F0] text-sm text-[#1E293B] placeholder:text-[#CBD5E1] focus:outline-none focus:border-[#2563EB] bg-[#F8FAFC]"
+              />
+            </div>
           </div>
         </div>
 

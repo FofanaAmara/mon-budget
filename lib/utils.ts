@@ -92,6 +92,22 @@ export function calcMonthlyCost(expense: Expense): number {
 }
 
 /**
+ * Returns "YYYY-MM" for a given Date
+ */
+export function toMonthKey(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  return `${y}-${m}`;
+}
+
+/**
+ * Returns current month key as "YYYY-MM"
+ */
+export function currentMonth(): string {
+  return toMonthKey(new Date());
+}
+
+/**
  * Returns days until a date (negative if past)
  */
 export function daysUntil(date: string | Date | null): number {

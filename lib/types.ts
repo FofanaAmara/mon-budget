@@ -49,9 +49,40 @@ export type Expense = {
 
 export type Settings = {
   id: string;
+  email: string | null;
+  phone: string | null;
   default_currency: string;
   default_reminder_offsets: number[];
   notify_push: boolean;
   notify_email: boolean;
   notify_sms: boolean;
+};
+
+export type MonthlyExpenseStatus = 'UPCOMING' | 'PAID' | 'OVERDUE' | 'DEFERRED';
+
+export type MonthlyExpense = {
+  id: string;
+  expense_id: string | null;
+  month: string;
+  name: string;
+  amount: number;
+  due_date: string;
+  status: MonthlyExpenseStatus;
+  paid_at: string | null;
+  section_id: string | null;
+  card_id: string | null;
+  is_auto_charged: boolean;
+  notes: string | null;
+  created_at: string;
+  // Joined
+  section?: Section;
+  card?: Card;
+};
+
+export type MonthSummary = {
+  count: number;
+  total: number;
+  paid_count: number;
+  paid_total: number;
+  overdue_count: number;
 };

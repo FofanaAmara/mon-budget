@@ -1,8 +1,16 @@
 export const dynamic = 'force-dynamic';
 
 import { getMonthlySummaryBySection, getUpcomingExpenses } from '@/lib/actions/expenses';
+import {
+  generateMonthlyExpenses,
+  getMonthSummary,
+  autoMarkOverdue,
+  autoMarkPaidForAutoDebit,
+} from '@/lib/actions/monthly-expenses';
+import { currentMonth } from '@/lib/utils';
 import { formatCAD, daysUntil } from '@/lib/utils';
 import NotificationPermission from '@/components/NotificationPermission';
+import Link from 'next/link';
 
 function getDueBadgeClass(days: number) {
   if (days <= 1) return 'bg-red-100 text-red-700';
@@ -18,9 +26,17 @@ function formatDueLabel(days: number) {
 }
 
 export default async function DashboardPage() {
-  const [sectionSummary, upcomingExpenses] = await Promise.all([
+  const month = currentMonth();
+
+  // Ensure monthly instances exist and statuses are up-to-date
+  await generateMonthlyExpenses(month);
+  await autoMarkOverdue(month);
+  await autoMarkPaidForAutoDebit(month);
+
+  const [sectionSummary, upcomingExpenses, monthSummary] = await Promise.all([
     getMonthlySummaryBySection(),
     getUpcomingExpenses(7),
+    getMonthSummary(month),
   ]);
 
   const totalMonthly = sectionSummary.reduce((sum, s) => sum + Number(s.total), 0);
@@ -69,6 +85,41 @@ export default async function DashboardPage() {
           </p>
         </div>
       </div>
+
+      {/* ── Mon mois (barre de progression) ── */}
+      {monthSummary.count > 0 && (
+        <Link href="/mon-mois" className="block">
+          <div className="bg-white border border-[#E2E8F0] rounded-2xl p-4 active:bg-[#F8FAFC] transition-colors">
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-sm font-semibold text-[#1E293B] flex items-center gap-2">
+                <span>📋</span> Mon mois
+              </h2>
+              <div className="flex items-center gap-2">
+                {monthSummary.overdue_count > 0 && (
+                  <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-red-50 text-red-600">
+                    {monthSummary.overdue_count} en retard
+                  </span>
+                )}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </div>
+            </div>
+            <div className="h-1.5 bg-[#F1F5F9] rounded-full overflow-hidden mb-2">
+              <div
+                className="h-full rounded-full transition-all"
+                style={{
+                  width: `${monthSummary.count > 0 ? Math.max((monthSummary.paid_count / monthSummary.count) * 100, 1) : 0}%`,
+                  backgroundColor: monthSummary.paid_count === monthSummary.count ? '#10B981' : '#2563EB',
+                }}
+              />
+            </div>
+            <p className="text-xs text-[#94A3B8]">
+              {monthSummary.paid_count}/{monthSummary.count} complétées · {formatCAD(monthSummary.paid_total)} payé / {formatCAD(monthSummary.total)} total
+            </p>
+          </div>
+        </Link>
+      )}
 
       {/* ── Alertes ── */}
       <div className="bg-white border border-[#E2E8F0] rounded-2xl p-4">

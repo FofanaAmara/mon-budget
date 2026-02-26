@@ -28,15 +28,14 @@ const tabs = [
     ),
   },
   {
-    href: '/sections',
-    label: 'Sections',
+    href: '/mon-mois',
+    label: 'Mon mois',
     icon: (active: boolean) => (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
         stroke={active ? '#2563EB' : '#94A3B8'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7" rx="1.5" />
-        <rect x="14" y="3" width="7" height="7" rx="1.5" />
-        <rect x="3" y="14" width="7" height="7" rx="1.5" />
-        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+        <rect x="3" y="4" width="18" height="18" rx="2" />
+        <path d="M16 2v4M8 2v4M3 10h18" />
+        <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" strokeWidth="2.5" stroke={active ? '#2563EB' : '#94A3B8'} />
       </svg>
     ),
   },

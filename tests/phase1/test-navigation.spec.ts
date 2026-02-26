@@ -14,6 +14,15 @@ test.describe('Navigation', () => {
     await expect(page.getByRole('heading', { name: 'Mes Sections' })).toBeVisible();
   });
 
+  test('can navigate to /mon-mois', async ({ page }) => {
+    await page.goto('/mon-mois');
+    // Page should load without error — check for the nav and progress bar
+    const nav = page.getByRole('navigation', { name: 'Navigation principale' });
+    await expect(nav).toBeVisible();
+    const toutesBtn = page.getByRole('button', { name: 'Toutes' });
+    await expect(toutesBtn).toBeVisible();
+  });
+
   test('can navigate to /cartes', async ({ page }) => {
     await page.goto('/cartes');
     await expect(page.getByRole('heading', { name: 'Mes Cartes' })).toBeVisible();
