@@ -23,16 +23,20 @@ const FREQUENCIES: { value: RecurrenceFrequency; label: string }[] = [
 export default function ExpenseModal({ sections, cards, expense, onClose, onSuccess }: Props) {
   const [isPending, startTransition] = useTransition();
 
-  const [sectionId, setSectionId]   = useState(expense?.section_id ?? '');
-  const [name, setName]             = useState(expense?.name ?? '');
-  const [amount, setAmount]         = useState(expense?.amount?.toString() ?? '');
-  const [type, setType]             = useState<ExpenseType>(expense?.type ?? 'RECURRING');
-  const [frequency, setFrequency]   = useState<RecurrenceFrequency>(expense?.recurrence_frequency ?? 'MONTHLY');
-  const [day, setDay]               = useState(expense?.recurrence_day?.toString() ?? '1');
-  const [autoDebit, setAutoDebit]   = useState(expense?.auto_debit ?? false);
-  const [cardId, setCardId]         = useState(expense?.card_id ?? '');
-  const [dueDate, setDueDate]       = useState(expense?.due_date ?? '');
-  const [notes, setNotes]           = useState(expense?.notes ?? '');
+  const [sectionId, setSectionId]         = useState(expense?.section_id ?? '');
+  const [name, setName]                   = useState(expense?.name ?? '');
+  const [amount, setAmount]               = useState(expense?.amount?.toString() ?? '');
+  const [type, setType]                   = useState<ExpenseType>(expense?.type ?? 'RECURRING');
+  const [frequency, setFrequency]         = useState<RecurrenceFrequency>(expense?.recurrence_frequency ?? 'MONTHLY');
+  const [day, setDay]                     = useState(expense?.recurrence_day?.toString() ?? '1');
+  const [autoDebit, setAutoDebit]         = useState(expense?.auto_debit ?? false);
+  const [cardId, setCardId]               = useState(expense?.card_id ?? '');
+  const [dueDate, setDueDate]             = useState(expense?.due_date ?? '');
+  const [notes, setNotes]                 = useState(expense?.notes ?? '');
+  // PLANNED fields
+  const [targetAmount, setTargetAmount]   = useState(expense?.target_amount?.toString() ?? '');
+  const [targetDate, setTargetDate]       = useState(expense?.target_date ?? '');
+  const [savedAmount, setSavedAmount]     = useState(expense?.saved_amount?.toString() ?? '0');
 
   const isValid = sectionId && name.trim() && amount && parseFloat(amount) > 0;
 
@@ -51,6 +55,10 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
         auto_debit: type === 'RECURRING' ? autoDebit : false,
         due_date: type === 'ONE_TIME' ? dueDate || undefined : undefined,
         notes: notes || undefined,
+        // PLANNED fields
+        target_amount: type === 'PLANNED' && targetAmount ? parseFloat(targetAmount) : undefined,
+        target_date: type === 'PLANNED' ? targetDate || undefined : undefined,
+        saved_amount: type === 'PLANNED' ? parseFloat(savedAmount) || 0 : undefined,
       };
 
       if (expense) {
@@ -131,17 +139,17 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
           <div>
             <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Type</label>
             <div className="flex bg-[#F8FAFC] rounded-xl p-1 gap-1">
-              {(['RECURRING', 'ONE_TIME'] as ExpenseType[]).map((t) => (
+              {(['RECURRING', 'ONE_TIME', 'PLANNED'] as ExpenseType[]).map((t) => (
                 <button
                   key={t}
                   onClick={() => setType(t)}
-                  className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+                  className={`flex-1 py-2 rounded-lg text-xs font-medium transition-all ${
                     type === t
                       ? 'bg-white text-[#1E293B] shadow-sm'
                       : 'text-[#94A3B8]'
                   }`}
                 >
-                  {t === 'RECURRING' ? 'Récurrent' : 'Ponctuel'}
+                  {t === 'RECURRING' ? 'Récurrent' : t === 'ONE_TIME' ? 'Ponctuel' : 'Planifié'}
                 </button>
               ))}
             </div>
@@ -225,6 +233,53 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
                 className="w-full border border-[#E2E8F0] rounded-xl px-4 py-3 text-sm focus:border-[#1E293B] outline-none"
               />
             </div>
+          )}
+
+          {/* PLANNED fields */}
+          {type === 'PLANNED' && (
+            <>
+              <div>
+                <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Objectif ($)</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8] text-sm">$</span>
+                  <input
+                    type="number"
+                    value={targetAmount}
+                    onChange={(e) => setTargetAmount(e.target.value)}
+                    placeholder="0.00"
+                    min="0"
+                    step="0.01"
+                    className="w-full border border-[#E2E8F0] rounded-xl pl-8 pr-4 py-3 text-sm focus:border-[#1E293B] outline-none"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Date cible</label>
+                  <input
+                    type="date"
+                    value={targetDate}
+                    onChange={(e) => setTargetDate(e.target.value)}
+                    className="w-full border border-[#E2E8F0] rounded-xl px-4 py-3 text-sm focus:border-[#1E293B] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Déjà épargné ($)</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] text-sm">$</span>
+                    <input
+                      type="number"
+                      value={savedAmount}
+                      onChange={(e) => setSavedAmount(e.target.value)}
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
+                      className="w-full border border-[#E2E8F0] rounded-xl pl-7 pr-3 py-3 text-sm focus:border-[#1E293B] outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+            </>
           )}
 
           {/* Notes */}

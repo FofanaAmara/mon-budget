@@ -68,6 +68,10 @@ type CreateExpenseInput = {
   notify_email?: boolean;
   notify_sms?: boolean;
   notes?: string;
+  // PLANNED fields
+  target_amount?: number;
+  target_date?: string;
+  saved_amount?: number;
 };
 
 export async function createExpense(data: CreateExpenseInput): Promise<Expense> {
@@ -88,7 +92,7 @@ export async function createExpense(data: CreateExpenseInput): Promise<Expense> 
       recurrence_frequency, recurrence_day, auto_debit,
       due_date, next_due_date,
       reminder_offsets, notify_push, notify_email, notify_sms,
-      notes
+      notes, target_amount, target_date, saved_amount
     ) VALUES (
       ${data.name},
       ${data.amount},
@@ -105,7 +109,10 @@ export async function createExpense(data: CreateExpenseInput): Promise<Expense> 
       ${data.notify_push ?? true},
       ${data.notify_email ?? false},
       ${data.notify_sms ?? false},
-      ${data.notes ?? null}
+      ${data.notes ?? null},
+      ${data.target_amount ?? null},
+      ${data.target_date ?? null},
+      ${data.saved_amount ?? 0}
     )
     RETURNING *
   `;
@@ -143,6 +150,9 @@ export async function updateExpense(
       due_date = CASE WHEN ${data.due_date !== undefined} THEN ${data.due_date ?? null} ELSE due_date END,
       next_due_date = CASE WHEN ${next_due_date !== undefined} THEN ${next_due_date ?? null} ELSE next_due_date END,
       notes = CASE WHEN ${data.notes !== undefined} THEN ${data.notes ?? null} ELSE notes END,
+      target_amount = CASE WHEN ${data.target_amount !== undefined} THEN ${data.target_amount ?? null} ELSE target_amount END,
+      target_date = CASE WHEN ${data.target_date !== undefined} THEN ${data.target_date ?? null} ELSE target_date END,
+      saved_amount = COALESCE(${data.saved_amount ?? null}, saved_amount),
       updated_at = NOW()
     WHERE id = ${id}
     RETURNING *
@@ -185,4 +195,49 @@ export async function getMonthlySummaryBySection(): Promise<
     ORDER BY s.position ASC
   `;
   return rows as { section_id: string; section_name: string; section_icon: string; section_color: string; total: number }[];
+}
+
+export async function getPlannedExpenses(): Promise<Expense[]> {
+  const rows = await sql`
+    SELECT
+      e.*,
+      row_to_json(s.*) as section,
+      row_to_json(c.*) as card
+    FROM expenses e
+    LEFT JOIN sections s ON e.section_id = s.id
+    LEFT JOIN cards c ON e.card_id = c.id
+    WHERE e.is_active = true
+      AND e.type = 'PLANNED'
+    ORDER BY e.target_date ASC NULLS LAST, e.created_at DESC
+  `;
+  return rows as Expense[];
+}
+
+export async function updateSavedAmount(id: string, savedAmount: number): Promise<Expense> {
+  const rows = await sql`
+    UPDATE expenses SET
+      saved_amount = ${savedAmount},
+      updated_at = NOW()
+    WHERE id = ${id}
+    RETURNING *
+  `;
+  revalidatePath('/projets');
+  revalidatePath('/');
+  return rows[0] as Expense;
+}
+
+export async function getExpensesByCard(cardId: string): Promise<Expense[]> {
+  const rows = await sql`
+    SELECT
+      e.*,
+      row_to_json(s.*) as section,
+      row_to_json(c.*) as card
+    FROM expenses e
+    LEFT JOIN sections s ON e.section_id = s.id
+    LEFT JOIN cards c ON e.card_id = c.id
+    WHERE e.is_active = true
+      AND e.card_id = ${cardId}
+    ORDER BY e.next_due_date ASC NULLS LAST, e.created_at DESC
+  `;
+  return rows as Expense[];
 }

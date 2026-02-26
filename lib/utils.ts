@@ -1,4 +1,4 @@
-import type { Expense, RecurrenceFrequency } from './types';
+import type { Expense, IncomeFrequency, RecurrenceFrequency } from './types';
 
 export function formatCAD(amount: number, currency = 'CAD'): string {
   return new Intl.NumberFormat('fr-CA', {
@@ -105,6 +105,34 @@ export function toMonthKey(date: Date): string {
  */
 export function currentMonth(): string {
   return toMonthKey(new Date());
+}
+
+/**
+ * Normalize income amount to monthly equivalent
+ */
+export function calcMonthlyIncome(amount: number, frequency: IncomeFrequency): number {
+  switch (frequency) {
+    case 'MONTHLY': return amount;
+    case 'BIWEEKLY': return (amount * 26) / 12;
+    case 'YEARLY': return amount / 12;
+    default: return amount;
+  }
+}
+
+/**
+ * Calculate monthly savings needed to reach a planned goal
+ */
+export function calcMonthlySuggested(
+  targetAmount: number,
+  savedAmount: number,
+  targetDate: string
+): number {
+  const now = new Date();
+  const target = new Date(targetDate);
+  const monthsRemaining =
+    (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth());
+  if (monthsRemaining <= 0 || targetAmount - savedAmount <= 0) return 0;
+  return (targetAmount - savedAmount) / monthsRemaining;
 }
 
 /**

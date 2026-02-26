@@ -11,6 +11,11 @@ export async function getCards(): Promise<Card[]> {
   return rows as Card[];
 }
 
+export async function getCardById(id: string): Promise<Card | null> {
+  const rows = await sql`SELECT * FROM cards WHERE id = ${id}`;
+  return rows[0] as Card ?? null;
+}
+
 export async function createCard(data: {
   name: string;
   last_four?: string;

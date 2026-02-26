@@ -1,61 +1,58 @@
 ---
 active: true
-iteration: 2
+iteration: 1
 max_iterations: 25
-completion_promise: "PHASE1_COMPLEMENT_COMPLETE"
-started_at: "2026-02-26T21:57:26Z"
+completion_promise: "PHASE2_COMPLETE"
+started_at: "2026-02-26T23:18:13Z"
 ---
 
-# MISSION: Phase 1 Complement — Mon Budget PWA
+# MISSION: Implement Mon Budget Phase 2
 
-Compléter Phase 1 du PRD v1.2 en ajoutant ce qui manque : table `monthly_expenses`, logique de génération des instances mensuelles, page `/mon-mois` (suivi mensuel avec statuts), widget "Mon mois" sur le dashboard, et champs `email`/`phone` dans les paramètres. Le MVP est déjà deployé (32/32 tests verts). Ce complement est entièrement additif — aucune régression n'est acceptable.
-
----
-
-## REFERENCES (Read First — Dans cet ordre)
-
-1. **`plan-phase1-complement.md`** — Plan détaillé avec Gap Analysis, phases A-D, success criteria. LIRE EN ENTIER avant de commencer.
-2. **`prd-budget-tracker-3.md`** — PRD v1.2 complet : modèle de données MonthlyExpense, vue "Mon mois", dashboard update.
-3. **`lib/types.ts`** — Types TypeScript existants (Section, Card, Expense, Settings). Comprendre avant de modifier.
-4. **`supabase/schema.sql`** — Schéma DB existant. Référence pour les tables actuelles.
-5. **`lib/actions/expenses.ts`** et **`lib/actions/settings.ts`** — Server Actions existantes. Ne pas casser leur signature.
-6. **`app/page.tsx`** — Dashboard existant. Comprendre la structure avant de l'augmenter.
-7. **`app/parametres/page.tsx`** — Page paramètres existante. Comprendre avant de modifier.
-8. **`.env.local`** — Credentials Neon PostgreSQL (`POSTGRES_URL`, `POSTGRES_URL_NON_POOLING`).
-9. **`.vercel/`** — Projet Vercel déjà lié (`amara-fofanas-projects/mon-budget`).
+Implémenter les quatre fonctionnalités Phase 2 de l'app "Mon Budget" : (1) gestion des revenus avec widget "Reste à vivre", (2) vue détaillée par carte de paiement (`/cartes/[id]`), (3) support complet des dépenses planifiées (type PLANNED) avec formulaire enrichi et page `/projets`, (4) navigation historique entre les mois passés sur `/mon-mois` — le tout déployé sur Vercel, testé Playwright (44/44 verts), zéro erreur TypeScript et console.
 
 ---
 
-## Required Tools/Skills
+## REFERENCES (Read First)
 
-- Utiliser le skill **`frontend-design`** pour TOUT le code UI : page `/mon-mois`, composants `MonthlyExpenseItem`, `MonthProgressBar`, mise à jour dashboard, mise à jour `/parametres`. Ne jamais écrire du JSX sans ce skill.
-- Utiliser `vercel` CLI (`--scope amara-fofanas-projects`) pour vérifier le deploy.
-- Utiliser le **MCP Playwright** (`mcp__playwright__browser_navigate`, `mcp__playwright__browser_snapshot`, `mcp__playwright__browser_take_screenshot`, `mcp__playwright__browser_console_messages`) pour tester visuellement chaque interface au fur et à mesure.
-- Utiliser `npx playwright` pour les tests E2E finaux.
+Lire ces fichiers DANS CET ORDRE avant de commencer :
+
+1. **`plan-phase2-new.md`** — Plan détaillé Phase 2 avec toutes les étapes, tâches, success criteria, et notes techniques. LIRE EN ENTIER avant de commencer.
+2. **`prd-budget-tracker-3.md`** — PRD complet v1.2 : modèle de données, fonctionnalités Phase 2 (section 7), contraintes techniques.
+3. **`status-phase1.md`** — État exact de ce qui a été livré en Phase 1 + Complement : tables, pages, actions, divergences de schéma.
+4. **`.env.local`** — Credentials Neon PostgreSQL (`POSTGRES_URL`, `POSTGRES_URL_NON_POOLING`) et variables Vercel.
+5. **`.vercel/`** — Projet Vercel déjà lié (`amara-fofanas-projects/mon-budget`).
 
 ---
 
-## UI TESTING PROTOCOL (Obligatoire apres chaque composant/page UI)
+## Required Tools / Skills
 
-> **Règle** : Apres chaque page ou composant UI construit avec `frontend-design`, IMMÉDIATEMENT tester dans le browser avec le MCP Playwright AVANT de passer à la suite.
+- **Skill `frontend-design`** : Utiliser pour TOUT le code UI (composants, pages, widgets, modals, layout). Ne jamais écrire du JSX/TSX sans ce skill.
+- **MCP Playwright** (`mcp__playwright__browser_navigate`, `mcp__playwright__browser_snapshot`, `mcp__playwright__browser_take_screenshot`, `mcp__playwright__browser_console_messages`) : tester visuellement chaque interface dans le browser immédiatement après chaque UI buildée.
+- **`vercel` CLI** (déjà installé et connecté) : déployer, vérifier statut. Toujours utiliser `--scope amara-fofanas-projects`.
+- **`npx playwright`** : lancer les tests E2E.
+- **Node.js scripts** : vérifier la DB, exécuter les migrations.
 
-**Protocole a suivre apres chaque UI buildée** :
+---
+
+## UI TESTING PROTOCOL (Obligatoire à chaque composant/page UI)
+
+> **Règle** : Après chaque page ou composant UI construit avec `frontend-design`, IMMÉDIATEMENT tester dans le browser avec le MCP Playwright AVANT de passer à la suite.
+
+**Protocole à suivre après chaque UI buildée** :
 
 ```
-1. npm run dev (si pas déjà lancé — port 3000)
+1. npm run dev (si pas déjà lancé)
 2. mcp__playwright__browser_navigate → http://localhost:3000/[page]
 3. mcp__playwright__browser_snapshot → vérifier l'arbre d'accessibilité (structure présente)
 4. mcp__playwright__browser_take_screenshot → vérifier le rendu visuel
-5. mcp__playwright__browser_resize → width: 375, height: 812 (mobile)
-6. mcp__playwright__browser_navigate → même URL (rechargement mobile)
-7. mcp__playwright__browser_take_screenshot → vérifier rendu mobile
-8. mcp__playwright__browser_console_messages (level: "error") → zéro erreur
-9. Si problème détecté → corriger AVANT de passer à la page suivante
+5. mcp__playwright__browser_resize 375px → même page en viewport mobile
+6. mcp__playwright__browser_console_messages → vérifier zéro erreur console
+7. Si problème détecté → corriger AVANT de passer à la page suivante
 ```
 
-**Ce qu'on vérifie a chaque test visuel** :
+**Ce qu'on vérifie à chaque test visuel** :
 - La page se charge sans erreur (pas de page blanche, pas de 500)
-- Les éléments attendus sont présents (barre de progression, groupes par statut, boutons d'action)
+- Les éléments attendus sont présents (navigation, titres, boutons, listes, widgets)
 - Le rendu mobile 375px est correct (pas de débordement horizontal)
 - Zéro erreur rouge dans la console browser
 
@@ -63,969 +60,623 @@ Compléter Phase 1 du PRD v1.2 en ajoutant ce qui manque : table `monthly_expens
 
 ## PHASES (Incremental Goals)
 
-### Phase A: Migration DB (Est. ~30 min)
+### Phase A: Migration DB — Table `incomes` (Est. ~30 min)
 
-**Objective** : Table `monthly_expenses` créée en Neon + colonnes `email`/`phone` ajoutées a `settings`. Aucun code applicatif modifié dans cette phase.
+**Objectif** : Créer la table `incomes` en production Neon PostgreSQL.
 
 **Actions** :
 
-**A1** — Créer `scripts/migrate-phase1-complement.js` :
+- Écrire `scripts/migrate-phase2.mjs` avec le contenu suivant :
 
 ```javascript
-const { neon } = require('@neondatabase/serverless');
-require('dotenv').config({ path: '.env.local' });
+// scripts/migrate-phase2.mjs
+import { neon } from '@neondatabase/serverless';
+import { config } from 'dotenv';
+
+config({ path: '.env.local' });
 
 const sql = neon(process.env.POSTGRES_URL_NON_POOLING);
 
 async function migrate() {
-  console.log('Starting Phase 1 Complement migration...');
+  console.log('Applying Phase 2 migration...');
 
-  // 1. Create monthly_expenses table
+  // Créer le type ENUM pour la fréquence (PostgreSQL)
   await sql`
-    CREATE TABLE IF NOT EXISTS monthly_expenses (
-      id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-      expense_id UUID REFERENCES expenses(id) ON DELETE SET NULL,
-      month VARCHAR(7) NOT NULL,
-      name VARCHAR(200) NOT NULL,
-      amount DECIMAL(10, 2) NOT NULL,
-      due_date DATE NOT NULL,
-      status VARCHAR(20) NOT NULL DEFAULT 'UPCOMING'
-        CHECK (status IN ('UPCOMING', 'PAID', 'OVERDUE', 'DEFERRED')),
-      paid_at DATE,
-      section_id UUID REFERENCES sections(id) ON DELETE SET NULL,
-      card_id UUID REFERENCES cards(id) ON DELETE SET NULL,
-      is_auto_charged BOOLEAN DEFAULT FALSE,
-      notes TEXT,
-      created_at TIMESTAMPTZ DEFAULT NOW(),
-      CONSTRAINT uq_expense_month UNIQUE (expense_id, month)
+    DO $$ BEGIN
+      CREATE TYPE income_frequency AS ENUM ('MONTHLY', 'BIWEEKLY', 'YEARLY');
+    EXCEPTION WHEN duplicate_object THEN null;
+    END $$
+  `;
+
+  // Créer la table incomes
+  await sql`
+    CREATE TABLE IF NOT EXISTS incomes (
+      id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      name        VARCHAR(255) NOT NULL,
+      amount      DECIMAL(10, 2) NOT NULL,
+      frequency   income_frequency NOT NULL DEFAULT 'MONTHLY',
+      is_active   BOOLEAN NOT NULL DEFAULT TRUE,
+      created_at  TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+      updated_at  TIMESTAMP WITH TIME ZONE DEFAULT NOW()
     )
   `;
-  console.log('✓ Table monthly_expenses created');
 
-  // 2. Create indexes
-  await sql`CREATE INDEX IF NOT EXISTS idx_me_month ON monthly_expenses(month)`;
-  await sql`CREATE INDEX IF NOT EXISTS idx_me_month_status ON monthly_expenses(month, status)`;
-  await sql`CREATE INDEX IF NOT EXISTS idx_me_section ON monthly_expenses(section_id)`;
-  console.log('✓ Indexes created');
+  console.log('Migration complete.');
 
-  // 3. Add email and phone to settings
-  await sql`ALTER TABLE settings ADD COLUMN IF NOT EXISTS email VARCHAR(255) DEFAULT NULL`;
-  await sql`ALTER TABLE settings ADD COLUMN IF NOT EXISTS phone VARCHAR(50) DEFAULT NULL`;
-  console.log('✓ Columns email and phone added to settings');
-
-  console.log('Migration complete!');
+  const result = await sql`SELECT COUNT(*) as count FROM incomes`;
+  console.log('incomes count:', result[0].count, '(expected: 0 for new table)');
 }
 
-migrate().catch((err) => {
-  console.error('Migration failed:', err);
-  process.exit(1);
-});
+migrate().catch((e) => { console.error(e); process.exit(1); });
 ```
 
-**A2** — Exécuter la migration :
-```bash
-node scripts/migrate-phase1-complement.js
-```
-
-**A3** — Vérifier la migration via script de verification :
-```bash
-node -e "
-const { neon } = require('@neondatabase/serverless');
-require('dotenv').config({ path: '.env.local' });
-const sql = neon(process.env.POSTGRES_URL_NON_POOLING);
-Promise.all([
-  sql\`SELECT COUNT(*) as count FROM monthly_expenses\`,
-  sql\`SELECT column_name FROM information_schema.columns WHERE table_name='settings' AND column_name IN ('email','phone') ORDER BY column_name\`,
-  sql\`SELECT indexname FROM pg_indexes WHERE tablename='monthly_expenses'\`
-]).then(([me, cols, idx]) => {
-  console.log('monthly_expenses count:', me[0].count, '(expected: 0)');
-  console.log('settings new columns:', cols.map(c => c.column_name).join(', '), '(expected: email, phone)');
-  console.log('indexes:', idx.map(i => i.indexname).join(', '));
-}).catch(console.error);
-"
-```
-
-**A4** — Mettre a jour `supabase/schema.sql` pour documenter les nouveaux DDL (ajouter le CREATE TABLE monthly_expenses et l'ALTER TABLE settings a la fin du fichier, en commentant clairement "Phase 1 Complement").
-
-**A5** — Commit :
-```bash
-git add scripts/migrate-phase1-complement.js supabase/schema.sql
-git commit -m "feat(db): add monthly_expenses table + email/phone to settings"
-git push origin main
-```
-
-**Success Criteria Phase A** :
-
-- [ ] `SELECT COUNT(*) FROM monthly_expenses` → retourne 0 (pas d'erreur)
-- [ ] `SELECT column_name FROM information_schema.columns WHERE table_name='settings' AND column_name='email'` → 1 row
-- [ ] `SELECT column_name FROM information_schema.columns WHERE table_name='settings' AND column_name='phone'` → 1 row
-- [ ] Contrainte `uq_expense_month` présente dans `pg_constraint`
-- [ ] Index `idx_me_month` et `idx_me_month_status` dans `pg_indexes`
-- [ ] `npm run build` → exit code 0 (aucun code applicatif changé)
-
----
-
-### Phase B: Business Logic — Types + Server Actions MonthlyExpense (Est. ~1h30)
-
-**Objective** : Types TypeScript mis a jour, `lib/actions/monthly-expenses.ts` créé avec toute la logique de génération et de gestion des statuts, `settings.ts` mis a jour pour email/phone.
-
-**Actions** :
-
-**B1** — Mettre a jour `lib/types.ts` — AJOUTER (ne pas supprimer l'existant) :
+- Exécuter : `node scripts/migrate-phase2.mjs`
+- Vérifier la table avec le script DB (voir SELF-CORRECTION LOOP section)
+- Ajouter dans `lib/types.ts` les types `IncomeFrequency` et `Income` :
 
 ```typescript
-// Après les types existants, ajouter :
+export type IncomeFrequency = 'MONTHLY' | 'BIWEEKLY' | 'YEARLY';
 
-export type MonthlyExpenseStatus = 'UPCOMING' | 'PAID' | 'OVERDUE' | 'DEFERRED';
-
-export type MonthlyExpense = {
+export type Income = {
   id: string;
-  expense_id: string | null;
-  month: string;           // ex: "2026-02"
   name: string;
   amount: number;
-  due_date: string;
-  status: MonthlyExpenseStatus;
-  paid_at: string | null;
-  section_id: string | null;
-  card_id: string | null;
-  is_auto_charged: boolean;
-  notes: string | null;
+  frequency: IncomeFrequency;
+  is_active: boolean;
   created_at: string;
-  // Joined
-  section?: Section;
-  card?: Card;
-};
-
-export type MonthSummary = {
-  count: number;
-  total: number;
-  paid_count: number;
-  paid_total: number;
-  overdue_count: number;
+  updated_at: string;
 };
 ```
 
-Et modifier le type `Settings` existant pour ajouter les deux nouveaux champs :
-```typescript
-// Dans Settings, ajouter AVANT les champs existants ou apres id :
-email: string | null;
-phone: string | null;
-```
+- `npm run build` pour valider que le code compile
+- Commit : `git add -A && git commit -m "feat: add incomes table migration + Income type" && git push origin main`
 
-**B2** — Mettre a jour `lib/actions/settings.ts` :
+**Success Criteria** :
 
-- `getSettings()` : modifier le SELECT pour inclure `email, phone`
-- `updateSettings(data)` : modifier pour accepter et persister `email` et `phone`
-- Ne pas modifier la signature des autres fonctions
-
-**B3** — Créer `lib/actions/monthly-expenses.ts` :
-
-```typescript
-'use server';
-
-import { neon } from '@neondatabase/serverless';
-import { revalidatePath } from 'next/cache';
-import type { MonthlyExpense, MonthSummary } from '@/lib/types';
-
-const sql = neon(process.env.POSTGRES_URL!);
-
-// Calcule la due_date effective d'une expense RECURRING pour un mois donné
-function calcDueDateForMonth(expense: {
-  recurrence_frequency: string | null;
-  recurrence_day: number | null;
-  next_due_date: string | null;
-}, month: string): string | null {
-  const [year, monthNum] = month.split('-').map(Number);
-
-  // Si next_due_date est dans ce mois, l'utiliser directement
-  if (expense.next_due_date) {
-    const nd = new Date(expense.next_due_date);
-    if (nd.getFullYear() === year && nd.getMonth() + 1 === monthNum) {
-      return expense.next_due_date;
-    }
-  }
-
-  // Pour MONTHLY, QUARTERLY, YEARLY : utiliser recurrence_day dans ce mois
-  if (expense.recurrence_day && ['MONTHLY', 'QUARTERLY', 'YEARLY'].includes(expense.recurrence_frequency || '')) {
-    const daysInMonth = new Date(year, monthNum, 0).getDate();
-    const day = Math.min(expense.recurrence_day, daysInMonth);
-    return `${year}-${String(monthNum).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-  }
-
-  // Pour WEEKLY / BIWEEKLY : retourner le 1er du mois comme fallback
-  if (['WEEKLY', 'BIWEEKLY'].includes(expense.recurrence_frequency || '')) {
-    return `${year}-${String(monthNum).padStart(2, '0')}-01`;
-  }
-
-  return null;
-}
-
-// Génère les instances mensuelles pour un mois donné (idempotent)
-export async function generateMonthlyExpenses(month: string): Promise<void> {
-  const [year, monthNum] = month.split('-').map(Number);
-  const monthStart = `${year}-${String(monthNum).padStart(2, '0')}-01`;
-  const monthEnd = new Date(year, monthNum, 0).toISOString().split('T')[0];
-
-  // Récupérer les expenses RECURRING actives
-  const recurringExpenses = await sql`
-    SELECT id, name, amount, section_id, card_id, auto_debit,
-           recurrence_frequency, recurrence_day, next_due_date, notes
-    FROM expenses
-    WHERE type = 'RECURRING'
-      AND is_active = true
-  `;
-
-  // Récupérer les expenses ONE_TIME dont next_due_date est dans ce mois
-  const oneTimeExpenses = await sql`
-    SELECT id, name, amount, section_id, card_id, auto_debit, next_due_date, notes
-    FROM expenses
-    WHERE type = 'ONE_TIME'
-      AND is_active = true
-      AND next_due_date >= ${monthStart}::date
-      AND next_due_date <= ${monthEnd}::date
-  `;
-
-  // Insérer les instances RECURRING
-  for (const expense of recurringExpenses) {
-    const dueDate = calcDueDateForMonth(expense, month);
-    if (!dueDate) continue;
-
-    await sql`
-      INSERT INTO monthly_expenses
-        (expense_id, month, name, amount, due_date, status, section_id, card_id, is_auto_charged, notes)
-      VALUES
-        (${expense.id}, ${month}, ${expense.name}, ${expense.amount},
-         ${dueDate}::date, 'UPCOMING', ${expense.section_id}, ${expense.card_id},
-         ${expense.auto_debit}, ${expense.notes})
-      ON CONFLICT (expense_id, month) DO NOTHING
-    `;
-  }
-
-  // Insérer les instances ONE_TIME
-  for (const expense of oneTimeExpenses) {
-    await sql`
-      INSERT INTO monthly_expenses
-        (expense_id, month, name, amount, due_date, status, section_id, card_id, is_auto_charged, notes)
-      VALUES
-        (${expense.id}, ${month}, ${expense.name}, ${expense.amount},
-         ${expense.next_due_date}::date, 'UPCOMING', ${expense.section_id}, ${expense.card_id},
-         ${expense.auto_debit}, ${expense.notes})
-      ON CONFLICT (expense_id, month) DO NOTHING
-    `;
-  }
-}
-
-// Auto-marque OVERDUE les instances dont due_date est passée et statut = UPCOMING
-export async function autoMarkOverdue(month: string): Promise<void> {
-  await sql`
-    UPDATE monthly_expenses
-    SET status = 'OVERDUE'
-    WHERE month = ${month}
-      AND status = 'UPCOMING'
-      AND due_date < CURRENT_DATE
-  `;
-}
-
-// Auto-marque PAID les instances auto_debit dont due_date est passée
-export async function autoMarkPaidForAutoDebit(month: string): Promise<void> {
-  await sql`
-    UPDATE monthly_expenses
-    SET status = 'PAID', paid_at = due_date
-    WHERE month = ${month}
-      AND is_auto_charged = true
-      AND status IN ('UPCOMING', 'OVERDUE')
-      AND due_date <= CURRENT_DATE
-  `;
-}
-
-// Récupérer les instances d'un mois (avec joins)
-export async function getMonthlyExpenses(
-  month: string,
-  sectionId?: string
-): Promise<MonthlyExpense[]> {
-  // Générer les instances si aucune n'existe pour ce mois
-  const existing = await sql`SELECT COUNT(*) as count FROM monthly_expenses WHERE month = ${month}`;
-  if (Number(existing[0].count) === 0) {
-    await generateMonthlyExpenses(month);
-  }
-
-  // Auto-updates
-  await autoMarkOverdue(month);
-  await autoMarkPaidForAutoDebit(month);
-
-  const rows = sectionId
-    ? await sql`
-        SELECT me.*,
-               s.name as section_name, s.icon as section_icon, s.color as section_color,
-               c.name as card_name
-        FROM monthly_expenses me
-        LEFT JOIN sections s ON me.section_id = s.id
-        LEFT JOIN cards c ON me.card_id = c.id
-        WHERE me.month = ${month} AND me.section_id = ${sectionId}
-        ORDER BY
-          CASE me.status WHEN 'OVERDUE' THEN 1 WHEN 'UPCOMING' THEN 2 WHEN 'DEFERRED' THEN 3 WHEN 'PAID' THEN 4 END,
-          me.due_date ASC
-      `
-    : await sql`
-        SELECT me.*,
-               s.name as section_name, s.icon as section_icon, s.color as section_color,
-               c.name as card_name
-        FROM monthly_expenses me
-        LEFT JOIN sections s ON me.section_id = s.id
-        LEFT JOIN cards c ON me.card_id = c.id
-        WHERE me.month = ${month}
-        ORDER BY
-          CASE me.status WHEN 'OVERDUE' THEN 1 WHEN 'UPCOMING' THEN 2 WHEN 'DEFERRED' THEN 3 WHEN 'PAID' THEN 4 END,
-          me.due_date ASC
-      `;
-
-  return rows.map((row) => ({
-    ...row,
-    amount: Number(row.amount),
-    section: row.section_name ? {
-      id: row.section_id,
-      name: row.section_name,
-      icon: row.section_icon,
-      color: row.section_color,
-    } : undefined,
-    card: row.card_name ? { id: row.card_id, name: row.card_name } : undefined,
-  })) as MonthlyExpense[];
-}
-
-// Résumé du mois pour la barre de progression
-export async function getMonthSummary(month: string): Promise<MonthSummary> {
-  const rows = await sql`
-    SELECT
-      COUNT(*) as count,
-      COALESCE(SUM(amount), 0) as total,
-      COALESCE(SUM(CASE WHEN status = 'PAID' THEN 1 ELSE 0 END), 0) as paid_count,
-      COALESCE(SUM(CASE WHEN status = 'PAID' THEN amount ELSE 0 END), 0) as paid_total,
-      COALESCE(SUM(CASE WHEN status = 'OVERDUE' THEN 1 ELSE 0 END), 0) as overdue_count
-    FROM monthly_expenses
-    WHERE month = ${month}
-  `;
-  return {
-    count: Number(rows[0].count),
-    total: Number(rows[0].total),
-    paid_count: Number(rows[0].paid_count),
-    paid_total: Number(rows[0].paid_total),
-    overdue_count: Number(rows[0].overdue_count),
-  };
-}
-
-// Marquer comme PAID
-export async function markAsPaid(id: string, paidAt?: string): Promise<void> {
-  await sql`
-    UPDATE monthly_expenses
-    SET status = 'PAID', paid_at = COALESCE(${paidAt || null}::date, CURRENT_DATE)
-    WHERE id = ${id}
-  `;
-  revalidatePath('/mon-mois');
-  revalidatePath('/');
-}
-
-// Marquer comme DEFERRED
-export async function markAsDeferred(id: string): Promise<void> {
-  await sql`
-    UPDATE monthly_expenses SET status = 'DEFERRED' WHERE id = ${id}
-  `;
-  revalidatePath('/mon-mois');
-  revalidatePath('/');
-}
-
-// Annuler un paiement (repasser a UPCOMING)
-export async function markAsUpcoming(id: string): Promise<void> {
-  await sql`
-    UPDATE monthly_expenses SET status = 'UPCOMING', paid_at = NULL WHERE id = ${id}
-  `;
-  revalidatePath('/mon-mois');
-  revalidatePath('/');
-}
-
-// Récupérer les dépenses OVERDUE du mois courant (pour dashboard)
-export async function getOverdueExpenses(month: string, limit = 5): Promise<MonthlyExpense[]> {
-  const rows = await sql`
-    SELECT me.*, s.name as section_name, s.icon as section_icon, s.color as section_color
-    FROM monthly_expenses me
-    LEFT JOIN sections s ON me.section_id = s.id
-    WHERE me.month = ${month} AND me.status = 'OVERDUE'
-    ORDER BY me.due_date ASC
-    LIMIT ${limit}
-  `;
-  return rows.map((row) => ({
-    ...row,
-    amount: Number(row.amount),
-    section: row.section_name ? {
-      id: row.section_id,
-      name: row.section_name,
-      icon: row.section_icon,
-      color: row.section_color,
-    } : undefined,
-  })) as MonthlyExpense[];
-}
-```
-
-**B4** — Vérifier `npm run build` et `npm run lint` :
-```bash
-npm run build
-npm run lint
-npx tsc --noEmit
-```
-
-**B5** — Test de la logique de génération :
-```bash
-node -e "
-const { neon } = require('@neondatabase/serverless');
-require('dotenv').config({ path: '.env.local' });
-const sql = neon(process.env.POSTGRES_URL_NON_POOLING);
-sql\`SELECT COUNT(*) as count FROM monthly_expenses WHERE month='2026-02'\`
-  .then(r => console.log('instances 2026-02:', r[0].count))
-  .catch(console.error);
-"
-```
-
-Note : La génération est déclenchée côté serveur par `getMonthlyExpenses()`, pas directement via script Node. Le test ci-dessus vérifie simplement que la table est accessible.
-
-**B6** — Commit :
-```bash
-git add lib/types.ts lib/actions/monthly-expenses.ts lib/actions/settings.ts
-git commit -m "feat(logic): monthly-expenses server actions + types update + settings email/phone"
-git push origin main
-```
-
-**Success Criteria Phase B** :
-
-- [ ] `MonthlyExpense`, `MonthlyExpenseStatus`, `MonthSummary` exportés depuis `lib/types.ts`
-- [ ] `Settings` inclut `email: string | null` et `phone: string | null`
-- [ ] `lib/actions/monthly-expenses.ts` contient : `generateMonthlyExpenses`, `getMonthlyExpenses`, `getMonthSummary`, `markAsPaid`, `markAsDeferred`, `markAsUpcoming`, `autoMarkOverdue`, `autoMarkPaidForAutoDebit`, `getOverdueExpenses`
-- [ ] `getSettings()` retourne les champs `email` et `phone` sans erreur TypeScript
-- [ ] `npm run build` → exit code 0
-- [ ] `npm run lint` → exit code 0
-- [ ] `npx tsc --noEmit` → exit code 0
+- [ ] `node scripts/migrate-phase2.mjs` → exit code 0, message "Migration complete"
+- [ ] Script DB : `SELECT table_name FROM information_schema.tables WHERE table_name='incomes'` → 1 ligne
+- [ ] Script DB : `SELECT COUNT(*) FROM incomes` → 0 (table vide)
+- [ ] `npm run build` → exit code 0 après ajout des types
+- [ ] Commit pushé sur main
 
 ---
 
-### Phase C: Page `/mon-mois` UI (Est. ~1h30)
+### Phase B: CRUD Revenus + Widget "Reste à vivre" (Est. ~2h)
 
-**Objective** : Page `/mon-mois` complète, testée visuellement sur desktop et mobile, fonctionnelle en production.
+**Objectif** : Page `/revenus` fonctionnelle, widget "Reste à vivre" visible sur le dashboard.
 
 **Actions** :
 
-**C1** — Utiliser le skill `frontend-design` pour créer `components/MonthProgressBar.tsx` :
+- Créer `lib/actions/incomes.ts` avec `'use server'` et les Server Actions suivantes :
+  - `getIncomes()` : `SELECT * FROM incomes WHERE is_active = true ORDER BY created_at DESC`
+  - `getMonthlyIncomeTotal()` : sélectionner tous les revenus actifs, normaliser chaque montant selon la fréquence (MONTHLY×1 / BIWEEKLY×26/12 / YEARLY×1/12), retourner la somme totale mensuelle normalisée
+  - `createIncome(data: { name: string, amount: number, frequency: IncomeFrequency })` : INSERT INTO incomes, puis `revalidatePath('/')` et `revalidatePath('/revenus')`
+  - `updateIncome(id: string, data: { name: string, amount: number, frequency: IncomeFrequency })` : UPDATE incomes SET ..., puis revalidate
+  - `deleteIncome(id: string)` : DELETE FROM incomes WHERE id = $1 (ou UPDATE SET is_active = false), puis revalidate
 
-Composant réutilisable. Props : `count: number, total: number, paidCount: number, paidTotal: number, overdueCount: number`. Affiche :
-- Barre de progression HTML/CSS (largeur = paidCount/count * 100%)
-- Texte : "X/Y complétées · Z$ payé / W$ total"
-- Couleur de la barre : vert si 100%, orange si > 50%, rouge si alertes OVERDUE
-- Formatter les montants en CAD avec `Intl.NumberFormat`
+- Utiliser le skill `frontend-design` pour créer `components/IncomeModal.tsx` :
+  - Champs : name (texte, requis), amount (nombre, requis, ≥ 0), frequency (select : Mensuel/Bimensuel/Annuel)
+  - Afficher en temps réel le montant mensuel normalisé calculé sous le champ amount
+  - Mode création + mode édition (recevant un `Income` optionnel en prop)
+  - Boutons : Enregistrer / Annuler
 
-Apres création : **MCP Playwright test** sur un storybook ou page de test.
+  → **MCP Playwright** : Ouvrir `/revenus`, cliquer "+", snapshot → vérifier que le modal s'ouvre avec les 3 champs
 
-**C2** — Utiliser le skill `frontend-design` pour créer `components/MonthlyExpenseItem.tsx` :
+- Utiliser le skill `frontend-design` pour créer `components/RevenusClient.tsx` :
+  - Liste des revenus actifs : nom, montant brut, fréquence, montant mensuel normalisé
+  - Ligne de total en bas : "Total mensuel net : X $" (gras, taille plus grande)
+  - Bouton "+" (ou FAB) pour ouvrir `IncomeModal` en mode création
+  - Bouton Modifier et Supprimer par ligne
+  - État vide informatif si aucun revenu ("Aucun revenu enregistré — cliquez + pour commencer")
 
-Props : `item: MonthlyExpense, onMarkPaid: () => void, onMarkDeferred: () => void`. Affiche :
-- Nom de la dépense, montant (formaté), due_date
-- Section icon + nom (compact)
-- Badge "Auto" si `is_auto_charged = true`
-- Bouton "Payer" (icone check) → fond vert — visible si statut OVERDUE ou UPCOMING
-- Bouton "Reporter" (icone arrow-right) → visible si statut UPCOMING uniquement
-- Si statut PAID : check icon vert + date de paiement, sans boutons d'action
-- Si statut DEFERRED : badge "Reporté", bouton "Payer" uniquement
-- Statut OVERDUE : fond rouge pâle, badge "En retard"
+- Créer `app/revenus/page.tsx` (Server Component) :
+  - Fetch `getIncomes()` et passer aux props de `RevenusClient`
+  - Titre de page : "Mes revenus"
 
-**C3** — Utiliser le skill `frontend-design` pour créer `app/mon-mois/page.tsx` :
+  → **MCP Playwright** (obligatoire) :
+  ```
+  1. navigate → http://localhost:3000/revenus
+  2. snapshot → vérifier titre, liste (ou état vide), bouton +
+  3. screenshot → rendu visuel
+  4. resize 375px → mobile
+  5. console_messages → zéro erreur
+  ```
 
-**Structure complète** :
+- Utiliser le skill `frontend-design` pour créer `components/ResteAVivreWidget.tsx` :
+  - Appeler `getMonthlyIncomeTotal()` et la fonction/action existante pour le total des dépenses mensuelles
+  - Calculer `reste = total_revenus - total_depenses`
+  - Afficher : "Revenus ce mois : X $", "Dépenses ce mois : Y $", "Reste à vivre : Z $"
+  - Couleur : vert si `reste >= 0`, rouge si `reste < 0`
+  - Si aucun revenu enregistré → afficher "Ajoutez vos revenus → /revenus" avec lien
 
-```typescript
-// app/mon-mois/page.tsx — Server Component
-// Props : searchParams : { month?: string, section?: string }
+- Intégrer `ResteAVivreWidget` dans `app/page.tsx` (dashboard) :
+  - Ajouter sous l'en-tête existant (premier ou deuxième widget)
 
-// Logique :
-// 1. month = searchParams.month ?? format(new Date(), 'yyyy-MM') // mois courant
-// 2. sectionId = searchParams.section
-// 3. const items = await getMonthlyExpenses(month, sectionId)
-// 4. const summary = await getMonthSummary(month)
-// 5. const sections = await getSections()
+  → **MCP Playwright** (obligatoire) :
+  ```
+  1. navigate → http://localhost:3000/
+  2. snapshot → vérifier que le widget "Reste à vivre" est présent
+  3. screenshot → rendu visuel
+  4. resize 375px → mobile
+  5. console_messages → zéro erreur
+  ```
 
-// UI :
-// En-tête :
-//   - Bouton "<" → month-1 (link href avec ?month=)
-//   - Titre "Février 2026" (formatter le mois)
-//   - Bouton ">" → month+1
+- Ajouter un lien vers `/revenus` depuis `components/ParametresClient.tsx` :
+  - Ajouter une section "Revenus" avec un lien "Gérer mes revenus →"
 
-// Barre de progression :
-//   - <MonthProgressBar {...summary} />
+- Commit : `git add -A && git commit -m "feat: revenus CRUD + widget reste-a-vivre" && git push origin main`
 
-// Filtre sections :
-//   - Chip "Tout" (actif si pas de sectionId)
-//   - Un chip par section (actif si sectionId = section.id)
-//   - Chaque chip = lien href ?month=...&section=...
+**Success Criteria** :
 
-// Groupes :
-//   - Section OVERDUE : si items.some(i => i.status === 'OVERDUE')
-//     - En-tête "En retard" avec badge count rouge
-//     - Liste des items OVERDUE + <MonthlyExpenseItem>
-//   - Section UPCOMING :
-//     - En-tête "À venir"
-//     - Liste des items UPCOMING + <MonthlyExpenseItem>
-//   - Section DEFERRED (si items.some(i => i.status === 'DEFERRED')) :
-//     - En-tête "Reporté"
-//     - Liste des items DEFERRED + <MonthlyExpenseItem>
-//   - Section PAID :
-//     - En-tête "Payé" (visuellement discret, fond vert pâle)
-//     - Liste des items PAID + <MonthlyExpenseItem>
+- [ ] `SELECT COUNT(*) FROM incomes` = 0 initialement
+- [ ] Créer "Salaire" 5000$ MONTHLY → visible dans la liste sur `/revenus`
+- [ ] Modifier le revenu → changement persisté après rechargement de la page
+- [ ] Supprimer le revenu → disparu de la liste
+- [ ] Widget "Reste à vivre" visible sur dashboard
+- [ ] Revenu 5000$/mois + dépenses 3500$/mois → widget affiche +1 500,00 $ en vert
+- [ ] Revenu 2000$/mois + dépenses 3500$/mois → widget affiche -1 500,00 $ en rouge
+- [ ] `npm run build` → exit code 0
+- [ ] Zéro erreur console browser sur `/revenus` et `/`
 
-// Message vide si items.length === 0 :
-//   - "Aucune dépense pour ce mois. Les dépenses récurrentes seront ajoutées automatiquement."
-```
+---
 
-**Actions Server** (dans la page ou dans un fichier séparé `app/mon-mois/actions.ts`) :
-- `handleMarkPaid(id: string)` → appelle `markAsPaid(id)` → `revalidatePath('/mon-mois')` + `revalidatePath('/')`
-- `handleMarkDeferred(id: string)` → appelle `markAsDeferred(id)` → `revalidatePath('/mon-mois')`
+### Phase C: Vue par carte + Dépenses PLANNED + Widgets dashboard (Est. ~2.5h)
 
-**C4** — MCP Playwright test complet apres création :
+**Objectif** : `/cartes/[id]` fonctionnel, formulaire PLANNED complet, `/projets` avec progression, widgets dashboard.
 
-```
-1. npm run dev
-2. mcp__playwright__browser_navigate → http://localhost:3000/mon-mois
-3. mcp__playwright__browser_snapshot → vérifier : titre mois, barre progression, groupes statuts
-4. mcp__playwright__browser_take_screenshot → screenshot desktop
-5. mcp__playwright__browser_resize → 375 x 812
-6. mcp__playwright__browser_navigate → http://localhost:3000/mon-mois (rechargement)
-7. mcp__playwright__browser_take_screenshot → screenshot mobile
-8. mcp__playwright__browser_console_messages (level: "error") → zéro erreur
-9. Tester navigation : cliquer "<" → vérifier URL change → mois précédent chargé
-10. Si des items existent : cliquer "Payer" sur un item UPCOMING → vérifier qu'il passe dans la section PAID
-```
+#### C.1 — Champs PLANNED dans ExpenseModal
 
-**C5** — Vérifier l'intégration dans la bottom navigation :
+- Modifier `components/ExpenseModal.tsx` :
+  - Ajouter les champs conditionnels suivants (visibles uniquement quand `type === 'PLANNED'`) :
+    - `target_amount` : champ numérique "Montant objectif ($)"
+    - `target_date` : champ date "Date cible"
+    - `saved_amount` : champ numérique "Montant épargné à ce jour ($)"
+    - Affichage calculé en temps réel : "Épargne mensuelle suggérée : X $/mois" (`(target_amount - saved_amount) / mois_restants`)
+    - Si `target_date` dans le passé ou champs manquants → afficher "N/A"
+  - Vérifier que quand `type !== 'PLANNED'`, ces champs sont masqués
+  - Vérifier que les champs RECURRING et ONE_TIME existants ne régressent pas
 
-Lire le fichier de la bottom nav (probablement dans `app/layout.tsx` ou `components/BottomNav.tsx`). Ajouter l'onglet "Mon mois" si pas déjà présent.
+  → **MCP Playwright** :
+  ```
+  1. navigate → http://localhost:3000/depenses → cliquer "+"
+  2. Sélectionner type "Planifiée"
+  3. snapshot → vérifier champs target_amount, target_date, saved_amount visibles
+  4. Sélectionner type "Récurrente"
+  5. snapshot → vérifier que ces champs disparaissent
+  6. console_messages → zéro erreur
+  ```
 
-**C6** — `npm run build` doit passer :
-```bash
-npm run build
-```
+#### C.2 — Server Actions PLANNED
 
-**C7** — Commit + push + vérification prod :
-```bash
-git add app/mon-mois/ components/MonthlyExpenseItem.tsx components/MonthProgressBar.tsx app/layout.tsx
-git commit -m "feat(ui): page /mon-mois — suivi mensuel avec statuts, progression et actions rapides"
-git push origin main
-```
+- Ajouter dans `lib/actions/expenses.ts` :
+  - `getPlannedExpenses()` : `SELECT * FROM expenses WHERE type = 'PLANNED' AND is_active = true ORDER BY created_at DESC`
+  - `updateSavedAmount(id: string, saved_amount: number)` : `UPDATE expenses SET saved_amount = $1, updated_at = NOW() WHERE id = $2` puis `revalidatePath('/projets')` et `revalidatePath('/')`
 
-Attendre le deploy Vercel (~2 min) puis :
-```bash
-vercel ls --scope amara-fofanas-projects
-```
-```
-mcp__playwright__browser_navigate → https://mon-budget-seven.vercel.app/mon-mois
-mcp__playwright__browser_snapshot → vérifier que la page se charge en production
-mcp__playwright__browser_console_messages (level: "error") → zéro erreur prod
-```
+#### C.3 — Page /projets
+
+- Utiliser le skill `frontend-design` pour créer `components/ProjetsClient.tsx` :
+  - Liste des dépenses PLANNED avec pour chaque projet :
+    - Nom du projet
+    - Ligne "8 000 $ / 25 000 $" (saved_amount / target_amount)
+    - Barre de progression (percentage = saved_amount / target_amount × 100)
+    - Date cible formatée
+    - "Épargne suggérée : X $/mois" calculée
+    - Bouton "Mettre à jour l'épargne" → modal simple (input numérique pour saved_amount) → appelle `updateSavedAmount`
+  - État vide informatif : "Aucun projet planifié — créez une dépense de type Planifiée"
+  - Lien vers `/depenses` pour créer un projet
+
+- Créer `app/projets/page.tsx` (Server Component) :
+  - Fetch `getPlannedExpenses()`
+  - Render `ProjetsClient`
+  - Titre : "Mes projets planifiés"
+
+  → **MCP Playwright** (obligatoire) :
+  ```
+  1. navigate → http://localhost:3000/projets
+  2. snapshot → vérifier structure (liste ou état vide, lien /depenses)
+  3. screenshot → rendu visuel
+  4. resize 375px → mobile
+  5. console_messages → zéro erreur
+  ```
+
+#### C.4 — Widget projets sur dashboard
+
+- Utiliser le skill `frontend-design` pour créer `components/ProjetsWidget.tsx` :
+  - Afficher les 3 premiers projets PLANNED actifs (triés par date cible croissante)
+  - Pour chacun : nom + barre de progression + montant mensuel suggéré
+  - Lien "Voir tous les projets →" vers `/projets`
+  - Si aucun projet → "Aucun projet planifié" avec lien pour en créer
+
+- Intégrer `ProjetsWidget` dans `app/page.tsx` (dashboard)
+
+  → **MCP Playwright** (obligatoire) :
+  ```
+  1. navigate → http://localhost:3000/
+  2. snapshot → vérifier widget projets présent
+  3. screenshot → rendu visuel
+  4. resize 375px → mobile
+  5. console_messages → zéro erreur
+  ```
+
+#### C.5 — Page /cartes/[id]
+
+- Ajouter dans `lib/actions/expenses.ts` (ou `lib/actions/cards.ts`) :
+  - `getExpensesByCard(cardId: string, month: string)` : sélectionner les `monthly_expenses` où `card_id = cardId` ET `month = month` ET `auto_debit = true` (utiliser le nom de colonne exact vérifié dans le schéma)
+  - `getCardMonthlyTotal(cardId: string, month: string)` : `SUM(amount)` des monthly_expenses pour cette carte et ce mois
+  - `getCardById(cardId: string)` : sélectionner une carte par son id (depuis `lib/actions/cards.ts`)
+
+- Utiliser le skill `frontend-design` pour créer `components/CarteDetailClient.tsx` :
+  - En-tête : nom de la carte + 4 derniers chiffres (ex: "Visa Desjardins ***4532")
+  - Total mensuel affiché en grand : "Total chargé ce mois : X $"
+  - Liste des dépenses auto-chargées du mois courant : nom, montant, date, statut (chip coloré)
+  - État vide informatif : "Aucune dépense auto-chargée sur cette carte ce mois-ci"
+  - Bouton/lien retour "← Mes cartes" vers `/cartes`
+
+- Créer `app/cartes/[id]/page.tsx` (Server Component) :
+  - Lire le param `id` depuis les props
+  - Fetch `getCardById(id)` → si null → appeler `notFound()` de Next.js
+  - Calculer le mois courant : `const month = new Date().toISOString().slice(0, 7)`
+  - Fetch `getExpensesByCard(id, month)` et `getCardMonthlyTotal(id, month)`
+  - Render `CarteDetailClient` avec ces données
+
+- Modifier `components/CartesClient.tsx` :
+  - Rendre chaque carte cliquable : ajouter un lien `<Link href={\`/cartes/${card.id}\`}>` autour de la carte (ou un bouton "Voir les dépenses →" par carte)
+  - Conserver les boutons "Modifier" et "Supprimer" existants
+
+  → **MCP Playwright** (obligatoire) :
+  ```
+  1. navigate → http://localhost:3000/cartes
+  2. snapshot → vérifier que les cartes sont cliquables (link ou bouton présent)
+  3. Cliquer sur une carte → vérifier navigation vers /cartes/[id]
+  4. snapshot → vérifier titre carte, total mensuel, liste dépenses
+  5. screenshot → rendu visuel
+  6. resize 375px → mobile
+  7. console_messages → zéro erreur
+  8. navigate → /cartes/uuid-inexistant → vérifier 404 propre
+  ```
+
+- Commit : `git add -A && git commit -m "feat: planned expenses form + /projets + /cartes/[id] + widgets dashboard" && git push origin main`
 
 **Success Criteria Phase C** :
 
-- [ ] `GET /mon-mois` retourne HTTP 200 (local + production)
-- [ ] Barre de progression affiche "X/Y complétées · Z$ payé / W$ total" avec données réelles
-- [ ] Items groupés dans l'ordre : OVERDUE → UPCOMING → DEFERRED → PAID
-- [ ] Bouton "Payer" sur item UPCOMING/OVERDUE → statut passe a PAID sans rechargement total
-- [ ] Bouton "Reporter" sur item UPCOMING → statut passe a DEFERRED
-- [ ] Badge "Auto" visible sur les `is_auto_charged = true`
-- [ ] Navigation mois : "<" et ">" modifient l'URL `?month=` et rechargent les données
-- [ ] Filtre sections : chips visibles, cliquer change l'URL `?section=` et filtre les items
-- [ ] Message "Aucune dépense" si liste vide
-- [ ] Rendu mobile 375px correct (pas de débordement horizontal)
-- [ ] Zéro erreur console browser
+- [ ] Formulaire dépense : type PLANNED → affiche target_amount, target_date, saved_amount, monthly_suggested
+- [ ] Formulaire dépense : type RECURRING → masque ces 4 éléments
+- [ ] Créer une dépense PLANNED "Piscine" (25000$, date future, 0$ épargné) → apparaît dans `/projets`
+- [ ] Barre de progression 0% visible pour ce projet
+- [ ] Montant mensuel suggéré calculé et affiché
+- [ ] Cliquer "Mettre à jour l'épargne" → modal s'ouvre → saisir 5000$ → barre passe à 20%
+- [ ] Widget projets visible sur dashboard
+- [ ] `/cartes` : les cartes sont cliquables → navigation vers `/cartes/[id]`
+- [ ] `/cartes/[id]` : affiche nom carte, total mensuel, liste dépenses auto-chargées
+- [ ] URL `/cartes/uuid-bidon` → 404 géré proprement (pas de crash)
 - [ ] `npm run build` → exit code 0
+- [ ] `npm run lint` → exit code 0
+- [ ] Zéro erreur console browser sur toutes les pages Phase C
 
 ---
 
-### Phase D: Dashboard Update + Parametres + Tests Playwright (Est. ~1h)
+### Phase D: Historique + Tests Playwright (12 nouveaux tests) (Est. ~2h)
 
-**Objective** : Widget "Mon mois" opérationnel sur le dashboard, champs email/phone dans /parametres, 40/40 tests Playwright verts sur URL Vercel production.
+**Objectif** : Navigation historique mois passés activée, 44/44 tests Playwright verts total.
 
-**Actions** :
+#### D.1 — Navigation historique sur /mon-mois
 
-**D1** — Utiliser le skill `frontend-design` pour mettre a jour `app/page.tsx` :
+- Vérifier le contenu de `lib/actions/monthly-expenses.ts` :
+  - Si `getMonthlyExpenses(month: string)` accepte déjà un paramètre `month` → RAS
+  - Si non → modifier pour accepter `month: string` en paramètre (utiliser ce paramètre dans la query WHERE)
 
-Ajouter en TÊTE du dashboard, avant les widgets existants, un nouveau widget "Mon mois" :
+- Modifier `app/mon-mois/page.tsx` :
+  - Lire le paramètre de recherche `searchParams.month` (type `string | undefined`)
+  - Si absent → utiliser le mois courant : `new Date().toISOString().slice(0, 7)`
+  - Passer le mois à `getMonthlyExpenses(month)`
+  - Passer `isReadOnly = selectedMonth < currentMonth` au composant client
 
-```
-Widget "Mon mois" :
-- Titre : "Mon mois" (h2) avec icone calendrier + lien texte "Voir tout →" → /mon-mois
-- <MonthProgressBar summary={summary} /> avec données du mois courant
-- Si summary.overdue_count > 0 :
-    - Section "En retard" avec fond rouge pâle
-    - Liste des dépenses OVERDUE (max 3) : nom + montant + due_date
-    - Lien "Voir tout les retards →" → /mon-mois?status=OVERDUE
-- Données via : const summary = await getMonthSummary(currentMonth)
-  et : const overdueItems = await getOverdueExpenses(currentMonth, 3)
-```
+- Utiliser le skill `frontend-design` pour enrichir le composant client de `/mon-mois` (ou créer un sous-composant `MonthNavigator`) :
+  - Bouton "< Mois précédent" : navigation vers `?month=[mois-1]`
+  - Affichage du mois sélectionné en français : "Janvier 2026", "Février 2026", etc.
+  - Bouton "Mois suivant >" : disabled si mois courant, navigation vers `?month=[mois+1]` sinon
+  - Si `isReadOnly = true` :
+    - Masquer ou désactiver les boutons "Marquer payé"
+    - Afficher un badge "Lecture seule" discret
+  - Si aucune donnée pour le mois sélectionné → afficher "Aucune dépense enregistrée pour ce mois"
 
-Utiliser `Promise.all()` pour paralléliser les requêtes DB du dashboard.
+  → **MCP Playwright** (obligatoire) :
+  ```
+  1. navigate → http://localhost:3000/mon-mois
+  2. snapshot → vérifier navigateur mois (boutons < > et mois affiché)
+  3. Cliquer "< Mois précédent"
+  4. snapshot → vérifier que le mois change (affichage + URL ?month=)
+  5. Vérifier mode lecture seule (boutons "Marquer payé" absents/disabled)
+  6. Cliquer "> Mois suivant"
+  7. snapshot → retour au mois courant, boutons réactifs
+  8. screenshot → rendu visuel
+  9. resize 375px → mobile
+  10. console_messages → zéro erreur
+  ```
 
-**D2** — MCP Playwright test apres mise a jour dashboard :
+- Commit intermédiaire : `git add -A && git commit -m "feat: historique navigation mois passés /mon-mois" && git push origin main`
 
-```
-mcp__playwright__browser_navigate → http://localhost:3000/
-mcp__playwright__browser_snapshot → vérifier widget "Mon mois" en tête
-mcp__playwright__browser_take_screenshot → screenshot dashboard complet
-mcp__playwright__browser_console_messages (level: "error") → zéro erreur
-```
+#### D.2 — Tests Playwright Phase 2
 
-**D3** — Utiliser le skill `frontend-design` pour mettre a jour `app/parametres/page.tsx` :
+Créer le répertoire `tests/phase2/` et les 6 fichiers spec suivants :
 
-Ajouter dans le formulaire paramètres (dans sa propre section "Notifications") :
-- Label "Email" + input type="email" lié a `settings.email` (nullable)
-- Label "Téléphone" + input type="tel" lié a `settings.phone` (nullable)
-- Placeholder email : "votre@email.com"
-- Placeholder téléphone : "+1 514 555 0000"
-- Note sous les champs : "Utilisés pour les notifications (Phase 3)"
-- Sauvegarder via `updateSettings()` mis a jour
-
-**D4** — MCP Playwright test /parametres :
-```
-mcp__playwright__browser_navigate → http://localhost:3000/parametres
-mcp__playwright__browser_snapshot → vérifier champs email et phone présents
-```
-
-**D5** — Commit dashboard + parametres :
-```bash
-git add app/page.tsx app/parametres/page.tsx
-git commit -m "feat(ui): dashboard widget mon-mois + parametres email/phone"
-git push origin main
-```
-
-**D6** — Ecrire 8 nouveaux tests Playwright dans `tests/phase1-complement/` :
-
+**`tests/phase2/test-revenus.spec.ts`** (3 tests) :
 ```typescript
-// tests/phase1-complement/test-mon-mois-load.spec.ts
-// - GET /mon-mois → HTTP 200
-// - Titre contenant "Mon mois" ou nom du mois visible
-// - Barre de progression présente (data-testid="month-progress" ou role="progressbar")
-// - Aucune erreur console
-
-// tests/phase1-complement/test-mon-mois-status.spec.ts
-// - Ouvrir /mon-mois
-// - Vérifier qu'au moins un groupe (OVERDUE, UPCOMING, DEFERRED ou PAID) est présent
-// - Si items UPCOMING présents : cliquer "Payer" → item passe dans section PAID
-// - Recharger la page → item toujours dans PAID (persisté)
-
-// tests/phase1-complement/test-mon-mois-overdue.spec.ts
-// - Ouvrir /mon-mois
-// - Vérifier que la section "En retard" existe dans le DOM (peut être vide ou cachée si 0 items)
-// - Vérifier l'absence d'erreur 500
-
-// tests/phase1-complement/test-mon-mois-filter.spec.ts
-// - Ouvrir /mon-mois
-// - Vérifier que les chips de filtre sections sont présents
-// - Cliquer un chip section → URL contient ?section=
-// - Page se recharge sans erreur
-
-// tests/phase1-complement/test-mon-mois-navigation.spec.ts
-// - Ouvrir /mon-mois (mois courant = 2026-02)
-// - Cliquer "<" → URL contient ?month=2026-01
-// - Titre du mois mis a jour (contient "Janvier" ou "2026-01")
-// - Cliquer ">" → URL revient a 2026-02
-
-// tests/phase1-complement/test-dashboard-widget.spec.ts
-// - Ouvrir /
-// - Vérifier élément avec texte "Mon mois" visible
-// - Vérifier barre de progression ou compteur de dépenses présent
-// - Cliquer "Voir tout" → navigation vers /mon-mois
-
-// tests/phase1-complement/test-parametres-email.spec.ts
-// - Ouvrir /parametres
-// - Vérifier input[type="email"] présent
-// - Vérifier input[type="tel"] présent
-// - Remplir email : "test@test.com" → sauvegarder
-// - Recharger → valeur persistée
-
-// tests/phase1-complement/test-auto-debit-paid.spec.ts
-// - Ouvrir /mon-mois
-// - Vérifier que les items avec badge "Auto" et due_date passée sont dans la section PAID
-// - Ou vérifier l'absence d'erreur si aucun item auto_debit
+// Test 1: Page /revenus accessible et structure correcte
+// Test 2: Créer un revenu "Salaire" 5000$ MONTHLY → visible dans la liste
+// Test 3: Supprimer le revenu → disparu de la liste
 ```
 
-Ajouter `data-testid` sur les éléments clés lors de la création de l'UI (Phase C/D) pour rendre les tests robustes :
-- `data-testid="month-progress"` sur la barre de progression
-- `data-testid="section-overdue"`, `data-testid="section-upcoming"`, `data-testid="section-paid"`
-- `data-testid="mark-paid-btn"` sur les boutons "Payer"
-- `data-testid="mark-deferred-btn"` sur les boutons "Reporter"
-- `data-testid="badge-auto"` sur les badges "Auto"
-- `data-testid="month-widget"` sur le widget dashboard
+**`tests/phase2/test-reste-a-vivre.spec.ts`** (2 tests) :
+```typescript
+// Test 1: Widget "Reste à vivre" présent sur le dashboard (contient le texte "Reste à vivre")
+// Test 2: Widget affiche une valeur numérique (positif ou négatif selon données)
+```
 
-**D7** — Exécuter tous les tests :
+**`tests/phase2/test-carte-detail.spec.ts`** (2 tests) :
+```typescript
+// Test 1: /cartes affiche des liens vers /cartes/[id] (ou bouton cliquable)
+// Test 2: Cliquer sur une carte navigue vers /cartes/[id] qui charge sans erreur HTTP 200
+// Note: si aucune carte, créer une carte d'abord dans le beforeEach
+```
+
+**`tests/phase2/test-planned.spec.ts`** (2 tests) :
+```typescript
+// Test 1: Ouvrir formulaire dépense, sélectionner type "Planifiée" →
+//         champs target_amount, target_date, saved_amount visibles
+// Test 2: Créer une dépense PLANNED "Piscine" 25000$ → apparaît dans /projets
+```
+
+**`tests/phase2/test-projets.spec.ts`** (2 tests) :
+```typescript
+// Test 1: Page /projets accessible et affiche titre "projets" ou liste (ou état vide)
+// Test 2: Si projet PLANNED existe → barre de progression visible sur /projets
+```
+
+**`tests/phase2/test-historique.spec.ts`** (1 test) :
+```typescript
+// Test 1: /mon-mois affiche un navigateur de mois avec boutons < et >
+//         Cliquer "< Mois précédent" → URL contient ?month= avec le mois précédent
+```
+
+- Lancer les tests Phase 1 pour valider la non-régression :
+
 ```bash
-# 1. Tests phase1 existants (régression)
 npx playwright test tests/phase1/ --project=chromium --reporter=list
+```
 
-# 2. Nouveaux tests complement
-npx playwright test tests/phase1-complement/ --project=chromium --reporter=list
+- Lancer les nouveaux tests Phase 2 :
 
-# 3. Tous les tests (total attendu : 40/40)
+```bash
+npx playwright test tests/phase2/ --project=chromium --reporter=list
+```
+
+- Si tous les tests passent, lancer la suite complète :
+
+```bash
 npx playwright test --project=chromium --reporter=list
 ```
 
-**D8** — Si des tests existants (phase1) échouent : analyser et corriger SANS modifier les tests eux-mêmes. L'objectif est zéro régression.
-
-**D9** — Commit final :
-```bash
-git add tests/phase1-complement/
-git commit -m "feat(tests): playwright tests phase1 complement — 8 nouveaux tests /mon-mois et dashboard"
-git push origin main
-```
-
-**D10** — Vérification finale sur URL Vercel production :
-```bash
-# Attendre le deploy (verifier via vercel ls --scope amara-fofanas-projects)
-npx playwright test --project=chromium --reporter=list
-# → 40/40 passed
-```
-
-**D11** — Vérification DB finale :
-```bash
-node -e "
-const { neon } = require('@neondatabase/serverless');
-require('dotenv').config({ path: '.env.local' });
-const sql = neon(process.env.POSTGRES_URL_NON_POOLING);
-Promise.all([
-  sql\`SELECT COUNT(*) as count FROM monthly_expenses\`,
-  sql\`SELECT COUNT(*) as count FROM monthly_expenses WHERE month='2026-02'\`,
-  sql\`SELECT email, phone FROM settings LIMIT 1\`,
-  sql\`SELECT COUNT(*) as count FROM expenses\`
-]).then(([me, me_current, s, e]) => {
-  console.log('monthly_expenses total:', me[0].count);
-  console.log('monthly_expenses 2026-02:', me_current[0].count);
-  console.log('settings email:', s[0].email, '| phone:', s[0].phone);
-  console.log('expenses total:', e[0].count);
-}).catch(console.error);
-"
-```
-
-**D12** — Git status final :
-```bash
-git status
-# Attendu : "nothing to commit, working tree clean"
-git log --oneline origin/main -5
-```
+- Commit final : `git add -A && git commit -m "feat: phase2 playwright tests (12 nouveaux) — 44/44 verts" && git push origin main`
 
 **Success Criteria Phase D** :
 
-- [ ] Widget "Mon mois" visible en haut du dashboard avec barre de progression réelle
-- [ ] Alertes OVERDUE affichées sur dashboard si instances en retard
-- [ ] Champs email + phone visibles et fonctionnels sur `/parametres`
-- [ ] 32 tests existants toujours verts (zéro régression)
-- [ ] 8 nouveaux tests verts dans `tests/phase1-complement/`
-- [ ] Total `npx playwright test --project=chromium` → 40/40 passed sur URL Vercel prod
+- [ ] `/mon-mois` : navigateur mois avec boutons "< Mois précédent" et "Mois suivant >" visible
+- [ ] Clic "< Mois précédent" → URL change, mois affiché change
+- [ ] Mois passé → mode lecture seule activé (boutons "Marquer payé" absents/disabled)
+- [ ] URL `/mon-mois?month=2026-01` fonctionne directement (accessible via bookmark)
+- [ ] Mois sans données → état vide informatif affiché (pas de crash)
+- [ ] `npx playwright test tests/phase1/ --project=chromium` → **32/32 passed** (non-régression)
+- [ ] `npx playwright test tests/phase2/ --project=chromium` → **12/12 passed**
+- [ ] `npx playwright test --project=chromium` → **44/44 total passed**
 - [ ] `npm run build` → exit code 0
 - [ ] `npm run lint` → exit code 0
 - [ ] `git status` → "nothing to commit, working tree clean"
-- [ ] Zéro erreur console browser sur `/`, `/mon-mois`, `/parametres`
+- [ ] Tout pushé sur main
 
 ---
 
 ## SELF-CORRECTION LOOP (Iteration Workflow)
 
-### 1. Test (How to Verify)
+### 1. Comment tester (dans l'ordre)
 
-Apres chaque modification, exécuter dans l'ordre :
+Après chaque modification significative, exécuter dans l'ordre :
 
 ```bash
-# Etape 1 : Build TypeScript
+# Étape 1 : Build TypeScript
 npm run build
 
-# Etape 2 : Lint
+# Étape 2 : Lint
 npm run lint
 
-# Etape 3 : TypeScript strict
-npx tsc --noEmit
-
-# Etape 4 : Vérification DB (apres Phase A)
+# Étape 3 : Vérification DB (après Phase A)
 node -e "
 const { neon } = require('@neondatabase/serverless');
 require('dotenv').config({ path: '.env.local' });
 const sql = neon(process.env.POSTGRES_URL_NON_POOLING);
 Promise.all([
-  sql\`SELECT COUNT(*) as count FROM monthly_expenses\`,
-  sql\`SELECT COUNT(*) as count FROM monthly_expenses WHERE month='2026-02'\`,
-  sql\`SELECT column_name FROM information_schema.columns WHERE table_name='settings' AND column_name IN ('email','phone')\`
-]).then(([me, me_current, cols]) => {
-  console.log('monthly_expenses:', me[0].count, '(table accessible)');
-  console.log('monthly_expenses 2026-02:', me_current[0].count);
-  console.log('settings new cols:', cols.map(c => c.column_name).join(', '), '(expected: email, phone)');
+  sql\`SELECT COUNT(*) as count FROM sections\`,
+  sql\`SELECT COUNT(*) as count FROM cards\`,
+  sql\`SELECT COUNT(*) as count FROM expenses\`,
+  sql\`SELECT COUNT(*) as count FROM incomes\`,
+  sql\`SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_name='incomes'\`
+]).then(([s, c, e, i, t]) => {
+  console.log('sections:', s[0].count, '(expected: >=6)');
+  console.log('cards:', c[0].count);
+  console.log('expenses:', e[0].count);
+  console.log('incomes:', i[0].count);
+  console.log('incomes table exists:', t.length > 0 ? 'YES' : 'NO');
 }).catch(console.error);
 "
 
-# Etape 5 : Tests Playwright phase1 (régression — apres Phase D)
+# Étape 4 (après Phase D) : Tests Playwright sur Vercel production
 npx playwright test tests/phase1/ --project=chromium --reporter=list
+npx playwright test tests/phase2/ --project=chromium --reporter=list
 
-# Etape 6 : Tests Playwright complement (apres Phase D)
-npx playwright test tests/phase1-complement/ --project=chromium --reporter=list
-
-# Etape 7 : Tous les tests
+# Ou tous ensemble
 npx playwright test --project=chromium --reporter=list
 ```
 
-### 2. If Failures
+### 2. En cas d'échec
 
-**Build error (TypeScript)** :
-1. Lire le message exact (fichier:ligne:colonne)
-2. Vérifier si le type `Settings` mis a jour casse des usages existants dans `/parametres` ou `settings.ts`
-3. Corriger le type ou le code qui l'utilise
-4. Relancer `npm run build`
+**Erreur build TypeScript** :
+- Lire le message exact (fichier:ligne:colonne)
+- Corriger le type/import manquant
+- Relancer `npm run build`
+- Si erreur dans `lib/types.ts` → vérifier les exports et les imports dans les fichiers qui utilisent ces types
 
-**Lint error** :
-1. `npm run lint -- --fix` pour les auto-fixables
-2. Corriger manuellement les erreurs restantes
-3. Relancer `npm run lint`
+**Erreur lint** :
+- `npm run lint -- --fix` pour les corrections automatiques
+- Corriger manuellement les erreurs restantes
+- Relancer `npm run lint`
 
-**Migration DB error** :
-1. Lire l'erreur PostgreSQL exacte dans le terminal
-2. Si "column already exists" : normal, la migration est idempotente — pas d'action requise
-3. Si "table already exists" : normal — `CREATE TABLE IF NOT EXISTS`
-4. Si erreur de connexion : vérifier `POSTGRES_URL_NON_POOLING` dans `.env.local`
-5. Si erreur de permissions : vérifier que la DB Neon est accessible
+**Test Playwright en échec** :
+- Lire le message d'erreur exact dans le terminal
+- Vérifier le screenshot dans `test-results/` si disponible
+- Identifier si c'est un problème d'UI (élément absent), de navigation (mauvaise URL), ou de données (DB vide)
+- Corriger le code correspondant
+- Si le test échoue à cause de données manquantes → ajouter un `beforeEach` ou `beforeAll` dans le spec pour créer les données nécessaires
+- Redéployer si nécessaire (`git push origin main`) et attendre le deploy Vercel
+- Relancer le test
 
-**Playwright test failure** :
-1. Lire le screenshot dans `test-results/`
-2. Identifier l'élément manquant ou l'assertion fausse
-3. Vérifier si le `data-testid` est présent dans le composant
-4. Si erreur 500 : vérifier les logs Next.js dans le terminal
-5. Corriger le code ou le test → redéployer si nécessaire → relancer
+**Erreur DB / migration** :
+- Vérifier que `POSTGRES_URL_NON_POOLING` est dans `.env.local`
+- Tester la connexion : `node -e "const {neon}=require('@neondatabase/serverless');require('dotenv').config({path:'.env.local'});const sql=neon(process.env.POSTGRES_URL_NON_POOLING);sql\`SELECT 1 as ok\`.then(r=>console.log('DB connected:', r[0].ok)).catch(console.error);"`
+- Vérifier les logs dans le Neon Dashboard si connexion échoue
+- Relancer `node scripts/migrate-phase2.mjs`
 
-**Régression tests phase1** :
-1. Identifier quel test échoue exactement
-2. Vérifier si une modification du dashboard (`app/page.tsx`) a cassé un sélecteur
-3. Corriger `app/page.tsx` en preservant les `data-testid` existants
-4. Ne PAS modifier les fichiers de test `tests/phase1/`
+**Erreur 500 / page blanche** :
+- Vérifier les logs du serveur dans le terminal `npm run dev`
+- Identifier l'erreur (Server Action échouée, variable d'environnement manquante, SQL invalide)
+- Corriger et recharger la page
 
-**Deploy Vercel échoue** :
-1. `vercel ls --scope amara-fofanas-projects` → voir le statut
-2. Ouvrir les logs du build dans le Vercel Dashboard
-3. Identifier l'erreur de build → corriger le code → `git push origin main`
-4. Attendre le redeploy automatique
+**Erreur deploy Vercel** :
+- `vercel logs --scope amara-fofanas-projects` pour voir les logs de build
+- Identifier l'erreur dans les logs
+- Corriger le code, `git push origin main`, attendre le redeploy
 
-**Page /mon-mois retourne 500 en production** :
-1. Vérifier que Phase A (migration DB) a bien été executée ET vérifiée AVANT le deploy
-2. Vérifier via MCP Playwright console_messages les erreurs exactes
-3. Si `monthly_expenses` n'existe pas : exécuter la migration, puis redéployer
-4. Si erreur de type TypeScript au runtime : revoir `lib/types.ts`
+**Régression tests Phase 1** :
+- Lancer uniquement les tests Phase 1 : `npx playwright test tests/phase1/ --project=chromium --reporter=list`
+- Identifier quel test échoue et pourquoi (screenshot dans test-results/)
+- Vérifier si une modification Phase 2 a cassé quelque chose (ExpenseModal, dashboard, navigation)
+- Corriger la régression avant de continuer Phase 2
 
-**Doublon dans monthly_expenses** :
-1. Si la contrainte UNIQUE a été omise : `ALTER TABLE monthly_expenses ADD CONSTRAINT uq_expense_month UNIQUE (expense_id, month)`
-2. Nettoyer les doublons si nécessaire : `DELETE FROM monthly_expenses WHERE id NOT IN (SELECT MIN(id) FROM monthly_expenses GROUP BY expense_id, month)`
+### 3. Si les tests passent
 
-### 3. If Tests Pass
+- Vérifier visuellement chaque page Phase 2 dans le navigateur (MCP Playwright) à 375px mobile
+- Vérifier la console browser : zéro erreur rouge
+- Vérifier les données en base avec le script DB Node
+- Vérifier que le code est committé : `git status` doit retourner "nothing to commit"
+- Vérifier le deploy Vercel : `vercel ls --scope amara-fofanas-projects` → statut "Ready"
+- Cocher chaque condition de sortie (section COMPLETION CRITERIA ci-dessous)
 
-- Vérifier visuellement chaque page modifiée dans le navigateur (375px mobile)
-- Vérifier la console browser : zéro erreur rouge (warnings acceptables)
-- Vérifier les données en base avec le script Node
-- Vérifier que le code est committé : `git status` → "nothing to commit"
-- Vérifier le deploy Vercel : `vercel ls --scope amara-fofanas-projects` → "Ready"
-- Cocher chaque condition de sortie (section COMPLETION CRITERIA)
+### 4. Déterminer la prochaine action
 
-### 4. Determine Next Action
-
-- Si **TOUTES les conditions de sortie sont remplies** → Output `<promise>PHASE1_COMPLEMENT_COMPLETE</promise>`
-- Si **Phase A non vérifiée** → Revenir Phase A avant tout
-- Si **conditions Phase B non remplies** → Vérifier types, server actions, npm run build
-- Si **conditions Phase C non remplies** → Vérifier page /mon-mois, MCP Playwright test
-- Si **conditions Phase D non remplies** → Vérifier tests, dashboard, parametres
-- Si **bloqué apres 25 itérations** → suivre l'Escape Hatch
+- Si **TOUTES les conditions de sortie sont remplies** → Output `<promise>PHASE2_COMPLETE</promise>`
+- Si **certaines conditions non remplies** → identifier quelle condition échoue → corriger → re-tester
+- Si **bloqué après 25 itérations** → suivre l'Escape Hatch
 
 ---
 
 ## COMPLETION CRITERIA (Exit Conditions)
 
-Output `<promise>PHASE1_COMPLEMENT_COMPLETE</promise>` **UNIQUEMENT** quand **TOUTES** ces conditions sont vraies :
+Output `<promise>PHASE2_COMPLETE</promise>` **UNIQUEMENT** quand **TOUTES** ces conditions sont vraies :
 
-### A. Features Développées et Fonctionnelles
+### A. Base de données
 
-- [ ] Table `monthly_expenses` créée en base (SELECT COUNT(*) ne génère pas d'erreur)
-- [ ] Instances du mois courant accessibles (`SELECT COUNT(*) FROM monthly_expenses WHERE month='2026-02'` >= 0)
-- [ ] Page `/mon-mois` accessible HTTP 200
-- [ ] Statuts UPCOMING/PAID/OVERDUE/DEFERRED fonctionnels (marquage manuel OK)
-- [ ] Auto-marquage PAID pour les `is_auto_charged=true` dont `due_date <= CURRENT_DATE`
-- [ ] Barre de progression sur dashboard visible avec données réelles
-- [ ] Filtre par section fonctionnel sur /mon-mois (chips + filtrage URL)
-- [ ] Navigation mois précédent/suivant fonctionnelle sur /mon-mois
-- [ ] Champs email et phone présents et éditables dans /parametres
-- [ ] `getSettings()` retourne email et phone (nullable)
+- [ ] Table `incomes` créée : `SELECT COUNT(*) FROM incomes` retourne une valeur (≥ 0)
+- [ ] Données créées via l'UI persistées correctement : créer un revenu → COUNT augmente → supprimer → COUNT diminue
 
-### B. Déploiement Vercel
+### B. Revenus et "Reste à vivre"
 
-- [ ] `git push origin main` déclenche le deploy → `vercel ls --scope amara-fofanas-projects` retourne statut "Ready"
-- [ ] `https://mon-budget-seven.vercel.app` retourne HTTP 200
-- [ ] `https://mon-budget-seven.vercel.app/mon-mois` retourne HTTP 200
+- [ ] Page `/revenus` accessible (HTTP 200), affiche la liste des revenus et le total mensuel net
+- [ ] CRUD complet : créer, modifier, supprimer un revenu via l'UI — changements persistés en base
+- [ ] Widget "Reste à vivre" visible sur le dashboard (`/`)
+- [ ] Widget calcule correctement : total_revenus_mensuel - total_dépenses_mensuel
+- [ ] Couleur verte si reste ≥ 0, rouge si reste < 0
+- [ ] Lien vers `/revenus` accessible depuis `/parametres`
 
-### C. Base de Données Neon Vérifiée
+### C. Vue par carte
 
-- [ ] `SELECT COUNT(*) FROM monthly_expenses` → 0 ou plus (table existe, pas d'erreur)
-- [ ] `SELECT email, phone FROM settings LIMIT 1` → colonnes accessibles (pas d'erreur)
-- [ ] Index `idx_me_month` présent dans `pg_indexes`
-- [ ] Contrainte `uq_expense_month` présente dans `pg_constraint`
+- [ ] Page `/cartes` : chaque carte est cliquable et mène vers `/cartes/[id]`
+- [ ] Page `/cartes/[id]` accessible (HTTP 200) : affiche le nom de la carte + total mensuel
+- [ ] Page `/cartes/[id]` affiche les dépenses auto-chargées pour la carte du mois courant
+- [ ] URL `/cartes/[uuid-inexistant]` → retourne 404 (pas de crash 500)
 
-### D. Build et Qualité
+### D. Dépenses planifiées (PLANNED)
+
+- [ ] `ExpenseModal` : type PLANNED → champs target_amount, target_date, saved_amount visibles
+- [ ] `ExpenseModal` : type RECURRING → ces champs sont masqués
+- [ ] Montant mensuel suggéré calculé automatiquement dans le modal
+- [ ] Page `/projets` accessible (HTTP 200), affiche les dépenses PLANNED avec barre de progression
+- [ ] Bouton "Mettre à jour l'épargne" sur `/projets` → modal s'ouvre → mise à jour persistée
+- [ ] Barre de progression se met à jour après modification de `saved_amount`
+- [ ] Widget projets visible sur le dashboard (`/`)
+
+### E. Historique
+
+- [ ] Page `/mon-mois` : navigateur mois présent avec boutons "< Mois précédent" et "Mois suivant >"
+- [ ] Clic "< Mois précédent" → mois affiché change, URL contient `?month=YYYY-MM`
+- [ ] URL `/mon-mois?month=2026-01` accessible directement
+- [ ] Mois passé → mode lecture seule (boutons "Marquer payé" absents ou disabled)
+- [ ] Mois sans données → état vide informatif (pas de crash)
+- [ ] Bouton "Mois suivant" disabled si mois courant
+
+### F. Build & Qualité
 
 - [ ] `npm run build` → exit code 0, zéro erreur TypeScript
 - [ ] `npm run lint` → zéro erreur ESLint
-- [ ] `npx tsc --noEmit` → exit code 0
-- [ ] Zéro `console.error` dans la console browser sur /, /mon-mois, /parametres
+- [ ] Zéro `console.error` dans la console browser sur TOUTES les pages (Phase 1 + Phase 2)
 - [ ] Zéro placeholder "TODO" ou "Coming soon" dans l'UI
 
-### E. Tests Playwright
+### G. Tests Playwright
 
-- [ ] `npx playwright test tests/phase1/ --project=chromium` → 32/32 passed (zéro régression)
-- [ ] `npx playwright test tests/phase1-complement/ --project=chromium` → 8/8 passed
-- [ ] `npx playwright test --project=chromium` → **40/40 passed**
-- [ ] Tous les tests s'exécutent sur l'URL Vercel de production (pas localhost)
+- [ ] `npx playwright test tests/phase1/ --project=chromium` → **32/32 passed** (non-régression)
+- [ ] `npx playwright test tests/phase2/ --project=chromium` → **12/12 passed** (nouveaux)
+- [ ] `npx playwright test --project=chromium` → **44/44 total passed**
 - [ ] Rapport Playwright généré : `playwright-report/index.html` existe
 
-### F. Fonctionnalités PWA et Push (inchangées)
+### H. Déploiement & Git
 
-- [ ] `GET /manifest.json` retourne JSON valide (non cassé par le complement)
-- [ ] Service Worker toujours visible dans DevTools sur l'URL Vercel
-
-### G. Git
-
-- [ ] `git status` retourne "nothing to commit, working tree clean"
-- [ ] `git log --oneline origin/main -5` → commits Phase 1 Complement présents
-- [ ] Toutes les features committées et pushées sur `main`
+- [ ] `git push origin main` déclenche le deploy automatique Vercel
+- [ ] `vercel ls --scope amara-fofanas-projects` → statut "Ready"
+- [ ] `https://mon-budget-seven.vercel.app` + toutes les nouvelles pages → HTTP 200
+- [ ] `git status` → "nothing to commit, working tree clean"
+- [ ] `git log --oneline origin/main` → dernier commit contient code Phase 2
 
 **Quand TOUTES les conditions ci-dessus sont TRUE :**
 
 ```
-<promise>PHASE1_COMPLEMENT_COMPLETE</promise>
+<promise>PHASE2_COMPLETE</promise>
 ```
 
 ---
 
-## ESCAPE HATCH (If Stuck After 25 Iterations)
+## ESCAPE HATCH (Si bloqué après 25 itérations)
 
-Si apres 25 itérations les conditions ne sont pas toutes remplies :
+Si après 25 itérations toutes les conditions ne sont pas remplies :
 
-### 1. Créer `phase1-complement-blockers.md`
+### 1. Créer `phase2-blockers.md`
 
 ```markdown
-## BLOCKERS REPORT — Phase 1 Complement
-
-**Date** : [date]
-**Iterations complétées** : 25
-**Phase atteinte** : [A / B / C / D]
+## BLOCKERS REPORT — Phase 2
 
 ### Conditions Non Remplies
-- [ ] Condition X.Y : [description précise] → Erreur : [message exact]
+- [x] Condition [lettre.numéro] : [description précise] → Erreur : [message exact]
 
 ### Tentatives
 1. Itération N : [ce qui a été essayé]
-2. Itération N+5 : [ce qui a été essayé]
+2. Itération N+5 : [résultat]
 
 ### Causes Probables
 - [Cause 1] : [explication]
+- [Cause 2] : [explication]
+
+### Features Complètes
+- [x] Phase A : Migration DB — OK
+- [ ] Phase B : Revenus — BLOQUÉ à [étape précise]
+- [ ] Phase C : PLANNED + Vue carte — non commencé
+- [ ] Phase D : Historique + Tests — non commencé
 
 ### Approches Alternatives
 1. [Approche A] : pros/cons
@@ -1034,24 +685,12 @@ Si apres 25 itérations les conditions ne sont pas toutes remplies :
 ### Actions Recommandées pour Amara
 - [Action 1]
 - [Action 2]
-
-### Etat DB (à vérifier)
-- monthly_expenses : [existe / n'existe pas]
-- settings.email : [existe / n'existe pas]
-- Instances 2026-02 : [count]
-
-### Etat Code (à vérifier)
-- lib/types.ts MonthlyExpense : [présent / absent]
-- lib/actions/monthly-expenses.ts : [présent / absent]
-- app/mon-mois/page.tsx : [présent / absent]
-- app/page.tsx modifié : [oui / non]
 ```
 
 ### 2. Committer ce qui fonctionne
 
 ```bash
-git add -A
-git commit -m "wip: phase1-complement partial — see phase1-complement-blockers.md"
+git add -A && git commit -m "wip: phase2 partial — see phase2-blockers.md"
 git push origin main
 ```
 
@@ -1065,104 +704,182 @@ git push origin main
 
 ## TECHNICAL NOTES
 
-### Ordre d'exécution obligatoire
+### Normalisation des revenus (calcul exact)
 
-```
-Phase A (DB Migration) → Phase B (Types + Logic) → Phase C (UI /mon-mois) → Phase D (Dashboard + Tests)
-```
-
-**Ne jamais passer a Phase B sans que la Phase A soit entièrement vérifiée.** Ne jamais déployer du code qui importe depuis `monthly-expenses.ts` sans que la table `monthly_expenses` existe en base.
-
-### DB Client
-
-- **Migrations (scripts Node)** : `POSTGRES_URL_NON_POOLING` via `@neondatabase/serverless`
-- **Server Actions Next.js** : `POSTGRES_URL` (pooled) via `@neondatabase/serverless`
-- Pattern : `const sql = neon(process.env.POSTGRES_URL!);`
-
-### Divergences de nommage a respecter
-
-| En base (existant) | Dans le code | Dans monthly_expenses | Note |
-|---|---|---|---|
-| `expenses.auto_debit` | `expense.auto_debit` | `is_auto_charged` | Copier auto_debit → is_auto_charged lors de l'INSERT |
-| `expenses.recurrence_frequency` | `expense.recurrence_frequency` | — | Utiliser recurrence_frequency dans toutes les requêtes |
-| `cards.bank`, `cards.color` | `card.bank`, `card.color` | — | Ne pas supprimer, ne pas référencer dans monthly_expenses |
-
-### Idempotence de la génération
-
-La contrainte `UNIQUE (expense_id, month)` + `ON CONFLICT DO NOTHING` garantit qu'appeler `generateMonthlyExpenses()` plusieurs fois ne crée pas de doublons. C'est intentionnel.
-
-### Mois courant
-
-Le mois courant au moment de l'exécution est `2026-02`. Utiliser `new Date()` côté serveur Next.js pour calculer le mois courant dynamiquement (format : `YYYY-MM`).
-
-### Server Components vs Client Components
-
-- `app/mon-mois/page.tsx` : Server Component (`async function`) — récupère les données directement
-- Les boutons "Payer" et "Reporter" nécessitent un Client Component pour l'interactivité : créer `components/MonthlyExpenseItem.tsx` avec `'use client'` et des Server Actions bindées
-- `components/MonthProgressBar.tsx` : peut être un Server Component (pas d'état client)
-
-### revalidatePath
-
-Apres toute mutation sur `monthly_expenses`, revalider :
 ```typescript
-revalidatePath('/mon-mois');
-revalidatePath('/');  // dashboard widget
+// lib/utils.ts — ajouter cette fonction
+export function calcMonthlyIncome(amount: number, frequency: IncomeFrequency): number {
+  switch (frequency) {
+    case 'MONTHLY':   return amount;
+    case 'BIWEEKLY':  return (amount * 26) / 12;  // 26 paies par an / 12 mois
+    case 'YEARLY':    return amount / 12;
+    default:          return amount;
+  }
+}
 ```
 
-### Vercel Scope
+### Calcul monthly_suggested pour PLANNED
 
-Toujours ajouter `--scope amara-fofanas-projects` aux commandes `vercel` :
+```typescript
+// lib/utils.ts — ajouter cette fonction
+export function calcMonthlySuggested(
+  targetAmount: number,
+  savedAmount: number,
+  targetDate: string  // format "YYYY-MM-DD"
+): number {
+  const now = new Date();
+  const target = new Date(targetDate);
+  const monthsRemaining =
+    (target.getFullYear() - now.getFullYear()) * 12 +
+    (target.getMonth() - now.getMonth());
+  if (monthsRemaining <= 0) return 0;
+  const remaining = targetAmount - savedAmount;
+  if (remaining <= 0) return 0;
+  return remaining / monthsRemaining;
+}
+```
+
+### Format mois pour historique
+
+```typescript
+// Mois courant
+const currentMonth = new Date().toISOString().slice(0, 7); // "2026-02"
+
+// Mois précédent
+function prevMonth(month: string): string {
+  const [year, m] = month.split('-').map(Number);
+  const date = new Date(year, m - 2, 1); // m-2 car JS Date months 0-indexed
+  return date.toISOString().slice(0, 7);
+}
+
+// Mois suivant
+function nextMonth(month: string): string {
+  const [year, m] = month.split('-').map(Number);
+  const date = new Date(year, m, 1);
+  return date.toISOString().slice(0, 7);
+}
+
+// Affichage français
+function formatMonthFr(month: string): string {
+  const [year, m] = month.split('-').map(Number);
+  const date = new Date(year, m - 1, 1);
+  return date.toLocaleDateString('fr-CA', { month: 'long', year: 'numeric' });
+  // → "février 2026"
+}
+```
+
+### Colonne auto_debit vs is_auto_charged
+
+Le schéma existant utilise `auto_debit` (pas `is_auto_charged`). Vérifier le nom exact de la colonne dans `monthly_expenses` en exécutant :
+
+```bash
+node -e "
+const { neon } = require('@neondatabase/serverless');
+require('dotenv').config({ path: '.env.local' });
+const sql = neon(process.env.POSTGRES_URL_NON_POOLING);
+sql\`SELECT column_name FROM information_schema.columns WHERE table_name = 'monthly_expenses' ORDER BY ordinal_position\`
+  .then(cols => console.log('monthly_expenses columns:', cols.map(c => c.column_name)))
+  .catch(console.error);
+"
+```
+
+Utiliser le nom exact retourné dans toutes les queries impliquant `monthly_expenses`.
+
+### Skill frontend-design — rappel obligatoire
+
+**NE JAMAIS écrire du JSX/TSX sans utiliser le skill `frontend-design`.** Cela inclut :
+- Tous les nouveaux composants React
+- Toutes les nouvelles pages Next.js
+- Tous les widgets dashboard
+- Toutes les modifications de composants existants (ExpenseModal, CartesClient, etc.)
+
+### Server Actions — conventions
+
+- Toujours ajouter `'use server'` en première ligne du fichier
+- Toujours appeler `revalidatePath(path)` après toute mutation en base
+- Revalider TOUTES les pages concernées : ex après `updateSavedAmount` → `revalidatePath('/projets')` ET `revalidatePath('/')`
+
+### DB client — quel URL utiliser
+
+- **Requêtes standard (dans Server Actions)** : `POSTGRES_URL` (connection pooling via `@neondatabase/serverless`)
+- **Scripts Node.js / migrations** : `POSTGRES_URL_NON_POOLING` (connexion directe)
+
+### Vercel scope — toujours spécifier
+
 ```bash
 vercel ls --scope amara-fofanas-projects
+vercel logs --scope amara-fofanas-projects
 vercel env ls --scope amara-fofanas-projects
 ```
 
-### URL de production
+### Convention de nommage
 
-```
-https://mon-budget-seven.vercel.app
-```
-
-Les tests Playwright doivent s'exécuter sur cette URL (configurer `baseURL` dans `playwright.config.ts`).
+- Fichiers : kebab-case (`lib/actions/incomes.ts`, `components/income-modal.tsx` → Non : PascalCase pour composants)
+- Composants React : PascalCase (`IncomeModal.tsx`, `ResteAVivreWidget.tsx`)
+- Server Actions : camelCase (`createIncome`, `getMonthlyIncomeTotal`)
+- Types TypeScript : PascalCase (`Income`, `IncomeFrequency`)
 
 ### Ne pas modifier
 
-- `.env.local` (déjà configuré)
-- `.vercel/` (projet déjà lié)
-- `tests/phase1/` (tests existants — ne pas toucher)
-- `app/api/push/` (Web Push — hors scope)
-- `public/sw.js`, `public/manifest.json` (PWA — hors scope)
+- `.env.local` — déjà configuré avec toutes les variables
+- `.vercel/` — projet déjà lié
+- `public/manifest.json` et `public/sw.js` — PWA déjà fonctionnelle
+- `playwright.config.ts` — baseURL déjà configuré sur Vercel production
+- `tests/phase1/` — ne pas modifier les tests existants (non-régression)
 
-### Convention de commits
+### Ordre d'itération recommandé
 
-```
-feat(db): description          → Phase A
-feat(logic): description       → Phase B
-feat(ui): description          → Phase C
-feat(tests): description       → Phase D
-fix: description               → corrections
-chore: description             → scripts, config
+Si une feature est bloquante → passer à la suivante et revenir. L'ordre de priorité si temps limité :
+1. Phase A (DB) — fondation de tout
+2. Phase B (Revenus) — feature la plus visible et indépendante
+3. Phase C.1 (champs PLANNED dans modal) — simple enrichissement
+4. Phase C.3 (page /projets) — feature complète autonome
+5. Phase C.5 (vue carte) — feature autonome
+6. Phase D (historique + tests) — finalisation
+
+### Commandes utiles de référence
+
+```bash
+# Voir le statut du deploy Vercel
+vercel ls --scope amara-fofanas-projects
+
+# Voir les logs Vercel build
+vercel logs --scope amara-fofanas-projects
+
+# Vérifier toutes les env vars Vercel
+vercel env ls --scope amara-fofanas-projects
+
+# Lancer seulement les tests qui matchent un pattern
+npx playwright test --grep "revenus" --project=chromium
+
+# Voir le rapport HTML des tests
+npx playwright show-report
+
+# TypeScript check sans build
+npx tsc --noEmit
+
+# Format code (si prettier configuré)
+npx prettier --write .
 ```
 
 ---
 
 ## FINAL SUCCESS CRITERIA
 
-```
-40/40 tests Playwright verts sur URL Vercel production
-Table monthly_expenses créée et accessible
-Instances mensuelles générées pour 2026-02
-Page /mon-mois avec statuts OVERDUE/UPCOMING/PAID/DEFERRED
-Barre de progression sur dashboard avec données réelles
-Filtre sections fonctionnel sur /mon-mois
-Champs email et phone dans /parametres
-npm run build + npm run lint sans erreur
+44/44 tests Playwright verts sur URL Vercel production
+CRUD revenus complet persisté en Neon
+Widget "Reste à vivre" sur dashboard avec calcul correct
+Vue `/cartes/[id]` avec total mensuel et liste dépenses carte
+Formulaire PLANNED enrichi avec 3 champs conditionnels et calcul mensuel
+Page `/projets` avec progression et montant mensuel suggéré
+Widget projets sur dashboard
+Navigation historique `/mon-mois` avec mois passés en lecture seule
+`npm run build` + `npm run lint` sans erreur
 Code committé et pushé sur GitHub main
 Zéro erreur console browser
-```
 
 **Output quand tout est complet :**
 
 ```
-<promise>PHASE1_COMPLEMENT_COMPLETE</promise>
+<promise>PHASE2_COMPLETE</promise>
 ```

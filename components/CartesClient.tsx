@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { createCard, updateCard, deleteCard } from '@/lib/actions/cards';
 import type { Card } from '@/lib/types';
+import Link from 'next/link';
 
 const COLORS = ['#6366F1', '#3B82F6', '#8B5CF6', '#EC4899', '#10B981', '#F59E0B'];
 
@@ -76,15 +77,15 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
                 <path d="M2 10h20" />
               </svg>
 
-              {/* Info */}
-              <div className="flex-1 min-w-0">
+              {/* Info — clickable to card detail */}
+              <Link href={`/cartes/${card.id}`} className="flex-1 min-w-0 block">
                 <p className="text-sm font-medium text-[#1E293B] truncate">{card.name}</p>
                 {(card.last_four || card.bank) && (
                   <p className="text-xs text-[#94A3B8] mt-0.5">
                     {card.last_four ? `•••• ${card.last_four}` : ''}{card.last_four && card.bank ? ' · ' : ''}{card.bank ?? ''}
                   </p>
                 )}
-              </div>
+              </Link>
 
               {/* Actions */}
               {deleting === card.id ? (

@@ -42,6 +42,10 @@ export type Expense = {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  // PLANNED fields
+  target_amount: number | null;
+  target_date: string | null;
+  saved_amount: number | null;
   // Joined
   section?: Section;
   card?: Card;
@@ -85,4 +89,16 @@ export type MonthSummary = {
   paid_count: number;
   paid_total: number;
   overdue_count: number;
+};
+
+export type IncomeFrequency = 'MONTHLY' | 'BIWEEKLY' | 'YEARLY';
+
+export type Income = {
+  id: string;
+  name: string;
+  amount: number;
+  frequency: IncomeFrequency;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
 };

@@ -1,15 +1,18 @@
 export const dynamic = 'force-dynamic';
 
-import { getMonthlySummaryBySection, getUpcomingExpenses } from '@/lib/actions/expenses';
+import { getMonthlySummaryBySection, getUpcomingExpenses, getPlannedExpenses } from '@/lib/actions/expenses';
 import {
   generateMonthlyExpenses,
   getMonthSummary,
   autoMarkOverdue,
   autoMarkPaidForAutoDebit,
 } from '@/lib/actions/monthly-expenses';
+import { getMonthlyIncomeTotal } from '@/lib/actions/incomes';
 import { currentMonth } from '@/lib/utils';
 import { formatCAD, daysUntil } from '@/lib/utils';
 import NotificationPermission from '@/components/NotificationPermission';
+import ResteAVivreWidget from '@/components/ResteAVivreWidget';
+import ProjetsWidget from '@/components/ProjetsWidget';
 import Link from 'next/link';
 
 function getDueBadgeClass(days: number) {
@@ -33,10 +36,12 @@ export default async function DashboardPage() {
   await autoMarkOverdue(month);
   await autoMarkPaidForAutoDebit(month);
 
-  const [sectionSummary, upcomingExpenses, monthSummary] = await Promise.all([
+  const [sectionSummary, upcomingExpenses, monthSummary, monthlyIncome, projets] = await Promise.all([
     getMonthlySummaryBySection(),
     getUpcomingExpenses(7),
     getMonthSummary(month),
+    getMonthlyIncomeTotal(),
+    getPlannedExpenses(),
   ]);
 
   const totalMonthly = sectionSummary.reduce((sum, s) => sum + Number(s.total), 0);
@@ -85,6 +90,12 @@ export default async function DashboardPage() {
           </p>
         </div>
       </div>
+
+      {/* ── Reste à vivre ── */}
+      <ResteAVivreWidget monthlyIncome={monthlyIncome} monthlyExpenses={totalMonthly} />
+
+      {/* ── Projets planifiés ── */}
+      <ProjetsWidget projets={projets} />
 
       {/* ── Mon mois (barre de progression) ── */}
       {monthSummary.count > 0 && (
