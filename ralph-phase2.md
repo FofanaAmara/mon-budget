@@ -21,6 +21,25 @@ npx playwright test tests/phase1/ --project=chromium
 
 - Utiliser le skill `frontend-design` pour TOUTES les nouvelles pages et composants UI.
 - Utiliser `vercel` CLI pour ajouter les env vars et déployer.
+- Utiliser le **MCP Playwright** pour tester visuellement chaque interface dans le browser **immédiatement après l'avoir buildée**, avant de passer à la suite.
+
+---
+
+## UI TESTING PROTOCOL (Obligatoire à chaque composant/page UI)
+
+> **Règle** : Après chaque page ou composant UI construit avec `frontend-design`, IMMÉDIATEMENT tester dans le browser avec le MCP Playwright AVANT de passer à la suite.
+
+**Protocole à suivre après chaque UI buildée** :
+
+```
+1. npm run dev (si pas déjà lancé)
+2. mcp__playwright__browser_navigate → http://localhost:3000/[page]
+3. mcp__playwright__browser_snapshot → vérifier la structure
+4. mcp__playwright__browser_take_screenshot → vérifier le rendu visuel
+5. mcp__playwright__browser_navigate en viewport 375px → vérifier mobile
+6. mcp__playwright__browser_console_messages → vérifier zéro erreur console
+7. Si problème → corriger AVANT de continuer
+```
 
 ---
 
@@ -37,8 +56,11 @@ npx playwright test tests/phase1/ --project=chromium
 - Créer `lib/actions/incomes.ts` : `createIncome`, `updateIncome`, `deleteIncome`
 - Créer `lib/utils.ts` fonction `normalizeToMonthly(amount, frequency)` : MONTHLY×1, BIWEEKLY×26/12, YEARLY÷12
 - Utiliser le skill `frontend-design` pour créer `app/revenus/page.tsx` : liste des revenus avec montant mensuel normalisé + total + CRUD
+  - → **MCP Playwright** : naviguer vers `/revenus`, screenshot, créer un revenu via l'UI, vérifier qu'il apparaît avec le bon montant mensuel normalisé
 - Ajouter onglet "Revenus" dans la navigation (ou accessible depuis /parametres)
+  - → **MCP Playwright** : vérifier la navigation vers `/revenus` depuis le menu, screenshot mobile 375px
 - Utiliser le skill `frontend-design` pour mettre à jour le dashboard : ajouter widget "Reste à vivre" = Revenus − Dépenses (vert si positif, rouge si négatif)
+  - → **MCP Playwright** : naviguer vers `/`, screenshot, vérifier widget "Reste à vivre" présent avec couleur correcte (vert/rouge), vérifier console zéro erreur
 - Commit + push
 
 **Success Criteria**:
@@ -62,7 +84,9 @@ npx playwright test tests/phase1/ --project=chromium
 - Créer `app/api/notify/email/route.ts` (Node.js runtime) : POST `{to, expenseName, amount, dueDate, isAutoCharged, cardName}` → `resend.emails.send()`
 - Créer `app/api/notify/sms/route.ts` (Node.js runtime) : POST même payload → `twilio.messages.create()`
 - Utiliser le skill `frontend-design` pour mettre à jour `app/parametres/page.tsx` : ajouter champs email + téléphone + bouton "Envoyer notification test" (appelle les 2 routes)
+  - → **MCP Playwright** : naviguer vers `/parametres`, screenshot, remplir email + téléphone, cliquer "Tester", vérifier le feedback UI (succès/erreur), recharger et vérifier persistance
 - Deploy : `vercel deploy --prod --scope amara-fofanas-projects`
+  - → **MCP Playwright** : naviguer vers l'URL Vercel prod, tester `/revenus` et le widget "Reste à vivre" en production
 - Commit + push
 
 **Success Criteria**:
@@ -108,7 +132,9 @@ npx playwright test tests/phase1/ --project=chromium
 **Actions**:
 
 - Utiliser le skill `frontend-design` pour créer `app/cartes/[id]/page.tsx` : en-tête carte (nom + type + ***XXXX), liste des dépenses auto-chargées sur cette carte, total mensuel en bas
+  - → **MCP Playwright** : naviguer vers `/cartes/[id]` (avec un ID réel depuis la DB), screenshot, vérifier dépenses filtrées + total correct, snapshot mobile 375px
 - Utiliser le skill `frontend-design` pour mettre à jour `app/cartes/page.tsx` : chaque carte affiche son total mensuel + lien vers `/cartes/[id]`
+  - → **MCP Playwright** : naviguer vers `/cartes`, screenshot, vérifier totaux affichés, cliquer sur une carte → vérifier navigation vers `/cartes/[id]`
 - Commit + push
 
 **Success Criteria**:

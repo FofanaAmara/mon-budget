@@ -21,6 +21,25 @@ npx playwright test tests/phase1/ tests/phase2/ --project=chromium
 
 - Utiliser le skill `frontend-design` pour TOUTES les nouvelles pages et composants UI.
 - Skill `frontend-design` également pour le widget projets sur le dashboard.
+- Utiliser le **MCP Playwright** pour tester visuellement chaque interface dans le browser **immédiatement après l'avoir buildée**, avant de passer à la suite.
+
+---
+
+## UI TESTING PROTOCOL (Obligatoire à chaque composant/page UI)
+
+> **Règle** : Après chaque page ou composant UI construit avec `frontend-design`, IMMÉDIATEMENT tester dans le browser avec le MCP Playwright AVANT de passer à la suite.
+
+**Protocole à suivre après chaque UI buildée** :
+
+```
+1. npm run dev (si pas déjà lancé)
+2. mcp__playwright__browser_navigate → http://localhost:3000/[page]
+3. mcp__playwright__browser_snapshot → vérifier la structure
+4. mcp__playwright__browser_take_screenshot → vérifier le rendu visuel
+5. mcp__playwright__browser_navigate en viewport 375px → vérifier mobile
+6. mcp__playwright__browser_console_messages → vérifier zéro erreur console
+7. Si problème → corriger AVANT de continuer
+```
 
 ---
 
@@ -43,9 +62,13 @@ npx playwright test tests/phase1/ tests/phase2/ --project=chromium
 - Mettre à jour `components/ExpenseForm.tsx` : afficher conditionnellement les 3 champs PLANNED (`target_amount`, `target_date`, `saved_amount`) quand `type === 'PLANNED'` — cacher pour RECURRING et ONE_TIME
 - Créer `lib/actions/expenses.ts` (ou mettre à jour) : `updateSavedAmount(id, amount)` Server Action
 - Utiliser le skill `frontend-design` pour créer `app/projets/page.tsx` : liste toutes les `expenses WHERE type = 'PLANNED'`, pour chacune : barre de progression (`saved/target` en %), épargne mensuelle suggérée, date cible, montant restant
+  - → **MCP Playwright** : naviguer vers `/projets`, screenshot, vérifier barre de progression % correct, épargne mensuelle affichée, snapshot mobile 375px
 - Utiliser le skill `frontend-design` pour créer `app/projets/[id]/page.tsx` : détail projet + input inline pour mettre à jour `saved_amount` → recalcul instantané de la progression
+  - → **MCP Playwright** : naviguer vers `/projets/[id]`, modifier `saved_amount` via l'UI, screenshot avant/après, vérifier recalcul instantané visible, vérifier console zéro erreur
 - Utiliser le skill `frontend-design` pour mettre à jour le dashboard (`app/page.tsx`) : ajouter widget "Projets planifiés" avec top 3 projets (les plus urgents par `target_date`), mini-barre progression, épargne mensuelle suggérée, lien vers `/projets`
+  - → **MCP Playwright** : naviguer vers `/`, screenshot dashboard complet, vérifier widget projets présent, cliquer lien vers `/projets`, vérifier navigation
 - Mettre à jour `components/BottomNav.tsx` : ajouter accès à "Projets" (onglet ou lien depuis dashboard)
+  - → **MCP Playwright** : tester navigation via bottom nav, screenshot mobile
 - Commit + push
 
 **Success Criteria**:
@@ -67,7 +90,9 @@ npx playwright test tests/phase1/ tests/phase2/ --project=chromium
 
 - Ajouter dans `lib/utils.ts` : `getExpensesForMonth(expenses, year, month)` — logique : inclure les dépenses RECURRING actives (toujours présentes dans le mois) + ONE_TIME dont `next_due_date` est dans ce mois + PLANNED exclues de l'historique
 - Utiliser le skill `frontend-design` pour créer `app/historique/page.tsx` : sélecteur de mois (12 mois en arrière max, format "Février 2026"), liste des dépenses du mois sélectionné groupées par section, sous-totaux par section, total global du mois
+  - → **MCP Playwright** : naviguer vers `/historique`, screenshot, changer le mois sélectionné, vérifier que les dépenses se mettent à jour, snapshot mobile 375px, vérifier console zéro erreur
 - Lien "Historique" accessible depuis la navigation (onglet ou menu)
+  - → **MCP Playwright** : vérifier navigation vers `/historique` depuis le menu
 - Commit + push
 
 **Success Criteria**:
@@ -91,6 +116,7 @@ npx playwright test tests/phase1/ tests/phase2/ --project=chromium
   - Colonnes : `Date;Nom;Montant;Devise;Type;Section;Carte;Notes`
   - Headers HTTP : `Content-Type: text/csv; charset=utf-8`, `Content-Disposition: attachment; filename="budget-YYYY-MM.csv"`
 - Utiliser le skill `frontend-design` pour ajouter bouton "Exporter CSV" sur `/historique` → appelle `/api/export?month=YYYY-MM` avec le mois sélectionné → déclenche le téléchargement
+  - → **MCP Playwright** : naviguer vers `/historique`, screenshot avec bouton "Exporter" visible, cliquer le bouton, vérifier que le téléchargement se déclenche (pas d'erreur 500), console zéro erreur
 - Commit + push
 
 **Success Criteria**:

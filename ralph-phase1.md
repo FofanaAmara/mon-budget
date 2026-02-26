@@ -15,7 +15,32 @@ Construire le MVP complet de l'app "Mon Budget" de zéro : infrastructure Next.j
 
 - Utiliser le skill `frontend-design` pour TOUT le code UI (composants, pages, layout, dashboard). Ne jamais coder l'UI sans ce skill.
 - Utiliser `vercel` CLI (déjà installé et connecté) pour déployer et gérer les env vars.
-- Utiliser `npx playwright` pour les tests E2E.
+- Utiliser `npx playwright` pour les tests E2E finaux.
+- Utiliser le **MCP Playwright** (`mcp__playwright__browser_navigate`, `mcp__playwright__browser_snapshot`, `mcp__playwright__browser_take_screenshot`) pour tester visuellement chaque interface dans le browser **au fur et à mesure du développement**.
+
+---
+
+## UI TESTING PROTOCOL (Obligatoire à chaque composant/page UI)
+
+> **Règle** : Après chaque page ou composant UI construit avec `frontend-design`, IMMÉDIATEMENT tester dans le browser avec le MCP Playwright AVANT de passer à la suite.
+
+**Protocole à suivre après chaque UI buildée** :
+
+```
+1. npm run dev (si pas déjà lancé)
+2. mcp__playwright__browser_navigate → http://localhost:3000/[page]
+3. mcp__playwright__browser_snapshot → vérifier l'arbre d'accessibilité (structure présente)
+4. mcp__playwright__browser_take_screenshot → vérifier le rendu visuel
+5. mcp__playwright__browser_navigate → même page en viewport 375px (mobile)
+6. mcp__playwright__browser_console_messages → vérifier zéro erreur console
+7. Si problème détecté → corriger AVANT de passer à la page suivante
+```
+
+**Ce qu'on vérifie à chaque test visuel** :
+- La page se charge sans erreur (pas de page blanche, pas de 500)
+- Les éléments attendus sont présents (navigation, titres, boutons, listes)
+- Le rendu mobile 375px est correct (pas de débordement horizontal)
+- Zéro erreur rouge dans la console browser
 
 ---
 
@@ -60,16 +85,25 @@ Construire le MVP complet de l'app "Mon Budget" de zéro : infrastructure Next.j
 **Actions**:
 
 - Utiliser le skill `frontend-design` pour créer le layout global, la navigation bottom bar (5 onglets), et le design system (tokens Tailwind, composants UI)
+  - → **MCP Playwright** : naviguer vers `/`, screenshot + snapshot, vérifier bottom nav sur 375px
 - Utiliser le skill `frontend-design` pour créer la page `/sections` : liste + modal création/édition + réordonnancement
+  - → **MCP Playwright** : naviguer vers `/sections`, vérifier les 6 sections seed affichées, tester ouverture modal, screenshot mobile
 - Créer les Server Actions `lib/actions/sections.ts` : `createSection`, `updateSection`, `deleteSection`, `reorderSections`
+  - → **MCP Playwright** : créer une section via l'UI, vérifier qu'elle apparaît dans la liste sans rechargement
 - Utiliser le skill `frontend-design` pour créer la page `/cartes` : liste + modal ajout/édition
+  - → **MCP Playwright** : naviguer vers `/cartes`, screenshot, vérifier état vide + bouton ajout
 - Créer les Server Actions `lib/actions/cards.ts` : `createCard`, `updateCard`, `deleteCard`
+  - → **MCP Playwright** : créer une carte via l'UI, vérifier qu'elle apparaît
 - Créer `lib/utils.ts` : `formatCAD(amount)`, `formatDate(date)`, `calcNextDueDate(type, recurrence, day)`, `calcMonthlyCost(expense)`
 - Utiliser le skill `frontend-design` pour créer `components/ExpenseForm.tsx` : formulaire complet (nom, montant, devise, type RECURRING/ONE_TIME, section, récurrence, date, prélèvement auto, carte, notes, reminder_offsets, canaux push/email/sms)
+  - → **MCP Playwright** : ouvrir le formulaire, screenshot, vérifier que les champs conditionnels s'affichent/masquent selon le type sélectionné
 - Utiliser le skill `frontend-design` pour créer la page `/depenses` : liste groupée par section + FAB "+"
+  - → **MCP Playwright** : naviguer vers `/depenses`, screenshot, tester le FAB "+" → formulaire s'ouvre, créer une dépense, vérifier qu'elle apparaît
 - Créer les Server Actions `lib/actions/expenses.ts` : `createExpense`, `updateExpense`, `deleteExpense`
 - Créer `app/depenses/[id]/edit/page.tsx` : formulaire pré-rempli
+  - → **MCP Playwright** : cliquer "Modifier" sur une dépense, vérifier le formulaire pré-rempli
 - Utiliser le skill `frontend-design` pour créer la page `/parametres` (Phase 1 minimal : devise + rappels par défaut)
+  - → **MCP Playwright** : naviguer vers `/parametres`, screenshot, sauvegarder un paramètre, recharger et vérifier persistance
 - Commit + push après chaque entité complète
 
 **Success Criteria**:
@@ -89,15 +123,19 @@ Construire le MVP complet de l'app "Mon Budget" de zéro : infrastructure Next.j
 **Actions**:
 
 - Utiliser le skill `frontend-design` pour créer le dashboard (`app/page.tsx`) avec 4 widgets : total mensuel par section (barres), prochaines dépenses 7 jours, alertes manuelles, en-tête total mensuel
+  - → **MCP Playwright** : naviguer vers `/`, screenshot, vérifier les 4 widgets présents avec de vraies données, snapshot mobile 375px, vérifier zéro erreur console
 - Créer `public/manifest.json` : name "Mon Budget", icons 192+512, display standalone, theme_color #2563EB, start_url "/"
 - Générer icônes PWA 192×192 et 512×512 PNG dans `public/icons/`
 - Créer `public/sw.js` : cache app shell + listener `push` → `self.registration.showNotification()`
 - Enregistrer le SW dans `app/layout.tsx`
+  - → **MCP Playwright** : naviguer vers `/`, ouvrir DevTools via snapshot, vérifier SW enregistré
 - Créer `app/api/push/subscribe/route.ts` (Node.js runtime) : POST → upsert dans `push_subscriptions`
 - Créer `app/api/push/send/route.ts` (Node.js runtime) : envoyer push via `web-push.sendNotification` à toutes les subscriptions
 - Utiliser le skill `frontend-design` pour créer `components/NotificationPermission.tsx` : banner "Activer les notifications"
+  - → **MCP Playwright** : naviguer vers `/`, vérifier le banner de permission visible, screenshot
 - Ajouter `vercel.json` avec headers PWA (pas de cron Phase 1)
 - Deploy : `vercel deploy --prod --scope amara-fofanas-projects`
+  - → **MCP Playwright** : naviguer vers l'URL Vercel prod, screenshot dashboard, vérifier que tout fonctionne en production (pas seulement localhost)
 - Commit + push
 
 **Success Criteria**:
