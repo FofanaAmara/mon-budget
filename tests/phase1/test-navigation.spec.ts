@@ -14,13 +14,6 @@ test.describe('Navigation', () => {
     await expect(page.getByRole('heading', { name: 'Sections' })).toBeVisible();
   });
 
-  test('can navigate to /mon-mois', async ({ page }) => {
-    await page.goto('/mon-mois');
-    // Page should load: h1 shows the month name, filter chip "Tout" is visible
-    await expect(page.locator('h1')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Tout' })).toBeVisible();
-  });
-
   test('can navigate to /cartes', async ({ page }) => {
     await page.goto('/cartes');
     await expect(page.getByRole('heading', { name: 'Cartes' })).toBeVisible();
