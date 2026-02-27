@@ -10,9 +10,9 @@ type Props = {
 };
 
 const FREQUENCY_OPTIONS: { value: IncomeFrequency; label: string; sub: string }[] = [
-  { value: 'MONTHLY',   label: 'Mensuel',       sub: '12×/an' },
-  { value: 'BIWEEKLY',  label: 'Aux 2 sem.',    sub: '26×/an' },
-  { value: 'YEARLY',    label: 'Annuel',         sub: '1×/an'  },
+  { value: 'MONTHLY',   label: 'Mensuel',       sub: '12x/an' },
+  { value: 'BIWEEKLY',  label: 'Aux 2 sem.',    sub: '26x/an' },
+  { value: 'YEARLY',    label: 'Annuel',         sub: '1x/an'  },
 ];
 
 export default function IncomeModal({ income, onClose }: Props) {
@@ -46,65 +46,43 @@ export default function IncomeModal({ income, onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center"
-      style={{ background: 'var(--surface-overlay)' }}
+      className="sheet-backdrop"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-lg pb-safe"
-        style={{
-          background: 'var(--surface-raised)',
-          borderRadius: 'var(--radius-sheet) var(--radius-sheet) 0 0',
-          boxShadow: 'var(--shadow-xl)',
-        }}
+        className="sheet"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Drag handle */}
-        <div className="flex justify-center pt-3 pb-2">
-          <div className="w-9 h-1 rounded-full" style={{ background: 'var(--border-strong)' }} />
-        </div>
+        <div className="sheet-handle" />
 
-        <div className="px-6 pb-8 pt-2">
-          <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '24px', letterSpacing: '-0.01em' }}>
+        <div style={{ padding: '8px 24px 32px' }}>
+          <h2 style={{
+            fontSize: 'var(--text-lg)',
+            fontWeight: 700,
+            color: 'var(--text-primary)',
+            marginBottom: '24px',
+            letterSpacing: 'var(--tracking-tight)',
+          }}>
             {income ? 'Modifier le revenu' : 'Nouveau revenu'}
           </h2>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {/* Name */}
             <div>
-              <label
-                style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-tertiary)', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}
-              >
-                Source de revenu
-              </label>
+              <label className="field-label">Source de revenu</label>
               <input
                 type="text"
-                placeholder="Salaire, Freelance, Loyer perçu…"
+                placeholder="Salaire, Freelance, Loyer percu..."
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                style={{
-                  width: '100%',
-                  border: '1.5px solid var(--border-default)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: '12px 14px',
-                  fontSize: '14px',
-                  color: 'var(--text-primary)',
-                  background: 'var(--surface-inset)',
-                  outline: 'none',
-                  transition: 'border-color 150ms ease-out',
-                }}
-                onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
-                onBlur={(e) => (e.target.style.borderColor = 'var(--border-default)')}
+                className="input-field"
               />
             </div>
 
             {/* Amount */}
             <div>
-              <label
-                style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-tertiary)', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}
-              >
-                Montant ($)
-              </label>
+              <label className="field-label">Montant ($)</label>
               <input
                 type="number"
                 min="0"
@@ -112,31 +90,15 @@ export default function IncomeModal({ income, onClose }: Props) {
                 placeholder="0.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                style={{
-                  width: '100%',
-                  border: '1.5px solid var(--border-default)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: '12px 14px',
-                  fontSize: '14px',
-                  color: 'var(--text-primary)',
-                  background: 'var(--surface-inset)',
-                  outline: 'none',
-                  transition: 'border-color 150ms ease-out',
-                  fontVariantNumeric: 'tabular-nums',
-                }}
-                onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
-                onBlur={(e) => (e.target.style.borderColor = 'var(--border-default)')}
+                className="input-field"
+                style={{ fontVariantNumeric: 'tabular-nums' }}
               />
             </div>
 
             {/* Frequency */}
             <div>
-              <label
-                style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-tertiary)', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'block', marginBottom: '8px' }}
-              >
-                Fréquence
-              </label>
-              <div className="grid grid-cols-3 gap-2">
+              <label className="field-label" style={{ marginBottom: '8px' }}>Frequence</label>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
                 {FREQUENCY_OPTIONS.map(({ value, label, sub }) => {
                   const active = frequency === value;
                   return (
@@ -144,16 +106,27 @@ export default function IncomeModal({ income, onClose }: Props) {
                       key={value}
                       type="button"
                       onClick={() => setFrequency(value)}
-                      className="py-2.5 px-2 rounded-[var(--radius-md)] transition-all text-center"
+                      className="freq-pill"
+                      data-active={active}
                       style={{
-                        border: active ? '1.5px solid var(--accent)' : '1.5px solid var(--border-default)',
-                        background: active ? 'var(--accent-subtle)' : 'var(--surface-inset)',
+                        padding: '10px 8px',
+                        textAlign: 'center',
+                        ...(active ? {
+                          background: 'var(--text-primary)',
+                          borderColor: 'var(--text-primary)',
+                          color: 'var(--text-inverted)',
+                        } : {}),
                       }}
                     >
-                      <span style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: active ? 'var(--accent)' : 'var(--text-primary)' }}>
+                      <span style={{ display: 'block', fontSize: 'var(--text-xs)', fontWeight: 600 }}>
                         {label}
                       </span>
-                      <span style={{ display: 'block', fontSize: '10px', color: active ? 'var(--accent-muted)' : 'var(--text-tertiary)', marginTop: '1px' }}>
+                      <span style={{
+                        display: 'block',
+                        fontSize: '10px',
+                        marginTop: '1px',
+                        opacity: 0.7,
+                      }}>
                         {sub}
                       </span>
                     </button>
@@ -163,7 +136,13 @@ export default function IncomeModal({ income, onClose }: Props) {
             </div>
 
             {error && (
-              <p style={{ fontSize: '13px', color: 'var(--negative)', background: 'var(--negative-subtle)', padding: '8px 12px', borderRadius: 'var(--radius-sm)' }}>
+              <p style={{
+                fontSize: 'var(--text-sm)',
+                color: 'var(--negative)',
+                background: 'var(--negative-subtle)',
+                padding: '8px 12px',
+                borderRadius: 'var(--radius-sm)',
+              }}>
                 {error}
               </p>
             )}
@@ -171,19 +150,16 @@ export default function IncomeModal({ income, onClose }: Props) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full font-semibold transition-all active:scale-[0.98]"
+              className="btn-primary"
               style={{
-                background: loading ? 'var(--accent-muted)' : 'var(--accent)',
-                color: 'var(--text-inverted)',
-                borderRadius: 'var(--radius-md)',
+                width: '100%',
                 padding: '14px',
-                fontSize: '15px',
-                fontWeight: 600,
-                marginTop: '8px',
-                boxShadow: loading ? 'none' : 'var(--shadow-accent)',
+                fontSize: 'var(--text-base)',
+                marginTop: '4px',
+                opacity: loading ? 0.5 : 1,
               }}
             >
-              {loading ? 'Enregistrement…' : income ? 'Modifier' : 'Ajouter'}
+              {loading ? 'Enregistrement...' : income ? 'Modifier' : 'Ajouter'}
             </button>
           </form>
         </div>

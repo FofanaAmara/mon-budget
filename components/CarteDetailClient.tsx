@@ -21,67 +21,98 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
   const manualExpenses = expenses.filter((e) => !e.auto_debit);
 
   return (
-    <div className="space-y-3">
+    <div style={{ padding: '36px 20px 24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {/* Card visual */}
       <div
-        className="rounded-[var(--radius-xl)] p-5 text-[var(--text-inverted)] relative overflow-hidden"
         style={{
+          borderRadius: 'var(--radius-xl)',
+          padding: '24px 20px 20px',
+          color: 'var(--text-inverted)',
+          position: 'relative',
+          overflow: 'hidden',
           background: `linear-gradient(135deg, ${card.color} 0%, ${card.color}CC 100%)`,
           boxShadow: `0 8px 32px ${card.color}40, 0 2px 8px ${card.color}25`,
         }}
       >
-        <div className="absolute -top-5 -right-5 w-24 h-24 rounded-full pointer-events-none" style={{ background: 'rgba(255,255,255,0.10)' }} />
-        <div className="absolute bottom-4 right-20 w-16 h-16 rounded-full pointer-events-none" style={{ background: 'rgba(255,255,255,0.06)' }} />
-        <div className="flex justify-between items-start mb-6">
+        <div style={{
+          position: 'absolute', top: '-20px', right: '-20px',
+          width: '96px', height: '96px', borderRadius: 'var(--radius-full)',
+          background: 'rgba(255,255,255,0.10)', pointerEvents: 'none',
+        }} />
+        <div style={{
+          position: 'absolute', bottom: '16px', right: '80px',
+          width: '64px', height: '64px', borderRadius: 'var(--radius-full)',
+          background: 'rgba(255,255,255,0.06)', pointerEvents: 'none',
+        }} />
+
+        <div className="flex justify-between items-start" style={{ marginBottom: '24px' }}>
           <div>
-            <p style={{ color: 'rgba(250,250,248,0.60)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase' }}>
+            <p className="section-label" style={{ color: 'rgba(250,250,248,0.60)' }}>
               {card.bank ?? 'Carte'}
             </p>
-            <p style={{ fontSize: '18px', fontWeight: 700, marginTop: '2px', letterSpacing: '-0.01em' }}>{card.name}</p>
+            <p style={{
+              fontSize: 'var(--text-lg)', fontWeight: 700,
+              marginTop: '2px', letterSpacing: 'var(--tracking-tight)',
+            }}>
+              {card.name}
+            </p>
           </div>
-          <div className="text-right">
-            <p style={{ color: 'rgba(250,250,248,0.60)', fontSize: '10px', letterSpacing: '0.04em' }}>Mensuel</p>
-            <p style={{ fontSize: '22px', fontWeight: 700, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}>
+          <div style={{ textAlign: 'right' }}>
+            <p style={{
+              color: 'rgba(250,250,248,0.60)',
+              fontSize: '10px', letterSpacing: 'var(--tracking-wide)',
+            }}>Mensuel</p>
+            <p className="amount" style={{
+              fontSize: 'var(--text-xl)',
+              letterSpacing: 'var(--tracking-tight)',
+            }}>
               {formatCAD(monthlyTotal)}
             </p>
           </div>
         </div>
-        <p style={{ color: 'rgba(250,250,248,0.50)', fontSize: '13px', fontFamily: 'monospace', letterSpacing: '0.08em' }}>
-          •••• •••• •••• {card.last_four ?? '????'}
+
+        <p style={{
+          color: 'rgba(250,250,248,0.50)',
+          fontSize: 'var(--text-sm)',
+          fontFamily: 'monospace',
+          letterSpacing: 'var(--tracking-widest)',
+        }}>
+          .... .... .... {card.last_four ?? '????'}
         </p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-3">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
         {[
-          { label: 'Prélèvements auto', value: autoExpenses.length },
-          { label: 'Dépenses totales', value: expenses.length },
+          { label: 'Prelevements auto', value: autoExpenses.length },
+          { label: 'Depenses totales', value: expenses.length },
         ].map(({ label, value }) => (
-          <div
-            key={label}
-            className="rounded-[var(--radius-lg)] p-4"
-            style={{ background: 'var(--surface-raised)', border: '1px solid var(--border-default)', boxShadow: 'var(--shadow-xs)' }}
-          >
-            <p style={{ fontSize: '26px', fontWeight: 700, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}>
+          <div key={label} className="card" style={{ padding: '16px' }}>
+            <p className="amount" style={{
+              fontSize: 'var(--text-2xl)',
+              color: 'var(--text-primary)',
+              letterSpacing: 'var(--tracking-tight)',
+            }}>
               {value}
             </p>
-            <p style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '2px' }}>{label}</p>
+            <p style={{
+              fontSize: 'var(--text-xs)',
+              color: 'var(--text-tertiary)',
+              marginTop: '2px',
+            }}>{label}</p>
           </div>
         ))}
       </div>
 
       {/* Auto-charged expenses */}
       {autoExpenses.length > 0 && (
-        <div
-          className="rounded-[var(--radius-lg)] overflow-hidden"
-          style={{ background: 'var(--surface-raised)', border: '1px solid var(--border-default)', boxShadow: 'var(--shadow-sm)' }}
-        >
-          <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--border-default)' }}>
-            <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }} className="flex items-center gap-2">
+        <div className="list-card">
+          <div className="list-card-header">
+            <h3 className="list-card-header-title flex items-center" style={{ gap: '8px' }}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
               </svg>
-              Prélèvements automatiques
+              Prelevements automatiques
             </h3>
           </div>
           {autoExpenses.map((expense, idx) => {
@@ -89,37 +120,54 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
             const monthly = calcMonthlyCost(expense);
             const badge = days !== null ? getDueBadge(days) : { bg: 'var(--accent-subtle)', color: 'var(--accent)' };
             return (
-              <div
-                key={expense.id}
-                className="flex items-center gap-3 px-4 py-3"
-                style={{ borderTop: idx > 0 ? '1px solid var(--border-default)' : 'none' }}
-              >
-                <div
-                  className="w-8 h-8 rounded-[var(--radius-sm)] flex items-center justify-center text-xs flex-shrink-0"
-                  style={{ background: `${expense.section?.color ?? 'var(--accent)'}18` }}
-                >
-                  <span>{expense.section?.icon ?? '💳'}</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)' }} className="truncate">{expense.name}</p>
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>{expense.section?.name ?? '—'}</span>
-                    {expense.next_due_date && days !== null && (
-                      <span
-                        style={{ fontSize: '10px', fontWeight: 600, background: badge.bg, color: badge.color, padding: '1px 6px', borderRadius: 'var(--radius-full)' }}
-                      >
-                        J-{days}
-                      </span>
+              <div key={expense.id}>
+                {idx > 0 && <div className="list-card-divider" style={{ marginLeft: '18px', marginRight: '18px' }} />}
+                <div className="list-card-row">
+                  <div style={{
+                    width: '32px', height: '32px',
+                    borderRadius: 'var(--radius-sm)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '0.875rem',
+                    background: 'var(--surface-sunken)',
+                    flexShrink: 0,
+                  }}>
+                    {expense.section?.icon ?? (
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="2" y="5" width="20" height="14" rx="3" />
+                        <path d="M2 10h20" />
+                      </svg>
                     )}
                   </div>
-                </div>
-                <div className="text-right flex-shrink-0">
-                  <p style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
-                    {formatCAD(expense.amount)}
-                  </p>
-                  {monthly !== expense.amount && (
-                    <p style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>{formatCAD(monthly)}/mois</p>
-                  )}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{
+                      fontSize: 'var(--text-sm)', fontWeight: 500,
+                      color: 'var(--text-primary)',
+                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                    }}>{expense.name}</p>
+                    <div className="flex items-center" style={{ gap: '6px', marginTop: '2px' }}>
+                      <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
+                        {expense.section?.name ?? '--'}
+                      </span>
+                      {expense.next_due_date && days !== null && (
+                        <span className="badge" style={{
+                          background: badge.bg, color: badge.color,
+                          fontSize: '10px', padding: '1px 6px',
+                        }}>
+                          J-{days}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                    <p className="amount" style={{ fontSize: 'var(--text-sm)' }}>
+                      {formatCAD(expense.amount)}
+                    </p>
+                    {monthly !== expense.amount && (
+                      <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
+                        {formatCAD(monthly)}/mois
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             );
@@ -129,50 +177,70 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
 
       {/* Other expenses */}
       {manualExpenses.length > 0 && (
-        <div
-          className="rounded-[var(--radius-lg)] overflow-hidden"
-          style={{ background: 'var(--surface-raised)', border: '1px solid var(--border-default)', boxShadow: 'var(--shadow-sm)' }}
-        >
-          <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--border-default)' }}>
-            <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>Autres dépenses liées</h3>
+        <div className="list-card">
+          <div className="list-card-header">
+            <h3 className="list-card-header-title">Autres depenses liees</h3>
           </div>
           {manualExpenses.map((expense, idx) => (
-            <div
-              key={expense.id}
-              className="flex items-center gap-3 px-4 py-3"
-              style={{ borderTop: idx > 0 ? '1px solid var(--border-default)' : 'none' }}
-            >
-              <div
-                className="w-8 h-8 rounded-[var(--radius-sm)] flex items-center justify-center text-xs flex-shrink-0"
-                style={{ background: `${expense.section?.color ?? 'var(--accent)'}18` }}
-              >
-                {expense.section?.icon ?? '💳'}
+            <div key={expense.id}>
+              {idx > 0 && <div className="list-card-divider" style={{ marginLeft: '18px', marginRight: '18px' }} />}
+              <div className="list-card-row">
+                <div style={{
+                  width: '32px', height: '32px',
+                  borderRadius: 'var(--radius-sm)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '0.875rem',
+                  background: 'var(--surface-sunken)',
+                  flexShrink: 0,
+                }}>
+                  {expense.section?.icon ?? (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="5" width="20" height="14" rx="3" />
+                      <path d="M2 10h20" />
+                    </svg>
+                  )}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{
+                    fontSize: 'var(--text-sm)', fontWeight: 500,
+                    color: 'var(--text-primary)',
+                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                  }}>{expense.name}</p>
+                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
+                    {expense.section?.name ?? '--'}
+                  </p>
+                </div>
+                <p className="amount" style={{ fontSize: 'var(--text-sm)', flexShrink: 0 }}>
+                  {formatCAD(expense.amount)}
+                </p>
               </div>
-              <div className="flex-1 min-w-0">
-                <p style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)' }} className="truncate">{expense.name}</p>
-                <p style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>{expense.section?.name ?? '—'}</p>
-              </div>
-              <p style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }} className="flex-shrink-0">
-                {formatCAD(expense.amount)}
-              </p>
             </div>
           ))}
         </div>
       )}
 
       {expenses.length === 0 && (
-        <div
-          className="rounded-[var(--radius-lg)] p-10 text-center"
-          style={{ background: 'var(--surface-raised)', border: '1px solid var(--border-default)' }}
-        >
-          <p style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>Aucune dépense liée à cette carte</p>
+        <div className="card">
+          <div className="empty-state" style={{ padding: '40px 24px' }}>
+            <div className="empty-state-icon">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="3" />
+                <path d="M2 10h20" />
+              </svg>
+            </div>
+            <p className="empty-state-text">Aucune depense liee a cette carte</p>
+          </div>
         </div>
       )}
 
       <Link
         href="/cartes"
-        className="flex items-center justify-center gap-1.5 py-3"
-        style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}
+        className="flex items-center justify-center"
+        style={{
+          gap: '6px', padding: '12px',
+          fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)',
+          textDecoration: 'none',
+        }}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M19 12H5M12 5l-7 7 7 7" />

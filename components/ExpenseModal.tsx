@@ -73,33 +73,32 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm"
+      className="sheet-backdrop"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:max-w-sm max-h-[92vh] overflow-y-auto">
+      <div className="sheet">
         {/* Handle */}
-        <div className="flex justify-center pt-3 pb-1 sm:hidden">
-          <div className="w-9 h-1 bg-[#E2E8F0] rounded-full" />
-        </div>
+        <div className="sheet-handle" />
 
-        <div className="px-6 pt-4 pb-8 space-y-5">
-          <h2 className="text-base font-semibold text-[#1E293B] tracking-tight">
-            {expense ? 'Modifier la dépense' : 'Nouvelle dépense'}
+        <div style={{ padding: '8px 24px 32px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <h2 style={{
+            fontSize: 'var(--text-lg)',
+            fontWeight: 700,
+            color: 'var(--text-primary)',
+            letterSpacing: 'var(--tracking-tight)',
+          }}>
+            {expense ? 'Modifier la depense' : 'Nouvelle depense'}
           </h2>
 
-          {/* 1. Section — première et obligatoire */}
+          {/* 1. Section */}
           <div>
-            <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Section *</label>
+            <label className="field-label">Section *</label>
             <select
               value={sectionId}
               onChange={(e) => setSectionId(e.target.value)}
-              className={`w-full border rounded-xl px-4 py-3 text-sm outline-none bg-white transition-colors ${
-                sectionId
-                  ? 'border-[#E2E8F0] focus:border-[#1E293B]'
-                  : 'border-[#E2E8F0] focus:border-[#1E293B]'
-              }`}
+              className="select-field"
             >
-              <option value="">Choisir une section…</option>
+              <option value="">Choisir une section...</option>
               {sections.map((s) => (
                 <option key={s.id} value={s.id}>{s.name}</option>
               ))}
@@ -108,21 +107,24 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
 
           {/* 2. Nom */}
           <div>
-            <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Nom *</label>
+            <label className="field-label">Nom *</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Loyer, Netflix, Assurance…"
-              className="w-full border border-[#E2E8F0] rounded-xl px-4 py-3 text-sm focus:border-[#1E293B] outline-none"
+              placeholder="Loyer, Netflix, Assurance..."
+              className="input-field"
             />
           </div>
 
           {/* 3. Montant */}
           <div>
-            <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Montant *</label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8] text-sm">$</span>
+            <label className="field-label">Montant *</label>
+            <div style={{ position: 'relative' }}>
+              <span style={{
+                position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)',
+                color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)',
+              }}>$</span>
               <input
                 type="number"
                 value={amount}
@@ -130,26 +132,25 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
                 placeholder="0.00"
                 min="0"
                 step="0.01"
-                className="w-full border border-[#E2E8F0] rounded-xl pl-8 pr-4 py-3 text-sm focus:border-[#1E293B] outline-none"
+                className="input-field"
+                style={{ paddingLeft: '32px', fontVariantNumeric: 'tabular-nums' }}
               />
             </div>
           </div>
 
-          {/* 4. Type */}
+          {/* 4. Type toggle */}
           <div>
-            <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Type</label>
-            <div className="flex bg-[#F8FAFC] rounded-xl p-1 gap-1">
+            <label className="field-label">Type</label>
+            <div className="type-toggle">
               {(['RECURRING', 'ONE_TIME', 'PLANNED'] as ExpenseType[]).map((t) => (
                 <button
                   key={t}
+                  type="button"
                   onClick={() => setType(t)}
-                  className={`flex-1 py-2 rounded-lg text-xs font-medium transition-all ${
-                    type === t
-                      ? 'bg-white text-[#1E293B] shadow-sm'
-                      : 'text-[#94A3B8]'
-                  }`}
+                  className="type-toggle-btn"
+                  data-active={type === t}
                 >
-                  {t === 'RECURRING' ? 'Récurrent' : t === 'ONE_TIME' ? 'Ponctuel' : 'Planifié'}
+                  {t === 'RECURRING' ? 'Recurrent' : t === 'ONE_TIME' ? 'Ponctuel' : 'Planifie'}
                 </button>
               ))}
             </div>
@@ -159,17 +160,15 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
           {type === 'RECURRING' && (
             <>
               <div>
-                <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Fréquence</label>
-                <div className="flex gap-1.5 flex-wrap">
+                <label className="field-label">Frequence</label>
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                   {FREQUENCIES.map((f) => (
                     <button
                       key={f.value}
+                      type="button"
                       onClick={() => setFrequency(f.value)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
-                        frequency === f.value
-                          ? 'bg-[#1E293B] text-white border-[#1E293B]'
-                          : 'bg-white text-[#64748B] border-[#E2E8F0]'
-                      }`}
+                      className="freq-pill"
+                      data-active={frequency === f.value}
                     >
                       {f.label}
                     </button>
@@ -177,43 +176,45 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div>
-                  <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Jour du mois</label>
+                  <label className="field-label">Jour du mois</label>
                   <input
                     type="number"
                     value={day}
                     onChange={(e) => setDay(e.target.value)}
                     min="1"
                     max="31"
-                    className="w-full border border-[#E2E8F0] rounded-xl px-4 py-3 text-sm focus:border-[#1E293B] outline-none"
+                    className="input-field"
                   />
                 </div>
 
-                <div className="flex flex-col justify-center gap-1.5">
-                  <label className="text-xs font-medium text-[#64748B] tracking-wide uppercase">Prélèvement auto</label>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '6px' }}>
+                  <label className="field-label" style={{ marginBottom: 0 }}>Prelevement auto</label>
                   <button
+                    type="button"
                     onClick={() => { setAutoDebit(!autoDebit); if (autoDebit) setCardId(''); }}
-                    className={`relative w-11 h-6 rounded-full transition-colors ${autoDebit ? 'bg-[#1E293B]' : 'bg-[#E2E8F0]'}`}
+                    className="toggle"
+                    data-active={autoDebit}
                   >
-                    <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform ${autoDebit ? 'translate-x-6' : 'translate-x-1'}`} />
+                    <span className="toggle-knob" />
                   </button>
                 </div>
               </div>
 
-              {/* Carte — visible uniquement si prélèvement auto activé */}
+              {/* Carte */}
               {autoDebit && cards.length > 0 && (
                 <div>
-                  <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Carte de débit</label>
+                  <label className="field-label">Carte de debit</label>
                   <select
                     value={cardId}
                     onChange={(e) => setCardId(e.target.value)}
-                    className="w-full border border-[#E2E8F0] rounded-xl px-4 py-3 text-sm focus:border-[#1E293B] outline-none bg-white"
+                    className="select-field"
                   >
-                    <option value="">Choisir une carte…</option>
+                    <option value="">Choisir une carte...</option>
                     {cards.map((c) => (
                       <option key={c.id} value={c.id}>
-                        {c.name}{c.last_four ? ` •••• ${c.last_four}` : ''}
+                        {c.name}{c.last_four ? ` .... ${c.last_four}` : ''}
                       </option>
                     ))}
                   </select>
@@ -225,12 +226,12 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
           {/* ONE_TIME date */}
           {type === 'ONE_TIME' && (
             <div>
-              <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Date d&apos;échéance</label>
+              <label className="field-label">Date d&apos;echeance</label>
               <input
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full border border-[#E2E8F0] rounded-xl px-4 py-3 text-sm focus:border-[#1E293B] outline-none"
+                className="input-field"
               />
             </div>
           )}
@@ -239,9 +240,12 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
           {type === 'PLANNED' && (
             <>
               <div>
-                <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Objectif ($)</label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8] text-sm">$</span>
+                <label className="field-label">Objectif ($)</label>
+                <div style={{ position: 'relative' }}>
+                  <span style={{
+                    position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)',
+                    color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)',
+                  }}>$</span>
                   <input
                     type="number"
                     value={targetAmount}
@@ -249,24 +253,28 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
                     placeholder="0.00"
                     min="0"
                     step="0.01"
-                    className="w-full border border-[#E2E8F0] rounded-xl pl-8 pr-4 py-3 text-sm focus:border-[#1E293B] outline-none"
+                    className="input-field"
+                    style={{ paddingLeft: '32px', fontVariantNumeric: 'tabular-nums' }}
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div>
-                  <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Date cible</label>
+                  <label className="field-label">Date cible</label>
                   <input
                     type="date"
                     value={targetDate}
                     onChange={(e) => setTargetDate(e.target.value)}
-                    className="w-full border border-[#E2E8F0] rounded-xl px-4 py-3 text-sm focus:border-[#1E293B] outline-none"
+                    className="input-field"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Déjà épargné ($)</label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] text-sm">$</span>
+                  <label className="field-label">Deja epargne ($)</label>
+                  <div style={{ position: 'relative' }}>
+                    <span style={{
+                      position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',
+                      color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)',
+                    }}>$</span>
                     <input
                       type="number"
                       value={savedAmount}
@@ -274,7 +282,8 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
                       placeholder="0.00"
                       min="0"
                       step="0.01"
-                      className="w-full border border-[#E2E8F0] rounded-xl pl-7 pr-3 py-3 text-sm focus:border-[#1E293B] outline-none"
+                      className="input-field"
+                      style={{ paddingLeft: '28px', fontVariantNumeric: 'tabular-nums' }}
                     />
                   </div>
                 </div>
@@ -284,30 +293,35 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
 
           {/* Notes */}
           <div>
-            <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Notes</label>
+            <label className="field-label">Notes</label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
-              placeholder="Informations supplémentaires…"
-              className="w-full border border-[#E2E8F0] rounded-xl px-4 py-3 text-sm focus:border-[#1E293B] outline-none resize-none"
+              placeholder="Informations supplementaires..."
+              className="input-field"
+              style={{ resize: 'none' }}
             />
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-1">
+          <div className="flex" style={{ gap: '12px', paddingTop: '4px' }}>
             <button
+              type="button"
               onClick={onClose}
-              className="flex-1 border border-[#E2E8F0] text-[#64748B] rounded-xl px-5 py-3 text-sm font-medium"
+              className="btn-secondary"
+              style={{ flex: 1, padding: '12px 20px' }}
             >
               Annuler
             </button>
             <button
+              type="button"
               onClick={handleSubmit}
               disabled={isPending || !isValid}
-              className="flex-1 bg-[#1E293B] text-white rounded-xl px-5 py-3 text-sm font-medium disabled:opacity-40 transition-opacity"
+              className="btn-primary"
+              style={{ flex: 1, padding: '12px 20px' }}
             >
-              {isPending ? 'Enregistrement…' : expense ? 'Modifier' : 'Ajouter'}
+              {isPending ? 'Enregistrement...' : expense ? 'Modifier' : 'Ajouter'}
             </button>
           </div>
         </div>

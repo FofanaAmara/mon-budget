@@ -8,6 +8,48 @@ import type { Settings } from '@/lib/types';
 const CURRENCIES = ['CAD', 'USD', 'EUR'];
 const REMINDER_OPTIONS = [1, 3, 7, 14, 30];
 
+const NAV_ITEMS = [
+  {
+    href: '/cartes',
+    label: 'Mes cartes de paiement',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="5" width="20" height="14" rx="3" />
+        <path d="M2 10h20" />
+      </svg>
+    ),
+  },
+  {
+    href: '/sections',
+    label: 'Mes sections',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+      </svg>
+    ),
+  },
+  {
+    href: '/revenus',
+    label: 'Mes revenus',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="1" x2="12" y2="23" />
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+      </svg>
+    ),
+  },
+  {
+    href: '/projets',
+    label: 'Mes projets planifies',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 8v8M8 12h8" />
+      </svg>
+    ),
+  },
+];
+
 export default function ParametresClient({ settings }: { settings: Settings }) {
   const [isPending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
@@ -41,23 +83,35 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
   }
 
   return (
-    <div className="px-4 pt-8 pb-6 min-h-screen">
-      <h1 className="text-2xl font-bold text-[#1E293B] mb-6">Réglages</h1>
+    <div style={{ padding: '36px 20px 24px', minHeight: '100vh' }}>
+      {/* Header */}
+      <div style={{ marginBottom: '28px' }}>
+        <h1 style={{
+          fontSize: 'var(--text-xl)',
+          fontWeight: 750,
+          color: 'var(--text-primary)',
+          letterSpacing: 'var(--tracking-tight)',
+          lineHeight: 'var(--leading-tight)',
+        }}>
+          Reglages
+        </h1>
+      </div>
 
-      <div className="space-y-4">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {/* Currency */}
-        <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5">
-          <h2 className="text-sm font-semibold text-[#1E293B] mb-3">Devise par défaut</h2>
-          <div className="flex gap-2">
+        <div className="card" style={{ padding: '18px 20px' }}>
+          <h2 style={{
+            fontSize: 'var(--text-sm)', fontWeight: 650,
+            color: 'var(--text-primary)', marginBottom: '12px',
+          }}>Devise par defaut</h2>
+          <div style={{ display: 'flex', gap: '8px' }}>
             {CURRENCIES.map((c) => (
               <button
                 key={c}
                 onClick={() => setCurrency(c)}
-                className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                  currency === c
-                    ? 'bg-[#1E293B] text-white'
-                    : 'bg-[#F8FAFC] text-[#94A3B8] hover:bg-[#F1F5F9] hover:text-[#1E293B]'
-                }`}
+                className="freq-pill"
+                data-active={currency === c}
+                style={{ flex: 1, textAlign: 'center' }}
               >
                 {c}
               </button>
@@ -66,19 +120,22 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
         </div>
 
         {/* Reminders */}
-        <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5">
-          <h2 className="text-sm font-semibold text-[#1E293B] mb-1">Rappels par défaut</h2>
-          <p className="text-xs text-[#94A3B8] mb-3">Jours avant l&apos;échéance</p>
-          <div className="flex gap-2 flex-wrap">
+        <div className="card" style={{ padding: '18px 20px' }}>
+          <h2 style={{
+            fontSize: 'var(--text-sm)', fontWeight: 650,
+            color: 'var(--text-primary)', marginBottom: '2px',
+          }}>Rappels par defaut</h2>
+          <p style={{
+            fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)',
+            marginBottom: '12px',
+          }}>Jours avant l&apos;echeance</p>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             {REMINDER_OPTIONS.map((day) => (
               <button
                 key={day}
                 onClick={() => toggleReminder(day)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                  reminders.includes(day)
-                    ? 'bg-[#1E293B] text-white'
-                    : 'bg-[#F8FAFC] text-[#94A3B8] hover:bg-[#F1F5F9] hover:text-[#1E293B]'
-                }`}
+                className="freq-pill"
+                data-active={reminders.includes(day)}
               >
                 {day}j
               </button>
@@ -86,49 +143,62 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
           </div>
         </div>
 
-        {/* Contact info for notifications */}
-        <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5">
-          <h2 className="text-sm font-semibold text-[#1E293B] mb-1">Contact</h2>
-          <p className="text-xs text-[#94A3B8] mb-3">Pour les notifications email et SMS</p>
-          <div className="space-y-3">
+        {/* Contact info */}
+        <div className="card" style={{ padding: '18px 20px' }}>
+          <h2 style={{
+            fontSize: 'var(--text-sm)', fontWeight: 650,
+            color: 'var(--text-primary)', marginBottom: '2px',
+          }}>Contact</h2>
+          <p style={{
+            fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)',
+            marginBottom: '16px',
+          }}>Pour les notifications email et SMS</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div>
-              <label className="text-xs text-[#94A3B8] mb-1 block">📧 Email</label>
+              <label className="field-label">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="votre@email.com"
-                className="w-full px-3 py-2.5 rounded-xl border border-[#E2E8F0] text-sm text-[#1E293B] placeholder:text-[#CBD5E1] focus:outline-none focus:border-[#2563EB] bg-[#F8FAFC]"
+                className="input-field"
               />
             </div>
             <div>
-              <label className="text-xs text-[#94A3B8] mb-1 block">📱 Téléphone (SMS)</label>
+              <label className="field-label">Telephone (SMS)</label>
               <input
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+1 514 000 0000"
-                className="w-full px-3 py-2.5 rounded-xl border border-[#E2E8F0] text-sm text-[#1E293B] placeholder:text-[#CBD5E1] focus:outline-none focus:border-[#2563EB] bg-[#F8FAFC]"
+                className="input-field"
               />
             </div>
           </div>
         </div>
 
         {/* Notifications */}
-        <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5">
-          <h2 className="text-sm font-semibold text-[#1E293B] mb-3">Canaux de notification</h2>
-          <div className="space-y-3">
+        <div className="card" style={{ padding: '18px 20px' }}>
+          <h2 style={{
+            fontSize: 'var(--text-sm)', fontWeight: 650,
+            color: 'var(--text-primary)', marginBottom: '14px',
+          }}>Canaux de notification</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {[
-              { label: '🔔 Notifications push', value: notifyPush, onChange: setNotifyPush },
-              { label: '📧 Email', value: notifyEmail, onChange: setNotifyEmail },
+              { label: 'Notifications push', value: notifyPush, onChange: setNotifyPush },
+              { label: 'Email', value: notifyEmail, onChange: setNotifyEmail },
             ].map(({ label, value, onChange }) => (
               <div key={label} className="flex items-center justify-between">
-                <span className="text-sm text-[#1E293B]">{label}</span>
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>
+                  {label}
+                </span>
                 <button
+                  type="button"
                   onClick={() => onChange(!value)}
-                  className={`relative w-12 h-6 rounded-full transition-colors ${value ? 'bg-[#1E293B]' : 'bg-[#E2E8F0]'}`}
+                  className="toggle"
+                  data-active={value}
                 >
-                  <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${value ? 'translate-x-7' : 'translate-x-1'}`} />
+                  <span className="toggle-knob" />
                 </button>
               </div>
             ))}
@@ -136,26 +206,25 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
         </div>
 
         {/* Gestion */}
-        <div className="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
-          <div className="px-5 pt-4 pb-2">
-            <h2 className="text-sm font-semibold text-[#1E293B]">Gestion</h2>
+        <div className="list-card">
+          <div style={{ padding: '14px 18px 8px' }}>
+            <h2 style={{
+              fontSize: 'var(--text-sm)', fontWeight: 650,
+              color: 'var(--text-primary)',
+            }}>Gestion</h2>
           </div>
-          {[
-            { href: '/cartes', label: 'Mes cartes de paiement', icon: '💳' },
-            { href: '/sections', label: 'Mes sections', icon: '📂' },
-            { href: '/revenus', label: 'Mes revenus', icon: '💰' },
-            { href: '/projets', label: 'Mes projets planifiés', icon: '🎯' },
-          ].map(({ href, label, icon }) => (
+          {NAV_ITEMS.map(({ href, label, icon }) => (
             <Link
               key={href}
               href={href}
-              className="flex items-center justify-between px-5 py-3.5 border-t border-[#F1F5F9] hover:bg-[#F8FAFC] transition-colors"
+              className="link-row"
+              style={{ textDecoration: 'none' }}
             >
-              <div className="flex items-center gap-3">
-                <span className="text-base">{icon}</span>
-                <span className="text-sm text-[#1E293B]">{label}</span>
+              <div className="flex items-center" style={{ gap: '12px' }}>
+                <span style={{ color: 'var(--text-tertiary)' }}>{icon}</span>
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>{label}</span>
               </div>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 18l6-6-6-6" />
               </svg>
             </Link>
@@ -166,9 +235,16 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
         <button
           onClick={handleSave}
           disabled={isPending}
-          className="w-full bg-[#1E293B] text-white rounded-2xl py-4 font-semibold text-sm disabled:opacity-50 transition-all"
+          className="btn-primary"
+          style={{
+            width: '100%',
+            padding: '14px',
+            fontSize: 'var(--text-base)',
+            marginTop: '4px',
+            opacity: isPending ? 0.5 : 1,
+          }}
         >
-          {saved ? '✓ Sauvegardé !' : isPending ? 'Sauvegarde…' : 'Sauvegarder les réglages'}
+          {saved ? 'Sauvegarde !' : isPending ? 'Sauvegarde...' : 'Sauvegarder les reglages'}
         </button>
       </div>
     </div>

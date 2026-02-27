@@ -18,16 +18,6 @@ type ModalState =
   | { mode: 'create' }
   | { mode: 'edit'; section: Section };
 
-const labelStyle = {
-  fontSize: '11px',
-  fontWeight: 600,
-  color: 'var(--text-tertiary)',
-  letterSpacing: '0.06em',
-  textTransform: 'uppercase' as const,
-  display: 'block',
-  marginBottom: '6px',
-};
-
 export default function SectionsClient({ sections: initial }: { sections: Section[] }) {
   const router = useRouter();
   const [sections, setSections] = useState(initial);
@@ -95,65 +85,99 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
   }
 
   return (
-    <div className="px-4 pt-8 pb-32 min-h-screen" style={{ background: 'var(--surface-ground)' }}>
-      <h1 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '20px', letterSpacing: '-0.02em' }}>
-        Sections
-      </h1>
+    <div style={{ padding: '36px 20px 96px', minHeight: '100vh' }}>
+      {/* Header */}
+      <div style={{ marginBottom: '28px' }}>
+        <h1 style={{
+          fontSize: 'var(--text-xl)',
+          fontWeight: 750,
+          color: 'var(--text-primary)',
+          letterSpacing: 'var(--tracking-tight)',
+          lineHeight: 'var(--leading-tight)',
+        }}>
+          Sections
+        </h1>
+        <p style={{
+          fontSize: 'var(--text-xs)',
+          color: 'var(--text-tertiary)',
+          marginTop: '4px',
+          fontWeight: 500,
+        }}>
+          {sections.length} section{sections.length !== 1 ? 's' : ''}
+        </p>
+      </div>
 
       {sections.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center">
-          <p style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>Aucune section — appuyez sur + pour commencer</p>
+        <div className="card">
+          <div className="empty-state">
+            <div className="empty-state-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <p className="empty-state-text">Aucune section</p>
+            <p className="empty-state-hint">Appuyez sur + pour commencer</p>
+          </div>
         </div>
       ) : (
-        <ul className="space-y-2">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {sections.map((section, i) => (
-            <li
+            <div
               key={section.id}
               draggable
               onDragStart={() => handleDragStart(i)}
               onDragOver={(e) => handleDragOver(e, i)}
               onDragEnd={handleDragEnd}
-              className="flex items-center gap-3 cursor-grab active:cursor-grabbing transition-opacity active:opacity-60"
+              className="card card-press"
               style={{
-                background: 'var(--surface-raised)',
-                border: '1px solid var(--border-default)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '12px 14px',
-                boxShadow: 'var(--shadow-xs)',
+                display: 'flex', alignItems: 'center', gap: '12px',
+                padding: '14px 18px',
+                cursor: 'grab',
               }}
             >
               {/* Drag handle */}
-              <svg width="10" height="14" viewBox="0 0 10 14" fill="none" className="flex-shrink-0" style={{ color: 'var(--text-tertiary)' }}>
-                <circle cx="3" cy="3" r="1.5" fill="currentColor"/>
-                <circle cx="3" cy="7" r="1.5" fill="currentColor"/>
-                <circle cx="3" cy="11" r="1.5" fill="currentColor"/>
-                <circle cx="7" cy="3" r="1.5" fill="currentColor"/>
-                <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
-                <circle cx="7" cy="11" r="1.5" fill="currentColor"/>
-              </svg>
+              <div className="drag-handle">
+                <svg width="10" height="14" viewBox="0 0 10 14" fill="none">
+                  <circle cx="3" cy="3" r="1.5" fill="currentColor"/>
+                  <circle cx="3" cy="7" r="1.5" fill="currentColor"/>
+                  <circle cx="3" cy="11" r="1.5" fill="currentColor"/>
+                  <circle cx="7" cy="3" r="1.5" fill="currentColor"/>
+                  <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
+                  <circle cx="7" cy="11" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
 
               {/* Color dot + Icon */}
-              <div className="flex items-center gap-1.5 flex-shrink-0">
-                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: section.color }} />
-                <span style={{ fontSize: '17px', lineHeight: 1 }}>{section.icon}</span>
+              <div className="flex items-center" style={{ gap: '6px', flexShrink: 0 }}>
+                <div style={{
+                  width: '8px', height: '8px',
+                  borderRadius: 'var(--radius-full)',
+                  background: section.color,
+                }} />
+                <span style={{ fontSize: '1.0625rem', lineHeight: 1 }}>{section.icon}</span>
               </div>
 
               {/* Name */}
-              <span style={{ flex: 1, fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)' }}>{section.name}</span>
+              <span style={{
+                flex: 1, fontSize: 'var(--text-sm)',
+                fontWeight: 550, color: 'var(--text-primary)',
+              }}>
+                {section.name}
+              </span>
 
               {/* Actions */}
               {deleting === section.id ? (
-                <div className="flex items-center gap-2" style={{ fontSize: '12px' }}>
+                <div className="confirm-inline">
                   <span style={{ color: 'var(--text-tertiary)' }}>Supprimer ?</span>
-                  <button onClick={() => handleDelete(section.id)} disabled={isPending} style={{ color: 'var(--negative)', fontWeight: 600 }}>Oui</button>
-                  <button onClick={() => setDeleting(null)} style={{ color: 'var(--text-tertiary)' }}>Non</button>
+                  <button onClick={() => handleDelete(section.id)} disabled={isPending} className="confirm-yes">Oui</button>
+                  <span className="confirm-sep">|</span>
+                  <button onClick={() => setDeleting(null)} className="confirm-no">Non</button>
                 </div>
               ) : (
-                <div className="flex items-center gap-0.5">
+                <div className="flex items-center" style={{ gap: '2px' }}>
                   <button
                     onClick={() => openEdit(section)}
-                    className="p-2 rounded-[var(--radius-sm)] transition-colors"
-                    style={{ color: 'var(--text-tertiary)' }}
+                    className="icon-btn"
                     aria-label="Modifier"
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -163,8 +187,7 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
                   </button>
                   <button
                     onClick={() => setDeleting(section.id)}
-                    className="p-2 rounded-[var(--radius-sm)] transition-colors"
-                    style={{ color: 'var(--text-tertiary)' }}
+                    className="icon-btn icon-btn-danger"
                     aria-label="Supprimer"
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -176,81 +199,63 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
                   </button>
                 </div>
               )}
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
 
       {/* FAB */}
       <button
         onClick={openCreate}
-        className="fixed bottom-20 right-4 w-14 h-14 rounded-full flex items-center justify-center text-[var(--text-inverted)] transition-all active:scale-95"
-        style={{ background: 'var(--text-primary)', boxShadow: 'var(--shadow-fab)' }}
+        className="fab"
         aria-label="Nouvelle section"
       >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-          <path d="M12 5v14M5 12h14" />
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
       </button>
 
       {/* Modal */}
       {modal.mode !== 'closed' && (
         <div
-          className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center"
-          style={{ background: 'var(--surface-overlay)' }}
+          className="sheet-backdrop"
           onClick={(e) => e.target === e.currentTarget && closeModal()}
         >
-          <div
-            className="w-full sm:max-w-sm"
-            style={{
-              background: 'var(--surface-raised)',
-              borderRadius: 'var(--radius-sheet) var(--radius-sheet) 0 0',
-              boxShadow: 'var(--shadow-xl)',
-            }}
-          >
-            <div className="flex justify-center pt-3 pb-1 sm:hidden">
-              <div className="w-9 h-1 rounded-full" style={{ background: 'var(--border-strong)' }} />
-            </div>
+          <div className="sheet">
+            <div className="sheet-handle" />
 
-            <div className="px-6 pt-4 pb-8 space-y-4">
-              <h2 style={{ fontSize: '17px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+            <div style={{ padding: '8px 24px 32px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <h2 style={{
+                fontSize: 'var(--text-lg)',
+                fontWeight: 700,
+                color: 'var(--text-primary)',
+                letterSpacing: 'var(--tracking-tight)',
+              }}>
                 {modal.mode === 'create' ? 'Nouvelle section' : 'Modifier'}
               </h2>
 
               <div>
-                <label style={labelStyle}>Nom *</label>
+                <label className="field-label">Nom *</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Ex : Maison, Sport…"
-                  style={{
-                    width: '100%',
-                    border: '1.5px solid var(--border-default)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: '11px 13px',
-                    fontSize: '14px',
-                    color: 'var(--text-primary)',
-                    background: 'var(--surface-inset)',
-                    outline: 'none',
-                  }}
-                  onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
-                  onBlur={(e) => (e.target.style.borderColor = 'var(--border-default)')}
+                  placeholder="Ex : Maison, Sport..."
+                  className="input-field"
                 />
               </div>
 
               <div>
-                <label style={labelStyle}>Icône</label>
-                <div className="flex flex-wrap gap-2">
+                <label className="field-label">Icone</label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   {EMOJIS.map((e) => (
                     <button
                       key={e}
+                      type="button"
                       onClick={() => setIcon(e)}
-                      className="w-10 h-10 rounded-[var(--radius-md)] text-xl transition-all"
-                      style={{
-                        background: icon === e ? 'var(--accent-subtle)' : 'var(--surface-inset)',
-                        outline: icon === e ? '1.5px solid var(--accent)' : 'none',
-                      }}
+                      className="emoji-btn"
+                      data-active={icon === e}
                     >
                       {e}
                     </button>
@@ -259,52 +264,38 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
               </div>
 
               <div>
-                <label style={labelStyle}>Couleur</label>
-                <div className="flex gap-2">
+                <label className="field-label">Couleur</label>
+                <div style={{ display: 'flex', gap: '8px' }}>
                   {COLORS.map((c) => (
                     <button
                       key={c}
+                      type="button"
                       onClick={() => setColor(c)}
-                      className="w-7 h-7 rounded-full transition-transform"
-                      style={{
-                        backgroundColor: c,
-                        transform: color === c ? 'scale(1.25)' : 'scale(1)',
-                        outline: color === c ? `2px solid ${c}` : 'none',
-                        outlineOffset: '2px',
-                      }}
+                      className="color-swatch"
+                      data-active={color === c}
+                      style={{ backgroundColor: c }}
                     />
                   ))}
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-1">
+              <div className="flex" style={{ gap: '12px', paddingTop: '4px' }}>
                 <button
+                  type="button"
                   onClick={closeModal}
-                  className="flex-1 font-medium"
-                  style={{
-                    border: '1.5px solid var(--border-default)',
-                    color: 'var(--text-secondary)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: '12px',
-                    fontSize: '14px',
-                  }}
+                  className="btn-secondary"
+                  style={{ flex: 1, padding: '12px 20px' }}
                 >
                   Annuler
                 </button>
                 <button
+                  type="button"
                   onClick={handleSave}
                   disabled={isPending || !name.trim()}
-                  className="flex-1 font-semibold transition-all active:scale-[0.98]"
-                  style={{
-                    background: 'var(--text-primary)',
-                    color: 'var(--text-inverted)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: '12px',
-                    fontSize: '14px',
-                    opacity: isPending || !name.trim() ? 0.4 : 1,
-                  }}
+                  className="btn-primary"
+                  style={{ flex: 1, padding: '12px 20px' }}
                 >
-                  {isPending ? 'Enregistrement…' : 'Sauvegarder'}
+                  {isPending ? 'Enregistrement...' : 'Sauvegarder'}
                 </button>
               </div>
             </div>
