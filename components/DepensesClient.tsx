@@ -20,17 +20,9 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
   const [showModal, setShowModal] = useState(false);
   const [editingExpense, setEditingExpense] = useState<Expense | undefined>();
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
+  const [sectionModal, setSectionModal] = useState<{ section: Section; expenses: Expense[] } | null>(null);
   const [, startTransition] = useTransition();
 
-  function toggleSection(sectionId: string) {
-    setExpandedSections((prev) => {
-      const next = new Set(prev);
-      if (next.has(sectionId)) next.delete(sectionId);
-      else next.add(sectionId);
-      return next;
-    });
-  }
   const isClient = useSyncExternalStore(() => () => {}, () => true, () => false);
 
   const grouped = sections.map((section) => ({
@@ -134,10 +126,8 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
 
   const SectionGroup = ({ section, sectionExpenses }: { section: Section; sectionExpenses: Expense[] }) => {
     const total = sectionExpenses.reduce((sum, e) => sum + Number(e.amount), 0);
-    const isExpanded = expandedSections.has(section.id);
     const hasMore = sectionExpenses.length > SECTION_PREVIEW_COUNT;
-    const visibleExpenses = isExpanded ? sectionExpenses : sectionExpenses.slice(0, SECTION_PREVIEW_COUNT);
-    const hiddenCount = sectionExpenses.length - SECTION_PREVIEW_COUNT;
+    const visibleExpenses = sectionExpenses.slice(0, SECTION_PREVIEW_COUNT);
 
     return (
       <div className="card" style={{ overflow: 'hidden' }}>
@@ -164,7 +154,7 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
             {formatCAD(total)}/mois
           </span>
         </div>
-        {/* Expense rows */}
+        {/* Expense rows (preview) */}
         <div>
           {visibleExpenses.map((e, i) => (
             <div key={e.id}>
@@ -173,10 +163,10 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
             </div>
           ))}
         </div>
-        {/* Show more / show less */}
+        {/* Voir tout → opens modal */}
         {hasMore && (
           <button
-            onClick={() => toggleSection(section.id)}
+            onClick={() => setSectionModal({ section, expenses: sectionExpenses })}
             style={{
               width: '100%',
               padding: '12px 20px',
@@ -185,7 +175,6 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
               color: 'var(--accent)',
               background: 'var(--surface-inset)',
               borderTop: '1px solid var(--surface-sunken)',
-              transition: `background var(--duration-fast) var(--ease-out)`,
               cursor: 'pointer',
               border: 'none',
               borderTopWidth: '1px',
@@ -193,9 +182,7 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
               borderTopColor: 'var(--surface-sunken)',
             }}
           >
-            {isExpanded
-              ? 'Voir moins'
-              : `Voir ${hiddenCount} autre${hiddenCount > 1 ? 's' : ''}`}
+            Voir tout ({sectionExpenses.length})
           </button>
         )}
       </div>
@@ -278,6 +265,52 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
       >
         +
       </button>
+
+      {/* Section detail modal */}
+      {sectionModal && (
+        <div
+          className="sheet-backdrop"
+          onClick={(e) => e.target === e.currentTarget && setSectionModal(null)}
+        >
+          <div className="sheet">
+            <div className="sheet-handle" />
+            <div style={{ padding: '8px 24px 32px' }}>
+              {/* Header */}
+              <div className="flex items-center justify-between" style={{ marginBottom: '20px' }}>
+                <div className="flex items-center" style={{ gap: '10px' }}>
+                  <span style={{ fontSize: '1.25rem' }}>{sectionModal.section.icon}</span>
+                  <h2 style={{
+                    fontSize: 'var(--text-lg)', fontWeight: 700,
+                    color: 'var(--text-primary)',
+                    letterSpacing: 'var(--tracking-tight)',
+                  }}>
+                    {sectionModal.section.name}
+                  </h2>
+                </div>
+                <button
+                  onClick={() => setSectionModal(null)}
+                  className="icon-btn"
+                  aria-label="Fermer"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </div>
+              {/* All expenses */}
+              <div className="card" style={{ overflow: 'hidden' }}>
+                {sectionModal.expenses.map((e, i) => (
+                  <div key={e.id}>
+                    {i > 0 && <div className="divider" style={{ marginLeft: '20px', marginRight: '20px' }} />}
+                    <ExpenseRow expense={e} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Expense modal */}
       {showModal && (

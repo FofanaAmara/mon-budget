@@ -7,7 +7,8 @@ import {
   autoMarkOverdue,
   autoMarkPaidForAutoDebit,
 } from '@/lib/actions/monthly-expenses';
-import { getMonthlyIncomeTotal } from '@/lib/actions/incomes';
+import { getMonthlyIncomeTotal, getIncomes } from '@/lib/actions/incomes';
+import { calcMonthlyIncome } from '@/lib/utils';
 import { currentMonth } from '@/lib/utils';
 import { formatCAD, daysUntil } from '@/lib/utils';
 import NotificationPermission from '@/components/NotificationPermission';
@@ -35,12 +36,13 @@ export default async function DashboardPage() {
   await autoMarkOverdue(month);
   await autoMarkPaidForAutoDebit(month);
 
-  const [sectionSummary, upcomingExpenses, monthSummary, monthlyIncome, projets] = await Promise.all([
+  const [sectionSummary, upcomingExpenses, monthSummary, monthlyIncome, projets, incomes] = await Promise.all([
     getMonthlySummaryBySection(),
     getUpcomingExpenses(7),
     getMonthSummary(month),
     getMonthlyIncomeTotal(),
     getPlannedExpenses(),
+    getIncomes(),
   ]);
 
   const totalMonthly = sectionSummary.reduce((sum, s) => sum + Number(s.total), 0);
@@ -49,10 +51,6 @@ export default async function DashboardPage() {
     month: 'long',
     year: 'numeric',
   }).format(new Date());
-
-  const alerts = upcomingExpenses.filter(
-    (e) => e.next_due_date && daysUntil(e.next_due_date) <= 3
-  );
 
   const hasNonZeroSections = sectionSummary.filter((s) => Number(s.total) > 0).length >= 3;
   const visibleSections = hasNonZeroSections
@@ -188,76 +186,27 @@ export default async function DashboardPage() {
           </Link>
         )}
 
-        {/* ── Alertes ── */}
-        <div className="card">
-          <div style={{ padding: '20px' }}>
-            <span className="section-label" style={{ display: 'block', marginBottom: '16px' }}>
-              Alertes
-            </span>
-            {alerts.length === 0 ? (
-              <div className="flex items-center gap-2">
-                <div style={{
-                  width: '24px', height: '24px', borderRadius: 'var(--radius-full)',
-                  background: 'var(--positive-subtle)', display: 'flex',
-                  alignItems: 'center', justifyContent: 'center',
-                  fontSize: 'var(--text-xs)', color: 'var(--positive)',
-                }}>
-                  ✓
-                </div>
-                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--positive)', fontWeight: 500 }}>
-                  Tout est a jour
-                </span>
-              </div>
-            ) : (
-              <div>
-                <p style={{
-                  fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)',
-                  marginBottom: '12px',
-                }}>
-                  {alerts.length} depense{alerts.length > 1 ? 's' : ''} dans moins de 3 jours
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {alerts.map((expense) => {
-                    const days = expense.next_due_date ? daysUntil(expense.next_due_date) : 0;
-                    const badgeStyle = getDueBadgeStyle(days);
-                    return (
-                      <div key={expense.id} className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="badge" style={{
-                            background: badgeStyle.bg,
-                            color: badgeStyle.text,
-                          }}>
-                            {formatDueLabel(days)}
-                          </span>
-                          <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-primary)', fontWeight: 500 }}>
-                            {expense.name}
-                          </span>
-                        </div>
-                        <span className="amount" style={{ fontSize: 'var(--text-sm)' }}>
-                          {formatCAD(expense.amount)}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
         {/* ── Prochaines depenses (7 jours) ── */}
         <div className="card">
           <div style={{ padding: '20px' }}>
-            <span className="section-label" style={{ display: 'block', marginBottom: '16px' }}>
-              Prochaines (7 jours)
-            </span>
+            <div className="flex items-center justify-between" style={{ marginBottom: '16px' }}>
+              <span className="section-label">Prochaines depenses</span>
+              {upcomingExpenses.length > 3 && (
+                <Link href="/mon-mois" style={{
+                  fontSize: 'var(--text-xs)', color: 'var(--accent)',
+                  fontWeight: 600, textDecoration: 'none',
+                }}>
+                  Voir tout →
+                </Link>
+              )}
+            </div>
             {upcomingExpenses.length === 0 ? (
               <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)' }}>
                 Aucune depense a venir
               </p>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {upcomingExpenses.map((expense) => {
+                {upcomingExpenses.slice(0, 3).map((expense) => {
                   const days = expense.next_due_date ? daysUntil(expense.next_due_date) : 0;
                   const badgeStyle = getDueBadgeStyle(days);
                   return (
@@ -281,6 +230,58 @@ export default async function DashboardPage() {
                       </div>
                       <span className="amount" style={{ fontSize: 'var(--text-sm)', flexShrink: 0 }}>
                         {formatCAD(expense.amount)}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ── Prochaines entrees d'argent ── */}
+        <div className="card">
+          <div style={{ padding: '20px' }}>
+            <div className="flex items-center justify-between" style={{ marginBottom: '16px' }}>
+              <span className="section-label">Prochaines entrees</span>
+              {incomes.length > 3 && (
+                <Link href="/revenus" style={{
+                  fontSize: 'var(--text-xs)', color: 'var(--accent)',
+                  fontWeight: 600, textDecoration: 'none',
+                }}>
+                  Voir tout →
+                </Link>
+              )}
+            </div>
+            {incomes.length === 0 ? (
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)' }}>
+                Aucun revenu configure
+              </p>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {incomes.slice(0, 3).map((income) => {
+                  const monthly = calcMonthlyIncome(Number(income.amount), income.frequency);
+                  return (
+                    <div key={income.id} className="flex items-center justify-between">
+                      <div className="flex items-center gap-2" style={{ minWidth: 0 }}>
+                        <span className="badge" style={{
+                          background: 'var(--positive-subtle)',
+                          color: 'var(--positive-text)',
+                          flexShrink: 0,
+                        }}>
+                          +
+                        </span>
+                        <span style={{
+                          fontSize: 'var(--text-sm)', color: 'var(--text-primary)',
+                          fontWeight: 500,
+                          overflow: 'hidden', textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap' as const, maxWidth: '140px',
+                        }}>
+                          {income.name}
+                        </span>
+                      </div>
+                      <span className="amount" style={{ fontSize: 'var(--text-sm)', flexShrink: 0, color: 'var(--positive)' }}>
+                        {formatCAD(monthly)}/mois
                       </span>
                     </div>
                   );

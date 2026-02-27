@@ -45,10 +45,13 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
       </head>
       <body className="font-[family-name:var(--font-geist)] antialiased">
-        <div className="max-w-lg mx-auto min-h-dvh relative">
-          {children}
-        </div>
         <BottomNav />
+        {/* On mobile: centered max-w-lg. On desktop: offset by sidebar width */}
+        <div className="md:ml-[240px]">
+          <div className="max-w-lg mx-auto md:max-w-2xl min-h-dvh relative">
+            {children}
+          </div>
+        </div>
         <ServiceWorkerInit />
       </body>
     </html>

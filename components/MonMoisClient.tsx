@@ -67,10 +67,13 @@ const GROUP_LABELS: Record<MonthlyExpenseStatus, string> = {
   PAID: 'Paye',
 };
 
+const GROUP_PREVIEW_COUNT = 3;
+
 export default function MonMoisClient({ expenses, summary, sections, month }: Props) {
   const router = useRouter();
   const [, startTransition] = useTransition();
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
+  const [groupModal, setGroupModal] = useState<{ status: MonthlyExpenseStatus; items: MonthlyExpense[] } | null>(null);
   const today = currentMonthKey();
   const isCurrentMonth = month === today;
 
@@ -259,26 +262,96 @@ export default function MonMoisClient({ expenses, summary, sections, month }: Pr
 
       {/* Grouped expenses by status */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        {grouped.map(({ status, items }) => (
-          <div key={status}>
-            <h2 className="section-label" style={{ marginBottom: '12px', paddingLeft: '4px' }}>
-              {GROUP_LABELS[status]} ({items.length})
-            </h2>
-            <div className="card" style={{ overflow: 'hidden' }}>
-              {items.map((expense, i) => (
-                <div key={expense.id}>
-                  {i > 0 && <div className="divider" style={{ marginLeft: '20px', marginRight: '20px' }} />}
-                  <ExpenseRow
-                    expense={expense}
-                    isCurrentMonth={isCurrentMonth}
-                    onAction={handleAction}
-                  />
-                </div>
-              ))}
+        {grouped.map(({ status, items }) => {
+          const hasMore = items.length > GROUP_PREVIEW_COUNT;
+          const visible = items.slice(0, GROUP_PREVIEW_COUNT);
+          return (
+            <div key={status}>
+              <h2 className="section-label" style={{ marginBottom: '12px', paddingLeft: '4px' }}>
+                {GROUP_LABELS[status]} ({items.length})
+              </h2>
+              <div className="card" style={{ overflow: 'hidden' }}>
+                {visible.map((expense, i) => (
+                  <div key={expense.id}>
+                    {i > 0 && <div className="divider" style={{ marginLeft: '20px', marginRight: '20px' }} />}
+                    <ExpenseRow
+                      expense={expense}
+                      isCurrentMonth={isCurrentMonth}
+                      onAction={handleAction}
+                    />
+                  </div>
+                ))}
+                {hasMore && (
+                  <button
+                    onClick={() => setGroupModal({ status, items })}
+                    style={{
+                      width: '100%',
+                      padding: '12px 20px',
+                      fontSize: 'var(--text-xs)',
+                      fontWeight: 600,
+                      color: 'var(--accent)',
+                      background: 'var(--surface-inset)',
+                      borderTop: '1px solid var(--surface-sunken)',
+                      cursor: 'pointer',
+                      border: 'none',
+                      borderTopWidth: '1px',
+                      borderTopStyle: 'solid',
+                      borderTopColor: 'var(--surface-sunken)',
+                    }}
+                  >
+                    Voir tout ({items.length})
+                  </button>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Group detail modal */}
+      {groupModal && (
+        <div
+          className="sheet-backdrop"
+          onClick={(e) => e.target === e.currentTarget && setGroupModal(null)}
+        >
+          <div className="sheet">
+            <div className="sheet-handle" />
+            <div style={{ padding: '8px 24px 32px' }}>
+              <div className="flex items-center justify-between" style={{ marginBottom: '20px' }}>
+                <h2 style={{
+                  fontSize: 'var(--text-lg)', fontWeight: 700,
+                  color: 'var(--text-primary)',
+                  letterSpacing: 'var(--tracking-tight)',
+                }}>
+                  {GROUP_LABELS[groupModal.status]} ({groupModal.items.length})
+                </h2>
+                <button
+                  onClick={() => setGroupModal(null)}
+                  className="icon-btn"
+                  aria-label="Fermer"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </div>
+              <div className="card" style={{ overflow: 'hidden' }}>
+                {groupModal.items.map((expense, i) => (
+                  <div key={expense.id}>
+                    {i > 0 && <div className="divider" style={{ marginLeft: '20px', marginRight: '20px' }} />}
+                    <ExpenseRow
+                      expense={expense}
+                      isCurrentMonth={isCurrentMonth}
+                      onAction={(id, action) => { handleAction(id, action); setGroupModal(null); }}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
