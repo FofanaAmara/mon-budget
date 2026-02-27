@@ -11,9 +11,6 @@ type Props = {
 };
 
 export default function TabTableauDeBord({ summary, incomeSummary }: Props) {
-  const solde = incomeSummary.actualTotal - summary.paid_total;
-  const soldePositive = solde >= 0;
-
   // Revenus: ratio reçu vs attendu
   const revenuPct = incomeSummary.expectedTotal > 0
     ? (incomeSummary.actualTotal / incomeSummary.expectedTotal) * 100 : 0;
@@ -26,9 +23,6 @@ export default function TabTableauDeBord({ summary, incomeSummary }: Props) {
     ? (summary.paid_total / chargesFixes) * 100 : 0;
   const depenseOver = summary.paid_total > chargesFixes;
   const depenseDelta = summary.paid_total - chargesFixes;
-
-  // Reste à payer = charges prévues non payées
-  const restAPayer = Math.max(chargesFixes - summary.paid_total, 0);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -164,39 +158,6 @@ export default function TabTableauDeBord({ summary, incomeSummary }: Props) {
           </p>
         </div>
       </Link>
-
-      {/* Solde du mois */}
-      <div className="card" style={{
-        padding: '16px 20px',
-        background: soldePositive
-          ? 'linear-gradient(135deg, #059669, #047857)'
-          : 'linear-gradient(135deg, #DC2626, #B91C1C)',
-        color: 'white',
-        borderColor: 'transparent',
-      }}>
-        <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, opacity: 0.75, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '4px' }}>
-          Solde du mois
-        </p>
-        <p className="amount" style={{ fontSize: 'var(--text-xl)', fontWeight: 750 }}>
-          {soldePositive ? '+' : ''}{formatCAD(solde)}
-        </p>
-        <p style={{ fontSize: 'var(--text-xs)', opacity: 0.7, marginTop: '4px' }}>
-          Reçu {formatCAD(incomeSummary.actualTotal)} - Payé {formatCAD(summary.paid_total)}
-        </p>
-      </div>
-
-      {/* Reste a payer */}
-      <div className="card" style={{ padding: '16px 20px' }}>
-        <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '4px' }}>
-          Reste a payer ce mois
-        </p>
-        <p className="amount" style={{ fontSize: 'var(--text-lg)', color: restAPayer > 0 ? 'var(--warning-text)' : 'var(--positive)' }}>
-          {formatCAD(restAPayer)}
-        </p>
-        <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
-          {summary.count - summary.paid_count} depense{summary.count - summary.paid_count !== 1 ? 's' : ''} restante{summary.count - summary.paid_count !== 1 ? 's' : ''}
-        </p>
-      </div>
 
     </div>
   );
