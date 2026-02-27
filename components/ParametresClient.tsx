@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import Link from 'next/link';
 import { updateSettings } from '@/lib/actions/settings';
 import type { Settings } from '@/lib/types';
 
@@ -132,6 +133,33 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Gestion */}
+        <div className="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
+          <div className="px-5 pt-4 pb-2">
+            <h2 className="text-sm font-semibold text-[#1E293B]">Gestion</h2>
+          </div>
+          {[
+            { href: '/cartes', label: 'Mes cartes de paiement', icon: '💳' },
+            { href: '/sections', label: 'Mes sections', icon: '📂' },
+            { href: '/revenus', label: 'Mes revenus', icon: '💰' },
+            { href: '/projets', label: 'Mes projets planifiés', icon: '🎯' },
+          ].map(({ href, label, icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className="flex items-center justify-between px-5 py-3.5 border-t border-[#F1F5F9] hover:bg-[#F8FAFC] transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-base">{icon}</span>
+                <span className="text-sm text-[#1E293B]">{label}</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </Link>
+          ))}
         </div>
 
         {/* Save */}

@@ -40,14 +40,12 @@ const tabs = [
     ),
   },
   {
-    href: '/cartes',
-    label: 'Cartes',
+    href: '/revenus',
+    label: 'Revenus',
     icon: (active: boolean) => (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
         stroke={active ? '#2563EB' : '#94A3B8'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M2 8a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V8z" />
-        <circle cx="7.5" cy="14" r="1.5" fill={active ? '#2563EB' : '#94A3B8'} stroke="none" />
-        <circle cx="11" cy="14" r="1.5" fill={active ? '#3B82F6' : '#CBD5E1'} stroke="none" />
+        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
       </svg>
     ),
   },

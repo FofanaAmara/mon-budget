@@ -13,12 +13,24 @@ type Props = {
   cards: Card[];
 };
 
+const SECTION_PREVIEW_COUNT = 3;
+
 export default function DepensesClient({ expenses, sections, cards }: Props) {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [editingExpense, setEditingExpense] = useState<Expense | undefined>();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
   const [, startTransition] = useTransition();
+
+  function toggleSection(sectionId: string) {
+    setExpandedSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(sectionId)) next.delete(sectionId);
+      else next.add(sectionId);
+      return next;
+    });
+  }
   // useSyncExternalStore: returns false on SSR, true on client — no double-render
   const isClient = useSyncExternalStore(() => () => {}, () => true, () => false);
 
@@ -106,6 +118,11 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
 
   const SectionGroup = ({ section, sectionExpenses }: { section: Section; sectionExpenses: Expense[] }) => {
     const total = sectionExpenses.reduce((sum, e) => sum + Number(e.amount), 0);
+    const isExpanded = expandedSections.has(section.id);
+    const hasMore = sectionExpenses.length > SECTION_PREVIEW_COUNT;
+    const visibleExpenses = isExpanded ? sectionExpenses : sectionExpenses.slice(0, SECTION_PREVIEW_COUNT);
+    const hiddenCount = sectionExpenses.length - SECTION_PREVIEW_COUNT;
+
     return (
       <div className="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
         {/* Group header */}
@@ -120,8 +137,19 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
         </div>
         {/* Expense rows */}
         <div className="divide-y divide-[#F8FAFC]">
-          {sectionExpenses.map((e) => <ExpenseRow key={e.id} expense={e} />)}
+          {visibleExpenses.map((e) => <ExpenseRow key={e.id} expense={e} />)}
         </div>
+        {/* Show more / show less */}
+        {hasMore && (
+          <button
+            onClick={() => toggleSection(section.id)}
+            className="w-full py-2.5 text-xs font-medium text-[#2563EB] bg-[#F8FAFC] border-t border-[#F1F5F9] hover:bg-blue-50 transition-colors"
+          >
+            {isExpanded
+              ? 'Voir moins ↑'
+              : `Voir ${hiddenCount} autre${hiddenCount > 1 ? 's' : ''} →`}
+          </button>
+        )}
       </div>
     );
   };
