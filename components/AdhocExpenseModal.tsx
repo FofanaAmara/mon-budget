@@ -32,7 +32,7 @@ export default function AdhocExpenseModal({ sections, month, onClose }: Props) {
         sectionId,
         month,
         mode === 'paid',
-        mode === 'upcoming' && dueDate ? dueDate : undefined,
+        dueDate || undefined,
       );
       onClose();
     } catch {
@@ -119,17 +119,18 @@ export default function AdhocExpenseModal({ sections, month, onClose }: Props) {
               />
             </div>
 
-            {/* Due date — only for upcoming */}
-            {mode === 'upcoming' && (
-              <div>
-                <label className="field-label">Date prevue</label>
-                <input
-                  type="date"
-                  value={dueDate} onChange={(e) => setDueDate(e.target.value)}
-                  className="input-field"
-                />
-              </div>
-            )}
+            {/* Date — optional in both modes */}
+            <div>
+              <label className="field-label">
+                {mode === 'paid' ? 'Date de la depense' : 'Date prevue'}
+                <span style={{ fontWeight: 400, color: 'var(--text-tertiary)', marginLeft: '4px' }}>(optionnel)</span>
+              </label>
+              <input
+                type="date"
+                value={dueDate} onChange={(e) => setDueDate(e.target.value)}
+                className="input-field"
+              />
+            </div>
 
             <div>
               <label className="field-label">Section</label>

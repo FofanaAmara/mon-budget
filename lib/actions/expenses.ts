@@ -354,7 +354,7 @@ export async function createAdhocExpense(
     // Already paid — log directly as PAID
     await sql`
       INSERT INTO monthly_expenses (expense_id, section_id, month, name, amount, status, due_date, paid_at, is_planned)
-      VALUES (${expenseId}, ${sectionId}, ${month}, ${name}, ${amount}, 'PAID', ${today}::date, ${today}::date, false)
+      VALUES (${expenseId}, ${sectionId}, ${month}, ${name}, ${amount}, 'PAID', ${effectiveDate}::date, ${effectiveDate}::date, false)
       ON CONFLICT (expense_id, month) DO NOTHING
     `;
   } else {
