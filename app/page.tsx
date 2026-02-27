@@ -260,7 +260,7 @@ export default async function DashboardPage() {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {incomes.slice(0, 3).map((income) => {
-                  const monthly = calcMonthlyIncome(Number(income.amount), income.frequency);
+                  const monthly = calcMonthlyIncome(income.amount, income.frequency, income.estimated_amount);
                   return (
                     <div key={income.id} className="flex items-center justify-between">
                       <div className="flex items-center gap-2" style={{ minWidth: 0 }}>

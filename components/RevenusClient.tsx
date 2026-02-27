@@ -10,6 +10,7 @@ const FREQUENCY_LABELS: Record<IncomeFrequency, string> = {
   MONTHLY: 'Mensuel',
   BIWEEKLY: 'Aux 2 sem.',
   YEARLY: 'Annuel',
+  VARIABLE: 'Variable',
 };
 
 type Props = {
@@ -199,7 +200,7 @@ function IncomeRow({
   onEdit: (inc: Income) => void;
   onDelete: (id: string) => void;
 }) {
-  const monthly = calcMonthlyIncome(Number(inc.amount), inc.frequency);
+  const monthly = calcMonthlyIncome(inc.amount, inc.frequency, inc.estimated_amount);
   return (
     <div>
       {index > 0 && <div className="divider" style={{ marginLeft: '20px', marginRight: '20px' }} />}

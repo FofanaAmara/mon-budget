@@ -108,9 +108,16 @@ export function currentMonth(): string {
 }
 
 /**
- * Normalize income amount to monthly equivalent
+ * Normalize income amount to monthly equivalent.
+ * For VARIABLE incomes, uses estimated_amount (returns 0 if not provided).
  */
-export function calcMonthlyIncome(amount: number, frequency: IncomeFrequency): number {
+export function calcMonthlyIncome(
+  amount: number | null,
+  frequency: IncomeFrequency,
+  estimated_amount?: number | null
+): number {
+  if (frequency === 'VARIABLE') return estimated_amount ?? 0;
+  if (amount === null) return 0;
   switch (frequency) {
     case 'MONTHLY': return amount;
     case 'BIWEEKLY': return (amount * 26) / 12;

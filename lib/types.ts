@@ -91,14 +91,35 @@ export type MonthSummary = {
   overdue_count: number;
 };
 
-export type IncomeFrequency = 'MONTHLY' | 'BIWEEKLY' | 'YEARLY';
+export type IncomeSource = 'EMPLOYMENT' | 'BUSINESS' | 'INVESTMENT' | 'OTHER';
+export type IncomeFrequency = 'MONTHLY' | 'BIWEEKLY' | 'YEARLY' | 'VARIABLE';
 
 export type Income = {
   id: string;
   name: string;
-  amount: number;
+  source: IncomeSource;
+  amount: number | null;           // null si VARIABLE
+  estimated_amount: number | null; // estimation mensuelle pour VARIABLE
   frequency: IncomeFrequency;
   is_active: boolean;
+  notes: string | null;
   created_at: string;
   updated_at: string;
+};
+
+export type MonthlyIncomeStatus = 'EXPECTED' | 'RECEIVED' | 'PARTIAL' | 'MISSED';
+
+export type MonthlyIncome = {
+  id: string;
+  income_id: string;
+  month: string;                   // "YYYY-MM"
+  expected_amount: number | null;
+  actual_amount: number | null;
+  status: MonthlyIncomeStatus;
+  received_at: string | null;
+  notes: string | null;
+  created_at: string;
+  // Joins
+  income_name?: string;
+  income_source?: IncomeSource;
 };
