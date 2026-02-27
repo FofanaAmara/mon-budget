@@ -67,16 +67,16 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
   const ExpenseRow = ({ expense }: { expense: Expense }) => {
     const badge = isClient ? getDueBadge(expense) : null;
     return (
-      <div className="flex items-center" style={{ gap: '12px', padding: '13px 20px' }}>
+      <div className="flex items-center" style={{ gap: '12px', padding: '12px 20px' }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{
-            fontWeight: 550, color: 'var(--text-primary)',
+            fontWeight: 600, color: 'var(--text-primary)',
             fontSize: 'var(--text-sm)',
             overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
           }}>
             {expense.name}
           </p>
-          <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
+          <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '4px' }}>
             {expense.type === 'RECURRING'
               ? `${expense.recurrence_frequency?.toLowerCase()} · j.${expense.recurrence_day}${expense.auto_debit ? ' · Prelev. auto' : ''}`
               : 'Ponctuel'}
@@ -98,20 +98,16 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
         </span>
 
         {deletingId === expense.id ? (
-          <div className="flex items-center" style={{ gap: '6px', fontSize: 'var(--text-xs)' }}>
-            <button onClick={() => handleDelete(expense.id)} style={{ color: 'var(--negative)', fontWeight: 650 }}>Oui</button>
-            <span style={{ color: 'var(--border-default)' }}>|</span>
-            <button onClick={() => setDeletingId(null)} style={{ color: 'var(--text-tertiary)' }}>Non</button>
+          <div className="confirm-inline">
+            <button onClick={() => handleDelete(expense.id)} className="confirm-yes">Oui</button>
+            <span className="confirm-sep">|</span>
+            <button onClick={() => setDeletingId(null)} className="confirm-no">Non</button>
           </div>
         ) : (
           <div className="flex items-center" style={{ gap: '2px' }}>
             <button
               onClick={() => handleEdit(expense)}
-              style={{
-                padding: '6px', color: 'var(--text-tertiary)',
-                borderRadius: 'var(--radius-sm)',
-                transition: `color var(--duration-fast) var(--ease-out)`,
-              }}
+              className="icon-btn"
               aria-label="Modifier"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -121,11 +117,7 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
             </button>
             <button
               onClick={() => setDeletingId(expense.id)}
-              style={{
-                padding: '6px', color: 'var(--text-tertiary)',
-                borderRadius: 'var(--radius-sm)',
-                transition: `color var(--duration-fast) var(--ease-out)`,
-              }}
+              className="icon-btn icon-btn-danger"
               aria-label="Supprimer"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -151,10 +143,10 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
       <div className="card" style={{ overflow: 'hidden' }}>
         {/* Group header */}
         <div className="flex items-center justify-between" style={{
-          padding: '14px 20px',
+          padding: '16px 20px',
           borderBottom: '1px solid var(--surface-sunken)',
         }}>
-          <div className="flex items-center" style={{ gap: '10px' }}>
+          <div className="flex items-center" style={{ gap: '12px' }}>
             <div style={{
               width: '32px', height: '32px',
               borderRadius: 'var(--radius-md)',
@@ -187,11 +179,11 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
             onClick={() => toggleSection(section.id)}
             style={{
               width: '100%',
-              padding: '11px 20px',
+              padding: '12px 20px',
               fontSize: 'var(--text-xs)',
               fontWeight: 600,
               color: 'var(--accent)',
-              background: 'var(--surface-sunken)',
+              background: 'var(--surface-inset)',
               borderTop: '1px solid var(--surface-sunken)',
               transition: `background var(--duration-fast) var(--ease-out)`,
               cursor: 'pointer',
@@ -237,7 +229,7 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
       {expenses.length === 0 && (
         <div className="flex flex-col items-center justify-center text-center" style={{ padding: '80px 0' }}>
           <div style={{ fontSize: '3rem', marginBottom: '16px', opacity: 0.6 }}>💸</div>
-          <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)', marginBottom: '6px' }}>
+          <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)', marginBottom: '8px', fontWeight: 500 }}>
             Aucune depense enregistree
           </p>
           <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-xs)', opacity: 0.7 }}>
@@ -256,7 +248,7 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
         {unsectioned.length > 0 && (
           <div className="card" style={{ overflow: 'hidden' }}>
             <div className="flex items-center justify-between" style={{
-              padding: '14px 20px',
+              padding: '16px 20px',
               borderBottom: '1px solid var(--surface-sunken)',
             }}>
               <span style={{ fontWeight: 600, color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)' }}>

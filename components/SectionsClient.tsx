@@ -131,7 +131,7 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
               className="card card-press"
               style={{
                 display: 'flex', alignItems: 'center', gap: '12px',
-                padding: '14px 18px',
+                padding: '16px 20px',
                 cursor: 'grab',
               }}
             >
@@ -148,7 +148,7 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
               </div>
 
               {/* Color dot + Icon */}
-              <div className="flex items-center" style={{ gap: '6px', flexShrink: 0 }}>
+              <div className="flex items-center" style={{ gap: '8px', flexShrink: 0 }}>
                 <div style={{
                   width: '8px', height: '8px',
                   borderRadius: 'var(--radius-full)',
@@ -160,7 +160,7 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
               {/* Name */}
               <span style={{
                 flex: 1, fontSize: 'var(--text-sm)',
-                fontWeight: 550, color: 'var(--text-primary)',
+                fontWeight: 600, color: 'var(--text-primary)',
               }}>
                 {section.name}
               </span>
@@ -284,7 +284,7 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
                   type="button"
                   onClick={closeModal}
                   className="btn-secondary"
-                  style={{ flex: 1, padding: '12px 20px' }}
+                  style={{ flex: 1 }}
                 >
                   Annuler
                 </button>
@@ -293,7 +293,7 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
                   onClick={handleSave}
                   disabled={isPending || !name.trim()}
                   className="btn-primary"
-                  style={{ flex: 1, padding: '12px 20px' }}
+                  style={{ flex: 1 }}
                 >
                   {isPending ? 'Enregistrement...' : 'Sauvegarder'}
                 </button>

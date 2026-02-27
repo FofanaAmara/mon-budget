@@ -22,7 +22,7 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
 
   return (
     <div style={{ padding: '36px 20px 24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      {/* Card visual */}
+      {/* Card visual — colored gradient with depth */}
       <div
         style={{
           borderRadius: 'var(--radius-xl)',
@@ -31,18 +31,18 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
           position: 'relative',
           overflow: 'hidden',
           background: `linear-gradient(135deg, ${card.color} 0%, ${card.color}CC 100%)`,
-          boxShadow: `0 8px 32px ${card.color}40, 0 2px 8px ${card.color}25`,
+          boxShadow: `0 8px 32px ${card.color}35, 0 2px 8px ${card.color}20`,
         }}
       >
         <div style={{
-          position: 'absolute', top: '-20px', right: '-20px',
+          position: 'absolute', top: '-24px', right: '-24px',
           width: '96px', height: '96px', borderRadius: 'var(--radius-full)',
-          background: 'rgba(255,255,255,0.10)', pointerEvents: 'none',
+          background: 'rgba(255,255,255,0.08)', pointerEvents: 'none',
         }} />
         <div style={{
           position: 'absolute', bottom: '16px', right: '80px',
           width: '64px', height: '64px', borderRadius: 'var(--radius-full)',
-          background: 'rgba(255,255,255,0.06)', pointerEvents: 'none',
+          background: 'rgba(255,255,255,0.05)', pointerEvents: 'none',
         }} />
 
         <div className="flex justify-between items-start" style={{ marginBottom: '24px' }}>
@@ -52,7 +52,7 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
             </p>
             <p style={{
               fontSize: 'var(--text-lg)', fontWeight: 700,
-              marginTop: '2px', letterSpacing: 'var(--tracking-tight)',
+              marginTop: '4px', letterSpacing: 'var(--tracking-tight)',
             }}>
               {card.name}
             </p>
@@ -87,7 +87,7 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
           { label: 'Prelevements auto', value: autoExpenses.length },
           { label: 'Depenses totales', value: expenses.length },
         ].map(({ label, value }) => (
-          <div key={label} className="card" style={{ padding: '16px' }}>
+          <div key={label} className="card" style={{ padding: '16px 20px' }}>
             <p className="amount" style={{
               fontSize: 'var(--text-2xl)',
               color: 'var(--text-primary)',
@@ -98,7 +98,7 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
             <p style={{
               fontSize: 'var(--text-xs)',
               color: 'var(--text-tertiary)',
-              marginTop: '2px',
+              marginTop: '4px',
             }}>{label}</p>
           </div>
         ))}
@@ -121,7 +121,7 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
             const badge = days !== null ? getDueBadge(days) : { bg: 'var(--accent-subtle)', color: 'var(--accent)' };
             return (
               <div key={expense.id}>
-                {idx > 0 && <div className="list-card-divider" style={{ marginLeft: '18px', marginRight: '18px' }} />}
+                {idx > 0 && <div className="list-card-divider" style={{ marginLeft: '20px', marginRight: '20px' }} />}
                 <div className="list-card-row">
                   <div style={{
                     width: '32px', height: '32px',
@@ -144,7 +144,7 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
                       color: 'var(--text-primary)',
                       overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                     }}>{expense.name}</p>
-                    <div className="flex items-center" style={{ gap: '6px', marginTop: '2px' }}>
+                    <div className="flex items-center" style={{ gap: '8px', marginTop: '4px' }}>
                       <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
                         {expense.section?.name ?? '--'}
                       </span>
@@ -163,7 +163,7 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
                       {formatCAD(expense.amount)}
                     </p>
                     {monthly !== expense.amount && (
-                      <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
+                      <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
                         {formatCAD(monthly)}/mois
                       </p>
                     )}
@@ -183,7 +183,7 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
           </div>
           {manualExpenses.map((expense, idx) => (
             <div key={expense.id}>
-              {idx > 0 && <div className="list-card-divider" style={{ marginLeft: '18px', marginRight: '18px' }} />}
+              {idx > 0 && <div className="list-card-divider" style={{ marginLeft: '20px', marginRight: '20px' }} />}
               <div className="list-card-row">
                 <div style={{
                   width: '32px', height: '32px',
@@ -206,7 +206,7 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
                     color: 'var(--text-primary)',
                     overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                   }}>{expense.name}</p>
-                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
+                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
                     {expense.section?.name ?? '--'}
                   </p>
                 </div>
@@ -237,9 +237,10 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
         href="/cartes"
         className="flex items-center justify-center"
         style={{
-          gap: '6px', padding: '12px',
+          gap: '8px', padding: '12px',
           fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)',
           textDecoration: 'none',
+          transition: `color var(--duration-fast) var(--ease-out)`,
         }}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

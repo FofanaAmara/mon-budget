@@ -97,19 +97,16 @@ export default function BottomNav() {
             <Link
               key={tab.href}
               href={tab.href}
-              className="flex flex-1 flex-col items-center justify-center gap-[3px]"
-              style={{
-                transition: `opacity var(--duration-fast) var(--ease-out)`,
-              }}
+              className="flex flex-1 flex-col items-center justify-center"
+              style={{ gap: '4px' }}
               aria-current={active ? 'page' : undefined}
             >
-              {/* Active indicator dot */}
-              <div className="relative flex flex-col items-center gap-[3px]">
+              <div className="relative flex flex-col items-center" style={{ gap: '4px' }}>
                 <span
                   className="relative"
                   style={{
                     transition: `transform var(--duration-normal) var(--ease-spring)`,
-                    transform: active ? 'scale(1.05)' : 'scale(1)',
+                    transform: active ? 'scale(1.06)' : 'scale(1)',
                   }}
                 >
                   {tab.icon(active)}
@@ -120,7 +117,7 @@ export default function BottomNav() {
                     fontWeight: active ? 650 : 500,
                     letterSpacing: '0.01em',
                     color: active ? 'var(--accent)' : 'var(--text-tertiary)',
-                    transition: `color var(--duration-normal) var(--ease-out), font-weight var(--duration-normal) var(--ease-out)`,
+                    transition: `color var(--duration-normal) var(--ease-out)`,
                   }}
                 >
                   {tab.label}

@@ -99,7 +99,7 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {/* Currency */}
-        <div className="card" style={{ padding: '18px 20px' }}>
+        <div className="card" style={{ padding: '20px' }}>
           <h2 style={{
             fontSize: 'var(--text-sm)', fontWeight: 650,
             color: 'var(--text-primary)', marginBottom: '12px',
@@ -120,10 +120,10 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
         </div>
 
         {/* Reminders */}
-        <div className="card" style={{ padding: '18px 20px' }}>
+        <div className="card" style={{ padding: '20px' }}>
           <h2 style={{
             fontSize: 'var(--text-sm)', fontWeight: 650,
-            color: 'var(--text-primary)', marginBottom: '2px',
+            color: 'var(--text-primary)', marginBottom: '4px',
           }}>Rappels par defaut</h2>
           <p style={{
             fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)',
@@ -144,16 +144,16 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
         </div>
 
         {/* Contact info */}
-        <div className="card" style={{ padding: '18px 20px' }}>
+        <div className="card" style={{ padding: '20px' }}>
           <h2 style={{
             fontSize: 'var(--text-sm)', fontWeight: 650,
-            color: 'var(--text-primary)', marginBottom: '2px',
+            color: 'var(--text-primary)', marginBottom: '4px',
           }}>Contact</h2>
           <p style={{
             fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)',
             marginBottom: '16px',
           }}>Pour les notifications email et SMS</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
               <label className="field-label">Email</label>
               <input
@@ -178,12 +178,12 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
         </div>
 
         {/* Notifications */}
-        <div className="card" style={{ padding: '18px 20px' }}>
+        <div className="card" style={{ padding: '20px' }}>
           <h2 style={{
             fontSize: 'var(--text-sm)', fontWeight: 650,
-            color: 'var(--text-primary)', marginBottom: '14px',
+            color: 'var(--text-primary)', marginBottom: '16px',
           }}>Canaux de notification</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {[
               { label: 'Notifications push', value: notifyPush, onChange: setNotifyPush },
               { label: 'Email', value: notifyEmail, onChange: setNotifyEmail },
@@ -207,7 +207,7 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
 
         {/* Gestion */}
         <div className="list-card">
-          <div style={{ padding: '14px 18px 8px' }}>
+          <div style={{ padding: '16px 20px 8px' }}>
             <h2 style={{
               fontSize: 'var(--text-sm)', fontWeight: 650,
               color: 'var(--text-primary)',
@@ -238,7 +238,7 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
           className="btn-primary"
           style={{
             width: '100%',
-            padding: '14px',
+            padding: '16px',
             fontSize: 'var(--text-base)',
             marginTop: '4px',
             opacity: isPending ? 0.5 : 1,

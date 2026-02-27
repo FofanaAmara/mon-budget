@@ -53,7 +53,6 @@ export default function IncomeModal({ income, onClose }: Props) {
         className="sheet"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Drag handle */}
         <div className="sheet-handle" />
 
         <div style={{ padding: '8px 24px 32px' }}>
@@ -97,7 +96,7 @@ export default function IncomeModal({ income, onClose }: Props) {
 
             {/* Frequency */}
             <div>
-              <label className="field-label" style={{ marginBottom: '8px' }}>Frequence</label>
+              <label className="field-label">Frequence</label>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
                 {FREQUENCY_OPTIONS.map(({ value, label, sub }) => {
                   const active = frequency === value;
@@ -109,7 +108,7 @@ export default function IncomeModal({ income, onClose }: Props) {
                       className="freq-pill"
                       data-active={active}
                       style={{
-                        padding: '10px 8px',
+                        padding: '12px 8px',
                         textAlign: 'center',
                         ...(active ? {
                           background: 'var(--text-primary)',
@@ -124,7 +123,7 @@ export default function IncomeModal({ income, onClose }: Props) {
                       <span style={{
                         display: 'block',
                         fontSize: '10px',
-                        marginTop: '1px',
+                        marginTop: '2px',
                         opacity: 0.7,
                       }}>
                         {sub}
@@ -153,7 +152,7 @@ export default function IncomeModal({ income, onClose }: Props) {
               className="btn-primary"
               style={{
                 width: '100%',
-                padding: '14px',
+                padding: '16px',
                 fontSize: 'var(--text-base)',
                 marginTop: '4px',
                 opacity: loading ? 0.5 : 1,

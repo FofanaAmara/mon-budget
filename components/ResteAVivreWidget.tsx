@@ -19,17 +19,9 @@ export default function ResteAVivreWidget({ monthlyIncome, monthlyExpenses }: Pr
 
   return (
     <Link href="/revenus" className="block card card-press">
-      <div style={{ padding: '18px 20px' }}>
-        <div className="flex items-center justify-between" style={{ marginBottom: '14px' }}>
-          <span
-            style={{
-              fontSize: 'var(--text-xs)',
-              fontWeight: 650,
-              color: 'var(--text-tertiary)',
-              letterSpacing: 'var(--tracking-widest)',
-              textTransform: 'uppercase' as const,
-            }}
-          >
+      <div style={{ padding: '20px' }}>
+        <div className="flex items-center justify-between" style={{ marginBottom: '16px' }}>
+          <span className="section-label">
             Reste a vivre
           </span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -49,7 +41,7 @@ export default function ResteAVivreWidget({ monthlyIncome, monthlyExpenses }: Pr
             >
               {formatCAD(resteAVivre)}
             </p>
-            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '3px' }}>
+            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '4px' }}>
               ce mois
             </p>
           </div>
@@ -62,7 +54,7 @@ export default function ResteAVivreWidget({ monthlyIncome, monthlyExpenses }: Pr
 
         {monthlyIncome > 0 && (
           <>
-            <div className="progress-track" style={{ marginBottom: '10px' }}>
+            <div className="progress-track" style={{ marginBottom: '12px' }}>
               <div
                 className="progress-fill"
                 style={{

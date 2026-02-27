@@ -60,11 +60,11 @@ export default function ProjetsClient({ projets }: Props) {
             : null;
 
         return (
-          <div key={projet.id} className="card" style={{ padding: '18px 20px' }}>
+          <div key={projet.id} className="card" style={{ padding: '20px' }}>
             {/* Header */}
-            <div className="flex items-start justify-between" style={{ marginBottom: '14px' }}>
+            <div className="flex items-start justify-between" style={{ marginBottom: '16px' }}>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div className="flex items-center" style={{ gap: '10px' }}>
+                <div className="flex items-center" style={{ gap: '12px' }}>
                   <div style={{
                     width: '32px', height: '32px',
                     borderRadius: 'var(--radius-md)',
@@ -86,7 +86,7 @@ export default function ProjetsClient({ projets }: Props) {
                       {projet.name}
                     </p>
                     {projet.section && (
-                      <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
+                      <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '4px' }}>
                         {projet.section.name}
                       </p>
                     )}
@@ -119,7 +119,7 @@ export default function ProjetsClient({ projets }: Props) {
             </div>
 
             {/* Progress bar */}
-            <div className="progress-track" style={{ height: '6px', marginBottom: '10px' }}>
+            <div className="progress-track" style={{ marginBottom: '12px' }}>
               <div
                 className="progress-fill"
                 style={{
@@ -139,7 +139,7 @@ export default function ProjetsClient({ projets }: Props) {
                       value={editValue}
                       onChange={(e) => setEditValue(e.target.value)}
                       className="input-field"
-                      style={{ width: '110px', padding: '7px 10px' }}
+                      style={{ width: '110px', padding: '8px 12px' }}
                       min="0"
                       step="0.01"
                       autoFocus
@@ -147,7 +147,7 @@ export default function ProjetsClient({ projets }: Props) {
                     <button
                       onClick={() => saveEdit(projet.id)}
                       className="btn-action btn-action-accent"
-                      style={{ padding: '7px 12px' }}
+                      style={{ padding: '8px 12px' }}
                     >
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="20 6 9 17 4 12" />
@@ -177,7 +177,7 @@ export default function ProjetsClient({ projets }: Props) {
                 <p style={{
                   fontSize: 'var(--text-xs)',
                   color: 'var(--text-tertiary)',
-                  marginTop: '2px',
+                  marginTop: '4px',
                 }}>
                   {Math.round(progress)}% atteint
                 </p>
@@ -193,7 +193,7 @@ export default function ProjetsClient({ projets }: Props) {
                     fontSize: 'var(--text-xs)',
                     fontWeight: 650,
                     color: 'var(--accent)',
-                    marginTop: '2px',
+                    marginTop: '4px',
                   }}>
                     {formatCAD(monthlySuggested)}/mois suggere
                   </p>

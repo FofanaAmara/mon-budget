@@ -64,7 +64,7 @@ export default async function DashboardPage() {
       <NotificationPermission />
       <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
-        {/* ── Header card ── */}
+        {/* ── Header card — deep indigo gradient with warm depth ── */}
         <div
           style={{
             borderRadius: 'var(--radius-xl)',
@@ -72,19 +72,26 @@ export default async function DashboardPage() {
             color: 'var(--text-inverted)',
             position: 'relative',
             overflow: 'hidden',
-            background: 'linear-gradient(145deg, #2D2BF0 0%, #1E1CB8 55%, #14126D 100%)',
+            background: 'linear-gradient(145deg, #3D3BF3 0%, #2D2BCC 40%, #1A1980 100%)',
+            boxShadow: '0 8px 32px rgba(61, 59, 243, 0.20), 0 2px 8px rgba(61, 59, 243, 0.10)',
           }}
         >
-          {/* Decorative orbs */}
+          {/* Decorative orbs — warm, organic */}
           <div style={{
-            position: 'absolute', top: '-20px', right: '-20px',
+            position: 'absolute', top: '-24px', right: '-24px',
             width: '120px', height: '120px', borderRadius: '50%',
-            background: 'rgba(255,255,255,0.07)', pointerEvents: 'none',
+            background: 'rgba(255,255,255,0.06)', pointerEvents: 'none',
           }} />
           <div style={{
-            position: 'absolute', bottom: '-30px', left: '20%',
+            position: 'absolute', bottom: '-32px', left: '20%',
             width: '80px', height: '80px', borderRadius: '50%',
             background: 'rgba(255,255,255,0.04)', pointerEvents: 'none',
+          }} />
+          {/* Subtle grain overlay */}
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.05) 0%, transparent 60%)',
+            pointerEvents: 'none',
           }} />
 
           <div style={{ position: 'relative', zIndex: 1 }}>
@@ -94,7 +101,7 @@ export default async function DashboardPage() {
                 fontWeight: 650,
                 textTransform: 'uppercase' as const,
                 letterSpacing: 'var(--tracking-widest)',
-                color: 'rgba(255,255,255,0.5)',
+                color: 'rgba(255,255,255,0.50)',
               }}>
                 {monthLabel}
               </p>
@@ -102,7 +109,7 @@ export default async function DashboardPage() {
                 fontSize: 'var(--text-xs)',
                 fontWeight: 700,
                 background: 'rgba(255,255,255,0.12)',
-                padding: '4px 10px',
+                padding: '4px 12px',
                 borderRadius: 'var(--radius-full)',
                 letterSpacing: '0.02em',
               }}>
@@ -127,8 +134,8 @@ export default async function DashboardPage() {
             </p>
             <p style={{
               fontSize: 'var(--text-xs)',
-              color: 'rgba(255,255,255,0.4)',
-              marginTop: '10px',
+              color: 'rgba(255,255,255,0.40)',
+              marginTop: '12px',
               fontWeight: 500,
             }}>
               {sectionSummary.filter((s) => Number(s.total) > 0).length} section
@@ -146,7 +153,7 @@ export default async function DashboardPage() {
         {/* ── Mon mois (progress) ── */}
         {monthSummary.count > 0 && (
           <Link href="/mon-mois" className="block card card-press">
-            <div style={{ padding: '18px 20px' }}>
+            <div style={{ padding: '20px' }}>
               <div className="flex items-center justify-between" style={{ marginBottom: '12px' }}>
                 <span className="section-label">Mon mois</span>
                 <div className="flex items-center gap-2">
@@ -163,7 +170,7 @@ export default async function DashboardPage() {
                   </svg>
                 </div>
               </div>
-              <div className="progress-track" style={{ marginBottom: '10px' }}>
+              <div className="progress-track" style={{ marginBottom: '12px' }}>
                 <div
                   className="progress-fill"
                   style={{
@@ -183,14 +190,14 @@ export default async function DashboardPage() {
 
         {/* ── Alertes ── */}
         <div className="card">
-          <div style={{ padding: '18px 20px' }}>
-            <span className="section-label" style={{ display: 'block', marginBottom: '14px' }}>
+          <div style={{ padding: '20px' }}>
+            <span className="section-label" style={{ display: 'block', marginBottom: '16px' }}>
               Alertes
             </span>
             {alerts.length === 0 ? (
               <div className="flex items-center gap-2">
                 <div style={{
-                  width: '22px', height: '22px', borderRadius: 'var(--radius-full)',
+                  width: '24px', height: '24px', borderRadius: 'var(--radius-full)',
                   background: 'var(--positive-subtle)', display: 'flex',
                   alignItems: 'center', justifyContent: 'center',
                   fontSize: 'var(--text-xs)', color: 'var(--positive)',
@@ -209,7 +216,7 @@ export default async function DashboardPage() {
                 }}>
                   {alerts.length} depense{alerts.length > 1 ? 's' : ''} dans moins de 3 jours
                 </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {alerts.map((expense) => {
                     const days = expense.next_due_date ? daysUntil(expense.next_due_date) : 0;
                     const badgeStyle = getDueBadgeStyle(days);
@@ -222,7 +229,7 @@ export default async function DashboardPage() {
                           }}>
                             {formatDueLabel(days)}
                           </span>
-                          <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-primary)', fontWeight: 450 }}>
+                          <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-primary)', fontWeight: 500 }}>
                             {expense.name}
                           </span>
                         </div>
@@ -240,8 +247,8 @@ export default async function DashboardPage() {
 
         {/* ── Prochaines depenses (7 jours) ── */}
         <div className="card">
-          <div style={{ padding: '18px 20px' }}>
-            <span className="section-label" style={{ display: 'block', marginBottom: '14px' }}>
+          <div style={{ padding: '20px' }}>
+            <span className="section-label" style={{ display: 'block', marginBottom: '16px' }}>
               Prochaines (7 jours)
             </span>
             {upcomingExpenses.length === 0 ? (
@@ -249,7 +256,7 @@ export default async function DashboardPage() {
                 Aucune depense a venir
               </p>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {upcomingExpenses.map((expense) => {
                   const days = expense.next_due_date ? daysUntil(expense.next_due_date) : 0;
                   const badgeStyle = getDueBadgeStyle(days);
@@ -265,7 +272,7 @@ export default async function DashboardPage() {
                         </span>
                         <span style={{
                           fontSize: 'var(--text-sm)', color: 'var(--text-primary)',
-                          fontWeight: 450,
+                          fontWeight: 500,
                           overflow: 'hidden', textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap' as const, maxWidth: '140px',
                         }}>
@@ -285,7 +292,7 @@ export default async function DashboardPage() {
 
         {/* ── Par section ── */}
         <div className="card">
-          <div style={{ padding: '18px 20px' }}>
+          <div style={{ padding: '20px' }}>
             <span className="section-label" style={{ display: 'block', marginBottom: '16px' }}>
               Par section
             </span>
@@ -294,13 +301,13 @@ export default async function DashboardPage() {
                 Aucune depense ce mois
               </p>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 {visibleSections.map((section) => {
                   const amount = Number(section.total);
                   const pct = totalMonthly > 0 ? (amount / totalMonthly) * 100 : 0;
                   return (
                     <div key={section.section_id}>
-                      <div className="flex items-center justify-between" style={{ marginBottom: '6px' }}>
+                      <div className="flex items-center justify-between" style={{ marginBottom: '8px' }}>
                         <div className="flex items-center gap-2">
                           <div
                             style={{
@@ -310,7 +317,7 @@ export default async function DashboardPage() {
                               flexShrink: 0,
                             }}
                           />
-                          <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-primary)', fontWeight: 450 }}>
+                          <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-primary)', fontWeight: 500 }}>
                             {section.section_icon} {section.section_name}
                           </span>
                         </div>

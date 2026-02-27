@@ -8,24 +8,47 @@ export default async function ProjetsPage() {
   const projets = await getPlannedExpenses();
 
   return (
-    <main className="min-h-screen bg-[#F8FAFC] pb-24">
-      <div className="px-4 pt-6 pb-4">
-        <h1 className="text-2xl font-bold text-[#1E293B]">Projets</h1>
-        <p className="text-sm text-[#94A3B8] mt-0.5">Suivez vos objectifs d&apos;épargne</p>
+    <div style={{ padding: '36px 20px 24px', minHeight: '100vh' }}>
+      {/* Header */}
+      <div style={{ marginBottom: '28px' }}>
+        <h1 style={{
+          fontSize: 'var(--text-xl)',
+          fontWeight: 750,
+          color: 'var(--text-primary)',
+          letterSpacing: 'var(--tracking-tight)',
+          lineHeight: 'var(--leading-tight)',
+        }}>
+          Projets
+        </h1>
+        <p style={{
+          fontSize: 'var(--text-xs)',
+          color: 'var(--text-tertiary)',
+          marginTop: '4px',
+          fontWeight: 500,
+        }}>
+          Suivez vos objectifs d&apos;epargne
+        </p>
       </div>
 
-      <div className="px-4 mb-4">
+      <div style={{ marginBottom: '16px' }}>
         <Link
           href="/depenses"
-          className="inline-flex items-center gap-1.5 text-sm text-[#2563EB] font-medium"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            fontSize: 'var(--text-sm)',
+            color: 'var(--accent)',
+            fontWeight: 600,
+            textDecoration: 'none',
+          }}
         >
-          <span>+</span> Ajouter un projet depuis Dépenses
+          <span style={{ fontSize: 'var(--text-base)', fontWeight: 700 }}>+</span>
+          Ajouter un projet depuis Depenses
         </Link>
       </div>
 
-      <div className="px-4">
-        <ProjetsClient projets={projets} />
-      </div>
-    </main>
+      <ProjetsClient projets={projets} />
+    </div>
   );
 }

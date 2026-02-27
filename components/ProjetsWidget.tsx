@@ -11,17 +11,9 @@ export default function ProjetsWidget({ projets }: Props) {
 
   return (
     <Link href="/projets" className="block card card-press">
-      <div style={{ padding: '18px 20px' }}>
+      <div style={{ padding: '20px' }}>
         <div className="flex items-center justify-between" style={{ marginBottom: '16px' }}>
-          <span
-            style={{
-              fontSize: 'var(--text-xs)',
-              fontWeight: 650,
-              color: 'var(--text-tertiary)',
-              letterSpacing: 'var(--tracking-widest)',
-              textTransform: 'uppercase' as const,
-            }}
-          >
+          <span className="section-label">
             Projets
           </span>
           <span style={{
@@ -33,7 +25,7 @@ export default function ProjetsWidget({ projets }: Props) {
           </span>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {projets.slice(0, 3).map((projet) => {
             const target = Number(projet.target_amount ?? projet.amount);
             const saved = Number(projet.saved_amount ?? 0);
@@ -41,7 +33,7 @@ export default function ProjetsWidget({ projets }: Props) {
 
             return (
               <div key={projet.id}>
-                <div className="flex justify-between items-center" style={{ marginBottom: '6px' }}>
+                <div className="flex justify-between items-center" style={{ marginBottom: '8px' }}>
                   <p style={{
                     fontSize: 'var(--text-sm)',
                     color: 'var(--text-primary)',

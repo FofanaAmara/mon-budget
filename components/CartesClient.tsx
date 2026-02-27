@@ -96,7 +96,7 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
               className="card card-press"
               style={{
                 display: 'flex', alignItems: 'center', gap: '12px',
-                padding: '14px 18px',
+                padding: '16px 20px',
               }}
             >
               {/* Colored left bar */}
@@ -121,17 +121,17 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
                 </svg>
               </div>
 
-              {/* Info — clickable to card detail */}
+              {/* Info */}
               <Link href={`/cartes/${card.id}`} style={{ flex: 1, minWidth: 0, display: 'block', textDecoration: 'none' }}>
                 <p style={{
-                  fontSize: 'var(--text-sm)', fontWeight: 550,
+                  fontSize: 'var(--text-sm)', fontWeight: 600,
                   color: 'var(--text-primary)',
                   overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                 }}>
                   {card.name}
                 </p>
                 {(card.last_four || card.bank) && (
-                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
+                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '4px' }}>
                     {card.last_four ? `.... ${card.last_four}` : ''}{card.last_four && card.bank ? ' · ' : ''}{card.bank ?? ''}
                   </p>
                 )}
@@ -255,7 +255,7 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
                   type="button"
                   onClick={() => setModal({ mode: 'closed' })}
                   className="btn-secondary"
-                  style={{ flex: 1, padding: '12px 20px' }}
+                  style={{ flex: 1 }}
                 >
                   Annuler
                 </button>
@@ -264,7 +264,7 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
                   onClick={handleSave}
                   disabled={isPending || !name.trim()}
                   className="btn-primary"
-                  style={{ flex: 1, padding: '12px 20px' }}
+                  style={{ flex: 1 }}
                 >
                   {isPending ? 'Enregistrement...' : 'Sauvegarder'}
                 </button>

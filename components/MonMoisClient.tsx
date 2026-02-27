@@ -108,7 +108,7 @@ export default function MonMoisClient({ expenses, summary, sections, month }: Pr
             padding: '8px',
             color: 'var(--text-tertiary)',
             borderRadius: 'var(--radius-md)',
-            transition: `color var(--duration-fast) var(--ease-out)`,
+            transition: `all var(--duration-fast) var(--ease-out)`,
             background: 'none', border: 'none', cursor: 'pointer',
           }}
           aria-label="Mois precedent"
@@ -134,7 +134,7 @@ export default function MonMoisClient({ expenses, summary, sections, month }: Pr
               style={{
                 fontSize: 'var(--text-xs)',
                 color: 'var(--accent)',
-                marginTop: '2px',
+                marginTop: '4px',
                 background: 'none', border: 'none', cursor: 'pointer',
                 fontWeight: 600,
               }}
@@ -150,7 +150,7 @@ export default function MonMoisClient({ expenses, summary, sections, month }: Pr
             padding: '8px',
             color: month >= today ? 'var(--border-default)' : 'var(--text-tertiary)',
             borderRadius: 'var(--radius-md)',
-            transition: `color var(--duration-fast) var(--ease-out)`,
+            transition: `all var(--duration-fast) var(--ease-out)`,
             background: 'none', border: 'none',
             cursor: month >= today ? 'default' : 'pointer',
           }}
@@ -164,7 +164,7 @@ export default function MonMoisClient({ expenses, summary, sections, month }: Pr
       </div>
 
       {/* Progress card */}
-      <div className="card" style={{ padding: '18px 20px', marginBottom: '16px' }}>
+      <div className="card" style={{ padding: '20px', marginBottom: '16px' }}>
         <div className="flex items-center justify-between" style={{ marginBottom: '12px' }}>
           <span style={{ fontSize: 'var(--text-sm)', fontWeight: 650, color: 'var(--text-primary)' }}>
             {summary.paid_count}/{summary.count} depenses completees
@@ -179,7 +179,7 @@ export default function MonMoisClient({ expenses, summary, sections, month }: Pr
           )}
         </div>
 
-        <div className="progress-track" style={{ height: '6px', marginBottom: '10px' }}>
+        <div className="progress-track" style={{ marginBottom: '12px' }}>
           <div
             className="progress-fill"
             style={{
@@ -205,7 +205,7 @@ export default function MonMoisClient({ expenses, summary, sections, month }: Pr
             onClick={() => setSelectedSection(null)}
             style={{
               flexShrink: 0,
-              padding: '7px 14px',
+              padding: '8px 16px',
               borderRadius: 'var(--radius-md)',
               fontSize: 'var(--text-xs)',
               fontWeight: 600,
@@ -226,7 +226,7 @@ export default function MonMoisClient({ expenses, summary, sections, month }: Pr
               style={{
                 flexShrink: 0,
                 gap: '6px',
-                padding: '7px 14px',
+                padding: '8px 16px',
                 borderRadius: 'var(--radius-md)',
                 fontSize: 'var(--text-xs)',
                 fontWeight: 600,
@@ -248,7 +248,7 @@ export default function MonMoisClient({ expenses, summary, sections, month }: Pr
       {expenses.length === 0 && (
         <div className="flex flex-col items-center justify-center text-center" style={{ padding: '80px 0' }}>
           <div style={{ fontSize: '3rem', marginBottom: '16px', opacity: 0.6 }}>📅</div>
-          <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)', marginBottom: '6px' }}>
+          <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)', marginBottom: '8px', fontWeight: 500 }}>
             Aucune depense ce mois
           </p>
           <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-xs)', opacity: 0.7 }}>
@@ -261,7 +261,7 @@ export default function MonMoisClient({ expenses, summary, sections, month }: Pr
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {grouped.map(({ status, items }) => (
           <div key={status}>
-            <h2 className="section-label" style={{ marginBottom: '10px', paddingLeft: '2px' }}>
+            <h2 className="section-label" style={{ marginBottom: '12px', paddingLeft: '4px' }}>
               {GROUP_LABELS[status]} ({items.length})
             </h2>
             <div className="card" style={{ overflow: 'hidden' }}>
@@ -296,17 +296,17 @@ function ExpenseRow({
   const statusStyle = STATUS_STYLES[expense.status];
 
   return (
-    <div style={{ padding: '13px 20px' }}>
+    <div style={{ padding: '12px 20px' }}>
       <div className="flex items-center" style={{ gap: '12px' }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{
-            fontWeight: 550, color: 'var(--text-primary)',
+            fontWeight: 600, color: 'var(--text-primary)',
             fontSize: 'var(--text-sm)',
             overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
           }}>
             {expense.name}
           </p>
-          <div className="flex items-center" style={{ gap: '6px', marginTop: '3px' }}>
+          <div className="flex items-center" style={{ gap: '8px', marginTop: '4px' }}>
             <span className="badge" style={{
               background: statusStyle.bg,
               color: statusStyle.color,
@@ -328,7 +328,7 @@ function ExpenseRow({
           <button
             onClick={() => setExpanded((v) => !v)}
             style={{
-              padding: '6px', color: 'var(--text-tertiary)',
+              padding: '8px', color: 'var(--text-tertiary)',
               borderRadius: 'var(--radius-sm)',
               transition: `color var(--duration-fast) var(--ease-out)`,
               flexShrink: 0,
@@ -347,18 +347,11 @@ function ExpenseRow({
 
       {/* Inline action buttons */}
       {expanded && isCurrentMonth && (
-        <div className="flex" style={{ gap: '8px', marginTop: '10px' }}>
+        <div className="flex" style={{ gap: '8px', marginTop: '12px' }}>
           {expense.status !== 'PAID' && (
             <button
               onClick={() => { onAction(expense.id, 'paid'); setExpanded(false); }}
-              style={{
-                flex: 1, padding: '8px',
-                fontSize: 'var(--text-xs)', fontWeight: 650,
-                borderRadius: 'var(--radius-md)',
-                background: 'var(--positive-subtle)', color: 'var(--positive-text)',
-                transition: `background var(--duration-fast) var(--ease-out)`,
-                border: 'none', cursor: 'pointer',
-              }}
+              className="btn-action btn-action-positive"
             >
               Marquer paye
             </button>
@@ -366,14 +359,7 @@ function ExpenseRow({
           {expense.status === 'PAID' && (
             <button
               onClick={() => { onAction(expense.id, 'upcoming'); setExpanded(false); }}
-              style={{
-                flex: 1, padding: '8px',
-                fontSize: 'var(--text-xs)', fontWeight: 650,
-                borderRadius: 'var(--radius-md)',
-                background: 'var(--accent-subtle)', color: 'var(--accent)',
-                transition: `background var(--duration-fast) var(--ease-out)`,
-                border: 'none', cursor: 'pointer',
-              }}
+              className="btn-action btn-action-accent"
             >
               Annuler
             </button>
@@ -381,14 +367,7 @@ function ExpenseRow({
           {expense.status !== 'DEFERRED' && expense.status !== 'PAID' && (
             <button
               onClick={() => { onAction(expense.id, 'deferred'); setExpanded(false); }}
-              style={{
-                flex: 1, padding: '8px',
-                fontSize: 'var(--text-xs)', fontWeight: 650,
-                borderRadius: 'var(--radius-md)',
-                background: 'var(--surface-sunken)', color: 'var(--text-tertiary)',
-                transition: `background var(--duration-fast) var(--ease-out)`,
-                border: 'none', cursor: 'pointer',
-              }}
+              className="btn-action btn-action-neutral"
             >
               Reporter
             </button>

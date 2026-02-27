@@ -33,7 +33,6 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
   const [cardId, setCardId]               = useState(expense?.card_id ?? '');
   const [dueDate, setDueDate]             = useState(expense?.due_date ?? '');
   const [notes, setNotes]                 = useState(expense?.notes ?? '');
-  // PLANNED fields
   const [targetAmount, setTargetAmount]   = useState(expense?.target_amount?.toString() ?? '');
   const [targetDate, setTargetDate]       = useState(expense?.target_date ?? '');
   const [savedAmount, setSavedAmount]     = useState(expense?.saved_amount?.toString() ?? '0');
@@ -55,7 +54,6 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
         auto_debit: type === 'RECURRING' ? autoDebit : false,
         due_date: type === 'ONE_TIME' ? dueDate || undefined : undefined,
         notes: notes || undefined,
-        // PLANNED fields
         target_amount: type === 'PLANNED' && targetAmount ? parseFloat(targetAmount) : undefined,
         target_date: type === 'PLANNED' ? targetDate || undefined : undefined,
         saved_amount: type === 'PLANNED' ? parseFloat(savedAmount) || 0 : undefined,
@@ -77,7 +75,6 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div className="sheet">
-        {/* Handle */}
         <div className="sheet-handle" />
 
         <div style={{ padding: '8px 24px 32px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -122,7 +119,7 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
             <label className="field-label">Montant *</label>
             <div style={{ position: 'relative' }}>
               <span style={{
-                position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)',
+                position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)',
                 color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)',
               }}>$</span>
               <input
@@ -161,7 +158,7 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
             <>
               <div>
                 <label className="field-label">Frequence</label>
-                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   {FREQUENCIES.map((f) => (
                     <button
                       key={f.value}
@@ -189,7 +186,7 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
                   />
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '6px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '8px' }}>
                   <label className="field-label" style={{ marginBottom: 0 }}>Prelevement auto</label>
                   <button
                     type="button"
@@ -243,7 +240,7 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
                 <label className="field-label">Objectif ($)</label>
                 <div style={{ position: 'relative' }}>
                   <span style={{
-                    position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)',
+                    position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)',
                     color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)',
                   }}>$</span>
                   <input
@@ -310,7 +307,7 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
               type="button"
               onClick={onClose}
               className="btn-secondary"
-              style={{ flex: 1, padding: '12px 20px' }}
+              style={{ flex: 1 }}
             >
               Annuler
             </button>
@@ -319,7 +316,7 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
               onClick={handleSubmit}
               disabled={isPending || !isValid}
               className="btn-primary"
-              style={{ flex: 1, padding: '12px 20px' }}
+              style={{ flex: 1 }}
             >
               {isPending ? 'Enregistrement...' : expense ? 'Modifier' : 'Ajouter'}
             </button>

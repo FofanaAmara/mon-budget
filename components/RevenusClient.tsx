@@ -105,7 +105,7 @@ export default function RevenusClient({ incomes, monthlyTotal }: Props) {
               return (
                 <div key={inc.id}>
                   {i > 0 && <div className="divider" style={{ marginLeft: '20px', marginRight: '20px' }} />}
-                  <div className="flex items-center" style={{ gap: '12px', padding: '13px 20px' }}>
+                  <div className="flex items-center" style={{ gap: '12px', padding: '12px 20px' }}>
                     {/* Icon */}
                     <div style={{
                       width: '36px', height: '36px',
@@ -123,13 +123,13 @@ export default function RevenusClient({ incomes, monthlyTotal }: Props) {
                     {/* Info */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={{
-                        fontWeight: 550, color: 'var(--text-primary)',
+                        fontWeight: 600, color: 'var(--text-primary)',
                         fontSize: 'var(--text-sm)',
                         overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                       }}>
                         {inc.name}
                       </p>
-                      <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
+                      <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '4px' }}>
                         {FREQUENCY_LABELS[inc.frequency]}
                         {inc.frequency !== 'MONTHLY' && (
                           <span> · {formatCAD(monthly)}/mois</span>
