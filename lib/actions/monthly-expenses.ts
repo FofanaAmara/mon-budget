@@ -117,7 +117,7 @@ export async function getMonthlyExpenses(
             WHEN 'DEFERRED' THEN 3
             WHEN 'PAID' THEN 4
           END,
-          me.due_date ASC
+          me.due_date DESC NULLS LAST
       `
     : await sql`
         SELECT
@@ -135,7 +135,7 @@ export async function getMonthlyExpenses(
             WHEN 'DEFERRED' THEN 3
             WHEN 'PAID' THEN 4
           END,
-          me.due_date ASC
+          me.due_date DESC NULLS LAST
       `;
 
   return rows as MonthlyExpense[];

@@ -52,7 +52,7 @@ export default function TabTimeline({ expenses, monthlyIncomes }: Props) {
   }
 
   // Sort by date
-  events.sort((a, b) => a.date.localeCompare(b.date));
+  events.sort((a, b) => b.date.localeCompare(a.date));
 
   // Group by date
   const groups: { date: string; events: TimelineEvent[] }[] = [];

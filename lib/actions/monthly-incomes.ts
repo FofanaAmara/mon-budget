@@ -45,7 +45,7 @@ export async function getMonthlyIncomeSummary(month: string): Promise<{
     FROM monthly_incomes mi
     JOIN incomes i ON mi.income_id = i.id
     WHERE mi.month = ${month}
-    ORDER BY i.source ASC, i.name ASC
+    ORDER BY mi.created_at DESC
   `;
 
   const items = rows as MonthlyIncome[];

@@ -214,7 +214,7 @@ export async function getPlannedExpenses(): Promise<Expense[]> {
     LEFT JOIN cards c ON e.card_id = c.id
     WHERE e.is_active = true
       AND e.type = 'PLANNED'
-    ORDER BY e.target_date ASC NULLS LAST, e.created_at DESC
+    ORDER BY e.created_at DESC
   `;
   return rows as Expense[];
 }
@@ -322,7 +322,7 @@ export async function getExpensesByCard(cardId: string): Promise<Expense[]> {
     LEFT JOIN cards c ON e.card_id = c.id
     WHERE e.is_active = true
       AND e.card_id = ${cardId}
-    ORDER BY e.next_due_date ASC NULLS LAST, e.created_at DESC
+    ORDER BY e.created_at DESC
   `;
   return rows as Expense[];
 }
