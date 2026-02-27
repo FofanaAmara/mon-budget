@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { updateSettings } from '@/lib/actions/settings';
+import { authClient } from '@/lib/auth/client';
 import type { Settings } from '@/lib/types';
 
 const CURRENCIES = ['CAD', 'USD', 'EUR'];
@@ -270,6 +271,28 @@ export default function ParametresClient({ settings }: Props) {
           }}
         >
           {saved ? 'Sauvegarde !' : isPending ? 'Sauvegarde...' : 'Sauvegarder les reglages'}
+        </button>
+
+        {/* Sign out */}
+        <button
+          onClick={async () => {
+            await authClient.signOut();
+            window.location.href = '/auth/sign-in';
+          }}
+          style={{
+            width: '100%',
+            padding: '14px',
+            fontSize: 'var(--text-sm)',
+            fontWeight: 600,
+            color: '#DC2626',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-lg)',
+            cursor: 'pointer',
+            marginTop: '8px',
+          }}
+        >
+          Se deconnecter
         </button>
 
       </div>
