@@ -147,7 +147,7 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
                   className="type-toggle-btn"
                   data-active={type === t}
                 >
-                  {t === 'RECURRING' ? 'Recurrent' : t === 'ONE_TIME' ? 'Ponctuel' : 'Planifie'}
+                  {t === 'RECURRING' ? 'Récurrent' : t === 'ONE_TIME' ? 'Ponctuel' : 'Planifié'}
                 </button>
               ))}
             </div>

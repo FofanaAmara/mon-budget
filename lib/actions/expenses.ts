@@ -15,7 +15,7 @@ export async function getExpenses(): Promise<Expense[]> {
     LEFT JOIN sections s ON e.section_id = s.id
     LEFT JOIN cards c ON e.card_id = c.id
     WHERE e.is_active = true
-    ORDER BY e.next_due_date ASC NULLS LAST, e.created_at DESC
+    ORDER BY e.created_at DESC, e.next_due_date ASC NULLS LAST
   `;
   return rows as Expense[];
 }

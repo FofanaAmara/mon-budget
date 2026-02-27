@@ -208,7 +208,7 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
           marginTop: '4px',
           fontWeight: 500,
         }}>
-          {expenses.length} depense{expenses.length !== 1 ? 's' : ''}
+          {expenses.length} dépense{expenses.length !== 1 ? 's' : ''}
         </p>
       </div>
 
