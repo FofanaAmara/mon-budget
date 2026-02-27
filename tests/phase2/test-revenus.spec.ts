@@ -32,9 +32,10 @@ test.describe('Revenus', () => {
 
   test('dashboard Reste à vivre widget links to /revenus', async ({ page }) => {
     await page.goto('/');
-    const widget = page.locator('a[href="/revenus"]');
+    // Use .first() — nav tab also has href="/revenus" now
+    const widget = page.locator('a[href="/revenus"]').first();
     await expect(widget).toBeVisible();
-    await widget.first().click();
+    await widget.click();
     await expect(page).toHaveURL(/\/revenus/);
   });
 });

@@ -30,6 +30,12 @@ test.describe('Expense RECURRING', () => {
     await page.waitForTimeout(4000);
     await page.reload();
 
+    // Expand the section if it shows a "Voir X autres" button (> 3 expenses shown)
+    const voirBtn = page.getByRole('button', { name: /Voir \d+ autre/ }).first();
+    if (await voirBtn.isVisible()) {
+      await voirBtn.click();
+    }
+
     // Use .first() to avoid strict mode when multiple Netflix expenses exist
     await expect(page.getByText('Netflix').first()).toBeVisible();
     await expect(page.getByText('17,99').first()).toBeVisible();
