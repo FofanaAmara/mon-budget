@@ -1,15 +1,42 @@
 'use client';
 
-import { useState, useTransition } from 'react';
 import Link from 'next/link';
-import { updateSettings } from '@/lib/actions/settings';
 import { authClient } from '@/lib/auth/client';
-import type { Settings } from '@/lib/types';
 
-const CURRENCIES = ['CAD', 'USD', 'EUR'];
-const REMINDER_OPTIONS = [1, 3, 7, 14, 30];
+const PREFERENCE_ITEMS = [
+  {
+    href: '/parametres/devise',
+    label: 'Devise par defaut',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M15 9.354a4 4 0 1 0 0 5.292M12 7v10" />
+      </svg>
+    ),
+  },
+  {
+    href: '/parametres/rappels',
+    label: 'Rappels par defaut',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+      </svg>
+    ),
+  },
+  {
+    href: '/parametres/notifications',
+    label: 'Notifications',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3z" />
+        <path d="M9.09 21a3 3 0 0 0 5.83 0" />
+      </svg>
+    ),
+  },
+];
 
-const NAV_ITEMS = [
+const MANAGEMENT_ITEMS = [
   {
     href: '/parametres/charges',
     label: 'Mes charges fixes',
@@ -50,45 +77,23 @@ const NAV_ITEMS = [
   },
 ];
 
-type Props = {
-  settings: Settings;
-};
+function LinkRow({ href, label, icon }: { href: string; label: string; icon: React.ReactNode }) {
+  return (
+    <Link href={href} className="link-row" style={{ textDecoration: 'none' }}>
+      <div className="flex items-center" style={{ gap: '12px' }}>
+        <span style={{ color: 'var(--text-tertiary)' }}>{icon}</span>
+        <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>{label}</span>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 18l6-6-6-6" />
+      </svg>
+    </Link>
+  );
+}
 
-export default function ParametresClient({ settings }: Props) {
-  const [isPending, startTransition] = useTransition();
-  const [saved, setSaved] = useState(false);
-
-  const [currency, setCurrency] = useState(settings.default_currency);
-  const [reminders, setReminders] = useState<number[]>(settings.default_reminder_offsets ?? [1, 3, 7]);
-  const [notifyPush, setNotifyPush] = useState(settings.notify_push);
-  const [notifyEmail, setNotifyEmail] = useState(settings.notify_email);
-  const [email, setEmail] = useState(settings.email ?? '');
-  const [phone, setPhone] = useState(settings.phone ?? '');
-
-  function toggleReminder(day: number) {
-    setReminders((prev) =>
-      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day].sort((a, b) => a - b)
-    );
-  }
-
-  function handleSave() {
-    startTransition(async () => {
-      await updateSettings(settings.id, {
-        email: email.trim() || null,
-        phone: phone.trim() || null,
-        default_currency: currency,
-        default_reminder_offsets: reminders,
-        notify_push: notifyPush,
-        notify_email: notifyEmail,
-      });
-      setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
-    });
-  }
-
+export default function ParametresClient() {
   return (
     <div style={{ padding: '36px 20px 24px', minHeight: '100vh' }}>
-      {/* Header */}
       <div style={{ marginBottom: '28px' }}>
         <h1 style={{
           fontSize: 'var(--text-xl)',
@@ -102,133 +107,31 @@ export default function ParametresClient({ settings }: Props) {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        {/* Currency */}
-        <div className="card" style={{ padding: '20px' }}>
-          <h2 style={{
-            fontSize: 'var(--text-sm)', fontWeight: 650,
-            color: 'var(--text-primary)', marginBottom: '12px',
-          }}>Devise par defaut</h2>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            {CURRENCIES.map((c) => (
-              <button
-                key={c}
-                onClick={() => setCurrency(c)}
-                className="freq-pill"
-                data-active={currency === c}
-                style={{ flex: 1, textAlign: 'center' }}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Reminders */}
-        <div className="card" style={{ padding: '20px' }}>
-          <h2 style={{
-            fontSize: 'var(--text-sm)', fontWeight: 650,
-            color: 'var(--text-primary)', marginBottom: '4px',
-          }}>Rappels par defaut</h2>
-          <p style={{
-            fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)',
-            marginBottom: '12px',
-          }}>Jours avant l&apos;echeance</p>
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            {REMINDER_OPTIONS.map((day) => (
-              <button
-                key={day}
-                onClick={() => toggleReminder(day)}
-                className="freq-pill"
-                data-active={reminders.includes(day)}
-              >
-                {day}j
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Contact info */}
-        <div className="card" style={{ padding: '20px' }}>
-          <h2 style={{
-            fontSize: 'var(--text-sm)', fontWeight: 650,
-            color: 'var(--text-primary)', marginBottom: '4px',
-          }}>Contact</h2>
-          <p style={{
-            fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)',
-            marginBottom: '16px',
-          }}>Pour les notifications email et SMS</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div>
-              <label className="field-label">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="votre@email.com"
-                className="input-field"
-              />
-            </div>
-            <div>
-              <label className="field-label">Telephone (SMS)</label>
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+1 514 000 0000"
-                className="input-field"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Notifications */}
-        <div className="card" style={{ padding: '20px' }}>
-          <h2 style={{
-            fontSize: 'var(--text-sm)', fontWeight: 650,
-            color: 'var(--text-primary)', marginBottom: '16px',
-          }}>Canaux de notification</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {[
-              { label: 'Notifications push', value: notifyPush, onChange: setNotifyPush },
-              { label: 'Email', value: notifyEmail, onChange: setNotifyEmail },
-            ].map(({ label, value, onChange }) => (
-              <div key={label} className="flex items-center justify-between">
-                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>
-                  {label}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => onChange(!value)}
-                  className="toggle"
-                  data-active={value}
-                >
-                  <span className="toggle-knob" />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Mon compte */}
         <div className="list-card">
-          <Link
+          <LinkRow
             href="/account/settings"
-            className="link-row"
-            style={{ textDecoration: 'none' }}
-          >
-            <div className="flex items-center" style={{ gap: '12px' }}>
-              <span style={{ color: 'var(--text-tertiary)' }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-              </span>
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>Mon compte</span>
-            </div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 18l6-6-6-6" />
-            </svg>
-          </Link>
+            label="Mon compte"
+            icon={
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            }
+          />
+        </div>
+
+        {/* Preferences */}
+        <div className="list-card">
+          <div style={{ padding: '16px 20px 8px' }}>
+            <h2 style={{
+              fontSize: 'var(--text-sm)', fontWeight: 650,
+              color: 'var(--text-primary)',
+            }}>Preferences</h2>
+          </div>
+          {PREFERENCE_ITEMS.map(({ href, label, icon }) => (
+            <LinkRow key={href} href={href} label={label} icon={icon} />
+          ))}
         </div>
 
         {/* Gestion */}
@@ -239,39 +142,10 @@ export default function ParametresClient({ settings }: Props) {
               color: 'var(--text-primary)',
             }}>Gestion</h2>
           </div>
-          {NAV_ITEMS.map(({ href, label, icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className="link-row"
-              style={{ textDecoration: 'none' }}
-            >
-              <div className="flex items-center" style={{ gap: '12px' }}>
-                <span style={{ color: 'var(--text-tertiary)' }}>{icon}</span>
-                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>{label}</span>
-              </div>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 18l6-6-6-6" />
-              </svg>
-            </Link>
+          {MANAGEMENT_ITEMS.map(({ href, label, icon }) => (
+            <LinkRow key={href} href={href} label={label} icon={icon} />
           ))}
         </div>
-
-        {/* Save */}
-        <button
-          onClick={handleSave}
-          disabled={isPending}
-          className="btn-primary"
-          style={{
-            width: '100%',
-            padding: '16px',
-            fontSize: 'var(--text-base)',
-            marginTop: '4px',
-            opacity: isPending ? 0.5 : 1,
-          }}
-        >
-          {saved ? 'Sauvegarde !' : isPending ? 'Sauvegarde...' : 'Sauvegarder les reglages'}
-        </button>
 
         {/* Sign out */}
         <button
@@ -294,7 +168,6 @@ export default function ParametresClient({ settings }: Props) {
         >
           Se deconnecter
         </button>
-
       </div>
     </div>
   );

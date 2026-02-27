@@ -1,6 +1,5 @@
 import { AccountView } from '@neondatabase/auth/react';
 import Breadcrumb from '@/components/Breadcrumb';
-import SignOutButton from '@/components/SignOutButton';
 
 export default async function AccountPage({
   params,
@@ -27,7 +26,6 @@ export default async function AccountPage({
         </h1>
       </div>
       <AccountView pathname={`/account/${path}`} />
-      <SignOutButton />
     </div>
   );
 }
