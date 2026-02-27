@@ -50,6 +50,19 @@ const tabs = [
     ),
   },
   {
+    href: '/cash-flow',
+    label: 'Cash Flow',
+    icon: (active: boolean) => (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+        stroke={active ? 'var(--accent)' : 'var(--text-tertiary)'} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="1" x2="12" y2="23" />
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+        <polyline points="17 8 20 5 17 2" />
+        <polyline points="7 22 4 19 7 16" />
+      </svg>
+    ),
+  },
+  {
     href: '/parametres',
     label: 'Reglages',
     icon: (active: boolean) => (
