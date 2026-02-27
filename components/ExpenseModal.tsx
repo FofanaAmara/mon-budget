@@ -84,7 +84,7 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
             color: 'var(--text-primary)',
             letterSpacing: 'var(--tracking-tight)',
           }}>
-            {expense ? 'Modifier la depense' : 'Nouvelle depense'}
+            {expense ? 'Modifier la dépense' : 'Nouvelle dépense'}
           </h2>
 
           {/* 1. Section */}

@@ -192,7 +192,7 @@ export default async function DashboardPage() {
         <div className="card">
           <div style={{ padding: '20px' }}>
             <div className="flex items-center justify-between" style={{ marginBottom: '16px' }}>
-              <span className="section-label">Prochaines depenses</span>
+              <span className="section-label">Prochaines (7 jours)</span>
               {upcomingExpenses.length > 3 && (
                 <Link href="/mon-mois" style={{
                   fontSize: 'var(--text-xs)', color: 'var(--accent)',
@@ -240,6 +240,32 @@ export default async function DashboardPage() {
             )}
           </div>
         </div>
+
+        {/* ── Alertes ── */}
+        {(() => {
+          const alertes = upcomingExpenses.filter((e) => {
+            const days = e.next_due_date ? daysUntil(e.next_due_date) : 99;
+            return days <= 3;
+          });
+          return (
+            <div className="card">
+              <div style={{ padding: '20px' }}>
+                <span className="section-label" style={{ display: 'block', marginBottom: '12px' }}>
+                  Alertes
+                </span>
+                {alertes.length === 0 ? (
+                  <p style={{ fontSize: 'var(--text-sm)', color: 'var(--positive)', fontWeight: 500 }}>
+                    Tout est à jour ✓
+                  </p>
+                ) : (
+                  <p style={{ fontSize: 'var(--text-sm)', color: 'var(--warning)', fontWeight: 500 }}>
+                    {alertes.length} dépense{alertes.length > 1 ? 's' : ''} dans moins de 3 jours
+                  </p>
+                )}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* ── Prochaines entrees d'argent ── */}
         <div className="card">
