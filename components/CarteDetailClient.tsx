@@ -10,10 +10,10 @@ type Props = {
   monthlyTotal: number;
 };
 
-function getDueBadgeClass(days: number) {
-  if (days <= 1) return 'bg-red-100 text-red-700';
-  if (days <= 3) return 'bg-orange-100 text-orange-700';
-  return 'bg-blue-100 text-blue-700';
+function getDueBadge(days: number): { bg: string; color: string } {
+  if (days <= 1) return { bg: 'var(--negative-subtle)', color: 'var(--negative-text)' };
+  if (days <= 3) return { bg: 'var(--warning-subtle)', color: 'var(--warning-text)' };
+  return { bg: 'var(--accent-subtle)', color: 'var(--accent)' };
 }
 
 export default function CarteDetailClient({ card, expenses, monthlyTotal }: Props) {
@@ -21,77 +21,104 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
   const manualExpenses = expenses.filter((e) => !e.auto_debit);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Card visual */}
       <div
-        className="rounded-3xl p-5 text-white relative overflow-hidden"
-        style={{ background: `linear-gradient(135deg, ${card.color} 0%, ${card.color}cc 100%)` }}
+        className="rounded-[var(--radius-xl)] p-5 text-[var(--text-inverted)] relative overflow-hidden"
+        style={{
+          background: `linear-gradient(135deg, ${card.color} 0%, ${card.color}CC 100%)`,
+          boxShadow: `0 8px 32px ${card.color}40, 0 2px 8px ${card.color}25`,
+        }}
       >
-        <div className="absolute -top-4 -right-4 w-24 h-24 rounded-full bg-white/10 pointer-events-none" />
+        <div className="absolute -top-5 -right-5 w-24 h-24 rounded-full pointer-events-none" style={{ background: 'rgba(255,255,255,0.10)' }} />
+        <div className="absolute bottom-4 right-20 w-16 h-16 rounded-full pointer-events-none" style={{ background: 'rgba(255,255,255,0.06)' }} />
         <div className="flex justify-between items-start mb-6">
           <div>
-            <p className="text-white/70 text-xs uppercase tracking-widest">{card.bank ?? 'Carte'}</p>
-            <p className="text-lg font-bold mt-0.5">{card.name}</p>
+            <p style={{ color: 'rgba(250,250,248,0.60)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase' }}>
+              {card.bank ?? 'Carte'}
+            </p>
+            <p style={{ fontSize: '18px', fontWeight: 700, marginTop: '2px', letterSpacing: '-0.01em' }}>{card.name}</p>
           </div>
           <div className="text-right">
-            <p className="text-white/70 text-xs">Mensuel</p>
-            <p className="text-xl font-bold">{formatCAD(monthlyTotal)}</p>
+            <p style={{ color: 'rgba(250,250,248,0.60)', fontSize: '10px', letterSpacing: '0.04em' }}>Mensuel</p>
+            <p style={{ fontSize: '22px', fontWeight: 700, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}>
+              {formatCAD(monthlyTotal)}
+            </p>
           </div>
         </div>
-        <p className="text-white/60 text-sm font-mono">
+        <p style={{ color: 'rgba(250,250,248,0.50)', fontSize: '13px', fontFamily: 'monospace', letterSpacing: '0.08em' }}>
           •••• •••• •••• {card.last_four ?? '????'}
         </p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-white border border-[#E2E8F0] rounded-2xl p-4">
-          <p className="text-2xl font-bold text-[#1E293B]">{autoExpenses.length}</p>
-          <p className="text-xs text-[#94A3B8] mt-0.5">Prélèvements auto</p>
-        </div>
-        <div className="bg-white border border-[#E2E8F0] rounded-2xl p-4">
-          <p className="text-2xl font-bold text-[#1E293B]">{expenses.length}</p>
-          <p className="text-xs text-[#94A3B8] mt-0.5">Dépenses totales</p>
-        </div>
+        {[
+          { label: 'Prélèvements auto', value: autoExpenses.length },
+          { label: 'Dépenses totales', value: expenses.length },
+        ].map(({ label, value }) => (
+          <div
+            key={label}
+            className="rounded-[var(--radius-lg)] p-4"
+            style={{ background: 'var(--surface-raised)', border: '1px solid var(--border-default)', boxShadow: 'var(--shadow-xs)' }}
+          >
+            <p style={{ fontSize: '26px', fontWeight: 700, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}>
+              {value}
+            </p>
+            <p style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '2px' }}>{label}</p>
+          </div>
+        ))}
       </div>
 
       {/* Auto-charged expenses */}
       {autoExpenses.length > 0 && (
-        <div className="bg-white border border-[#E2E8F0] rounded-2xl divide-y divide-[#F1F5F9]">
-          <div className="px-4 py-3">
-            <h3 className="font-semibold text-[#1E293B] text-sm flex items-center gap-2">
-              <span>⚡</span> Prélèvements automatiques
+        <div
+          className="rounded-[var(--radius-lg)] overflow-hidden"
+          style={{ background: 'var(--surface-raised)', border: '1px solid var(--border-default)', boxShadow: 'var(--shadow-sm)' }}
+        >
+          <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--border-default)' }}>
+            <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }} className="flex items-center gap-2">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+              </svg>
+              Prélèvements automatiques
             </h3>
           </div>
-          {autoExpenses.map((expense) => {
+          {autoExpenses.map((expense, idx) => {
             const days = expense.next_due_date ? daysUntil(expense.next_due_date) : null;
             const monthly = calcMonthlyCost(expense);
+            const badge = days !== null ? getDueBadge(days) : { bg: 'var(--accent-subtle)', color: 'var(--accent)' };
             return (
-              <div key={expense.id} className="flex items-center gap-3 px-4 py-3">
+              <div
+                key={expense.id}
+                className="flex items-center gap-3 px-4 py-3"
+                style={{ borderTop: idx > 0 ? '1px solid var(--border-default)' : 'none' }}
+              >
                 <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-xs flex-shrink-0"
-                  style={{ backgroundColor: `${expense.section?.color ?? '#6366F1'}20`, color: expense.section?.color ?? '#6366F1' }}
+                  className="w-8 h-8 rounded-[var(--radius-sm)] flex items-center justify-center text-xs flex-shrink-0"
+                  style={{ background: `${expense.section?.color ?? 'var(--accent)'}18` }}
                 >
-                  {expense.section?.icon ?? '💳'}
+                  <span>{expense.section?.icon ?? '💳'}</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-[#1E293B] text-sm truncate">{expense.name}</p>
-                  <p className="text-xs text-[#94A3B8]">
-                    {expense.section?.name ?? '—'}
-                    {expense.next_due_date && (
-                      <>
-                        {' · '}
-                        <span className={`inline-block px-1.5 py-0.5 rounded-full text-xs font-medium ${days !== null ? getDueBadgeClass(days) : 'bg-blue-100 text-blue-700'}`}>
-                          J-{days}
-                        </span>
-                      </>
+                  <p style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)' }} className="truncate">{expense.name}</p>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>{expense.section?.name ?? '—'}</span>
+                    {expense.next_due_date && days !== null && (
+                      <span
+                        style={{ fontSize: '10px', fontWeight: 600, background: badge.bg, color: badge.color, padding: '1px 6px', borderRadius: 'var(--radius-full)' }}
+                      >
+                        J-{days}
+                      </span>
                     )}
-                  </p>
+                  </div>
                 </div>
                 <div className="text-right flex-shrink-0">
-                  <p className="font-semibold text-[#1E293B] text-sm">{formatCAD(expense.amount)}</p>
+                  <p style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+                    {formatCAD(expense.amount)}
+                  </p>
                   {monthly !== expense.amount && (
-                    <p className="text-xs text-[#94A3B8]">{formatCAD(monthly)}/mois</p>
+                    <p style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>{formatCAD(monthly)}/mois</p>
                   )}
                 </div>
               </div>
@@ -102,23 +129,30 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
 
       {/* Other expenses */}
       {manualExpenses.length > 0 && (
-        <div className="bg-white border border-[#E2E8F0] rounded-2xl divide-y divide-[#F1F5F9]">
-          <div className="px-4 py-3">
-            <h3 className="font-semibold text-[#1E293B] text-sm">Autres dépenses liées</h3>
+        <div
+          className="rounded-[var(--radius-lg)] overflow-hidden"
+          style={{ background: 'var(--surface-raised)', border: '1px solid var(--border-default)', boxShadow: 'var(--shadow-sm)' }}
+        >
+          <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--border-default)' }}>
+            <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>Autres dépenses liées</h3>
           </div>
-          {manualExpenses.map((expense) => (
-            <div key={expense.id} className="flex items-center gap-3 px-4 py-3">
+          {manualExpenses.map((expense, idx) => (
+            <div
+              key={expense.id}
+              className="flex items-center gap-3 px-4 py-3"
+              style={{ borderTop: idx > 0 ? '1px solid var(--border-default)' : 'none' }}
+            >
               <div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-xs flex-shrink-0"
-                style={{ backgroundColor: `${expense.section?.color ?? '#6366F1'}20` }}
+                className="w-8 h-8 rounded-[var(--radius-sm)] flex items-center justify-center text-xs flex-shrink-0"
+                style={{ background: `${expense.section?.color ?? 'var(--accent)'}18` }}
               >
                 {expense.section?.icon ?? '💳'}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-[#1E293B] text-sm truncate">{expense.name}</p>
-                <p className="text-xs text-[#94A3B8]">{expense.section?.name ?? '—'}</p>
+                <p style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)' }} className="truncate">{expense.name}</p>
+                <p style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>{expense.section?.name ?? '—'}</p>
               </div>
-              <p className="font-semibold text-[#1E293B] text-sm flex-shrink-0">
+              <p style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }} className="flex-shrink-0">
                 {formatCAD(expense.amount)}
               </p>
             </div>
@@ -127,17 +161,23 @@ export default function CarteDetailClient({ card, expenses, monthlyTotal }: Prop
       )}
 
       {expenses.length === 0 && (
-        <div className="bg-white border border-[#E2E8F0] rounded-2xl p-8 text-center">
-          <p className="text-3xl mb-2">💳</p>
-          <p className="text-[#94A3B8] text-sm">Aucune dépense liée à cette carte</p>
+        <div
+          className="rounded-[var(--radius-lg)] p-10 text-center"
+          style={{ background: 'var(--surface-raised)', border: '1px solid var(--border-default)' }}
+        >
+          <p style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>Aucune dépense liée à cette carte</p>
         </div>
       )}
 
       <Link
         href="/cartes"
-        className="block text-center text-sm text-[#94A3B8] py-2"
+        className="flex items-center justify-center gap-1.5 py-3"
+        style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}
       >
-        ← Retour aux cartes
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M19 12H5M12 5l-7 7 7 7" />
+        </svg>
+        Retour aux cartes
       </Link>
     </div>
   );

@@ -11,12 +11,22 @@ import {
 import type { Section } from '@/lib/types';
 
 const EMOJIS = ['🏠', '👤', '👨‍👩‍👧‍👦', '🚗', '💼', '🎯', '🏋️', '🎓', '🏥', '✈️'];
-const COLORS = ['#3B82F6', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#EF4444'];
+const COLORS = ['#3D3BF3', '#1A7F5A', '#C7382D', '#C27815', '#6366F1', '#EC4899'];
 
 type ModalState =
   | { mode: 'closed' }
   | { mode: 'create' }
   | { mode: 'edit'; section: Section };
+
+const labelStyle = {
+  fontSize: '11px',
+  fontWeight: 600,
+  color: 'var(--text-tertiary)',
+  letterSpacing: '0.06em',
+  textTransform: 'uppercase' as const,
+  display: 'block',
+  marginBottom: '6px',
+};
 
 export default function SectionsClient({ sections: initial }: { sections: Section[] }) {
   const router = useRouter();
@@ -27,12 +37,12 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
 
   const [name, setName] = useState('');
   const [icon, setIcon] = useState('🏠');
-  const [color, setColor] = useState('#3B82F6');
+  const [color, setColor] = useState(COLORS[0]);
 
   const dragIndex = useRef<number | null>(null);
 
   function openCreate() {
-    setName(''); setIcon('🏠'); setColor('#3B82F6');
+    setName(''); setIcon('🏠'); setColor(COLORS[0]);
     setModal({ mode: 'create' });
   }
 
@@ -85,13 +95,14 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
   }
 
   return (
-    <div className="px-4 pt-8 pb-32 min-h-screen">
-      {/* Header — titre seul, pas de bouton */}
-      <h1 className="text-2xl font-bold text-[#1E293B] mb-6">Sections</h1>
+    <div className="px-4 pt-8 pb-32 min-h-screen" style={{ background: 'var(--surface-ground)' }}>
+      <h1 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '20px', letterSpacing: '-0.02em' }}>
+        Sections
+      </h1>
 
       {sections.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 text-center">
-          <p className="text-[#94A3B8] text-sm">Aucune section — appuyez sur + pour commencer</p>
+          <p style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>Aucune section — appuyez sur + pour commencer</p>
         </div>
       ) : (
         <ul className="space-y-2">
@@ -102,52 +113,61 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
               onDragStart={() => handleDragStart(i)}
               onDragOver={(e) => handleDragOver(e, i)}
               onDragEnd={handleDragEnd}
-              className="bg-white border border-[#E2E8F0] rounded-2xl px-4 py-3.5 flex items-center gap-3 cursor-grab active:cursor-grabbing active:opacity-70 transition-opacity"
+              className="flex items-center gap-3 cursor-grab active:cursor-grabbing transition-opacity active:opacity-60"
+              style={{
+                background: 'var(--surface-raised)',
+                border: '1px solid var(--border-default)',
+                borderRadius: 'var(--radius-lg)',
+                padding: '12px 14px',
+                boxShadow: 'var(--shadow-xs)',
+              }}
             >
               {/* Drag handle */}
-              <svg width="12" height="16" viewBox="0 0 12 16" fill="none" className="flex-shrink-0 text-[#CBD5E1]">
-                <circle cx="4" cy="4" r="1.5" fill="currentColor"/>
-                <circle cx="4" cy="8" r="1.5" fill="currentColor"/>
-                <circle cx="4" cy="12" r="1.5" fill="currentColor"/>
-                <circle cx="8" cy="4" r="1.5" fill="currentColor"/>
-                <circle cx="8" cy="8" r="1.5" fill="currentColor"/>
-                <circle cx="8" cy="12" r="1.5" fill="currentColor"/>
+              <svg width="10" height="14" viewBox="0 0 10 14" fill="none" className="flex-shrink-0" style={{ color: 'var(--text-tertiary)' }}>
+                <circle cx="3" cy="3" r="1.5" fill="currentColor"/>
+                <circle cx="3" cy="7" r="1.5" fill="currentColor"/>
+                <circle cx="3" cy="11" r="1.5" fill="currentColor"/>
+                <circle cx="7" cy="3" r="1.5" fill="currentColor"/>
+                <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
+                <circle cx="7" cy="11" r="1.5" fill="currentColor"/>
               </svg>
 
-              {/* Icon — pas de fond coloré */}
-              <span className="text-lg leading-none flex-shrink-0">{section.icon}</span>
+              {/* Color dot + Icon */}
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: section.color }} />
+                <span style={{ fontSize: '17px', lineHeight: 1 }}>{section.icon}</span>
+              </div>
 
               {/* Name */}
-              <span className="flex-1 text-sm font-medium text-[#1E293B]">{section.name}</span>
-
-              {/* Color dot — discret */}
-              <div className="w-2 h-2 rounded-full flex-shrink-0 opacity-60" style={{ backgroundColor: section.color }} />
+              <span style={{ flex: 1, fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)' }}>{section.name}</span>
 
               {/* Actions */}
               {deleting === section.id ? (
-                <div className="flex items-center gap-2 text-xs">
-                  <span className="text-[#94A3B8]">Supprimer ?</span>
-                  <button onClick={() => handleDelete(section.id)} disabled={isPending} className="text-red-500 font-semibold">Oui</button>
-                  <button onClick={() => setDeleting(null)} className="text-[#94A3B8]">Non</button>
+                <div className="flex items-center gap-2" style={{ fontSize: '12px' }}>
+                  <span style={{ color: 'var(--text-tertiary)' }}>Supprimer ?</span>
+                  <button onClick={() => handleDelete(section.id)} disabled={isPending} style={{ color: 'var(--negative)', fontWeight: 600 }}>Oui</button>
+                  <button onClick={() => setDeleting(null)} style={{ color: 'var(--text-tertiary)' }}>Non</button>
                 </div>
               ) : (
                 <div className="flex items-center gap-0.5">
                   <button
                     onClick={() => openEdit(section)}
-                    className="p-2 text-[#CBD5E1] hover:text-[#1E293B] rounded-lg transition-colors"
+                    className="p-2 rounded-[var(--radius-sm)] transition-colors"
+                    style={{ color: 'var(--text-tertiary)' }}
                     aria-label="Modifier"
                   >
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                       <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" />
                     </svg>
                   </button>
                   <button
                     onClick={() => setDeleting(section.id)}
-                    className="p-2 text-[#CBD5E1] hover:text-red-400 rounded-lg transition-colors"
+                    className="p-2 rounded-[var(--radius-sm)] transition-colors"
+                    style={{ color: 'var(--text-tertiary)' }}
                     aria-label="Supprimer"
                   >
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="3 6 5 6 21 6" />
                       <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
                       <path d="M10 11v6M14 11v6" />
@@ -161,52 +181,76 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
         </ul>
       )}
 
-      {/* FAB — cohérent avec toutes les pages */}
+      {/* FAB */}
       <button
         onClick={openCreate}
-        className="fixed bottom-20 right-4 w-14 h-14 bg-[#1E293B] text-white rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-[#0F172A] transition-colors active:scale-95"
+        className="fixed bottom-20 right-4 w-14 h-14 rounded-full flex items-center justify-center text-[var(--text-inverted)] transition-all active:scale-95"
+        style={{ background: 'var(--text-primary)', boxShadow: 'var(--shadow-fab)' }}
         aria-label="Nouvelle section"
       >
-        +
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
       </button>
 
       {/* Modal */}
       {modal.mode !== 'closed' && (
         <div
-          className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm"
+          className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center"
+          style={{ background: 'var(--surface-overlay)' }}
           onClick={(e) => e.target === e.currentTarget && closeModal()}
         >
-          <div className="bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:max-w-sm">
+          <div
+            className="w-full sm:max-w-sm"
+            style={{
+              background: 'var(--surface-raised)',
+              borderRadius: 'var(--radius-sheet) var(--radius-sheet) 0 0',
+              boxShadow: 'var(--shadow-xl)',
+            }}
+          >
             <div className="flex justify-center pt-3 pb-1 sm:hidden">
-              <div className="w-9 h-1 bg-[#E2E8F0] rounded-full" />
+              <div className="w-9 h-1 rounded-full" style={{ background: 'var(--border-strong)' }} />
             </div>
 
-            <div className="px-6 pt-4 pb-8 space-y-5">
-              <h2 className="text-base font-semibold text-[#1E293B]">
+            <div className="px-6 pt-4 pb-8 space-y-4">
+              <h2 style={{ fontSize: '17px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
                 {modal.mode === 'create' ? 'Nouvelle section' : 'Modifier'}
               </h2>
 
               <div>
-                <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Nom *</label>
+                <label style={labelStyle}>Nom *</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Ex : Maison, Sport…"
-                  className="w-full border border-[#E2E8F0] rounded-xl px-4 py-3 text-sm focus:border-[#1E293B] outline-none"
+                  style={{
+                    width: '100%',
+                    border: '1.5px solid var(--border-default)',
+                    borderRadius: 'var(--radius-md)',
+                    padding: '11px 13px',
+                    fontSize: '14px',
+                    color: 'var(--text-primary)',
+                    background: 'var(--surface-inset)',
+                    outline: 'none',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
+                  onBlur={(e) => (e.target.style.borderColor = 'var(--border-default)')}
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Icône</label>
+                <label style={labelStyle}>Icône</label>
                 <div className="flex flex-wrap gap-2">
                   {EMOJIS.map((e) => (
                     <button
                       key={e}
                       onClick={() => setIcon(e)}
-                      className={`w-10 h-10 rounded-xl text-xl transition-all ${
-                        icon === e ? 'bg-[#F1F5F9] ring-1 ring-[#1E293B]' : 'bg-[#F8FAFC]'
-                      }`}
+                      className="w-10 h-10 rounded-[var(--radius-md)] text-xl transition-all"
+                      style={{
+                        background: icon === e ? 'var(--accent-subtle)' : 'var(--surface-inset)',
+                        outline: icon === e ? '1.5px solid var(--accent)' : 'none',
+                      }}
                     >
                       {e}
                     </button>
@@ -215,29 +259,50 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
               </div>
 
               <div>
-                <label className="text-xs font-medium text-[#64748B] mb-1.5 block tracking-wide uppercase">Couleur</label>
+                <label style={labelStyle}>Couleur</label>
                 <div className="flex gap-2">
                   {COLORS.map((c) => (
                     <button
                       key={c}
                       onClick={() => setColor(c)}
-                      className={`w-7 h-7 rounded-full transition-transform ${
-                        color === c ? 'scale-125 ring-2 ring-offset-1 ring-[#1E293B]' : 'hover:scale-110'
-                      }`}
-                      style={{ backgroundColor: c }}
+                      className="w-7 h-7 rounded-full transition-transform"
+                      style={{
+                        backgroundColor: c,
+                        transform: color === c ? 'scale(1.25)' : 'scale(1)',
+                        outline: color === c ? `2px solid ${c}` : 'none',
+                        outlineOffset: '2px',
+                      }}
                     />
                   ))}
                 </div>
               </div>
 
               <div className="flex gap-3 pt-1">
-                <button onClick={closeModal} className="flex-1 border border-[#E2E8F0] text-[#64748B] rounded-xl px-5 py-3 text-sm font-medium">
+                <button
+                  onClick={closeModal}
+                  className="flex-1 font-medium"
+                  style={{
+                    border: '1.5px solid var(--border-default)',
+                    color: 'var(--text-secondary)',
+                    borderRadius: 'var(--radius-md)',
+                    padding: '12px',
+                    fontSize: '14px',
+                  }}
+                >
                   Annuler
                 </button>
                 <button
                   onClick={handleSave}
                   disabled={isPending || !name.trim()}
-                  className="flex-1 bg-[#1E293B] text-white rounded-xl px-5 py-3 text-sm font-medium disabled:opacity-40"
+                  className="flex-1 font-semibold transition-all active:scale-[0.98]"
+                  style={{
+                    background: 'var(--text-primary)',
+                    color: 'var(--text-inverted)',
+                    borderRadius: 'var(--radius-md)',
+                    padding: '12px',
+                    fontSize: '14px',
+                    opacity: isPending || !name.trim() ? 0.4 : 1,
+                  }}
                 >
                   {isPending ? 'Enregistrement…' : 'Sauvegarder'}
                 </button>

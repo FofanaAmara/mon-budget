@@ -46,25 +46,25 @@ function currentMonthKey(): string {
 }
 
 const STATUS_LABELS: Record<MonthlyExpenseStatus, string> = {
-  UPCOMING: 'À venir',
-  PAID: 'Payé',
+  UPCOMING: 'A venir',
+  PAID: 'Paye',
   OVERDUE: 'En retard',
-  DEFERRED: 'Reporté',
+  DEFERRED: 'Reporte',
 };
 
-const STATUS_STYLES: Record<MonthlyExpenseStatus, string> = {
-  UPCOMING: 'bg-blue-50 text-blue-700',
-  PAID: 'bg-emerald-50 text-emerald-700',
-  OVERDUE: 'bg-red-50 text-red-600',
-  DEFERRED: 'bg-[#F8FAFC] text-[#94A3B8]',
+const STATUS_STYLES: Record<MonthlyExpenseStatus, { bg: string; color: string }> = {
+  UPCOMING: { bg: 'var(--accent-subtle)', color: 'var(--accent)' },
+  PAID: { bg: 'var(--positive-subtle)', color: 'var(--positive-text)' },
+  OVERDUE: { bg: 'var(--negative-subtle)', color: 'var(--negative-text)' },
+  DEFERRED: { bg: 'var(--surface-sunken)', color: 'var(--text-tertiary)' },
 };
 
 const GROUP_ORDER: MonthlyExpenseStatus[] = ['OVERDUE', 'UPCOMING', 'DEFERRED', 'PAID'];
 const GROUP_LABELS: Record<MonthlyExpenseStatus, string> = {
-  OVERDUE: '⚠️ En retard',
-  UPCOMING: '⏳ À venir',
-  DEFERRED: '⏭️ Reporté',
-  PAID: '✅ Payé',
+  OVERDUE: 'En retard',
+  UPCOMING: 'A venir',
+  DEFERRED: 'Reporte',
+  PAID: 'Paye',
 };
 
 export default function MonMoisClient({ expenses, summary, sections, month }: Props) {
@@ -99,13 +99,19 @@ export default function MonMoisClient({ expenses, summary, sections, month }: Pr
   }
 
   return (
-    <div className="px-4 pt-8 pb-24 min-h-screen">
+    <div style={{ padding: '36px 20px 96px', minHeight: '100vh' }}>
       {/* Header with month navigation */}
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex items-center justify-between" style={{ marginBottom: '24px' }}>
         <button
           onClick={() => navigateMonth(prevMonth(month))}
-          className="p-2 text-[#94A3B8] hover:text-[#1E293B] rounded-xl transition-colors"
-          aria-label="Mois précédent"
+          style={{
+            padding: '8px',
+            color: 'var(--text-tertiary)',
+            borderRadius: 'var(--radius-md)',
+            transition: `color var(--duration-fast) var(--ease-out)`,
+            background: 'none', border: 'none', cursor: 'pointer',
+          }}
+          aria-label="Mois precedent"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M15 18l-6-6 6-6" />
@@ -113,11 +119,25 @@ export default function MonMoisClient({ expenses, summary, sections, month }: Pr
         </button>
 
         <div className="text-center">
-          <h1 className="text-lg font-bold text-[#1E293B] capitalize">{monthLabel(month)}</h1>
+          <h1 style={{
+            fontSize: 'var(--text-lg)',
+            fontWeight: 750,
+            color: 'var(--text-primary)',
+            textTransform: 'capitalize' as const,
+            letterSpacing: 'var(--tracking-tight)',
+          }}>
+            {monthLabel(month)}
+          </h1>
           {!isCurrentMonth && (
             <button
               onClick={() => navigateMonth(today)}
-              className="text-xs text-[#2563EB] mt-0.5"
+              style={{
+                fontSize: 'var(--text-xs)',
+                color: 'var(--accent)',
+                marginTop: '2px',
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontWeight: 600,
+              }}
             >
               Retour au mois actuel
             </button>
@@ -126,56 +146,75 @@ export default function MonMoisClient({ expenses, summary, sections, month }: Pr
 
         <button
           onClick={() => navigateMonth(nextMonth(month))}
-          className="p-2 text-[#94A3B8] hover:text-[#1E293B] rounded-xl transition-colors"
+          style={{
+            padding: '8px',
+            color: month >= today ? 'var(--border-default)' : 'var(--text-tertiary)',
+            borderRadius: 'var(--radius-md)',
+            transition: `color var(--duration-fast) var(--ease-out)`,
+            background: 'none', border: 'none',
+            cursor: month >= today ? 'default' : 'pointer',
+          }}
           aria-label="Mois suivant"
           disabled={month >= today}
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={month >= today ? '#E2E8F0' : 'currentColor'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 18l6-6-6-6" />
           </svg>
         </button>
       </div>
 
       {/* Progress card */}
-      <div className="bg-white border border-[#E2E8F0] rounded-2xl p-4 mb-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-semibold text-[#1E293B]">
-            {summary.paid_count}/{summary.count} dépenses complétées
+      <div className="card" style={{ padding: '18px 20px', marginBottom: '16px' }}>
+        <div className="flex items-center justify-between" style={{ marginBottom: '12px' }}>
+          <span style={{ fontSize: 'var(--text-sm)', fontWeight: 650, color: 'var(--text-primary)' }}>
+            {summary.paid_count}/{summary.count} depenses completees
           </span>
           {summary.overdue_count > 0 && (
-            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-red-50 text-red-600">
+            <span className="badge" style={{
+              background: 'var(--negative-subtle)',
+              color: 'var(--negative-text)',
+            }}>
               {summary.overdue_count} en retard
             </span>
           )}
         </div>
 
-        {/* Progress bar */}
-        <div className="h-2 bg-[#F1F5F9] rounded-full overflow-hidden mb-2">
+        <div className="progress-track" style={{ height: '6px', marginBottom: '10px' }}>
           <div
-            className="h-full rounded-full transition-all duration-500"
+            className="progress-fill"
             style={{
               width: `${Math.max(progressPct, summary.count > 0 ? 1 : 0)}%`,
-              backgroundColor: progressPct >= 100 ? '#10B981' : '#2563EB',
+              backgroundColor: progressPct >= 100 ? 'var(--positive)' : 'var(--accent)',
             }}
           />
         </div>
 
-        <div className="flex items-center justify-between text-xs text-[#94A3B8]">
-          <span>{formatCAD(summary.paid_total)} payé</span>
-          <span>{formatCAD(summary.total)} total</span>
+        <div className="flex items-center justify-between" style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
+          <span className="amount" style={{ fontWeight: 600 }}>{formatCAD(summary.paid_total)} paye</span>
+          <span className="amount" style={{ fontWeight: 600 }}>{formatCAD(summary.total)} total</span>
         </div>
       </div>
 
       {/* Section filter */}
       {sections.length > 0 && (
-        <div className="flex gap-2 overflow-x-auto pb-1 mb-4 scrollbar-hide">
+        <div className="flex scrollbar-hide" style={{
+          gap: '8px', overflowX: 'auto',
+          paddingBottom: '4px', marginBottom: '16px',
+        }}>
           <button
             onClick={() => setSelectedSection(null)}
-            className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
-              selectedSection === null
-                ? 'bg-[#1E293B] text-white'
-                : 'bg-white border border-[#E2E8F0] text-[#94A3B8]'
-            }`}
+            style={{
+              flexShrink: 0,
+              padding: '7px 14px',
+              borderRadius: 'var(--radius-md)',
+              fontSize: 'var(--text-xs)',
+              fontWeight: 600,
+              transition: `all var(--duration-fast) var(--ease-out)`,
+              background: selectedSection === null ? 'var(--text-primary)' : 'var(--surface-raised)',
+              color: selectedSection === null ? 'var(--text-inverted)' : 'var(--text-tertiary)',
+              border: selectedSection === null ? 'none' : '1.5px solid var(--border-default)',
+              cursor: 'pointer',
+            }}
           >
             Tout
           </button>
@@ -183,11 +222,20 @@ export default function MonMoisClient({ expenses, summary, sections, month }: Pr
             <button
               key={s.id}
               onClick={() => setSelectedSection(s.id === selectedSection ? null : s.id)}
-              className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
-                selectedSection === s.id
-                  ? 'bg-[#1E293B] text-white'
-                  : 'bg-white border border-[#E2E8F0] text-[#94A3B8]'
-              }`}
+              className="flex items-center"
+              style={{
+                flexShrink: 0,
+                gap: '6px',
+                padding: '7px 14px',
+                borderRadius: 'var(--radius-md)',
+                fontSize: 'var(--text-xs)',
+                fontWeight: 600,
+                transition: `all var(--duration-fast) var(--ease-out)`,
+                background: selectedSection === s.id ? 'var(--text-primary)' : 'var(--surface-raised)',
+                color: selectedSection === s.id ? 'var(--text-inverted)' : 'var(--text-tertiary)',
+                border: selectedSection === s.id ? 'none' : '1.5px solid var(--border-default)',
+                cursor: 'pointer',
+              }}
             >
               <span>{s.icon}</span>
               <span>{s.name}</span>
@@ -198,33 +246,35 @@ export default function MonMoisClient({ expenses, summary, sections, month }: Pr
 
       {/* Empty state */}
       {expenses.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="text-5xl mb-4">📅</div>
-          <p className="text-[#94A3B8] text-sm mb-2">Aucune dépense ce mois</p>
-          <p className="text-xs text-[#CBD5E1]">
-            Les dépenses récurrentes apparaissent automatiquement
+        <div className="flex flex-col items-center justify-center text-center" style={{ padding: '80px 0' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '16px', opacity: 0.6 }}>📅</div>
+          <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)', marginBottom: '6px' }}>
+            Aucune depense ce mois
+          </p>
+          <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-xs)', opacity: 0.7 }}>
+            Les depenses recurrentes apparaissent automatiquement
           </p>
         </div>
       )}
 
       {/* Grouped expenses by status */}
-      <div className="space-y-4">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {grouped.map(({ status, items }) => (
           <div key={status}>
-            <h2 className="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-2 px-1">
+            <h2 className="section-label" style={{ marginBottom: '10px', paddingLeft: '2px' }}>
               {GROUP_LABELS[status]} ({items.length})
             </h2>
-            <div className="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
-              <div className="divide-y divide-[#F8FAFC]">
-                {items.map((expense) => (
+            <div className="card" style={{ overflow: 'hidden' }}>
+              {items.map((expense, i) => (
+                <div key={expense.id}>
+                  {i > 0 && <div className="divider" style={{ marginLeft: '20px', marginRight: '20px' }} />}
                   <ExpenseRow
-                    key={expense.id}
                     expense={expense}
                     isCurrentMonth={isCurrentMonth}
                     onAction={handleAction}
                   />
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
         ))}
@@ -243,32 +293,47 @@ function ExpenseRow({
   onAction: (id: string, action: 'paid' | 'deferred' | 'upcoming') => void;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const statusStyle = STATUS_STYLES[expense.status];
 
   return (
-    <div className="px-4 py-3">
-      <div className="flex items-center gap-3">
-        <div className="flex-1 min-w-0">
-          <p className="font-medium text-[#1E293B] text-sm truncate">{expense.name}</p>
-          <div className="flex items-center gap-1.5 mt-0.5">
-            <span className={`text-xs font-medium px-1.5 py-0.5 rounded-md ${STATUS_STYLES[expense.status]}`}>
+    <div style={{ padding: '13px 20px' }}>
+      <div className="flex items-center" style={{ gap: '12px' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{
+            fontWeight: 550, color: 'var(--text-primary)',
+            fontSize: 'var(--text-sm)',
+            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+          }}>
+            {expense.name}
+          </p>
+          <div className="flex items-center" style={{ gap: '6px', marginTop: '3px' }}>
+            <span className="badge" style={{
+              background: statusStyle.bg,
+              color: statusStyle.color,
+            }}>
               {STATUS_LABELS[expense.status]}
             </span>
-            <span className="text-xs text-[#94A3B8]">
+            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
               {expense.is_auto_charged ? '· Auto' : ''}
               {expense.due_date ? ` · ${formatShortDate(expense.due_date)}` : ''}
             </span>
           </div>
         </div>
 
-        <span className="font-semibold text-[#1E293B] text-sm flex-shrink-0">
+        <span className="amount" style={{ fontSize: 'var(--text-sm)', flexShrink: 0 }}>
           {formatCAD(Number(expense.amount))}
         </span>
 
-        {/* Actions — only for current month */}
         {isCurrentMonth && (
           <button
             onClick={() => setExpanded((v) => !v)}
-            className="p-1.5 text-[#94A3B8] hover:text-[#1E293B] rounded-lg transition-colors flex-shrink-0"
+            style={{
+              padding: '6px', color: 'var(--text-tertiary)',
+              borderRadius: 'var(--radius-sm)',
+              transition: `color var(--duration-fast) var(--ease-out)`,
+              flexShrink: 0,
+              background: 'none', border: 'none', cursor: 'pointer',
+            }}
             aria-label="Actions"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -282,29 +347,50 @@ function ExpenseRow({
 
       {/* Inline action buttons */}
       {expanded && isCurrentMonth && (
-        <div className="flex gap-2 mt-2 ml-0">
+        <div className="flex" style={{ gap: '8px', marginTop: '10px' }}>
           {expense.status !== 'PAID' && (
             <button
               onClick={() => { onAction(expense.id, 'paid'); setExpanded(false); }}
-              className="flex-1 py-1.5 text-xs font-semibold rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
+              style={{
+                flex: 1, padding: '8px',
+                fontSize: 'var(--text-xs)', fontWeight: 650,
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--positive-subtle)', color: 'var(--positive-text)',
+                transition: `background var(--duration-fast) var(--ease-out)`,
+                border: 'none', cursor: 'pointer',
+              }}
             >
-              ✓ Marquer payé
+              Marquer paye
             </button>
           )}
           {expense.status === 'PAID' && (
             <button
               onClick={() => { onAction(expense.id, 'upcoming'); setExpanded(false); }}
-              className="flex-1 py-1.5 text-xs font-semibold rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+              style={{
+                flex: 1, padding: '8px',
+                fontSize: 'var(--text-xs)', fontWeight: 650,
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--accent-subtle)', color: 'var(--accent)',
+                transition: `background var(--duration-fast) var(--ease-out)`,
+                border: 'none', cursor: 'pointer',
+              }}
             >
-              ↩ Annuler
+              Annuler
             </button>
           )}
           {expense.status !== 'DEFERRED' && expense.status !== 'PAID' && (
             <button
               onClick={() => { onAction(expense.id, 'deferred'); setExpanded(false); }}
-              className="flex-1 py-1.5 text-xs font-semibold rounded-xl bg-[#F8FAFC] text-[#94A3B8] hover:bg-[#F1F5F9] transition-colors"
+              style={{
+                flex: 1, padding: '8px',
+                fontSize: 'var(--text-xs)', fontWeight: 650,
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--surface-sunken)', color: 'var(--text-tertiary)',
+                transition: `background var(--duration-fast) var(--ease-out)`,
+                border: 'none', cursor: 'pointer',
+              }}
             >
-              ⏭ Reporter
+              Reporter
             </button>
           )}
         </div>

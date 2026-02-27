@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from 'next';
-import { DM_Sans } from 'next/font/google';
+import { Geist } from 'next/font/google';
 import './globals.css';
 import BottomNav from '@/components/BottomNav';
 import ServiceWorkerInit from '@/components/ServiceWorkerInit';
 
-const dmSans = DM_Sans({
+const geist = Geist({
   subsets: ['latin'],
-  variable: '--font-dm-sans',
+  variable: '--font-geist',
   display: 'swap',
 });
 
@@ -28,7 +28,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
-  themeColor: '#2563EB',
+  themeColor: '#F5F4F1',
 };
 
 export default function RootLayout({
@@ -37,14 +37,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr" className={dmSans.variable}>
+    <html lang="fr" className={geist.variable}>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-touch-fullscreen" content="yes" />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
       </head>
-      <body className="font-[family-name:var(--font-dm-sans)] antialiased">
+      <body className="font-[family-name:var(--font-geist)] antialiased">
         <div className="max-w-lg mx-auto min-h-dvh relative">
           {children}
         </div>

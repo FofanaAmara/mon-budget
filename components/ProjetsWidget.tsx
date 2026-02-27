@@ -10,16 +10,30 @@ export default function ProjetsWidget({ projets }: Props) {
   if (projets.length === 0) return null;
 
   return (
-    <Link href="/projets" className="block">
-      <div className="bg-white border border-[#E2E8F0] rounded-2xl p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-[#1E293B] text-sm flex items-center gap-2">
-            <span>🎯</span> Projets
-          </h3>
-          <span className="text-xs text-[#94A3B8]">{projets.length} en cours →</span>
+    <Link href="/projets" className="block card card-press">
+      <div style={{ padding: '18px 20px' }}>
+        <div className="flex items-center justify-between" style={{ marginBottom: '16px' }}>
+          <span
+            style={{
+              fontSize: 'var(--text-xs)',
+              fontWeight: 650,
+              color: 'var(--text-tertiary)',
+              letterSpacing: 'var(--tracking-widest)',
+              textTransform: 'uppercase' as const,
+            }}
+          >
+            Projets
+          </span>
+          <span style={{
+            fontSize: 'var(--text-xs)',
+            color: 'var(--text-secondary)',
+            fontWeight: 500,
+          }}>
+            {projets.length} en cours
+          </span>
         </div>
 
-        <div className="space-y-2.5">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           {projets.slice(0, 3).map((projet) => {
             const target = Number(projet.target_amount ?? projet.amount);
             const saved = Number(projet.saved_amount ?? 0);
@@ -27,16 +41,33 @@ export default function ProjetsWidget({ projets }: Props) {
 
             return (
               <div key={projet.id}>
-                <div className="flex justify-between items-center mb-1">
-                  <p className="text-sm text-[#1E293B] truncate max-w-[160px]">{projet.name}</p>
-                  <p className="text-xs font-medium text-[#1E293B]">
+                <div className="flex justify-between items-center" style={{ marginBottom: '6px' }}>
+                  <p style={{
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--text-primary)',
+                    fontWeight: 500,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap' as const,
+                    maxWidth: '160px',
+                  }}>
+                    {projet.name}
+                  </p>
+                  <p className="amount" style={{
+                    fontSize: 'var(--text-xs)',
+                    color: 'var(--text-secondary)',
+                    fontWeight: 600,
+                  }}>
                     {formatCAD(saved)} / {formatCAD(target)}
                   </p>
                 </div>
-                <div className="h-1.5 bg-[#F1F5F9] rounded-full overflow-hidden">
+                <div className="progress-track">
                   <div
-                    className={`h-full rounded-full transition-all ${progress >= 100 ? 'bg-emerald-500' : 'bg-[#2563EB]'}`}
-                    style={{ width: `${Math.max(progress, 2)}%` }}
+                    className="progress-fill"
+                    style={{
+                      width: `${Math.max(progress, 2)}%`,
+                      backgroundColor: progress >= 100 ? 'var(--positive)' : 'var(--accent)',
+                    }}
                   />
                 </div>
               </div>

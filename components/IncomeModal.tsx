@@ -9,11 +9,11 @@ type Props = {
   onClose: () => void;
 };
 
-const FREQUENCY_LABELS: Record<IncomeFrequency, string> = {
-  MONTHLY: 'Mensuel',
-  BIWEEKLY: 'Aux 2 semaines',
-  YEARLY: 'Annuel',
-};
+const FREQUENCY_OPTIONS: { value: IncomeFrequency; label: string; sub: string }[] = [
+  { value: 'MONTHLY',   label: 'Mensuel',       sub: '12×/an' },
+  { value: 'BIWEEKLY',  label: 'Aux 2 sem.',    sub: '26×/an' },
+  { value: 'YEARLY',    label: 'Annuel',         sub: '1×/an'  },
+];
 
 export default function IncomeModal({ income, onClose }: Props) {
   const [name, setName] = useState(income?.name ?? '');
@@ -45,25 +45,36 @@ export default function IncomeModal({ income, onClose }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center"
+      style={{ background: 'var(--surface-overlay)' }}
+      onClick={onClose}
+    >
       <div
-        className="bg-white rounded-t-3xl w-full max-w-lg pb-10"
+        className="w-full max-w-lg pb-safe"
+        style={{
+          background: 'var(--surface-raised)',
+          borderRadius: 'var(--radius-sheet) var(--radius-sheet) 0 0',
+          boxShadow: 'var(--shadow-xl)',
+        }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Handle */}
+        {/* Drag handle */}
         <div className="flex justify-center pt-3 pb-2">
-          <div className="w-10 h-1 bg-gray-300 rounded-full" />
+          <div className="w-9 h-1 rounded-full" style={{ background: 'var(--border-strong)' }} />
         </div>
 
-        <div className="px-6 pb-4">
-          <h2 className="text-xl font-bold text-[#1E293B] mb-6">
+        <div className="px-6 pb-8 pt-2">
+          <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '24px', letterSpacing: '-0.01em' }}>
             {income ? 'Modifier le revenu' : 'Nouveau revenu'}
           </h2>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {/* Name */}
             <div>
-              <label className="block text-sm font-medium text-[#1E293B] mb-1">
+              <label
+                style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-tertiary)', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}
+              >
                 Source de revenu
               </label>
               <input
@@ -71,13 +82,29 @@ export default function IncomeModal({ income, onClose }: Props) {
                 placeholder="Salaire, Freelance, Loyer perçu…"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full border border-[#E2E8F0] rounded-xl px-4 py-3 text-[#1E293B] focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+                style={{
+                  width: '100%',
+                  border: '1.5px solid var(--border-default)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '12px 14px',
+                  fontSize: '14px',
+                  color: 'var(--text-primary)',
+                  background: 'var(--surface-inset)',
+                  outline: 'none',
+                  transition: 'border-color 150ms ease-out',
+                }}
+                onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
+                onBlur={(e) => (e.target.style.borderColor = 'var(--border-default)')}
               />
             </div>
 
             {/* Amount */}
             <div>
-              <label className="block text-sm font-medium text-[#1E293B] mb-1">Montant ($)</label>
+              <label
+                style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-tertiary)', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}
+              >
+                Montant ($)
+              </label>
               <input
                 type="number"
                 min="0"
@@ -85,37 +112,76 @@ export default function IncomeModal({ income, onClose }: Props) {
                 placeholder="0.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-full border border-[#E2E8F0] rounded-xl px-4 py-3 text-[#1E293B] focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+                style={{
+                  width: '100%',
+                  border: '1.5px solid var(--border-default)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '12px 14px',
+                  fontSize: '14px',
+                  color: 'var(--text-primary)',
+                  background: 'var(--surface-inset)',
+                  outline: 'none',
+                  transition: 'border-color 150ms ease-out',
+                  fontVariantNumeric: 'tabular-nums',
+                }}
+                onFocus={(e) => (e.target.style.borderColor = 'var(--accent)')}
+                onBlur={(e) => (e.target.style.borderColor = 'var(--border-default)')}
               />
             </div>
 
             {/* Frequency */}
             <div>
-              <label className="block text-sm font-medium text-[#1E293B] mb-2">Fréquence</label>
-              <div className="flex gap-2">
-                {(Object.keys(FREQUENCY_LABELS) as IncomeFrequency[]).map((f) => (
-                  <button
-                    key={f}
-                    type="button"
-                    onClick={() => setFrequency(f)}
-                    className={`flex-1 py-2 px-3 rounded-xl text-sm font-medium border transition-colors ${
-                      frequency === f
-                        ? 'bg-[#2563EB] text-white border-[#2563EB]'
-                        : 'bg-white text-[#1E293B] border-[#E2E8F0]'
-                    }`}
-                  >
-                    {FREQUENCY_LABELS[f]}
-                  </button>
-                ))}
+              <label
+                style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-tertiary)', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'block', marginBottom: '8px' }}
+              >
+                Fréquence
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {FREQUENCY_OPTIONS.map(({ value, label, sub }) => {
+                  const active = frequency === value;
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setFrequency(value)}
+                      className="py-2.5 px-2 rounded-[var(--radius-md)] transition-all text-center"
+                      style={{
+                        border: active ? '1.5px solid var(--accent)' : '1.5px solid var(--border-default)',
+                        background: active ? 'var(--accent-subtle)' : 'var(--surface-inset)',
+                      }}
+                    >
+                      <span style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: active ? 'var(--accent)' : 'var(--text-primary)' }}>
+                        {label}
+                      </span>
+                      <span style={{ display: 'block', fontSize: '10px', color: active ? 'var(--accent-muted)' : 'var(--text-tertiary)', marginTop: '1px' }}>
+                        {sub}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {error && (
+              <p style={{ fontSize: '13px', color: 'var(--negative)', background: 'var(--negative-subtle)', padding: '8px 12px', borderRadius: 'var(--radius-sm)' }}>
+                {error}
+              </p>
+            )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#2563EB] text-white rounded-xl py-3.5 font-semibold text-base disabled:opacity-50 mt-2"
+              className="w-full font-semibold transition-all active:scale-[0.98]"
+              style={{
+                background: loading ? 'var(--accent-muted)' : 'var(--accent)',
+                color: 'var(--text-inverted)',
+                borderRadius: 'var(--radius-md)',
+                padding: '14px',
+                fontSize: '15px',
+                fontWeight: 600,
+                marginTop: '8px',
+                boxShadow: loading ? 'none' : 'var(--shadow-accent)',
+              }}
             >
               {loading ? 'Enregistrement…' : income ? 'Modifier' : 'Ajouter'}
             </button>

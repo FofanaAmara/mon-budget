@@ -11,38 +11,69 @@ export default function ResteAVivreWidget({ monthlyIncome, monthlyExpenses }: Pr
   const ratio = monthlyIncome > 0 ? Math.min((monthlyExpenses / monthlyIncome) * 100, 100) : 0;
   const isPositive = resteAVivre >= 0;
 
+  const barColor = ratio > 90
+    ? 'var(--negative)'
+    : ratio > 70
+    ? 'var(--warning)'
+    : 'var(--positive)';
+
   return (
-    <Link href="/revenus" className="block">
-      <div className="bg-white border border-[#E2E8F0] rounded-2xl p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-[#1E293B] text-sm">Reste à vivre</h3>
-          <span className="text-xs text-[#94A3B8]">→</span>
+    <Link href="/revenus" className="block card card-press">
+      <div style={{ padding: '18px 20px' }}>
+        <div className="flex items-center justify-between" style={{ marginBottom: '14px' }}>
+          <span
+            style={{
+              fontSize: 'var(--text-xs)',
+              fontWeight: 650,
+              color: 'var(--text-tertiary)',
+              letterSpacing: 'var(--tracking-widest)',
+              textTransform: 'uppercase' as const,
+            }}
+          >
+            Reste a vivre
+          </span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
         </div>
 
-        <div className="flex items-end justify-between mb-3">
+        <div className="flex items-end justify-between" style={{ marginBottom: monthlyIncome > 0 ? '16px' : '0' }}>
           <div>
-            <p className={`text-2xl font-bold ${isPositive ? 'text-emerald-600' : 'text-red-500'}`}>
+            <p
+              className="amount"
+              style={{
+                fontSize: 'var(--text-2xl)',
+                lineHeight: 'var(--leading-tight)',
+                color: isPositive ? 'var(--positive)' : 'var(--negative)',
+              }}
+            >
               {formatCAD(resteAVivre)}
             </p>
-            <p className="text-xs text-[#94A3B8] mt-0.5">ce mois</p>
+            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '3px' }}>
+              ce mois
+            </p>
           </div>
           {monthlyIncome === 0 && (
-            <p className="text-xs text-[#94A3B8] italic">Ajoutez vos revenus →</p>
+            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>
+              Ajoutez vos revenus
+            </p>
           )}
         </div>
 
         {monthlyIncome > 0 && (
           <>
-            {/* Progress bar */}
-            <div className="h-2 bg-[#F1F5F9] rounded-full overflow-hidden mb-2">
+            <div className="progress-track" style={{ marginBottom: '10px' }}>
               <div
-                className={`h-full rounded-full transition-all ${ratio > 90 ? 'bg-red-500' : ratio > 70 ? 'bg-orange-400' : 'bg-emerald-500'}`}
-                style={{ width: `${ratio}%` }}
+                className="progress-fill"
+                style={{
+                  width: `${ratio}%`,
+                  backgroundColor: barColor,
+                }}
               />
             </div>
-            <div className="flex justify-between text-xs text-[#94A3B8]">
-              <span>Dépenses {Math.round(ratio)}%</span>
-              <span>Revenus {formatCAD(monthlyIncome)}</span>
+            <div className="flex justify-between" style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
+              <span>Depenses {Math.round(ratio)}%</span>
+              <span className="amount" style={{ fontWeight: 600 }}>Revenus {formatCAD(monthlyIncome)}</span>
             </div>
           </>
         )}
