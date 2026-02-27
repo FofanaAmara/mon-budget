@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { deleteIncome } from '@/lib/actions/incomes';
 import { calcMonthlyIncome, formatCAD } from '@/lib/utils';
-import type { Income, IncomeFrequency } from '@/lib/types';
+import type { Income, IncomeFrequency, IncomeSource } from '@/lib/types';
 import IncomeModal from './IncomeModal';
 
 const FREQUENCY_LABELS: Record<IncomeFrequency, string> = {
@@ -11,6 +11,13 @@ const FREQUENCY_LABELS: Record<IncomeFrequency, string> = {
   BIWEEKLY: 'Aux 2 sem.',
   YEARLY: 'Annuel',
   VARIABLE: 'Variable',
+};
+
+const SOURCE_META: Record<IncomeSource, { label: string; icon: string; color: string; bg: string }> = {
+  EMPLOYMENT: { label: 'Emploi',         icon: '💼', color: '#2563EB', bg: '#EFF6FF' },
+  BUSINESS:   { label: 'Business',       icon: '🏢', color: '#7C3AED', bg: '#F5F3FF' },
+  INVESTMENT: { label: 'Investissement', icon: '📈', color: '#059669', bg: '#ECFDF5' },
+  OTHER:      { label: 'Autre',          icon: '🔧', color: '#6B7280', bg: '#F9FAFB' },
 };
 
 type Props = {
@@ -201,39 +208,63 @@ function IncomeRow({
   onDelete: (id: string) => void;
 }) {
   const monthly = calcMonthlyIncome(inc.amount, inc.frequency, inc.estimated_amount);
+  const srcMeta = SOURCE_META[inc.source ?? 'OTHER'];
+  const isVariable = inc.frequency === 'VARIABLE';
+
   return (
     <div>
       {index > 0 && <div className="divider" style={{ marginLeft: '20px', marginRight: '20px' }} />}
       <div className="flex items-center" style={{ gap: '12px', padding: '12px 20px' }}>
+        {/* Source icon badge */}
         <div style={{
           width: '36px', height: '36px',
           borderRadius: 'var(--radius-md)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: 'var(--positive-subtle)',
+          background: srcMeta.bg,
           flexShrink: 0,
+          fontSize: '16px',
         }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--positive-text)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="12" y1="1" x2="12" y2="23" />
-            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-          </svg>
+          {srcMeta.icon}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{
-            fontWeight: 600, color: 'var(--text-primary)',
-            fontSize: 'var(--text-sm)',
-            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-          }}>
-            {inc.name}
-          </p>
-          <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '4px' }}>
-            {FREQUENCY_LABELS[inc.frequency]}
-            {inc.frequency !== 'MONTHLY' && (
-              <span> · {formatCAD(monthly)}/mois</span>
+          <div className="flex items-center" style={{ gap: '6px', flexWrap: 'wrap' }}>
+            <p style={{
+              fontWeight: 600, color: 'var(--text-primary)',
+              fontSize: 'var(--text-sm)',
+              overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+            }}>
+              {inc.name}
+            </p>
+            {/* Source badge */}
+            <span style={{
+              fontSize: '10px',
+              fontWeight: 600,
+              padding: '1px 6px',
+              borderRadius: '999px',
+              background: srcMeta.bg,
+              color: srcMeta.color,
+              flexShrink: 0,
+            }}>
+              {srcMeta.label}
+            </span>
+          </div>
+          <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '3px' }}>
+            {isVariable ? (
+              <span>Variable{monthly > 0 ? ` · ~${formatCAD(monthly)}/mois` : ''}</span>
+            ) : (
+              <>
+                {FREQUENCY_LABELS[inc.frequency]}
+                {inc.frequency !== 'MONTHLY' && monthly > 0 && (
+                  <span> · {formatCAD(monthly)}/mois</span>
+                )}
+              </>
             )}
           </p>
         </div>
         <span className="amount" style={{ fontSize: 'var(--text-sm)', color: 'var(--positive)', flexShrink: 0 }}>
-          {formatCAD(Number(inc.amount))}
+          {isVariable
+            ? (monthly > 0 ? `~${formatCAD(monthly)}` : '—')
+            : formatCAD(Number(inc.amount))}
         </span>
         <div className="flex items-center" style={{ gap: '2px' }}>
           <button onClick={() => onEdit(inc)} className="icon-btn" aria-label="Modifier">

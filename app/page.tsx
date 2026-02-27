@@ -8,6 +8,7 @@ import {
   autoMarkPaidForAutoDebit,
 } from '@/lib/actions/monthly-expenses';
 import { getMonthlyIncomeTotal, getIncomes } from '@/lib/actions/incomes';
+import { generateMonthlyIncomes } from '@/lib/actions/monthly-incomes';
 import { calcMonthlyIncome } from '@/lib/utils';
 import { currentMonth } from '@/lib/utils';
 import { formatCAD, daysUntil } from '@/lib/utils';
@@ -33,6 +34,7 @@ export default async function DashboardPage() {
   const month = currentMonth();
 
   await generateMonthlyExpenses(month);
+  await generateMonthlyIncomes(month);
   await autoMarkOverdue(month);
   await autoMarkPaidForAutoDebit(month);
 

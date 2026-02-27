@@ -9,6 +9,11 @@ import {
   autoMarkOverdue,
   autoMarkPaidForAutoDebit,
 } from '@/lib/actions/monthly-expenses';
+import {
+  generateMonthlyIncomes,
+  getMonthlyIncomeSummary,
+} from '@/lib/actions/monthly-incomes';
+import { getIncomes } from '@/lib/actions/incomes';
 import { currentMonth } from '@/lib/utils';
 
 type PageProps = {
@@ -21,6 +26,7 @@ export default async function MonMoisPage({ searchParams }: PageProps) {
 
   // Ensure instances exist for this month (idempotent)
   await generateMonthlyExpenses(month);
+  await generateMonthlyIncomes(month);
 
   // Auto-mark statuses for current month only
   if (month === currentMonth()) {
@@ -28,10 +34,12 @@ export default async function MonMoisPage({ searchParams }: PageProps) {
     await autoMarkPaidForAutoDebit(month);
   }
 
-  const [expenses, summary, sections] = await Promise.all([
+  const [expenses, summary, sections, incomeSummary, allIncomes] = await Promise.all([
     getMonthlyExpenses(month),
     getMonthSummary(month),
     getSections(),
+    getMonthlyIncomeSummary(month),
+    getIncomes(),
   ]);
 
   return (
@@ -40,6 +48,9 @@ export default async function MonMoisPage({ searchParams }: PageProps) {
       summary={summary}
       sections={sections}
       month={month}
+      monthlyIncomes={incomeSummary.items}
+      incomeSummary={{ expectedTotal: incomeSummary.expectedTotal, actualTotal: incomeSummary.actualTotal }}
+      allIncomes={allIncomes}
     />
   );
 }

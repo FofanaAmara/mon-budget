@@ -241,3 +241,31 @@ export async function getExpensesByCard(cardId: string): Promise<Expense[]> {
   `;
   return rows as Expense[];
 }
+
+// Creates a one-time adhoc expense directly in monthly_expenses for the given month.
+// Used by the quick-add FAB in Mon Mois.
+export async function createAdhocExpense(
+  name: string,
+  amount: number,
+  sectionId: string,
+  month: string
+): Promise<void> {
+  // Insert into expenses table as ONE_TIME
+  const rows = await sql`
+    INSERT INTO expenses (name, amount, type, section_id, is_active, next_due_date)
+    VALUES (${name}, ${amount}, 'ONE_TIME', ${sectionId}, true, CURRENT_DATE)
+    RETURNING id
+  `;
+  const expenseId = (rows[0] as { id: string }).id;
+
+  // Insert directly as monthly instance with UPCOMING status
+  await sql`
+    INSERT INTO monthly_expenses (expense_id, section_id, month, name, amount, status, due_date)
+    VALUES (${expenseId}, ${sectionId}, ${month}, ${name}, ${amount}, 'UPCOMING', CURRENT_DATE)
+    ON CONFLICT (expense_id, month) DO NOTHING
+  `;
+
+  revalidatePath('/mon-mois');
+  revalidatePath('/depenses');
+  revalidatePath('/');
+}
