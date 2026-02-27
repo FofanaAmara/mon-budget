@@ -208,6 +208,28 @@ export default function ParametresClient({ settings }: Props) {
           </div>
         </div>
 
+        {/* Mon compte */}
+        <div className="list-card">
+          <Link
+            href="/account/settings"
+            className="link-row"
+            style={{ textDecoration: 'none' }}
+          >
+            <div className="flex items-center" style={{ gap: '12px' }}>
+              <span style={{ color: 'var(--text-tertiary)' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </span>
+              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>Mon compte</span>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </Link>
+        </div>
+
         {/* Gestion */}
         <div className="list-card">
           <div style={{ padding: '16px 20px 8px' }}>

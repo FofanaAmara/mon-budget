@@ -2,13 +2,15 @@
 
 import { revalidatePath } from 'next/cache';
 import { sql } from '@/lib/db';
+import { requireAuth } from '@/lib/auth/helpers';
 import { calcMonthlyIncome } from '@/lib/utils';
 import type { Income, IncomeFrequency, IncomeSource } from '@/lib/types';
 
 export async function getIncomes(): Promise<Income[]> {
+  const userId = await requireAuth();
   const rows = await sql`
     SELECT * FROM incomes
-    WHERE is_active = true
+    WHERE is_active = true AND user_id = ${userId}
     ORDER BY created_at DESC
   `;
   return rows as Income[];
@@ -33,9 +35,10 @@ type IncomeInput = {
 };
 
 export async function createIncome(data: IncomeInput): Promise<Income> {
+  const userId = await requireAuth();
   const rows = await sql`
-    INSERT INTO incomes (name, source, amount, estimated_amount, frequency, notes)
-    VALUES (${data.name}, ${data.source}, ${data.amount}, ${data.estimated_amount}, ${data.frequency}, ${data.notes ?? null})
+    INSERT INTO incomes (user_id, name, source, amount, estimated_amount, frequency, notes)
+    VALUES (${userId}, ${data.name}, ${data.source}, ${data.amount}, ${data.estimated_amount}, ${data.frequency}, ${data.notes ?? null})
     RETURNING *
   `;
   revalidatePath('/revenus');
@@ -46,6 +49,7 @@ export async function createIncome(data: IncomeInput): Promise<Income> {
 }
 
 export async function updateIncome(id: string, data: Partial<IncomeInput>): Promise<Income> {
+  const userId = await requireAuth();
   const rows = await sql`
     UPDATE incomes SET
       name = COALESCE(${data.name ?? null}, name),
@@ -55,7 +59,7 @@ export async function updateIncome(id: string, data: Partial<IncomeInput>): Prom
       frequency = COALESCE(${data.frequency ?? null}, frequency),
       notes = ${data.notes !== undefined ? (data.notes ?? null) : null},
       updated_at = NOW()
-    WHERE id = ${id}
+    WHERE id = ${id} AND user_id = ${userId}
     RETURNING *
   `;
   revalidatePath('/revenus');
@@ -66,7 +70,8 @@ export async function updateIncome(id: string, data: Partial<IncomeInput>): Prom
 }
 
 export async function deleteIncome(id: string): Promise<void> {
-  await sql`UPDATE incomes SET is_active = false, updated_at = NOW() WHERE id = ${id}`;
+  const userId = await requireAuth();
+  await sql`UPDATE incomes SET is_active = false, updated_at = NOW() WHERE id = ${id} AND user_id = ${userId}`;
   revalidatePath('/revenus');
   revalidatePath('/');
 }
@@ -78,18 +83,19 @@ export async function createAdhocIncome(
   source: IncomeSource,
   month: string
 ): Promise<void> {
+  const userId = await requireAuth();
   // Insert into incomes table as VARIABLE (one-time use)
   const rows = await sql`
-    INSERT INTO incomes (name, source, amount, estimated_amount, frequency, is_active)
-    VALUES (${name}, ${source}, ${amount}, 0, 'VARIABLE', true)
+    INSERT INTO incomes (user_id, name, source, amount, estimated_amount, frequency, is_active)
+    VALUES (${userId}, ${name}, ${source}, ${amount}, 0, 'VARIABLE', true)
     RETURNING id
   `;
   const incomeId = (rows[0] as { id: string }).id;
 
   // Insert directly as monthly instance with RECEIVED status
   await sql`
-    INSERT INTO monthly_incomes (income_id, month, expected_amount, actual_amount, status, received_at)
-    VALUES (${incomeId}, ${month}, 0, ${amount}, 'RECEIVED', CURRENT_DATE)
+    INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, actual_amount, status, received_at)
+    VALUES (${userId}, ${incomeId}, ${month}, 0, ${amount}, 'RECEIVED', CURRENT_DATE)
     ON CONFLICT (income_id, month) DO NOTHING
   `;
 

@@ -2,10 +2,12 @@
 
 import { revalidatePath } from 'next/cache';
 import { sql } from '@/lib/db';
+import { requireAuth } from '@/lib/auth/helpers';
 import { calcNextDueDate } from '@/lib/utils';
 import type { Expense, ExpenseType, RecurrenceFrequency, SavingsContribution } from '@/lib/types';
 
 export async function getExpenses(): Promise<Expense[]> {
+  const userId = await requireAuth();
   const rows = await sql`
     SELECT
       e.*,
@@ -14,13 +16,14 @@ export async function getExpenses(): Promise<Expense[]> {
     FROM expenses e
     LEFT JOIN sections s ON e.section_id = s.id
     LEFT JOIN cards c ON e.card_id = c.id
-    WHERE e.is_active = true
+    WHERE e.is_active = true AND e.user_id = ${userId}
     ORDER BY e.created_at DESC, e.next_due_date ASC NULLS LAST
   `;
   return rows as Expense[];
 }
 
 export async function getUpcomingExpenses(days = 7): Promise<Expense[]> {
+  const userId = await requireAuth();
   const rows = await sql`
     SELECT
       e.*,
@@ -30,6 +33,7 @@ export async function getUpcomingExpenses(days = 7): Promise<Expense[]> {
     LEFT JOIN sections s ON e.section_id = s.id
     LEFT JOIN cards c ON e.card_id = c.id
     WHERE e.is_active = true
+      AND e.user_id = ${userId}
       AND e.next_due_date IS NOT NULL
       AND e.next_due_date <= CURRENT_DATE + ${days}::integer
       AND e.next_due_date >= CURRENT_DATE
@@ -39,6 +43,7 @@ export async function getUpcomingExpenses(days = 7): Promise<Expense[]> {
 }
 
 export async function getExpenseById(id: string): Promise<Expense | null> {
+  const userId = await requireAuth();
   const rows = await sql`
     SELECT
       e.*,
@@ -47,7 +52,7 @@ export async function getExpenseById(id: string): Promise<Expense | null> {
     FROM expenses e
     LEFT JOIN sections s ON e.section_id = s.id
     LEFT JOIN cards c ON e.card_id = c.id
-    WHERE e.id = ${id}
+    WHERE e.id = ${id} AND e.user_id = ${userId}
   `;
   return rows[0] as Expense ?? null;
 }
@@ -75,6 +80,7 @@ type CreateExpenseInput = {
 };
 
 export async function createExpense(data: CreateExpenseInput): Promise<Expense> {
+  const userId = await requireAuth();
   // Calculate next_due_date
   let next_due_date: string | null = null;
 
@@ -87,13 +93,14 @@ export async function createExpense(data: CreateExpenseInput): Promise<Expense> 
 
   const rows = await sql`
     INSERT INTO expenses (
-      name, amount, currency, type,
+      user_id, name, amount, currency, type,
       section_id, card_id,
       recurrence_frequency, recurrence_day, auto_debit,
       due_date, next_due_date,
       reminder_offsets, notify_push, notify_email, notify_sms,
       notes, target_amount, target_date, saved_amount
     ) VALUES (
+      ${userId},
       ${data.name},
       ${data.amount},
       ${data.currency ?? 'CAD'},
@@ -129,6 +136,7 @@ export async function updateExpense(
   id: string,
   data: Partial<CreateExpenseInput>
 ): Promise<Expense> {
+  const userId = await requireAuth();
   // Recalculate next_due_date if recurrence fields changed
   let next_due_date: string | null | undefined = undefined;
 
@@ -157,7 +165,7 @@ export async function updateExpense(
       target_date = CASE WHEN ${data.target_date !== undefined} THEN ${data.target_date ?? null} ELSE target_date END,
       saved_amount = COALESCE(${data.saved_amount ?? null}, saved_amount),
       updated_at = NOW()
-    WHERE id = ${id}
+    WHERE id = ${id} AND user_id = ${userId}
     RETURNING *
   `;
 
@@ -171,7 +179,8 @@ export async function updateExpense(
 }
 
 export async function deleteExpense(id: string): Promise<void> {
-  await sql`UPDATE expenses SET is_active = false, updated_at = NOW() WHERE id = ${id}`;
+  const userId = await requireAuth();
+  await sql`UPDATE expenses SET is_active = false, updated_at = NOW() WHERE id = ${id} AND user_id = ${userId}`;
   revalidatePath('/depenses');
   revalidatePath('/projets');
   revalidatePath('/parametres');
@@ -182,6 +191,7 @@ export async function deleteExpense(id: string): Promise<void> {
 export async function getMonthlySummaryBySection(): Promise<
   { section_id: string; section_name: string; section_icon: string; section_color: string; total: number }[]
 > {
+  const userId = await requireAuth();
   const rows = await sql`
     SELECT
       s.id as section_id,
@@ -199,7 +209,8 @@ export async function getMonthlySummaryBySection(): Promise<
         END
       ), 0) as total
     FROM sections s
-    LEFT JOIN expenses e ON e.section_id = s.id AND e.is_active = true
+    LEFT JOIN expenses e ON e.section_id = s.id AND e.is_active = true AND e.user_id = ${userId}
+    WHERE s.user_id = ${userId}
     GROUP BY s.id, s.name, s.icon, s.color, s.position
     ORDER BY s.position ASC
   `;
@@ -207,6 +218,7 @@ export async function getMonthlySummaryBySection(): Promise<
 }
 
 export async function getPlannedExpenses(): Promise<Expense[]> {
+  const userId = await requireAuth();
   const rows = await sql`
     SELECT
       e.*,
@@ -217,17 +229,19 @@ export async function getPlannedExpenses(): Promise<Expense[]> {
     LEFT JOIN cards c ON e.card_id = c.id
     WHERE e.is_active = true
       AND e.type = 'PLANNED'
+      AND e.user_id = ${userId}
     ORDER BY e.created_at DESC
   `;
   return rows as Expense[];
 }
 
 export async function updateSavedAmount(id: string, savedAmount: number): Promise<Expense> {
+  const userId = await requireAuth();
   const rows = await sql`
     UPDATE expenses SET
       saved_amount = ${savedAmount},
       updated_at = NOW()
-    WHERE id = ${id}
+    WHERE id = ${id} AND user_id = ${userId}
     RETURNING *
   `;
   revalidatePath('/projets');
@@ -240,26 +254,28 @@ export async function addSavingsContribution(
   amount: number,
   note?: string | null,
 ): Promise<void> {
+  const userId = await requireAuth();
   // Insert the contribution
   await sql`
-    INSERT INTO savings_contributions (expense_id, amount, note)
-    VALUES (${expenseId}, ${amount}, ${note ?? null})
+    INSERT INTO savings_contributions (user_id, expense_id, amount, note)
+    VALUES (${userId}, ${expenseId}, ${amount}, ${note ?? null})
   `;
   // Update the running total
   await sql`
     UPDATE expenses SET
       saved_amount = saved_amount + ${amount},
       updated_at = NOW()
-    WHERE id = ${expenseId}
+    WHERE id = ${expenseId} AND user_id = ${userId}
   `;
   revalidatePath('/projets');
   revalidatePath('/');
 }
 
 export async function getSavingsContributions(expenseId: string): Promise<SavingsContribution[]> {
+  const userId = await requireAuth();
   const rows = await sql`
     SELECT * FROM savings_contributions
-    WHERE expense_id = ${expenseId}
+    WHERE expense_id = ${expenseId} AND user_id = ${userId}
     ORDER BY created_at DESC
   `;
   return rows as SavingsContribution[];
@@ -272,23 +288,24 @@ export async function transferSavings(
   fromName: string,
   toName: string,
 ): Promise<void> {
+  const userId = await requireAuth();
   // Debit source
   await sql`
-    INSERT INTO savings_contributions (expense_id, amount, note)
-    VALUES (${fromId}, ${-amount}, ${'Transfert vers ' + toName})
+    INSERT INTO savings_contributions (user_id, expense_id, amount, note)
+    VALUES (${userId}, ${fromId}, ${-amount}, ${'Transfert vers ' + toName})
   `;
   await sql`
     UPDATE expenses SET saved_amount = saved_amount - ${amount}, updated_at = NOW()
-    WHERE id = ${fromId}
+    WHERE id = ${fromId} AND user_id = ${userId}
   `;
   // Credit destination
   await sql`
-    INSERT INTO savings_contributions (expense_id, amount, note)
-    VALUES (${toId}, ${amount}, ${'Transfert depuis ' + fromName})
+    INSERT INTO savings_contributions (user_id, expense_id, amount, note)
+    VALUES (${userId}, ${toId}, ${amount}, ${'Transfert depuis ' + fromName})
   `;
   await sql`
     UPDATE expenses SET saved_amount = saved_amount + ${amount}, updated_at = NOW()
-    WHERE id = ${toId}
+    WHERE id = ${toId} AND user_id = ${userId}
   `;
   revalidatePath('/projets');
   revalidatePath('/');
@@ -296,25 +313,27 @@ export async function transferSavings(
 
 // Returns the single "Épargne libre" pot, creating it if it doesn't exist.
 export async function getOrCreateFreeSavings(): Promise<Expense> {
+  const userId = await requireAuth();
   const existing = await sql`
     SELECT e.*, row_to_json(s.*) as section, row_to_json(c.*) as card
     FROM expenses e
     LEFT JOIN sections s ON e.section_id = s.id
     LEFT JOIN cards c ON e.card_id = c.id
-    WHERE e.is_active = true AND e.type = 'PLANNED' AND e.name = 'Épargne libre'
+    WHERE e.is_active = true AND e.type = 'PLANNED' AND e.name = 'Épargne libre' AND e.user_id = ${userId}
     LIMIT 1
   `;
   if (existing.length > 0) return existing[0] as Expense;
 
   const rows = await sql`
-    INSERT INTO expenses (name, amount, type, saved_amount)
-    VALUES ('Épargne libre', 0, 'PLANNED', 0)
+    INSERT INTO expenses (user_id, name, amount, type, saved_amount)
+    VALUES (${userId}, 'Épargne libre', 0, 'PLANNED', 0)
     RETURNING *, NULL as section, NULL as card
   `;
   return rows[0] as Expense;
 }
 
 export async function getExpensesByCard(cardId: string): Promise<Expense[]> {
+  const userId = await requireAuth();
   const rows = await sql`
     SELECT
       e.*,
@@ -325,15 +344,13 @@ export async function getExpensesByCard(cardId: string): Promise<Expense[]> {
     LEFT JOIN cards c ON e.card_id = c.id
     WHERE e.is_active = true
       AND e.card_id = ${cardId}
+      AND e.user_id = ${userId}
     ORDER BY e.created_at DESC
   `;
   return rows as Expense[];
 }
 
 // Creates an adhoc (imprevu) expense directly in monthly_expenses.
-// alreadyPaid = true → logs a past expense (status PAID, is_planned = false)
-// alreadyPaid = false → creates an upcoming expense (status UPCOMING, is_planned = false)
-// dueDate = optional date for upcoming expenses
 export async function createAdhocExpense(
   name: string,
   amount: number,
@@ -342,13 +359,14 @@ export async function createAdhocExpense(
   alreadyPaid: boolean = false,
   dueDate?: string,
 ): Promise<void> {
+  const userId = await requireAuth();
   const today = new Date().toISOString().split('T')[0];
   const effectiveDate = dueDate || today;
 
   // Insert into expenses table as ONE_TIME
   const rows = await sql`
-    INSERT INTO expenses (name, amount, type, section_id, is_active, next_due_date)
-    VALUES (${name}, ${amount}, 'ONE_TIME', ${sectionId}, true, ${effectiveDate}::date)
+    INSERT INTO expenses (user_id, name, amount, type, section_id, is_active, next_due_date)
+    VALUES (${userId}, ${name}, ${amount}, 'ONE_TIME', ${sectionId}, true, ${effectiveDate}::date)
     RETURNING id
   `;
   const expenseId = (rows[0] as { id: string }).id;
@@ -356,15 +374,15 @@ export async function createAdhocExpense(
   if (alreadyPaid) {
     // Already paid — log directly as PAID
     await sql`
-      INSERT INTO monthly_expenses (expense_id, section_id, month, name, amount, status, due_date, paid_at, is_planned)
-      VALUES (${expenseId}, ${sectionId}, ${month}, ${name}, ${amount}, 'PAID', ${effectiveDate}::date, ${effectiveDate}::date, false)
+      INSERT INTO monthly_expenses (user_id, expense_id, section_id, month, name, amount, status, due_date, paid_at, is_planned)
+      VALUES (${userId}, ${expenseId}, ${sectionId}, ${month}, ${name}, ${amount}, 'PAID', ${effectiveDate}::date, ${effectiveDate}::date, false)
       ON CONFLICT (expense_id, month) DO NOTHING
     `;
   } else {
     // Upcoming — will need to be paid later
     await sql`
-      INSERT INTO monthly_expenses (expense_id, section_id, month, name, amount, status, due_date, is_planned)
-      VALUES (${expenseId}, ${sectionId}, ${month}, ${name}, ${amount}, 'UPCOMING', ${effectiveDate}::date, false)
+      INSERT INTO monthly_expenses (user_id, expense_id, section_id, month, name, amount, status, due_date, is_planned)
+      VALUES (${userId}, ${expenseId}, ${sectionId}, ${month}, ${name}, ${amount}, 'UPCOMING', ${effectiveDate}::date, false)
       ON CONFLICT (expense_id, month) DO NOTHING
     `;
   }

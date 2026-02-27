@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "@neondatabase/auth/ui/tailwind";
 
 /* ══════════════════════════════════════════════════════════
    MON BUDGET — Design Tokens · Micro-Obsession v2

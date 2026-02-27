@@ -2,17 +2,20 @@
 
 import { revalidatePath } from 'next/cache';
 import { sql } from '@/lib/db';
+import { requireAuth } from '@/lib/auth/helpers';
 import type { Card } from '@/lib/types';
 
 export async function getCards(): Promise<Card[]> {
+  const userId = await requireAuth();
   const rows = await sql`
-    SELECT * FROM cards ORDER BY created_at ASC
+    SELECT * FROM cards WHERE user_id = ${userId} ORDER BY created_at ASC
   `;
   return rows as Card[];
 }
 
 export async function getCardById(id: string): Promise<Card | null> {
-  const rows = await sql`SELECT * FROM cards WHERE id = ${id}`;
+  const userId = await requireAuth();
+  const rows = await sql`SELECT * FROM cards WHERE id = ${id} AND user_id = ${userId}`;
   return rows[0] as Card ?? null;
 }
 
@@ -22,9 +25,11 @@ export async function createCard(data: {
   bank?: string;
   color?: string;
 }): Promise<Card> {
+  const userId = await requireAuth();
   const rows = await sql`
-    INSERT INTO cards (name, last_four, bank, color)
+    INSERT INTO cards (user_id, name, last_four, bank, color)
     VALUES (
+      ${userId},
       ${data.name},
       ${data.last_four ?? null},
       ${data.bank ?? null},
@@ -40,6 +45,7 @@ export async function updateCard(
   id: string,
   data: Partial<{ name: string; last_four: string; bank: string; color: string }>
 ): Promise<Card> {
+  const userId = await requireAuth();
   const rows = await sql`
     UPDATE cards
     SET
@@ -48,7 +54,7 @@ export async function updateCard(
       bank = COALESCE(${data.bank ?? null}, bank),
       color = COALESCE(${data.color ?? null}, color),
       updated_at = NOW()
-    WHERE id = ${id}
+    WHERE id = ${id} AND user_id = ${userId}
     RETURNING *
   `;
   revalidatePath('/cartes');
@@ -56,6 +62,7 @@ export async function updateCard(
 }
 
 export async function deleteCard(id: string): Promise<void> {
-  await sql`DELETE FROM cards WHERE id = ${id}`;
+  const userId = await requireAuth();
+  await sql`DELETE FROM cards WHERE id = ${id} AND user_id = ${userId}`;
   revalidatePath('/cartes');
 }

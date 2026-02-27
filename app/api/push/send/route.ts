@@ -3,6 +3,7 @@ export const runtime = 'nodejs';
 import { NextRequest, NextResponse } from 'next/server';
 import webpush from 'web-push';
 import { sql } from '@/lib/db';
+import { auth } from '@/lib/auth/server';
 
 export async function POST(req: NextRequest) {
   // Initialize VAPID inside the handler — env vars are not available at module eval time during Vercel builds
@@ -13,9 +14,16 @@ export async function POST(req: NextRequest) {
   );
 
   try {
+    const { data: session } = await auth.getSession();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Non authentifie' }, { status: 401 });
+    }
+    const userId = session.user.id;
+
     const { title, body, url } = await req.json();
 
-    const subscriptions = await sql`SELECT * FROM push_subscriptions`;
+    // Only send to THIS user's subscriptions
+    const subscriptions = await sql`SELECT * FROM push_subscriptions WHERE user_id = ${userId}`;
 
     if (subscriptions.length === 0) {
       return NextResponse.json({ success: true, sent: 0, message: 'No subscriptions' });

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { sql } from '@/lib/db';
+import { requireAuth } from '@/lib/auth/helpers';
 import type { MonthlyExpense, MonthSummary } from '@/lib/types';
 
 // Calculates the due_date for a RECURRING expense in a given month
@@ -37,6 +38,7 @@ function calcDueDateForMonth(expense: {
 
 // Generates monthly instances for a given month (idempotent — safe to call multiple times)
 export async function generateMonthlyExpenses(month: string): Promise<void> {
+  const userId = await requireAuth();
   const [year, monthNum] = month.split('-').map(Number);
   const monthStart = `${year}-${String(monthNum).padStart(2, '0')}-01`;
   const daysInMonth = new Date(year, monthNum, 0).getDate();
@@ -49,6 +51,7 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
     FROM expenses
     WHERE type = 'RECURRING'
       AND is_active = true
+      AND user_id = ${userId}
   `;
 
   // Fetch ONE_TIME expenses whose next_due_date falls in this month
@@ -57,6 +60,7 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
     FROM expenses
     WHERE type = 'ONE_TIME'
       AND is_active = true
+      AND user_id = ${userId}
       AND next_due_date IS NOT NULL
       AND next_due_date >= ${monthStart}::date
       AND next_due_date <= ${monthEnd}::date
@@ -69,9 +73,9 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
 
     await sql`
       INSERT INTO monthly_expenses
-        (expense_id, month, name, amount, due_date, status, section_id, card_id, is_auto_charged, notes)
+        (user_id, expense_id, month, name, amount, due_date, status, section_id, card_id, is_auto_charged, notes)
       VALUES
-        (${expense.id}, ${month}, ${expense.name}, ${expense.amount},
+        (${userId}, ${expense.id}, ${month}, ${expense.name}, ${expense.amount},
          ${dueDate}::date, 'UPCOMING', ${expense.section_id}, ${expense.card_id},
          ${expense.auto_debit}, ${expense.notes})
       ON CONFLICT (expense_id, month) DO NOTHING
@@ -82,9 +86,9 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
   for (const expense of oneTimeExpenses) {
     await sql`
       INSERT INTO monthly_expenses
-        (expense_id, month, name, amount, due_date, status, section_id, card_id, is_auto_charged, notes)
+        (user_id, expense_id, month, name, amount, due_date, status, section_id, card_id, is_auto_charged, notes)
       VALUES
-        (${expense.id}, ${month}, ${expense.name}, ${expense.amount},
+        (${userId}, ${expense.id}, ${month}, ${expense.name}, ${expense.amount},
          ${expense.next_due_date}::date, 'UPCOMING', ${expense.section_id}, ${expense.card_id},
          ${expense.auto_debit}, ${expense.notes})
       ON CONFLICT (expense_id, month) DO NOTHING
@@ -99,6 +103,7 @@ export async function getMonthlyExpenses(
   month: string,
   sectionId?: string
 ): Promise<MonthlyExpense[]> {
+  const userId = await requireAuth();
   const rows = sectionId
     ? await sql`
         SELECT
@@ -110,6 +115,7 @@ export async function getMonthlyExpenses(
         LEFT JOIN cards c ON me.card_id = c.id
         WHERE me.month = ${month}
           AND me.section_id = ${sectionId}
+          AND me.user_id = ${userId}
         ORDER BY
           CASE me.status
             WHEN 'OVERDUE' THEN 1
@@ -128,6 +134,7 @@ export async function getMonthlyExpenses(
         LEFT JOIN sections s ON me.section_id = s.id
         LEFT JOIN cards c ON me.card_id = c.id
         WHERE me.month = ${month}
+          AND me.user_id = ${userId}
         ORDER BY
           CASE me.status
             WHEN 'OVERDUE' THEN 1
@@ -143,6 +150,7 @@ export async function getMonthlyExpenses(
 
 // Get month summary stats
 export async function getMonthSummary(month: string): Promise<MonthSummary> {
+  const userId = await requireAuth();
   const rows = await sql`
     SELECT
       COUNT(*) as count,
@@ -153,7 +161,7 @@ export async function getMonthSummary(month: string): Promise<MonthSummary> {
       COALESCE(SUM(amount) FILTER (WHERE status = 'PAID'), 0) as paid_total,
       COUNT(*) FILTER (WHERE status = 'OVERDUE') as overdue_count
     FROM monthly_expenses
-    WHERE month = ${month}
+    WHERE month = ${month} AND user_id = ${userId}
   `;
 
   const row = rows[0];
@@ -170,11 +178,12 @@ export async function getMonthSummary(month: string): Promise<MonthSummary> {
 
 // Mark a monthly expense as PAID
 export async function markAsPaid(id: string): Promise<void> {
+  const userId = await requireAuth();
   const today = new Date().toISOString().split('T')[0];
   await sql`
     UPDATE monthly_expenses
     SET status = 'PAID', paid_at = ${today}::date
-    WHERE id = ${id}
+    WHERE id = ${id} AND user_id = ${userId}
   `;
   revalidatePath('/depenses');
   revalidatePath('/');
@@ -182,10 +191,11 @@ export async function markAsPaid(id: string): Promise<void> {
 
 // Mark a monthly expense as DEFERRED
 export async function markAsDeferred(id: string): Promise<void> {
+  const userId = await requireAuth();
   await sql`
     UPDATE monthly_expenses
     SET status = 'DEFERRED', paid_at = NULL
-    WHERE id = ${id}
+    WHERE id = ${id} AND user_id = ${userId}
   `;
   revalidatePath('/depenses');
   revalidatePath('/');
@@ -193,10 +203,11 @@ export async function markAsDeferred(id: string): Promise<void> {
 
 // Revert a monthly expense back to UPCOMING
 export async function markAsUpcoming(id: string): Promise<void> {
+  const userId = await requireAuth();
   await sql`
     UPDATE monthly_expenses
     SET status = 'UPCOMING', paid_at = NULL
-    WHERE id = ${id}
+    WHERE id = ${id} AND user_id = ${userId}
   `;
   revalidatePath('/depenses');
   revalidatePath('/');
@@ -204,6 +215,7 @@ export async function markAsUpcoming(id: string): Promise<void> {
 
 // Auto-mark OVERDUE: mark UPCOMING instances past their due_date as OVERDUE
 export async function autoMarkOverdue(month: string): Promise<void> {
+  const userId = await requireAuth();
   const today = new Date().toISOString().split('T')[0];
   await sql`
     UPDATE monthly_expenses
@@ -212,12 +224,14 @@ export async function autoMarkOverdue(month: string): Promise<void> {
       AND status = 'UPCOMING'
       AND due_date < ${today}::date
       AND is_auto_charged = false
+      AND user_id = ${userId}
   `;
   // Note: no revalidatePath here — this is called during page render
 }
 
 // Auto-mark PAID for auto-charged expenses past their due_date
 export async function autoMarkPaidForAutoDebit(month: string): Promise<void> {
+  const userId = await requireAuth();
   const today = new Date().toISOString().split('T')[0];
   await sql`
     UPDATE monthly_expenses
@@ -226,6 +240,7 @@ export async function autoMarkPaidForAutoDebit(month: string): Promise<void> {
       AND status = 'UPCOMING'
       AND is_auto_charged = true
       AND due_date <= ${today}::date
+      AND user_id = ${userId}
   `;
   // Note: no revalidatePath here — this is called during page render
 }

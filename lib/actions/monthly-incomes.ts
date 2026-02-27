@@ -2,16 +2,18 @@
 
 import { revalidatePath } from 'next/cache';
 import { sql } from '@/lib/db';
+import { requireAuth } from '@/lib/auth/helpers';
 import type { MonthlyIncome } from '@/lib/types';
 
 // Generates monthly_incomes instances for FIXED incomes of a given month.
 // VARIABLE incomes are NOT auto-generated (manual entry only).
 // Idempotent — safe to call multiple times (ON CONFLICT DO NOTHING).
 export async function generateMonthlyIncomes(month: string): Promise<void> {
+  const userId = await requireAuth();
   const incomes = await sql`
     SELECT id, name, source, amount, frequency
     FROM incomes
-    WHERE is_active = true AND frequency != 'VARIABLE'
+    WHERE is_active = true AND frequency != 'VARIABLE' AND user_id = ${userId}
   `;
 
   for (const inc of incomes as { id: string; name: string; amount: number; frequency: string }[]) {
@@ -22,8 +24,8 @@ export async function generateMonthlyIncomes(month: string): Promise<void> {
       Number(inc.amount);
 
     await sql`
-      INSERT INTO monthly_incomes (income_id, month, expected_amount, status)
-      VALUES (${inc.id}, ${month}, ${expectedAmount}, 'EXPECTED')
+      INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, status)
+      VALUES (${userId}, ${inc.id}, ${month}, ${expectedAmount}, 'EXPECTED')
       ON CONFLICT (income_id, month) DO NOTHING
     `;
   }
@@ -36,6 +38,7 @@ export async function getMonthlyIncomeSummary(month: string): Promise<{
   expectedTotal: number;
   actualTotal: number;
 }> {
+  const userId = await requireAuth();
   const rows = await sql`
     SELECT
       mi.*,
@@ -44,7 +47,7 @@ export async function getMonthlyIncomeSummary(month: string): Promise<{
       i.frequency as income_frequency
     FROM monthly_incomes mi
     JOIN incomes i ON mi.income_id = i.id
-    WHERE mi.month = ${month}
+    WHERE mi.month = ${month} AND mi.user_id = ${userId}
     ORDER BY mi.created_at DESC
   `;
 
@@ -61,6 +64,7 @@ export async function markIncomeReceived(
   actualAmount: number,
   notes?: string
 ): Promise<void> {
+  const userId = await requireAuth();
   await sql`
     UPDATE monthly_incomes
     SET
@@ -68,7 +72,7 @@ export async function markIncomeReceived(
       actual_amount = ${actualAmount},
       received_at = CURRENT_DATE,
       notes = ${notes ?? null}
-    WHERE id = ${monthlyIncomeId}
+    WHERE id = ${monthlyIncomeId} AND user_id = ${userId}
   `;
   revalidatePath('/revenus');
   revalidatePath('/');
@@ -81,11 +85,12 @@ export async function markVariableIncomeReceived(
   actualAmount: number,
   notes?: string
 ): Promise<void> {
+  const userId = await requireAuth();
   await sql`
     INSERT INTO monthly_incomes
-      (income_id, month, expected_amount, actual_amount, status, received_at, notes)
+      (user_id, income_id, month, expected_amount, actual_amount, status, received_at, notes)
     VALUES
-      (${incomeId}, ${month}, ${actualAmount}, ${actualAmount}, 'RECEIVED', CURRENT_DATE, ${notes ?? null})
+      (${userId}, ${incomeId}, ${month}, ${actualAmount}, ${actualAmount}, 'RECEIVED', CURRENT_DATE, ${notes ?? null})
     ON CONFLICT (income_id, month) DO UPDATE
       SET
         actual_amount = ${actualAmount},

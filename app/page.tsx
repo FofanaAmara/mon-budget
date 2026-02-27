@@ -13,8 +13,10 @@ import {
   generateMonthlyIncomes,
   getMonthlyIncomeSummary,
 } from '@/lib/actions/monthly-incomes';
+import { hasOrphanedData, ensureDefaultSections } from '@/lib/actions/claim';
 import { currentMonth } from '@/lib/utils';
 import AccueilClient from '@/components/AccueilClient';
+import ClaimBanner from '@/components/ClaimBanner';
 import NotificationPermission from '@/components/NotificationPermission';
 
 type PageProps = {
@@ -24,6 +26,12 @@ type PageProps = {
 export default async function AccueilPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const month = params.month ?? currentMonth();
+
+  // Ensure new users have default sections
+  await ensureDefaultSections();
+
+  // Check for orphaned data (pre-auth migration)
+  const showClaimBanner = await hasOrphanedData();
 
   // Ensure instances exist for this month (idempotent)
   await generateMonthlyExpenses(month);
@@ -49,6 +57,7 @@ export default async function AccueilPage({ searchParams }: PageProps) {
   return (
     <>
       <NotificationPermission />
+      {showClaimBanner && <div style={{ padding: '20px 20px 0' }}><ClaimBanner /></div>}
       <AccueilClient
         summary={summary}
         incomeSummary={{ expectedTotal: incomeSummary.expectedTotal, actualTotal: incomeSummary.actualTotal }}

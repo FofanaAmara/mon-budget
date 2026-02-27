@@ -1,5 +1,6 @@
 export type Section = {
   id: string;
+  user_id: string;
   name: string;
   icon: string;
   color: string;
@@ -10,6 +11,7 @@ export type Section = {
 
 export type Card = {
   id: string;
+  user_id: string;
   name: string;
   last_four: string | null;
   bank: string | null;
@@ -23,6 +25,7 @@ export type RecurrenceFrequency = 'WEEKLY' | 'BIWEEKLY' | 'MONTHLY' | 'QUARTERLY
 
 export type Expense = {
   id: string;
+  user_id: string;
   name: string;
   amount: number;
   currency: string;
@@ -53,6 +56,7 @@ export type Expense = {
 
 export type Settings = {
   id: string;
+  user_id: string;
   email: string | null;
   phone: string | null;
   default_currency: string;
@@ -66,6 +70,7 @@ export type MonthlyExpenseStatus = 'UPCOMING' | 'PAID' | 'OVERDUE' | 'DEFERRED';
 
 export type MonthlyExpense = {
   id: string;
+  user_id: string;
   expense_id: string | null;
   month: string;
   name: string;
@@ -99,6 +104,7 @@ export type IncomeFrequency = 'MONTHLY' | 'BIWEEKLY' | 'YEARLY' | 'VARIABLE';
 
 export type Income = {
   id: string;
+  user_id: string;
   name: string;
   source: IncomeSource;
   amount: number | null;           // null si VARIABLE
@@ -114,6 +120,7 @@ export type MonthlyIncomeStatus = 'EXPECTED' | 'RECEIVED' | 'PARTIAL' | 'MISSED'
 
 export type MonthlyIncome = {
   id: string;
+  user_id: string;
   income_id: string;
   month: string;                   // "YYYY-MM"
   expected_amount: number | null;
@@ -129,6 +136,7 @@ export type MonthlyIncome = {
 
 export type SavingsContribution = {
   id: string;
+  user_id: string;
   expense_id: string;
   amount: number;
   note: string | null;

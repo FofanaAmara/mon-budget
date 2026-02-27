@@ -9,6 +9,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- ============================================================
 CREATE TABLE IF NOT EXISTS sections (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id TEXT NOT NULL,
   name VARCHAR(100) NOT NULL,
   icon VARCHAR(10) DEFAULT '📁',
   color VARCHAR(7) DEFAULT '#3B82F6',
@@ -22,6 +23,7 @@ CREATE TABLE IF NOT EXISTS sections (
 -- ============================================================
 CREATE TABLE IF NOT EXISTS cards (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id TEXT NOT NULL,
   name VARCHAR(100) NOT NULL,
   last_four VARCHAR(4),
   bank VARCHAR(100),
@@ -35,6 +37,7 @@ CREATE TABLE IF NOT EXISTS cards (
 -- ============================================================
 CREATE TABLE IF NOT EXISTS expenses (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id TEXT NOT NULL,
   name VARCHAR(200) NOT NULL,
   amount DECIMAL(10, 2) NOT NULL,
   currency VARCHAR(3) DEFAULT 'CAD',
@@ -69,6 +72,7 @@ CREATE TABLE IF NOT EXISTS expenses (
 -- ============================================================
 CREATE TABLE IF NOT EXISTS settings (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id TEXT NOT NULL UNIQUE,
   default_currency VARCHAR(3) DEFAULT 'CAD',
   default_reminder_offsets INTEGER[] DEFAULT '{1, 3, 7}',
   notify_push BOOLEAN DEFAULT TRUE,
@@ -83,6 +87,7 @@ CREATE TABLE IF NOT EXISTS settings (
 -- ============================================================
 CREATE TABLE IF NOT EXISTS notification_log (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id TEXT NOT NULL,
   expense_id UUID REFERENCES expenses(id) ON DELETE CASCADE,
   channel VARCHAR(20) NOT NULL CHECK (channel IN ('push', 'email', 'sms')),
   status VARCHAR(20) NOT NULL CHECK (status IN ('sent', 'failed', 'pending')),
@@ -95,6 +100,7 @@ CREATE TABLE IF NOT EXISTS notification_log (
 -- ============================================================
 CREATE TABLE IF NOT EXISTS push_subscriptions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id TEXT NOT NULL,
   endpoint TEXT UNIQUE NOT NULL,
   p256dh TEXT NOT NULL,
   auth TEXT NOT NULL,
