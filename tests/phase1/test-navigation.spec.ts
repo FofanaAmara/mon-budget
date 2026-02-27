@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Navigation', () => {
   test('bottom nav has 6 tabs', async ({ page }) => {
+    // Set mobile viewport so the bottom nav is visible (it's hidden on desktop)
+    await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/');
     const nav = page.getByRole('navigation', { name: 'Navigation principale' });
     await expect(nav).toBeVisible();
