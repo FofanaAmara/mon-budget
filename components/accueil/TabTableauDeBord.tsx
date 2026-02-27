@@ -9,9 +9,10 @@ type Props = {
   incomeSummary: { expectedTotal: number; actualTotal: number };
   totalMonthlyExpenses: number;
   projets: Expense[];
+  totalDebtBalance: number;
 };
 
-export default function TabTableauDeBord({ summary, incomeSummary, totalMonthlyExpenses, projets }: Props) {
+export default function TabTableauDeBord({ summary, incomeSummary, totalMonthlyExpenses, projets, totalDebtBalance }: Props) {
   const solde = incomeSummary.actualTotal - summary.paid_total;
   const soldePositive = solde >= 0;
   const totalEpargne = projets.reduce((s, p) => s + Number(p.saved_amount ?? 0), 0);
@@ -201,11 +202,11 @@ export default function TabTableauDeBord({ summary, incomeSummary, totalMonthlyE
         </p>
       </div>
 
-      {/* Epargne */}
+      {/* Patrimoine */}
       <Link href="/projets" className="block card card-press">
         <div style={{ padding: '16px 20px' }}>
           <div className="flex items-center justify-between" style={{ marginBottom: '10px' }}>
-            <span className="section-label">Epargne</span>
+            <span className="section-label">Patrimoine</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
           </div>
           <p className="amount" style={{ fontSize: 'var(--text-lg)', color: 'var(--positive)' }}>
@@ -214,6 +215,22 @@ export default function TabTableauDeBord({ summary, incomeSummary, totalMonthlyE
           <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
             {projetsActifs} projet{projetsActifs !== 1 ? 's' : ''} actif{projetsActifs !== 1 ? 's' : ''}
           </p>
+          {totalDebtBalance > 0 && (
+            <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid var(--border)' }}>
+              <div className="flex items-center justify-between">
+                <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)' }}>Valeur nette</span>
+                <span className="amount" style={{
+                  fontSize: 'var(--text-sm)', fontWeight: 700,
+                  color: totalEpargne - totalDebtBalance >= 0 ? 'var(--positive)' : 'var(--negative-text)',
+                }}>
+                  {totalEpargne - totalDebtBalance >= 0 ? '+' : ''}{formatCAD(totalEpargne - totalDebtBalance)}
+                </span>
+              </div>
+              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
+                Dettes: {formatCAD(totalDebtBalance)}
+              </p>
+            </div>
+          )}
         </div>
       </Link>
     </div>

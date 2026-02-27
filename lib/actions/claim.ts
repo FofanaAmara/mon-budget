@@ -33,9 +33,10 @@ export async function claimOrphanedData(): Promise<{ claimed: number }> {
     const r8 = await sql`UPDATE savings_contributions SET user_id = ${userId} WHERE user_id = 'unclaimed' RETURNING id`;
     const r9 = await sql`UPDATE push_subscriptions SET user_id = ${userId} WHERE user_id = 'unclaimed' RETURNING id`;
     const r10 = await sql`UPDATE notification_log SET user_id = ${userId} WHERE user_id = 'unclaimed' RETURNING id`;
+    const r11 = await sql`UPDATE debts SET user_id = ${userId} WHERE user_id = 'unclaimed' RETURNING id`;
 
     const total = r1.length + r2.length + r3.length + r4.length + r5.length +
-      r6.length + r7.length + r8.length + r9.length + r10.length;
+      r6.length + r7.length + r8.length + r9.length + r10.length + r11.length;
 
     // Revalidate all pages
     revalidatePath('/');

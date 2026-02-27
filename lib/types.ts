@@ -22,6 +22,7 @@ export type Card = {
 
 export type ExpenseType = 'RECURRING' | 'ONE_TIME' | 'PLANNED';
 export type RecurrenceFrequency = 'WEEKLY' | 'BIWEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
+export type DebtFrequency = 'WEEKLY' | 'BIWEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
 
 export type Expense = {
   id: string;
@@ -66,12 +67,34 @@ export type Settings = {
   notify_sms: boolean;
 };
 
+export type Debt = {
+  id: string;
+  user_id: string;
+  name: string;
+  original_amount: number;
+  remaining_balance: number;
+  interest_rate: number | null;
+  payment_amount: number;
+  payment_frequency: DebtFrequency;
+  payment_day: number | null;
+  auto_debit: boolean;
+  card_id: string | null;
+  section_id: string | null;
+  notes: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  section?: Section;
+  card?: Card;
+};
+
 export type MonthlyExpenseStatus = 'UPCOMING' | 'PAID' | 'OVERDUE' | 'DEFERRED';
 
 export type MonthlyExpense = {
   id: string;
   user_id: string;
   expense_id: string | null;
+  debt_id: string | null;
   month: string;
   name: string;
   amount: number;

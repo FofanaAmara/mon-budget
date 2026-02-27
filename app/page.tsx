@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import { getMonthlySummaryBySection, getPlannedExpenses } from '@/lib/actions/expenses';
+import { getTotalDebtBalance } from '@/lib/actions/debts';
 import {
   generateMonthlyExpenses,
   getMonthlyExpenses,
@@ -43,13 +44,14 @@ export default async function AccueilPage({ searchParams }: PageProps) {
     await autoMarkPaidForAutoDebit(month);
   }
 
-  const [expenses, summary, incomeSummary, sectionSummary, monthlyIncomeFromTemplates, projets] = await Promise.all([
+  const [expenses, summary, incomeSummary, sectionSummary, monthlyIncomeFromTemplates, projets, totalDebtBalance] = await Promise.all([
     getMonthlyExpenses(month),
     getMonthSummary(month),
     getMonthlyIncomeSummary(month),
     getMonthlySummaryBySection(),
     getMonthlyIncomeTotal(),
     getPlannedExpenses(),
+    getTotalDebtBalance(),
   ]);
 
   const totalMonthlyExpenses = sectionSummary.reduce((sum, s) => sum + Number(s.total), 0);
@@ -67,6 +69,7 @@ export default async function AccueilPage({ searchParams }: PageProps) {
         monthlyIncomeFromTemplates={monthlyIncomeFromTemplates}
         totalMonthlyExpenses={totalMonthlyExpenses}
         projets={projets}
+        totalDebtBalance={totalDebtBalance}
       />
     </>
   );

@@ -24,11 +24,12 @@ type Props = {
   monthlyIncomeFromTemplates: number;
   totalMonthlyExpenses: number;
   projets: Expense[];
+  totalDebtBalance: number;
 };
 
 export default function AccueilClient({
   summary, incomeSummary, expenses, monthlyIncomes, month,
-  monthlyIncomeFromTemplates, totalMonthlyExpenses, projets,
+  monthlyIncomeFromTemplates, totalMonthlyExpenses, projets, totalDebtBalance,
 }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
 
@@ -71,6 +72,7 @@ export default function AccueilClient({
           incomeSummary={incomeSummary}
           totalMonthlyExpenses={totalMonthlyExpenses}
           projets={projets}
+          totalDebtBalance={totalDebtBalance}
         />
       )}
 

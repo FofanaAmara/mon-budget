@@ -95,6 +95,35 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
     `;
   }
 
+  // Insert DEBT payment instances
+  const activeDebts = await sql`
+    SELECT id, name, payment_amount, payment_frequency, payment_day,
+           auto_debit, card_id, section_id, notes
+    FROM debts
+    WHERE is_active = true
+      AND remaining_balance > 0
+      AND user_id = ${userId}
+  `;
+
+  for (const debt of activeDebts as { id: string; name: string; payment_amount: number; payment_frequency: string; payment_day: number | null; auto_debit: boolean; card_id: string | null; section_id: string | null; notes: string | null }[]) {
+    const dueDate = calcDueDateForMonth({
+      recurrence_frequency: debt.payment_frequency,
+      recurrence_day: debt.payment_day,
+      next_due_date: null,
+    }, month);
+    if (!dueDate) continue;
+
+    await sql`
+      INSERT INTO monthly_expenses
+        (user_id, debt_id, month, name, amount, due_date, status, section_id, card_id, is_auto_charged, is_planned, notes)
+      VALUES
+        (${userId}, ${debt.id}, ${month}, ${debt.name + ' (versement)'}, ${debt.payment_amount},
+         ${dueDate}::date, 'UPCOMING', ${debt.section_id}, ${debt.card_id},
+         ${debt.auto_debit}, true, ${debt.notes})
+      ON CONFLICT (debt_id, month) WHERE debt_id IS NOT NULL DO NOTHING
+    `;
+  }
+
   // Note: no revalidatePath here — this is called during page render
 }
 
@@ -185,6 +214,28 @@ export async function markAsPaid(id: string): Promise<void> {
     SET status = 'PAID', paid_at = ${today}::date
     WHERE id = ${id} AND user_id = ${userId}
   `;
+
+  // If this monthly expense is linked to a debt, decrement remaining_balance
+  const meRows = await sql`
+    SELECT debt_id, amount FROM monthly_expenses
+    WHERE id = ${id} AND user_id = ${userId} AND debt_id IS NOT NULL
+  `;
+  if (meRows.length > 0) {
+    const { debt_id, amount } = meRows[0] as { debt_id: string; amount: number };
+    await sql`
+      UPDATE debts SET
+        remaining_balance = GREATEST(remaining_balance - ${amount}, 0),
+        updated_at = NOW()
+      WHERE id = ${debt_id} AND user_id = ${userId}
+    `;
+    // Auto-deactivate if fully paid off
+    await sql`
+      UPDATE debts SET is_active = false, updated_at = NOW()
+      WHERE id = ${debt_id} AND user_id = ${userId} AND remaining_balance <= 0
+    `;
+    revalidatePath('/projets');
+  }
+
   revalidatePath('/depenses');
   revalidatePath('/');
 }
