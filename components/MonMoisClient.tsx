@@ -308,7 +308,7 @@ export default function MonMoisClient({
             {(monthlyIncomes.length + unregisteredVariables.length > INCOME_PREVIEW_COUNT) && (
               <button
                 onClick={() => setShowAllIncomes(true)}
-                aria-label="Voir toutes les entrées"
+                aria-label="Afficher les entrées complètes"
                 style={{
                   width: '100%', padding: '12px 20px',
                   fontSize: 'var(--text-xs)', fontWeight: 600,

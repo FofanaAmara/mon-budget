@@ -21,7 +21,7 @@ test.describe('Revenus UI — source badges & Variable', () => {
   test('/revenus modal has source picker when opened', async ({ page }) => {
     await page.goto('/revenus');
     await page.getByLabel('Ajouter un revenu').click();
-    // Source selector should be visible in the modal
-    await expect(page.getByText('Source')).toBeVisible();
+    // Source picker label in IncomeModal — exact match to avoid substring collision
+    await expect(page.getByText('Source', { exact: true })).toBeVisible();
   });
 });
