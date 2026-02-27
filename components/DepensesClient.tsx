@@ -200,7 +200,7 @@ export default function DepensesClient({ expenses, sections, cards }: Props) {
           letterSpacing: 'var(--tracking-tight)',
           lineHeight: 'var(--leading-tight)',
         }}>
-          Depenses
+          Dépenses
         </h1>
         <p style={{
           fontSize: 'var(--text-xs)',

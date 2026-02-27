@@ -37,8 +37,8 @@ test.describe('Mon Mois — Vue mensuelle', () => {
 
   test('section filter chips are rendered', async ({ page }) => {
     await page.goto('/mon-mois');
-    // "Tout" is the all-sections filter chip (not "Toutes")
-    const toutBtn = page.getByRole('button', { name: 'Tout' });
+    // "Tout" is the all-sections filter chip — exact: true to avoid matching "Voir tout (32)"
+    const toutBtn = page.getByRole('button', { name: 'Tout', exact: true });
     await expect(toutBtn).toBeVisible();
   });
 

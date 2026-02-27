@@ -93,7 +93,7 @@ export default function ParametresClient({ settings }: { settings: Settings }) {
           letterSpacing: 'var(--tracking-tight)',
           lineHeight: 'var(--leading-tight)',
         }}>
-          Reglages
+          Réglages
         </h1>
       </div>
 
