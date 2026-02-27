@@ -120,6 +120,7 @@ export async function createExpense(data: CreateExpenseInput): Promise<Expense> 
   revalidatePath('/depenses');
   revalidatePath('/projets');
   revalidatePath('/parametres');
+  revalidatePath('/parametres/charges');
   revalidatePath('/');
   return rows[0] as Expense;
 }
@@ -163,6 +164,7 @@ export async function updateExpense(
   revalidatePath('/depenses');
   revalidatePath('/projets');
   revalidatePath('/parametres');
+  revalidatePath('/parametres/charges');
   revalidatePath('/');
   revalidatePath(`/depenses/${id}/edit`);
   return rows[0] as Expense;
@@ -173,6 +175,7 @@ export async function deleteExpense(id: string): Promise<void> {
   revalidatePath('/depenses');
   revalidatePath('/projets');
   revalidatePath('/parametres');
+  revalidatePath('/parametres/charges');
   revalidatePath('/');
 }
 

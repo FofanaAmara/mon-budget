@@ -40,6 +40,7 @@ export async function createIncome(data: IncomeInput): Promise<Income> {
   `;
   revalidatePath('/revenus');
   revalidatePath('/parametres');
+  revalidatePath('/parametres/revenus');
   revalidatePath('/');
   return rows[0] as Income;
 }
@@ -59,6 +60,7 @@ export async function updateIncome(id: string, data: Partial<IncomeInput>): Prom
   `;
   revalidatePath('/revenus');
   revalidatePath('/parametres');
+  revalidatePath('/parametres/revenus');
   revalidatePath('/');
   return rows[0] as Income;
 }

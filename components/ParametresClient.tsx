@@ -3,14 +3,31 @@
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { updateSettings } from '@/lib/actions/settings';
-import ExpenseTemplateManager from '@/components/ExpenseTemplateManager';
-import IncomeTemplateManager from '@/components/IncomeTemplateManager';
-import type { Settings, Expense, Section, Card, Income } from '@/lib/types';
+import type { Settings } from '@/lib/types';
 
 const CURRENCIES = ['CAD', 'USD', 'EUR'];
 const REMINDER_OPTIONS = [1, 3, 7, 14, 30];
 
 const NAV_ITEMS = [
+  {
+    href: '/parametres/charges',
+    label: 'Mes charges fixes',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+      </svg>
+    ),
+  },
+  {
+    href: '/parametres/revenus',
+    label: 'Mes revenus recurrents',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="1" x2="12" y2="23" />
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+      </svg>
+    ),
+  },
   {
     href: '/cartes',
     label: 'Mes cartes de paiement',
@@ -34,13 +51,9 @@ const NAV_ITEMS = [
 
 type Props = {
   settings: Settings;
-  expenses: Expense[];
-  sections: Section[];
-  cards: Card[];
-  incomes: Income[];
 };
 
-export default function ParametresClient({ settings, expenses, sections, cards, incomes }: Props) {
+export default function ParametresClient({ settings }: Props) {
   const [isPending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
 
@@ -237,36 +250,6 @@ export default function ParametresClient({ settings, expenses, sections, cards, 
           {saved ? 'Sauvegarde !' : isPending ? 'Sauvegarde...' : 'Sauvegarder les reglages'}
         </button>
 
-        {/* ── Templates Section ── */}
-        <div style={{
-          borderTop: '1px solid var(--border-default)',
-          paddingTop: '24px',
-          marginTop: '12px',
-        }}>
-          <p style={{
-            fontSize: 'var(--text-xs)',
-            fontWeight: 650,
-            color: 'var(--text-tertiary)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.08em',
-            marginBottom: '16px',
-          }}>
-            Modeles de depenses & revenus
-          </p>
-
-          {/* Expense Templates */}
-          <ExpenseTemplateManager
-            expenses={expenses}
-            sections={sections}
-            cards={cards}
-          />
-
-          {/* Spacer */}
-          <div style={{ height: '24px' }} />
-
-          {/* Income Templates */}
-          <IncomeTemplateManager incomes={incomes} />
-        </div>
       </div>
     </div>
   );

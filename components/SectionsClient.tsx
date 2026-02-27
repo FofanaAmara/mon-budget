@@ -9,6 +9,7 @@ import {
   reorderSections,
 } from '@/lib/actions/sections';
 import type { Section } from '@/lib/types';
+import Breadcrumb from '@/components/Breadcrumb';
 
 const EMOJIS = ['🏠', '👤', '👨‍👩‍👧‍👦', '🚗', '💼', '🎯', '🏋️', '🎓', '🏥', '✈️'];
 const COLORS = ['#3D3BF3', '#1A7F5A', '#C7382D', '#C27815', '#6366F1', '#EC4899'];
@@ -86,6 +87,10 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
 
   return (
     <div style={{ padding: '36px 20px 96px', minHeight: '100vh' }}>
+      <Breadcrumb items={[
+        { label: 'Reglages', href: '/parametres' },
+        { label: 'Mes sections' },
+      ]} />
       {/* Header */}
       <div style={{ marginBottom: '28px' }}>
         <h1 style={{

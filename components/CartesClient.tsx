@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createCard, updateCard, deleteCard } from '@/lib/actions/cards';
 import type { Card } from '@/lib/types';
 import Link from 'next/link';
+import Breadcrumb from '@/components/Breadcrumb';
 
 const COLORS = ['#3D3BF3', '#1A7F5A', '#C7382D', '#C27815', '#6366F1', '#EC4899'];
 
@@ -54,6 +55,10 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
 
   return (
     <div style={{ padding: '36px 20px 96px', minHeight: '100vh' }}>
+      <Breadcrumb items={[
+        { label: 'Reglages', href: '/parametres' },
+        { label: 'Mes cartes' },
+      ]} />
       {/* Header */}
       <div style={{ marginBottom: '28px' }}>
         <h1 style={{
