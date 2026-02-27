@@ -28,18 +28,6 @@ const tabs = [
     ),
   },
   {
-    href: '/mon-mois',
-    label: 'Mon mois',
-    icon: (active: boolean) => (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-        stroke={active ? 'var(--accent)' : 'var(--text-tertiary)'} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="4" width="18" height="18" rx="2" />
-        <path d="M16 2v4M8 2v4M3 10h18" />
-        <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" strokeWidth="2.5" />
-      </svg>
-    ),
-  },
-  {
     href: '/revenus',
     label: 'Revenus',
     icon: (active: boolean) => (
@@ -50,15 +38,13 @@ const tabs = [
     ),
   },
   {
-    href: '/cash-flow',
-    label: 'Cash Flow',
+    href: '/projets',
+    label: 'Epargne',
     icon: (active: boolean) => (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
         stroke={active ? 'var(--accent)' : 'var(--text-tertiary)'} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="12" y1="1" x2="12" y2="23" />
-        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-        <polyline points="17 8 20 5 17 2" />
-        <polyline points="7 22 4 19 7 16" />
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 6v6l4 2" />
       </svg>
     ),
   },

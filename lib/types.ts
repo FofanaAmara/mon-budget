@@ -123,3 +123,11 @@ export type MonthlyIncome = {
   income_name?: string;
   income_source?: IncomeSource;
 };
+
+export type SavingsContribution = {
+  id: string;
+  expense_id: string;
+  amount: number;
+  note: string | null;
+  created_at: string;
+};

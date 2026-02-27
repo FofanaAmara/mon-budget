@@ -70,7 +70,7 @@ export async function markIncomeReceived(
       notes = ${notes ?? null}
     WHERE id = ${monthlyIncomeId}
   `;
-  revalidatePath('/mon-mois');
+  revalidatePath('/revenus');
   revalidatePath('/');
 }
 
@@ -93,6 +93,6 @@ export async function markVariableIncomeReceived(
         received_at = CURRENT_DATE,
         notes = ${notes ?? null}
   `;
-  revalidatePath('/mon-mois');
+  revalidatePath('/revenus');
   revalidatePath('/');
 }

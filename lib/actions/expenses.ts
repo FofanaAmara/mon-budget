@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { sql } from '@/lib/db';
 import { calcNextDueDate } from '@/lib/utils';
-import type { Expense, ExpenseType, RecurrenceFrequency } from '@/lib/types';
+import type { Expense, ExpenseType, RecurrenceFrequency, SavingsContribution } from '@/lib/types';
 
 export async function getExpenses(): Promise<Expense[]> {
   const rows = await sql`
@@ -118,6 +118,8 @@ export async function createExpense(data: CreateExpenseInput): Promise<Expense> 
   `;
 
   revalidatePath('/depenses');
+  revalidatePath('/projets');
+  revalidatePath('/parametres');
   revalidatePath('/');
   return rows[0] as Expense;
 }
@@ -159,6 +161,8 @@ export async function updateExpense(
   `;
 
   revalidatePath('/depenses');
+  revalidatePath('/projets');
+  revalidatePath('/parametres');
   revalidatePath('/');
   revalidatePath(`/depenses/${id}/edit`);
   return rows[0] as Expense;
@@ -167,6 +171,8 @@ export async function updateExpense(
 export async function deleteExpense(id: string): Promise<void> {
   await sql`UPDATE expenses SET is_active = false, updated_at = NOW() WHERE id = ${id}`;
   revalidatePath('/depenses');
+  revalidatePath('/projets');
+  revalidatePath('/parametres');
   revalidatePath('/');
 }
 
@@ -226,6 +232,85 @@ export async function updateSavedAmount(id: string, savedAmount: number): Promis
   return rows[0] as Expense;
 }
 
+export async function addSavingsContribution(
+  expenseId: string,
+  amount: number,
+  note?: string | null,
+): Promise<void> {
+  // Insert the contribution
+  await sql`
+    INSERT INTO savings_contributions (expense_id, amount, note)
+    VALUES (${expenseId}, ${amount}, ${note ?? null})
+  `;
+  // Update the running total
+  await sql`
+    UPDATE expenses SET
+      saved_amount = saved_amount + ${amount},
+      updated_at = NOW()
+    WHERE id = ${expenseId}
+  `;
+  revalidatePath('/projets');
+  revalidatePath('/');
+}
+
+export async function getSavingsContributions(expenseId: string): Promise<SavingsContribution[]> {
+  const rows = await sql`
+    SELECT * FROM savings_contributions
+    WHERE expense_id = ${expenseId}
+    ORDER BY created_at DESC
+  `;
+  return rows as SavingsContribution[];
+}
+
+export async function transferSavings(
+  fromId: string,
+  toId: string,
+  amount: number,
+  fromName: string,
+  toName: string,
+): Promise<void> {
+  // Debit source
+  await sql`
+    INSERT INTO savings_contributions (expense_id, amount, note)
+    VALUES (${fromId}, ${-amount}, ${'Transfert vers ' + toName})
+  `;
+  await sql`
+    UPDATE expenses SET saved_amount = saved_amount - ${amount}, updated_at = NOW()
+    WHERE id = ${fromId}
+  `;
+  // Credit destination
+  await sql`
+    INSERT INTO savings_contributions (expense_id, amount, note)
+    VALUES (${toId}, ${amount}, ${'Transfert depuis ' + fromName})
+  `;
+  await sql`
+    UPDATE expenses SET saved_amount = saved_amount + ${amount}, updated_at = NOW()
+    WHERE id = ${toId}
+  `;
+  revalidatePath('/projets');
+  revalidatePath('/');
+}
+
+// Returns the single "Épargne libre" pot, creating it if it doesn't exist.
+export async function getOrCreateFreeSavings(): Promise<Expense> {
+  const existing = await sql`
+    SELECT e.*, row_to_json(s.*) as section, row_to_json(c.*) as card
+    FROM expenses e
+    LEFT JOIN sections s ON e.section_id = s.id
+    LEFT JOIN cards c ON e.card_id = c.id
+    WHERE e.is_active = true AND e.type = 'PLANNED' AND e.name = 'Épargne libre'
+    LIMIT 1
+  `;
+  if (existing.length > 0) return existing[0] as Expense;
+
+  const rows = await sql`
+    INSERT INTO expenses (name, amount, type, saved_amount)
+    VALUES ('Épargne libre', 0, 'PLANNED', 0)
+    RETURNING *, NULL as section, NULL as card
+  `;
+  return rows[0] as Expense;
+}
+
 export async function getExpensesByCard(cardId: string): Promise<Expense[]> {
   const rows = await sql`
     SELECT
@@ -265,7 +350,6 @@ export async function createAdhocExpense(
     ON CONFLICT (expense_id, month) DO NOTHING
   `;
 
-  revalidatePath('/mon-mois');
   revalidatePath('/depenses');
   revalidatePath('/');
 }

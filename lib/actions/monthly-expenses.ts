@@ -172,7 +172,7 @@ export async function markAsPaid(id: string): Promise<void> {
     SET status = 'PAID', paid_at = ${today}::date
     WHERE id = ${id}
   `;
-  revalidatePath('/mon-mois');
+  revalidatePath('/depenses');
   revalidatePath('/');
 }
 
@@ -183,7 +183,7 @@ export async function markAsDeferred(id: string): Promise<void> {
     SET status = 'DEFERRED', paid_at = NULL
     WHERE id = ${id}
   `;
-  revalidatePath('/mon-mois');
+  revalidatePath('/depenses');
   revalidatePath('/');
 }
 
@@ -194,7 +194,7 @@ export async function markAsUpcoming(id: string): Promise<void> {
     SET status = 'UPCOMING', paid_at = NULL
     WHERE id = ${id}
   `;
-  revalidatePath('/mon-mois');
+  revalidatePath('/depenses');
   revalidatePath('/');
 }
 
