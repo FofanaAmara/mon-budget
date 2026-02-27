@@ -14,41 +14,92 @@ type Props = {
 export default function TabTableauDeBord({ summary, incomeSummary, totalMonthlyExpenses, projets }: Props) {
   const solde = incomeSummary.actualTotal - summary.paid_total;
   const soldePositive = solde >= 0;
-  const restAPayer = summary.total - summary.paid_total;
   const totalEpargne = projets.reduce((s, p) => s + Number(p.saved_amount ?? 0), 0);
   const projetsActifs = projets.filter(p => p.target_amount !== null && Number(p.target_amount) > 0).length;
-  const progressPctExpenses = summary.count > 0 ? (summary.paid_count / summary.count) * 100 : 0;
-  const progressPctIncomes = incomeSummary.expectedTotal > 0 ? (incomeSummary.actualTotal / incomeSummary.expectedTotal) * 100 : 0;
+
+  // Revenus: ratio reçu vs attendu
+  const revenuPct = incomeSummary.expectedTotal > 0
+    ? (incomeSummary.actualTotal / incomeSummary.expectedTotal) * 100 : 0;
+  const revenuOver = incomeSummary.actualTotal > incomeSummary.expectedTotal;
+  const revenuDelta = incomeSummary.actualTotal - incomeSummary.expectedTotal;
+
+  // Depenses: ratio dépensé vs charges prévues (planned_total)
+  const chargesFixes = summary.planned_total;
+  const depensePct = chargesFixes > 0
+    ? (summary.paid_total / chargesFixes) * 100 : 0;
+  const depenseOver = summary.paid_total > chargesFixes;
+  const depenseDelta = summary.paid_total - chargesFixes;
+
+  // Reste à payer = charges prévues non payées
+  const restAPayer = Math.max(chargesFixes - summary.paid_total, 0);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {/* Revenus card */}
       <Link href="/revenus" className="block card card-press">
         <div style={{ padding: '16px 20px' }}>
-          <div className="flex items-center justify-between" style={{ marginBottom: '10px' }}>
+          <div className="flex items-center justify-between" style={{ marginBottom: '12px' }}>
             <span className="section-label">Revenus</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
           </div>
-          <div className="flex items-end justify-between" style={{ marginBottom: '10px' }}>
+
+          {/* Two columns: Reçu | Attendu */}
+          <div className="flex items-start justify-between" style={{ marginBottom: '12px' }}>
             <div>
+              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '2px' }}>Reçu</p>
               <p className="amount" style={{ fontSize: 'var(--text-lg)', color: 'var(--positive)' }}>
                 {formatCAD(incomeSummary.actualTotal)}
               </p>
-              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
-                reçu / {formatCAD(incomeSummary.expectedTotal)} attendu
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '2px' }}>Attendu</p>
+              <p className="amount" style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
+                {formatCAD(incomeSummary.expectedTotal)}
               </p>
             </div>
           </div>
-          <div className="progress-track">
-            <div className="progress-fill" style={{ width: `${Math.min(progressPctIncomes, 100)}%`, background: progressPctIncomes >= 80 ? 'var(--positive)' : 'var(--accent)' }} />
+
+          {/* Progress bar with overflow */}
+          <div className="progress-track" style={{ position: 'relative', overflow: 'visible' }}>
+            {revenuOver ? (
+              <>
+                {/* Full green bar */}
+                <div className="progress-fill" style={{
+                  width: '100%',
+                  background: 'var(--positive)',
+                  boxShadow: '0 0 8px rgba(5, 150, 105, 0.4)',
+                }} />
+                {/* Overflow glow indicator */}
+                <div style={{
+                  position: 'absolute', right: '-2px', top: '-3px', bottom: '-3px',
+                  width: '6px', borderRadius: '3px',
+                  background: 'var(--positive)',
+                  boxShadow: '0 0 10px rgba(5, 150, 105, 0.6)',
+                }} />
+              </>
+            ) : (
+              <div className="progress-fill" style={{
+                width: `${Math.max(revenuPct, 2)}%`,
+                background: revenuPct >= 80 ? 'var(--positive)' : 'var(--accent)',
+              }} />
+            )}
           </div>
+
+          {/* Delta label */}
+          <p style={{ fontSize: 'var(--text-xs)', marginTop: '6px', fontWeight: 600, color: revenuOver ? 'var(--positive)' : 'var(--text-tertiary)' }}>
+            {revenuOver
+              ? `+${formatCAD(revenuDelta)} de plus que prevu`
+              : revenuDelta === 0
+                ? 'Objectif atteint'
+                : `${formatCAD(Math.abs(revenuDelta))} restant a recevoir`}
+          </p>
         </div>
       </Link>
 
       {/* Depenses card */}
       <Link href="/depenses" className="block card card-press">
         <div style={{ padding: '16px 20px' }}>
-          <div className="flex items-center justify-between" style={{ marginBottom: '10px' }}>
+          <div className="flex items-center justify-between" style={{ marginBottom: '12px' }}>
             <span className="section-label">Depenses</span>
             <div className="flex items-center" style={{ gap: '8px' }}>
               {summary.overdue_count > 0 && (
@@ -59,19 +110,61 @@ export default function TabTableauDeBord({ summary, incomeSummary, totalMonthlyE
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
             </div>
           </div>
-          <div className="flex items-end justify-between" style={{ marginBottom: '10px' }}>
+
+          {/* Two columns: Dépensé | Charges fixes */}
+          <div className="flex items-start justify-between" style={{ marginBottom: '12px' }}>
             <div>
-              <p className="amount" style={{ fontSize: 'var(--text-lg)' }}>
+              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '2px' }}>Depense</p>
+              <p className="amount" style={{ fontSize: 'var(--text-lg)', color: depenseOver ? 'var(--negative-text)' : 'var(--text-primary)' }}>
                 {formatCAD(summary.paid_total)}
               </p>
-              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
-                payé / {formatCAD(summary.total)} total
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '2px' }}>Charges fixes</p>
+              <p className="amount" style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
+                {formatCAD(chargesFixes)}
               </p>
             </div>
           </div>
-          <div className="progress-track">
-            <div className="progress-fill" style={{ width: `${Math.min(progressPctExpenses, 100)}%`, background: progressPctExpenses >= 100 ? 'var(--positive)' : 'var(--accent)' }} />
+
+          {/* Progress bar with overflow */}
+          <div className="progress-track" style={{ position: 'relative', overflow: 'visible' }}>
+            {depenseOver ? (
+              <>
+                {/* Base fills the charges portion */}
+                <div className="progress-fill" style={{
+                  width: `${Math.min((chargesFixes / summary.paid_total) * 100, 100)}%`,
+                  background: 'var(--accent)',
+                  borderRadius: 'var(--radius-sm) 0 0 var(--radius-sm)',
+                  position: 'absolute', left: 0, top: 0, bottom: 0,
+                }} />
+                {/* Red overflow segment */}
+                <div style={{
+                  position: 'absolute',
+                  left: `${(chargesFixes / summary.paid_total) * 100}%`,
+                  right: 0, top: 0, bottom: 0,
+                  width: `${100 - (chargesFixes / summary.paid_total) * 100}%`,
+                  background: 'var(--negative)',
+                  borderRadius: '0 var(--radius-sm) var(--radius-sm) 0',
+                  boxShadow: '0 0 8px rgba(220, 38, 38, 0.3)',
+                }} />
+              </>
+            ) : (
+              <div className="progress-fill" style={{
+                width: `${Math.max(Math.min(depensePct, 100), 2)}%`,
+                background: depensePct >= 90 ? 'var(--warning)' : 'var(--accent)',
+              }} />
+            )}
           </div>
+
+          {/* Delta label */}
+          <p style={{ fontSize: 'var(--text-xs)', marginTop: '6px', fontWeight: 600, color: depenseOver ? 'var(--negative-text)' : 'var(--text-tertiary)' }}>
+            {depenseOver
+              ? `+${formatCAD(depenseDelta)} au-dessus des charges`
+              : depenseDelta === 0
+                ? 'Toutes les charges payees'
+                : `${formatCAD(Math.abs(depenseDelta))} restant sur les charges`}
+          </p>
         </div>
       </Link>
 

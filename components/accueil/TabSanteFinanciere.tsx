@@ -12,8 +12,8 @@ type Props = {
 };
 
 export default function TabSanteFinanciere({ summary, incomeSummary, expenses, monthlyIncomeFromTemplates, totalMonthlyExpenses }: Props) {
-  // Score de sante: % charges couvertes par revenus recus
-  const coverageActual = summary.total > 0 ? Math.min((incomeSummary.actualTotal / summary.total) * 100, 100) : 100;
+  // Score de sante: % charges prévues couvertes par revenus recus
+  const coverageActual = summary.planned_total > 0 ? Math.min((incomeSummary.actualTotal / summary.planned_total) * 100, 100) : 100;
   const coverageTheoretical = totalMonthlyExpenses > 0 ? Math.min((monthlyIncomeFromTemplates / totalMonthlyExpenses) * 100, 200) : 100;
 
   const scoreColor = coverageActual >= 80 ? 'var(--positive)' : coverageActual >= 50 ? 'var(--warning)' : 'var(--negative)';

@@ -22,10 +22,15 @@ export default function ExpenseTrackingRow({ expense, isCurrentMonth, onAction }
           <p style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: 'var(--text-sm)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {expense.name}
           </p>
-          <div className="flex items-center" style={{ gap: '8px', marginTop: '4px' }}>
+          <div className="flex items-center" style={{ gap: '6px', marginTop: '4px', flexWrap: 'wrap' }}>
             <span className="badge" style={{ background: statusStyle.bg, color: statusStyle.color }}>
               {STATUS_LABELS[expense.status]}
             </span>
+            {!expense.is_planned && (
+              <span className="badge" style={{ background: 'var(--warning-subtle)', color: 'var(--warning-text)' }}>
+                Imprevu
+              </span>
+            )}
             <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
               {expense.is_auto_charged ? '· Auto' : ''}
               {expense.due_date ? ` · ${formatShortDate(expense.due_date)}` : ''}

@@ -147,6 +147,8 @@ export async function getMonthSummary(month: string): Promise<MonthSummary> {
     SELECT
       COUNT(*) as count,
       COALESCE(SUM(amount), 0) as total,
+      COALESCE(SUM(amount) FILTER (WHERE is_planned = true), 0) as planned_total,
+      COALESCE(SUM(amount) FILTER (WHERE is_planned = false), 0) as unplanned_total,
       COUNT(*) FILTER (WHERE status = 'PAID') as paid_count,
       COALESCE(SUM(amount) FILTER (WHERE status = 'PAID'), 0) as paid_total,
       COUNT(*) FILTER (WHERE status = 'OVERDUE') as overdue_count
@@ -158,6 +160,8 @@ export async function getMonthSummary(month: string): Promise<MonthSummary> {
   return {
     count: Number(row.count),
     total: Number(row.total),
+    planned_total: Number(row.planned_total),
+    unplanned_total: Number(row.unplanned_total),
     paid_count: Number(row.paid_count),
     paid_total: Number(row.paid_total),
     overdue_count: Number(row.overdue_count),

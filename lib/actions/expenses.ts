@@ -327,28 +327,44 @@ export async function getExpensesByCard(cardId: string): Promise<Expense[]> {
   return rows as Expense[];
 }
 
-// Creates a one-time adhoc expense directly in monthly_expenses for the given month.
-// Used by the quick-add FAB in Mon Mois.
+// Creates an adhoc (imprevu) expense directly in monthly_expenses.
+// alreadyPaid = true → logs a past expense (status PAID, is_planned = false)
+// alreadyPaid = false → creates an upcoming expense (status UPCOMING, is_planned = false)
+// dueDate = optional date for upcoming expenses
 export async function createAdhocExpense(
   name: string,
   amount: number,
   sectionId: string,
-  month: string
+  month: string,
+  alreadyPaid: boolean = false,
+  dueDate?: string,
 ): Promise<void> {
+  const today = new Date().toISOString().split('T')[0];
+  const effectiveDate = dueDate || today;
+
   // Insert into expenses table as ONE_TIME
   const rows = await sql`
     INSERT INTO expenses (name, amount, type, section_id, is_active, next_due_date)
-    VALUES (${name}, ${amount}, 'ONE_TIME', ${sectionId}, true, CURRENT_DATE)
+    VALUES (${name}, ${amount}, 'ONE_TIME', ${sectionId}, true, ${effectiveDate}::date)
     RETURNING id
   `;
   const expenseId = (rows[0] as { id: string }).id;
 
-  // Insert directly as monthly instance with UPCOMING status
-  await sql`
-    INSERT INTO monthly_expenses (expense_id, section_id, month, name, amount, status, due_date)
-    VALUES (${expenseId}, ${sectionId}, ${month}, ${name}, ${amount}, 'UPCOMING', CURRENT_DATE)
-    ON CONFLICT (expense_id, month) DO NOTHING
-  `;
+  if (alreadyPaid) {
+    // Already paid — log directly as PAID
+    await sql`
+      INSERT INTO monthly_expenses (expense_id, section_id, month, name, amount, status, due_date, paid_at, is_planned)
+      VALUES (${expenseId}, ${sectionId}, ${month}, ${name}, ${amount}, 'PAID', ${today}::date, ${today}::date, false)
+      ON CONFLICT (expense_id, month) DO NOTHING
+    `;
+  } else {
+    // Upcoming — will need to be paid later
+    await sql`
+      INSERT INTO monthly_expenses (expense_id, section_id, month, name, amount, status, due_date, is_planned)
+      VALUES (${expenseId}, ${sectionId}, ${month}, ${name}, ${amount}, 'UPCOMING', ${effectiveDate}::date, false)
+      ON CONFLICT (expense_id, month) DO NOTHING
+    `;
+  }
 
   revalidatePath('/depenses');
   revalidatePath('/');

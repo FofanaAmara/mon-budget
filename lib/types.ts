@@ -76,6 +76,7 @@ export type MonthlyExpense = {
   section_id: string | null;
   card_id: string | null;
   is_auto_charged: boolean;
+  is_planned: boolean;
   notes: string | null;
   created_at: string;
   // Joined
@@ -86,8 +87,10 @@ export type MonthlyExpense = {
 export type MonthSummary = {
   count: number;
   total: number;
+  planned_total: number;       // charges fixes + dépenses prévues
+  unplanned_total: number;     // dépenses imprévues
   paid_count: number;
-  paid_total: number;
+  paid_total: number;          // tout ce qui est payé (prévu + imprévu)
   overdue_count: number;
 };
 

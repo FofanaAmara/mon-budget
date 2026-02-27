@@ -37,8 +37,10 @@ export default function DepensesTrackingClient({ expenses, summary, sections, mo
     items: filtered.filter((e) => e.status === status),
   })).filter((g) => g.items.length > 0);
 
-  const progressPct = summary.count > 0 ? (summary.paid_count / summary.count) * 100 : 0;
-  const restAPayer = summary.total - summary.paid_total;
+  const chargesFixes = summary.planned_total;
+  const progressPct = chargesFixes > 0 ? (summary.paid_total / chargesFixes) * 100 : 0;
+  const restAPayer = Math.max(chargesFixes - summary.paid_total, 0);
+  const hasUnplanned = summary.unplanned_total > 0;
 
   function handleAction(id: string, action: 'paid' | 'deferred' | 'upcoming') {
     startTransition(async () => {
@@ -62,14 +64,15 @@ export default function DepensesTrackingClient({ expenses, summary, sections, mo
         color: 'white',
       }}>
         <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, opacity: 0.75, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '4px' }}>
-          Total attendu
+          Charges prevues
         </p>
         <p className="amount" style={{ fontSize: 'var(--text-2xl)', fontWeight: 750, letterSpacing: 'var(--tracking-tight)' }}>
-          {formatCAD(summary.total)}
+          {formatCAD(chargesFixes)}
         </p>
         <div className="flex items-center" style={{ gap: '16px', marginTop: '12px', fontSize: 'var(--text-xs)', opacity: 0.85 }}>
-          <span>Payé {formatCAD(summary.paid_total)}</span>
+          <span>Depense {formatCAD(summary.paid_total)}</span>
           <span>Reste {formatCAD(restAPayer)}</span>
+          {hasUnplanned && <span>Imprevus {formatCAD(summary.unplanned_total)}</span>}
         </div>
         {/* Progress bar */}
         <div style={{
