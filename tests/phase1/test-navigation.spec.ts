@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Navigation', () => {
-  test('bottom nav has 5 tabs', async ({ page }) => {
+  test('bottom nav has 6 tabs', async ({ page }) => {
     await page.goto('/');
     const nav = page.getByRole('navigation', { name: 'Navigation principale' });
     await expect(nav).toBeVisible();
     const links = nav.getByRole('link');
-    await expect(links).toHaveCount(5);
+    await expect(links).toHaveCount(6);
   });
 
   test('can navigate to /sections', async ({ page }) => {

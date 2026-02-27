@@ -168,7 +168,7 @@ export default function MonMoisClient({
             transition: `all var(--duration-fast) var(--ease-out)`,
             background: 'none', border: 'none', cursor: 'pointer',
           }}
-          aria-label="Mois precedent"
+          aria-label="Mois précédent"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M15 18l-6-6 6-6" />
@@ -245,7 +245,7 @@ export default function MonMoisClient({
       <div className="card" style={{ padding: '20px', marginBottom: '16px' }}>
         <div className="flex items-center justify-between" style={{ marginBottom: '12px' }}>
           <span style={{ fontSize: 'var(--text-sm)', fontWeight: 650, color: 'var(--text-primary)' }}>
-            {summary.paid_count}/{summary.count} depenses completees
+            {summary.paid_count}/{summary.count} dépenses complétées
           </span>
           {summary.overdue_count > 0 && (
             <span className="badge" style={{

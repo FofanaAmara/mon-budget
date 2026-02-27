@@ -180,7 +180,7 @@ export default async function DashboardPage() {
                 />
               </div>
               <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                <span className="amount" style={{ fontWeight: 600 }}>{monthSummary.paid_count}/{monthSummary.count}</span> completees
+                <span className="amount" style={{ fontWeight: 600 }}>{monthSummary.paid_count}/{monthSummary.count}</span> complétées
                 {' · '}
                 <span className="amount" style={{ fontWeight: 600 }}>{formatCAD(monthSummary.paid_total)}</span> paye / {formatCAD(monthSummary.total)} total
               </p>
