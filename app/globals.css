@@ -142,8 +142,8 @@
   --card-foreground: var(--text-primary);
   --popover: var(--surface-raised);
   --popover-foreground: var(--text-primary);
-  --primary: var(--text-primary);
-  --primary-foreground: var(--text-inverted);
+  --primary: var(--accent);
+  --primary-foreground: white;
   --secondary: var(--surface-inset);
   --secondary-foreground: var(--text-primary);
   --muted: var(--surface-sunken);
@@ -258,8 +258,8 @@ body {
   width: 52px;
   height: 52px;
   border-radius: var(--radius-full);
-  background: var(--text-primary);
-  color: var(--text-inverted);
+  background: var(--accent);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -530,9 +530,9 @@ body {
 }
 
 .pill[data-active="true"] {
-  background: var(--text-primary);
-  border-color: var(--text-primary);
-  color: var(--text-inverted);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
 }
 
 /* ── Action icon buttons ──────────────────────────────── */
@@ -593,8 +593,8 @@ body {
   border-radius: var(--radius-md);
   font-size: var(--text-sm);
   font-weight: 600;
-  background: var(--text-primary);
-  color: var(--text-inverted);
+  background: var(--accent);
+  color: white;
   border: none;
   cursor: pointer;
   transition: opacity var(--duration-fast) var(--ease-out),
@@ -723,9 +723,9 @@ body {
 }
 
 .freq-pill[data-active="true"] {
-  background: var(--text-primary);
-  border-color: var(--text-primary);
-  color: var(--text-inverted);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
 }
 
 /* ── Color swatches — satisfying scale feedback ──────── */

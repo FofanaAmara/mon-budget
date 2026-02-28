@@ -61,7 +61,7 @@ export default function DepensesTrackingClient({ expenses, summary, sections, ca
         borderRadius: 'var(--radius-lg)',
         padding: '20px',
         marginBottom: '16px',
-        background: 'linear-gradient(135deg, #2563EB, #1D4ED8)',
+        background: 'linear-gradient(135deg, #3D3BF3, #3230D4)',
         color: 'white',
       }}>
         <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, opacity: 0.75, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '4px' }}>
@@ -111,8 +111,8 @@ export default function DepensesTrackingClient({ expenses, summary, sections, ca
               borderRadius: 'var(--radius-md)',
               fontSize: 'var(--text-xs)', fontWeight: 600,
               transition: `all var(--duration-fast) var(--ease-out)`,
-              background: selectedSection === null ? 'var(--text-primary)' : 'var(--surface-raised)',
-              color: selectedSection === null ? 'var(--text-inverted)' : 'var(--text-tertiary)',
+              background: selectedSection === null ? 'var(--accent)' : 'var(--surface-raised)',
+              color: selectedSection === null ? 'white' : 'var(--text-tertiary)',
               border: selectedSection === null ? 'none' : '1.5px solid var(--border-default)',
               cursor: 'pointer',
             }}
@@ -129,8 +129,8 @@ export default function DepensesTrackingClient({ expenses, summary, sections, ca
                 borderRadius: 'var(--radius-md)',
                 fontSize: 'var(--text-xs)', fontWeight: 600,
                 transition: `all var(--duration-fast) var(--ease-out)`,
-                background: selectedSection === s.id ? 'var(--text-primary)' : 'var(--surface-raised)',
-                color: selectedSection === s.id ? 'var(--text-inverted)' : 'var(--text-tertiary)',
+                background: selectedSection === s.id ? 'var(--accent)' : 'var(--surface-raised)',
+                color: selectedSection === s.id ? 'white' : 'var(--text-tertiary)',
                 border: selectedSection === s.id ? 'none' : '1.5px solid var(--border-default)',
                 cursor: 'pointer',
               }}

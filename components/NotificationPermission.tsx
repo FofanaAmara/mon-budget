@@ -52,22 +52,46 @@ export default function NotificationPermission() {
   if (!show || permission !== 'default') return null;
 
   return (
-    <div className="mx-4 mb-4 bg-[#EFF6FF] border border-[#BFDBFE] rounded-2xl p-4 flex items-center gap-3">
-      <span className="text-2xl flex-shrink-0">🔔</span>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-[#1E40AF]">Activer les notifications</p>
-        <p className="text-xs text-[#3B82F6]">Recevez des rappels avant vos échéances</p>
+    <div style={{
+      margin: '0 16px 16px',
+      background: 'var(--accent-subtle)',
+      border: '1px solid var(--accent-muted)',
+      borderRadius: 'var(--radius-lg)',
+      padding: '16px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px',
+    }}>
+      <span style={{ fontSize: '1.5rem', flexShrink: 0 }}>🔔</span>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <p style={{ fontSize: 'var(--text-sm)', fontWeight: 650, color: 'var(--accent)' }}>
+          Activer les notifications
+        </p>
+        <p style={{ fontSize: 'var(--text-xs)', color: 'var(--accent)', opacity: 0.7 }}>
+          Recevez des rappels avant vos echeances
+        </p>
       </div>
-      <div className="flex gap-2 flex-shrink-0">
+      <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
         <button
           onClick={() => setShow(false)}
-          className="text-xs text-[#94A3B8] px-2 py-1"
+          style={{
+            fontSize: 'var(--text-xs)',
+            color: 'var(--text-tertiary)',
+            padding: '4px 8px',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+          }}
         >
           Plus tard
         </button>
         <button
           onClick={requestPermission}
-          className="text-xs font-semibold bg-[#2563EB] text-white px-3 py-1.5 rounded-lg"
+          className="btn-primary"
+          style={{
+            fontSize: 'var(--text-xs)',
+            padding: '6px 12px',
+          }}
         >
           Activer
         </button>

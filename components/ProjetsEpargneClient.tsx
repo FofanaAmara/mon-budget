@@ -124,7 +124,7 @@ export default function ProjetsEpargneClient({ projets, sections, cards, freeSav
         <div className="card" style={{
           padding: '16px 20px',
           background: valeurNette >= 0
-            ? 'linear-gradient(135deg, #059669, #047857)'
+            ? 'linear-gradient(135deg, #1A7F5A, #145C42)'
             : 'linear-gradient(135deg, #DC2626, #B91C1C)',
           color: 'white',
           borderColor: 'transparent',

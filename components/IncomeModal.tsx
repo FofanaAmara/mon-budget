@@ -10,10 +10,10 @@ type Props = {
 };
 
 const SOURCE_OPTIONS: { value: IncomeSource; label: string; icon: string; color: string }[] = [
-  { value: 'EMPLOYMENT', label: 'Emploi',        icon: '💼', color: '#2563EB' },
+  { value: 'EMPLOYMENT', label: 'Emploi',        icon: '💼', color: '#3D3BF3' },
   { value: 'BUSINESS',   label: 'Business',      icon: '🏢', color: '#7C3AED' },
-  { value: 'INVESTMENT', label: 'Investissement', icon: '📈', color: '#059669' },
-  { value: 'OTHER',      label: 'Autre',          icon: '🔧', color: '#6B7280' },
+  { value: 'INVESTMENT', label: 'Investissement', icon: '📈', color: '#1A7F5A' },
+  { value: 'OTHER',      label: 'Autre',          icon: '🔧', color: '#6B6966' },
 ];
 
 const FIXED_FREQ_OPTIONS: { value: IncomeFrequency; label: string; sub: string }[] = [
@@ -210,12 +210,12 @@ export default function IncomeModal({ income, onClose }: Props) {
                             padding: '12px 8px',
                             textAlign: 'center',
                             borderRadius: 'var(--radius-md)',
-                            border: `1.5px solid ${active ? 'var(--text-primary)' : 'var(--border-default)'}`,
-                            background: active ? 'var(--text-primary)' : 'var(--surface-raised)',
+                            border: `1.5px solid ${active ? 'var(--accent)' : 'var(--border-default)'}`,
+                            background: active ? 'var(--accent)' : 'var(--surface-raised)',
                             cursor: 'pointer',
                           }}
                         >
-                          <span style={{ display: 'block', fontSize: 'var(--text-xs)', fontWeight: 600, color: active ? 'var(--text-inverted)' : 'var(--text-secondary)' }}>
+                          <span style={{ display: 'block', fontSize: 'var(--text-xs)', fontWeight: 600, color: active ? 'white' : 'var(--text-secondary)' }}>
                             {label}
                           </span>
                           <span style={{ display: 'block', fontSize: '10px', marginTop: '2px', color: active ? 'rgba(255,255,255,0.7)' : 'var(--text-tertiary)' }}>

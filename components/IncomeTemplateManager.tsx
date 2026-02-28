@@ -14,10 +14,10 @@ const FREQUENCY_LABELS: Record<IncomeFrequency, string> = {
 };
 
 const SOURCE_META: Record<IncomeSource, { label: string; icon: string; color: string; bg: string }> = {
-  EMPLOYMENT: { label: 'Emploi',         icon: '💼', color: '#2563EB', bg: '#EFF6FF' },
+  EMPLOYMENT: { label: 'Emploi',         icon: '💼', color: '#3D3BF3', bg: '#EDEDFE' },
   BUSINESS:   { label: 'Business',       icon: '🏢', color: '#7C3AED', bg: '#F5F3FF' },
-  INVESTMENT: { label: 'Investissement', icon: '📈', color: '#059669', bg: '#ECFDF5' },
-  OTHER:      { label: 'Autre',          icon: '🔧', color: '#6B7280', bg: '#F9FAFB' },
+  INVESTMENT: { label: 'Investissement', icon: '📈', color: '#1A7F5A', bg: '#E8F5EE' },
+  OTHER:      { label: 'Autre',          icon: '🔧', color: '#6B6966', bg: '#F5F4F1' },
 };
 
 type Props = {

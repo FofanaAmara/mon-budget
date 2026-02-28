@@ -56,7 +56,7 @@ export async function claimOrphanedData(): Promise<{ claimed: number }> {
 
 // Ensures the user has default sections. Called for new users on first visit.
 const DEFAULT_SECTIONS = [
-  { name: 'Maison',    icon: '🏠', color: '#3B82F6', position: 0 },
+  { name: 'Maison',    icon: '🏠', color: '#3D3BF3', position: 0 },
   { name: 'Perso',     icon: '👤', color: '#8B5CF6', position: 1 },
   { name: 'Famille',   icon: '👨‍👩‍👧‍👦', color: '#EC4899', position: 2 },
   { name: 'Transport', icon: '🚗', color: '#F59E0B', position: 3 },

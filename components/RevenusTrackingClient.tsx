@@ -72,10 +72,10 @@ export default function RevenusTrackingClient({ monthlyIncomes, incomeSummary, a
         padding: '20px',
         marginBottom: '16px',
         background: progressPct >= 80
-          ? 'linear-gradient(135deg, #059669, #047857)'
+          ? 'linear-gradient(135deg, #1A7F5A, #145C42)'
           : progressPct >= 40
-            ? 'linear-gradient(135deg, #D97706, #B45309)'
-            : 'linear-gradient(135deg, #2563EB, #1D4ED8)',
+            ? 'linear-gradient(135deg, #C27815, #8C5710)'
+            : 'linear-gradient(135deg, #3D3BF3, #3230D4)',
         color: 'white',
       }}>
         <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, opacity: 0.75, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '4px' }}>

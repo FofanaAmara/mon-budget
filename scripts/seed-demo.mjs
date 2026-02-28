@@ -47,7 +47,7 @@ async function seed() {
   console.log('📁 Création des sections...');
   const sections = await sql`
     INSERT INTO sections (user_id, name, icon, color, position) VALUES
-      (${USER_ID}, 'Maison',    '🏠', '#3B82F6', 0),
+      (${USER_ID}, 'Maison',    '🏠', '#3D3BF3', 0),
       (${USER_ID}, 'Perso',     '👤', '#8B5CF6', 1),
       (${USER_ID}, 'Famille',   '👨‍👩‍👧‍👦', '#EC4899', 2),
       (${USER_ID}, 'Transport', '🚗', '#F59E0B', 3),
