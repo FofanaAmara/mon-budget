@@ -18,7 +18,7 @@ export default function SignOutButton() {
         fontSize: 'var(--text-sm)',
         fontWeight: 600,
         color: '#DC2626',
-        background: 'var(--bg-card)',
+        background: 'var(--surface-raised)',
         border: '1px solid var(--border)',
         borderRadius: 'var(--radius-lg)',
         cursor: 'pointer',

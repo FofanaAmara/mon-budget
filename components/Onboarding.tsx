@@ -85,7 +85,7 @@ export default function Onboarding({ onComplete }: Props) {
               {HOW_STEPS.map((s, i) => (
                 <div key={i} style={{
                   display: 'flex', gap: '14px', alignItems: 'flex-start',
-                  background: 'var(--bg-card)', border: '1px solid var(--border)',
+                  background: 'var(--surface-raised)', border: '1px solid var(--border)',
                   borderRadius: 'var(--radius-lg)', padding: '16px',
                 }}>
                   <span style={{
@@ -152,7 +152,7 @@ export default function Onboarding({ onComplete }: Props) {
                 disabled={isPending}
                 style={{
                   textAlign: 'left', padding: '20px',
-                  background: 'var(--bg-card)', color: 'var(--text-primary)',
+                  background: 'var(--surface-raised)', color: 'var(--text-primary)',
                   border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)',
                   cursor: isPending ? 'not-allowed' : 'pointer',
                   opacity: isPending ? 0.5 : 1,

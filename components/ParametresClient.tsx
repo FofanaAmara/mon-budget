@@ -247,7 +247,7 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
             fontSize: 'var(--text-sm)',
             fontWeight: 600,
             color: '#DC2626',
-            background: 'var(--bg-card)',
+            background: 'var(--surface-raised)',
             border: '1px solid var(--border)',
             borderRadius: 'var(--radius-lg)',
             cursor: 'pointer',
@@ -261,11 +261,12 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
       {/* Clear confirmation modal */}
       {showClearModal && (
         <div
-          className="sheet-backdrop"
           onClick={() => !isPendingClear && setShowClearModal(false)}
           style={{
             position: 'fixed', inset: 0, zIndex: 9999,
-            background: 'rgba(0,0,0,0.5)',
+            background: 'rgba(0,0,0,0.45)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             padding: '24px',
           }}
@@ -274,7 +275,7 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
             onClick={(e) => e.stopPropagation()}
             style={{
               width: '100%', maxWidth: '360px',
-              background: 'var(--bg-card)',
+              background: 'var(--surface-raised)',
               borderRadius: 'var(--radius-lg)',
               padding: '24px',
               boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
