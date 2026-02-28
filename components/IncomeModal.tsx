@@ -35,6 +35,13 @@ export default function IncomeModal({ income, onClose }: Props) {
   const [estimatedAmount, setEstimatedAmount] = useState(
     income?.estimated_amount?.toString() ?? ''
   );
+  const [payAnchorDate, setPayAnchorDate] = useState(() => {
+    const d = income?.pay_anchor_date;
+    if (!d) return '';
+    if (d instanceof Date) return d.toISOString().slice(0, 10);
+    return String(d).slice(0, 10);
+  });
+  const [autoDeposit, setAutoDeposit] = useState(income?.auto_deposit ?? false);
   const [notes, setNotes] = useState(income?.notes ?? '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -58,6 +65,8 @@ export default function IncomeModal({ income, onClose }: Props) {
         amount: isVariable ? null : parseFloat(amount),
         estimated_amount: estimatedAmount ? parseFloat(estimatedAmount) : null,
         frequency: isVariable ? 'VARIABLE' as IncomeFrequency : frequency,
+        pay_anchor_date: (!isVariable && frequency === 'BIWEEKLY' && payAnchorDate) ? payAnchorDate : null,
+        auto_deposit: !isVariable ? autoDeposit : false,
         notes: notes.trim() || null,
       };
       if (income) {
@@ -226,6 +235,45 @@ export default function IncomeModal({ income, onClose }: Props) {
                     })}
                   </div>
                 </div>
+
+                {/* Auto deposit toggle */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                  <div>
+                    <label className="field-label" style={{ marginBottom: 0 }}>Depot automatique</label>
+                    {autoDeposit && (
+                      <p style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '2px' }}>
+                        Marque automatiquement recu a la date prevue
+                      </p>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setAutoDeposit(!autoDeposit)}
+                    className="toggle"
+                    data-active={autoDeposit}
+                  >
+                    <span className="toggle-knob" />
+                  </button>
+                </div>
+
+                {/* Biweekly anchor date */}
+                {frequency === 'BIWEEKLY' && (
+                  <div>
+                    <label className="field-label">
+                      Prochaine paie
+                      <span style={{ fontWeight: 400, color: 'var(--text-tertiary)', marginLeft: '4px' }}>recommande</span>
+                    </label>
+                    <input
+                      type="date"
+                      value={payAnchorDate}
+                      onChange={(e) => setPayAnchorDate(e.target.value)}
+                      className="input-field"
+                    />
+                    <p style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '4px' }}>
+                      Date d&apos;une prochaine paie (pour calculer les mois a 3 paies)
+                    </p>
+                  </div>
+                )}
               </>
             )}
 

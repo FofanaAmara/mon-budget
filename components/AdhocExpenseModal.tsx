@@ -99,7 +99,7 @@ export default function AdhocExpenseModal({ sections, cards, month, onClose }: P
             background: 'var(--surface-inset)',
           }}>
             {mode === 'paid'
-              ? 'Logguez une depense imprevue deja effectuee. Elle sera marquee comme payee directement.'
+              ? 'Ajoutez une depense imprevue deja effectuee. Elle sera marquee comme payee directement.'
               : 'Ajoutez une depense imprevue a venir avec sa date previsionnelle.'}
           </p>
 
@@ -171,7 +171,7 @@ export default function AdhocExpenseModal({ sections, cards, month, onClose }: P
               className="btn-primary"
               style={{ width: '100%', padding: '16px', fontSize: 'var(--text-base)', opacity: loading ? 0.5 : 1 }}
             >
-              {loading ? 'Ajout...' : mode === 'paid' ? 'Logguer cette depense' : 'Ajouter cette depense'}
+              {loading ? 'Ajout...' : 'Ajouter cette depense'}
             </button>
           </form>
         </div>

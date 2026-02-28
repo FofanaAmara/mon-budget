@@ -133,6 +133,8 @@ export type Income = {
   amount: number | null;           // null si VARIABLE
   estimated_amount: number | null; // estimation mensuelle pour VARIABLE
   frequency: IncomeFrequency;
+  pay_anchor_date: string | Date | null;
+  auto_deposit: boolean;
   is_active: boolean;
   notes: string | null;
   created_at: string;
@@ -150,11 +152,14 @@ export type MonthlyIncome = {
   actual_amount: number | null;
   status: MonthlyIncomeStatus;
   received_at: string | null;
+  is_auto_deposited: boolean;
   notes: string | null;
   created_at: string;
   // Joins
   income_name?: string;
   income_source?: IncomeSource;
+  income_frequency?: IncomeFrequency;
+  income_pay_anchor_date?: string | Date | null;
 };
 
 export type SavingsContribution = {

@@ -14,6 +14,7 @@ import { getMonthlyIncomeTotal } from '@/lib/actions/incomes';
 import {
   generateMonthlyIncomes,
   getMonthlyIncomeSummary,
+  autoMarkReceivedForAutoDeposit,
 } from '@/lib/actions/monthly-incomes';
 import { hasOrphanedData, ensureDefaultSections } from '@/lib/actions/claim';
 import { hasUserData } from '@/lib/actions/demo-data';
@@ -47,6 +48,7 @@ export default async function AccueilPage({ searchParams }: PageProps) {
   if (month === currentMonth()) {
     await autoMarkOverdue(month);
     await autoMarkPaidForAutoDebit(month);
+    await autoMarkReceivedForAutoDeposit(month);
   }
 
   const [expenses, summary, incomeSummary, sectionSummary, monthlyIncomeFromTemplates, projets, totalDebtBalance, savingsSummary, debtSummary] = await Promise.all([

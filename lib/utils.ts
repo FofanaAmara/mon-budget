@@ -22,12 +22,16 @@ export function formatDate(date: string | Date | null): string {
 
 export function formatShortDate(date: string | Date | null): string {
   if (!date) return '—';
-  const d = typeof date === 'string' ? new Date(date) : date;
+  // Neon returns DATE columns as UTC-midnight Date objects; reconstruct using UTC parts to avoid UTC→local offset shift
+  const d = typeof date === 'string'
+    ? new Date(date.length === 10 ? date + 'T00:00:00' : date)
+    : new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
   return new Intl.DateTimeFormat('fr-CA', {
     day: '2-digit',
     month: 'short',
   }).format(d);
 }
+
 
 /**
  * Calculate the next due date for a recurring expense.
@@ -148,6 +152,79 @@ export function calcMonthlySuggested(
     (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth());
   if (monthsRemaining <= 0 || targetAmount - savedAmount <= 0) return 0;
   return (targetAmount - savedAmount) / monthsRemaining;
+}
+
+/**
+ * Count how many biweekly pay dates fall within a given month.
+ * Walks forward/backward from anchorDate in 14-day steps.
+ * @param anchorDate - A known pay date (ISO string "YYYY-MM-DD")
+ * @param year - Full year (e.g. 2026)
+ * @param month - 0-based month (0=Jan, 11=Dec)
+ * @returns 2 (normal) or 3 (rich month)
+ */
+export function countBiweeklyPayDatesInMonth(
+  anchorDate: string | Date,
+  year: number,
+  month: number
+): number {
+  const anchor = anchorDate instanceof Date
+    ? new Date(anchorDate.getFullYear(), anchorDate.getMonth(), anchorDate.getDate())
+    : new Date(String(anchorDate).slice(0, 10) + 'T00:00:00');
+  const monthStart = new Date(year, month, 1);
+  const monthEnd = new Date(year, month + 1, 0); // last day of month
+
+  // Find the first pay date on or before monthStart
+  let cursor = new Date(anchor);
+  if (cursor > monthStart) {
+    while (cursor > monthStart) {
+      cursor.setDate(cursor.getDate() - 14);
+    }
+  } else {
+    while (new Date(cursor.getTime() + 14 * 86400000) <= monthStart) {
+      cursor.setDate(cursor.getDate() + 14);
+    }
+  }
+
+  // Now walk forward counting dates within the month
+  let count = 0;
+  for (let i = 0; i < 5; i++) {
+    if (cursor >= monthStart && cursor <= monthEnd) {
+      count++;
+    }
+    cursor.setDate(cursor.getDate() + 14);
+    if (cursor > monthEnd) break;
+  }
+
+  return count;
+}
+
+/**
+ * Get the next biweekly pay date on or after today.
+ * @param anchorDate - A known pay date (ISO string "YYYY-MM-DD")
+ * @returns Date object of the next pay date
+ */
+export function getNextBiweeklyPayDate(anchorDate: string | Date): Date {
+  const anchor = anchorDate instanceof Date
+    ? new Date(anchorDate.getFullYear(), anchorDate.getMonth(), anchorDate.getDate())
+    : new Date(String(anchorDate).slice(0, 10) + 'T00:00:00');
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  let cursor = new Date(anchor);
+
+  if (cursor >= today) {
+    // Walk backward to find the closest future one
+    while (cursor.getTime() - 14 * 86400000 >= today.getTime()) {
+      cursor.setDate(cursor.getDate() - 14);
+    }
+    return cursor;
+  }
+
+  // Walk forward until we're on or after today
+  while (cursor < today) {
+    cursor.setDate(cursor.getDate() + 14);
+  }
+  return cursor;
 }
 
 /**

@@ -257,14 +257,46 @@ export async function markAsPaid(id: string): Promise<void> {
   revalidatePath('/');
 }
 
-// Mark a monthly expense as DEFERRED
-export async function markAsDeferred(id: string): Promise<void> {
+// Defer a monthly expense to a future month.
+// Marks the current instance DEFERRED (kept for traceability),
+// and creates a new UPCOMING entry in the target month.
+export async function deferExpenseToMonth(id: string, targetMonth: string): Promise<void> {
   const userId = await requireAuth();
-  await sql`
-    UPDATE monthly_expenses
-    SET status = 'DEFERRED', paid_at = NULL
+
+  // Fetch the current instance details
+  const rows = await sql`
+    SELECT name, amount, section_id, card_id, month FROM monthly_expenses
     WHERE id = ${id} AND user_id = ${userId}
   `;
+  if (rows.length === 0) return;
+  const { name, amount, section_id, card_id, month: sourceMonth } = rows[0] as {
+    name: string; amount: number; section_id: string | null;
+    card_id: string | null; month: string;
+  };
+
+  // Format source month label for the note
+  const [sy, sm] = sourceMonth.split('-').map(Number);
+  const sourceLabel = new Intl.DateTimeFormat('fr-CA', { month: 'long', year: 'numeric' })
+    .format(new Date(sy, sm - 1, 1));
+
+  // Mark current instance as DEFERRED
+  await sql`
+    UPDATE monthly_expenses SET status = 'DEFERRED', paid_at = NULL
+    WHERE id = ${id} AND user_id = ${userId}
+  `;
+
+  // Create new entry in target month (expense_id = NULL so it coexists with template generation)
+  const [ty, tm] = targetMonth.split('-').map(Number);
+  const dueDate = `${targetMonth}-01`;
+  await sql`
+    INSERT INTO monthly_expenses
+      (user_id, expense_id, month, name, amount, due_date, status, section_id, card_id, is_planned, notes)
+    VALUES
+      (${userId}, NULL, ${targetMonth}, ${name}, ${amount},
+       ${dueDate}::date, 'UPCOMING', ${section_id}, ${card_id}, true,
+       ${'Reporté depuis ' + sourceLabel})
+  `;
+
   revalidatePath('/depenses');
   revalidatePath('/');
 }
@@ -275,6 +307,31 @@ export async function markAsUpcoming(id: string): Promise<void> {
   await sql`
     UPDATE monthly_expenses
     SET status = 'UPCOMING', paid_at = NULL
+    WHERE id = ${id} AND user_id = ${userId}
+  `;
+  revalidatePath('/depenses');
+  revalidatePath('/');
+}
+
+// Delete an adhoc/imprévue monthly expense (expense_id IS NULL — no template).
+// Planned expenses linked to a template cannot be deleted this way.
+export async function deleteMonthlyExpense(id: string): Promise<void> {
+  const userId = await requireAuth();
+  await sql`
+    DELETE FROM monthly_expenses
+    WHERE id = ${id} AND user_id = ${userId} AND expense_id IS NULL
+  `;
+  revalidatePath('/depenses');
+  revalidatePath('/');
+}
+
+// Update the amount for a monthly expense (this month only — template unchanged).
+// Use case: dépense prévue 100 $ mais a coûté 87 $, ou a été suspendue (→ 0 $).
+export async function updateMonthlyExpenseAmount(id: string, newAmount: number): Promise<void> {
+  const userId = await requireAuth();
+  await sql`
+    UPDATE monthly_expenses
+    SET amount = ${newAmount}
     WHERE id = ${id} AND user_id = ${userId}
   `;
   revalidatePath('/depenses');

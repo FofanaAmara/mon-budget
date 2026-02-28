@@ -31,14 +31,16 @@ type IncomeInput = {
   amount: number | null;
   estimated_amount: number | null;
   frequency: IncomeFrequency;
+  pay_anchor_date?: string | null;
+  auto_deposit?: boolean;
   notes?: string | null;
 };
 
 export async function createIncome(data: IncomeInput): Promise<Income> {
   const userId = await requireAuth();
   const rows = await sql`
-    INSERT INTO incomes (user_id, name, source, amount, estimated_amount, frequency, notes)
-    VALUES (${userId}, ${data.name}, ${data.source}, ${data.amount}, ${data.estimated_amount}, ${data.frequency}, ${data.notes ?? null})
+    INSERT INTO incomes (user_id, name, source, amount, estimated_amount, frequency, pay_anchor_date, auto_deposit, notes)
+    VALUES (${userId}, ${data.name}, ${data.source}, ${data.amount}, ${data.estimated_amount}, ${data.frequency}, ${data.pay_anchor_date ?? null}, ${data.auto_deposit ?? false}, ${data.notes ?? null})
     RETURNING *
   `;
   revalidatePath('/revenus');
@@ -57,6 +59,8 @@ export async function updateIncome(id: string, data: Partial<IncomeInput>): Prom
       amount = ${data.amount !== undefined ? data.amount : null},
       estimated_amount = ${data.estimated_amount !== undefined ? data.estimated_amount : null},
       frequency = COALESCE(${data.frequency ?? null}, frequency),
+      pay_anchor_date = ${data.pay_anchor_date !== undefined ? (data.pay_anchor_date ?? null) : null},
+      auto_deposit = ${data.auto_deposit !== undefined ? data.auto_deposit : false},
       notes = ${data.notes !== undefined ? (data.notes ?? null) : null},
       updated_at = NOW()
     WHERE id = ${id} AND user_id = ${userId}
@@ -99,6 +103,11 @@ export async function createAdhocIncome(
     ON CONFLICT (income_id, month) DO NOTHING
   `;
 
+  // Deactivate so it doesn't appear in Réglages > Revenus récurrents
+  await sql`UPDATE incomes SET is_active = false WHERE id = ${incomeId}`;
+
   revalidatePath('/revenus');
+  revalidatePath('/parametres');
+  revalidatePath('/parametres/revenus');
   revalidatePath('/');
 }

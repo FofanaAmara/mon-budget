@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import {
   generateMonthlyIncomes,
   getMonthlyIncomeSummary,
+  autoMarkReceivedForAutoDeposit,
 } from '@/lib/actions/monthly-incomes';
 import { getIncomes } from '@/lib/actions/incomes';
 import { currentMonth } from '@/lib/utils';
@@ -18,6 +19,11 @@ export default async function RevenusPage({ searchParams }: PageProps) {
 
   // Ensure instances exist for this month (idempotent)
   await generateMonthlyIncomes(month);
+
+  // Auto-mark auto-deposit incomes as received for current month
+  if (month === currentMonth()) {
+    await autoMarkReceivedForAutoDeposit(month);
+  }
 
   const [incomeSummary, allIncomes] = await Promise.all([
     getMonthlyIncomeSummary(month),

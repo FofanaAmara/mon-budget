@@ -239,7 +239,7 @@ export default function ProjetsEpargneClient({ projets, sections, cards, freeSav
           <div style={{ marginBottom: '24px' }}>
             <div className="flex items-center justify-between" style={{ marginBottom: '12px', paddingLeft: '4px', paddingRight: '4px' }}>
               <h2 className="section-label">
-                Mes projets ({projets.length})
+                Epargne pour projet ({projets.length})
               </h2>
             </div>
 

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { deleteIncome } from '@/lib/actions/incomes';
-import { calcMonthlyIncome, formatCAD } from '@/lib/utils';
+import { calcMonthlyIncome, formatCAD, formatShortDate, getNextBiweeklyPayDate } from '@/lib/utils';
 import type { Income, IncomeFrequency, IncomeSource } from '@/lib/types';
 import IncomeModal from './IncomeModal';
 
@@ -60,17 +60,22 @@ export default function IncomeTemplateManager({ incomes }: Props) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      {/* Header */}
-      <div className="flex items-center justify-between">
+      {/* Hero card total */}
+      <div className="card" style={{
+        padding: '16px 20px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      }}>
         <div>
-          <h2 style={{
-            fontSize: 'var(--text-sm)', fontWeight: 650,
-            color: 'var(--text-primary)',
+          <p className="amount" style={{
+            fontSize: 'var(--text-xl)', fontWeight: 750,
+            color: 'var(--positive)',
+            letterSpacing: 'var(--tracking-tight)',
           }}>
-            Mes revenus recurrents
-          </h2>
+            {formatCAD(monthlyTotal)}
+            <span style={{ fontSize: 'var(--text-xs)', fontWeight: 500, color: 'var(--text-tertiary)', marginLeft: '4px' }}>/mois</span>
+          </p>
           <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
-            {incomes.length} source{incomes.length !== 1 ? 's' : ''} · {formatCAD(monthlyTotal)}/mois
+            {incomes.length} source{incomes.length !== 1 ? 's' : ''} de revenus
           </p>
         </div>
         <button
@@ -224,9 +229,15 @@ function IncomeRow({
                 {inc.frequency !== 'MONTHLY' && monthly > 0 && (
                   <span> · {formatCAD(monthly)}/mois</span>
                 )}
+                {inc.auto_deposit && <span> · Depot auto</span>}
               </>
             )}
           </p>
+          {inc.frequency === 'BIWEEKLY' && inc.pay_anchor_date && (
+            <p style={{ fontSize: '11px', color: 'var(--accent)', marginTop: '2px', fontWeight: 600 }}>
+              Prochaine : {formatShortDate(getNextBiweeklyPayDate(inc.pay_anchor_date))}
+            </p>
+          )}
         </div>
         <span className="amount" style={{ fontSize: 'var(--text-sm)', color: 'var(--positive)', flexShrink: 0 }}>
           {isVariable

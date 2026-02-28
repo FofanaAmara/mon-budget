@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { sql } from '@/lib/db';
 import { requireAuth } from '@/lib/auth/helpers';
+import { countBiweeklyPayDatesInMonth } from '@/lib/utils';
 import type { MonthlyIncome } from '@/lib/types';
 
 // Generates monthly_incomes instances for FIXED incomes of a given month.
@@ -11,24 +12,49 @@ import type { MonthlyIncome } from '@/lib/types';
 export async function generateMonthlyIncomes(month: string): Promise<void> {
   const userId = await requireAuth();
   const incomes = await sql`
-    SELECT id, name, source, amount, frequency
+    SELECT id, name, source, amount, frequency, pay_anchor_date, auto_deposit
     FROM incomes
     WHERE is_active = true AND frequency != 'VARIABLE' AND user_id = ${userId}
   `;
 
-  for (const inc of incomes as { id: string; name: string; amount: number; frequency: string }[]) {
-    const expectedAmount =
-      inc.frequency === 'MONTHLY'  ? Number(inc.amount) :
-      inc.frequency === 'BIWEEKLY' ? (Number(inc.amount) * 26 / 12) :
-      inc.frequency === 'YEARLY'   ? (Number(inc.amount) / 12) :
-      Number(inc.amount);
+  for (const inc of incomes as { id: string; name: string; amount: number; frequency: string; pay_anchor_date: string | Date | null; auto_deposit: boolean }[]) {
+    let expectedAmount: number;
+
+    if (inc.frequency === 'BIWEEKLY' && inc.pay_anchor_date) {
+      const [year, monthNum] = month.split('-').map(Number);
+      const payDates = countBiweeklyPayDatesInMonth(inc.pay_anchor_date, year, monthNum - 1);
+      expectedAmount = Number(inc.amount) * payDates;
+    } else {
+      expectedAmount =
+        inc.frequency === 'MONTHLY'  ? Number(inc.amount) :
+        inc.frequency === 'BIWEEKLY' ? (Number(inc.amount) * 26 / 12) :
+        inc.frequency === 'YEARLY'   ? (Number(inc.amount) / 12) :
+        Number(inc.amount);
+    }
 
     await sql`
-      INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, status)
-      VALUES (${userId}, ${inc.id}, ${month}, ${expectedAmount}, 'EXPECTED')
+      INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, status, is_auto_deposited)
+      VALUES (${userId}, ${inc.id}, ${month}, ${expectedAmount}, 'EXPECTED', ${inc.auto_deposit ?? false})
       ON CONFLICT (income_id, month) DO NOTHING
     `;
   }
+  // No revalidatePath — called during page render
+}
+
+// Auto-mark EXPECTED incomes as RECEIVED when is_auto_deposited is true.
+// Same pattern as autoMarkPaidForAutoDebit in monthly-expenses.ts.
+export async function autoMarkReceivedForAutoDeposit(month: string): Promise<void> {
+  const userId = await requireAuth();
+  await sql`
+    UPDATE monthly_incomes
+    SET status = 'RECEIVED',
+        actual_amount = expected_amount,
+        received_at = CURRENT_DATE
+    WHERE month = ${month}
+      AND status = 'EXPECTED'
+      AND is_auto_deposited = true
+      AND user_id = ${userId}
+  `;
   // No revalidatePath — called during page render
 }
 
@@ -44,7 +70,9 @@ export async function getMonthlyIncomeSummary(month: string): Promise<{
       mi.*,
       i.name as income_name,
       i.source as income_source,
-      i.frequency as income_frequency
+      i.frequency as income_frequency,
+      i.pay_anchor_date as income_pay_anchor_date,
+      i.auto_deposit as income_auto_deposit
     FROM monthly_incomes mi
     JOIN incomes i ON mi.income_id = i.id
     WHERE mi.month = ${month} AND mi.user_id = ${userId}
@@ -73,6 +101,44 @@ export async function markIncomeReceived(
       received_at = CURRENT_DATE,
       notes = ${notes ?? null}
     WHERE id = ${monthlyIncomeId} AND user_id = ${userId}
+  `;
+  revalidatePath('/revenus');
+  revalidatePath('/');
+}
+
+// Revert a RECEIVED/PARTIAL income back to EXPECTED.
+// Same pattern as markAsUpcoming in monthly-expenses.ts.
+export async function markIncomeAsExpected(monthlyIncomeId: string): Promise<void> {
+  const userId = await requireAuth();
+  await sql`
+    UPDATE monthly_incomes
+    SET status = 'EXPECTED', actual_amount = NULL, received_at = NULL
+    WHERE id = ${monthlyIncomeId} AND user_id = ${userId}
+  `;
+  revalidatePath('/revenus');
+  revalidatePath('/');
+}
+
+// Delete a monthly income instance (adhoc/ponctuel only).
+// Safe: templates in `incomes` are already is_active=false for adhoc entries.
+export async function deleteMonthlyIncome(id: string): Promise<void> {
+  const userId = await requireAuth();
+  await sql`
+    DELETE FROM monthly_incomes
+    WHERE id = ${id} AND user_id = ${userId}
+  `;
+  revalidatePath('/revenus');
+  revalidatePath('/');
+}
+
+// Update the expected_amount for a monthly income (this month only — template unchanged).
+// Use case: congé sans solde → salaire 3 000 $ au lieu de 4 200 $ ce mois.
+export async function updateMonthlyIncomeAmount(id: string, newExpectedAmount: number): Promise<void> {
+  const userId = await requireAuth();
+  await sql`
+    UPDATE monthly_incomes
+    SET expected_amount = ${newExpectedAmount}
+    WHERE id = ${id} AND user_id = ${userId}
   `;
   revalidatePath('/revenus');
   revalidatePath('/');

@@ -8,10 +8,13 @@ import type { MonthlyExpense } from '@/lib/types';
 type Props = {
   expense: MonthlyExpense;
   isCurrentMonth: boolean;
-  onAction: (id: string, action: 'paid' | 'deferred' | 'upcoming') => void;
+  onAction: (id: string, action: 'paid' | 'upcoming') => void;
+  onDefer?: () => void;
+  onDelete?: () => void;
+  onUpdateAmount?: () => void;
 };
 
-export default function ExpenseTrackingRow({ expense, isCurrentMonth, onAction }: Props) {
+export default function ExpenseTrackingRow({ expense, isCurrentMonth, onAction, onDefer, onDelete, onUpdateAmount }: Props) {
   const [expanded, setExpanded] = useState(false);
   const statusStyle = STATUS_STYLES[expense.status];
 
@@ -63,20 +66,30 @@ export default function ExpenseTrackingRow({ expense, isCurrentMonth, onAction }
       </div>
 
       {expanded && isCurrentMonth && (
-        <div className="flex" style={{ gap: '8px', marginTop: '12px' }}>
+        <div className="flex" style={{ gap: '8px', marginTop: '12px', flexWrap: 'wrap' }}>
           {expense.status !== 'PAID' && (
             <button onClick={() => { onAction(expense.id, 'paid'); setExpanded(false); }} className="btn-action btn-action-positive">
-              Marquer paye
+              Marquer payé
+            </button>
+          )}
+          {expense.status !== 'PAID' && onUpdateAmount && (
+            <button onClick={() => { onUpdateAmount(); setExpanded(false); }} className="btn-action btn-action-neutral">
+              Modifier montant
             </button>
           )}
           {expense.status === 'PAID' && (
             <button onClick={() => { onAction(expense.id, 'upcoming'); setExpanded(false); }} className="btn-action btn-action-accent">
-              Annuler
+              Remettre à venir
             </button>
           )}
-          {expense.status !== 'DEFERRED' && expense.status !== 'PAID' && (
-            <button onClick={() => { onAction(expense.id, 'deferred'); setExpanded(false); }} className="btn-action btn-action-neutral">
+          {expense.status !== 'DEFERRED' && expense.status !== 'PAID' && onDefer && (
+            <button onClick={() => { onDefer(); setExpanded(false); }} className="btn-action btn-action-neutral">
               Reporter
+            </button>
+          )}
+          {onDelete && expense.expense_id === null && (
+            <button onClick={() => { onDelete(); setExpanded(false); }} className="btn-action btn-action-danger">
+              Supprimer
             </button>
           )}
         </div>

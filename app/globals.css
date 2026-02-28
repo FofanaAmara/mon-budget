@@ -685,6 +685,11 @@ body {
   color: var(--text-tertiary);
 }
 
+.btn-action-danger {
+  background: var(--negative-subtle);
+  color: var(--negative-text);
+}
+
 /* ── Type toggle (RECURRING / ONE_TIME / PLANNED) ────── */
 .type-toggle {
   display: flex;
