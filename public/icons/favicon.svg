@@ -1,0 +1,15 @@
+<!--
+  Mes Finances — Favicon (32x32 optimized)
+  Usage: Browser tab favicon
+-->
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <rect width="32" height="32" rx="6" fill="#3D3BF3"/>
+  <path
+    d="M7 24 L12 8 L16 20 L20 6 L25 24"
+    stroke="#FFFFFF"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>

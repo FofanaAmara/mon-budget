@@ -12,15 +12,19 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: 'Mon Budget',
-  description: 'Gérez vos dépenses, sections et cartes bancaires',
+  title: 'Mes Finances',
+  description: 'Toute ta vie financière, claire et sous contrôle',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Mon Budget',
+    title: 'Mes Finances',
   },
   formatDetection: { telephone: false },
+  icons: {
+    icon: '/icons/favicon.svg',
+    apple: '/icons/icon-192.png',
+  },
 };
 
 export const viewport: Viewport = {

@@ -1,4 +1,4 @@
-# CLAUDE.md — Mon Budget
+# CLAUDE.md — Mes Finances
 
 ## Workflow
 

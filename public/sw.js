@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mon-budget-v1';
+const CACHE_NAME = 'mes-finances-v1';
 const APP_SHELL = ['/', '/depenses', '/sections', '/cartes', '/parametres'];
 
 self.addEventListener('install', (event) => {
@@ -25,9 +25,9 @@ self.addEventListener('fetch', (event) => {
 });
 
 self.addEventListener('push', (event) => {
-  const data = event.data ? event.data.json() : { title: 'Mon Budget', body: 'Rappel de dépense' };
+  const data = event.data ? event.data.json() : { title: 'Mes Finances', body: 'Rappel de dépense' };
   event.waitUntil(
-    self.registration.showNotification(data.title || 'Mon Budget', {
+    self.registration.showNotification(data.title || 'Mes Finances', {
       body: data.body || '',
       icon: '/icons/icon-192.png',
       badge: '/icons/icon-192.png',

@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, sent: 0, message: 'No subscriptions' });
     }
 
-    const payload = JSON.stringify({ title: title ?? 'Mon Budget', body, url: url ?? '/' });
+    const payload = JSON.stringify({ title: title ?? 'Mes Finances', body, url: url ?? '/' });
 
     const results = await Promise.allSettled(
       subscriptions.map((sub) =>
