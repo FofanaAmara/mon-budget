@@ -132,6 +132,8 @@
   /* Nav */
   --nav-height: 68px;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --header-height: 48px;
 
   /* Tailwind bridge */
   --background: var(--surface-ground);
@@ -179,6 +181,13 @@ body {
   overscroll-behavior: none;
   font-feature-settings: "ss01", "ss02", "cv01";
   line-height: var(--leading-normal);
+}
+
+/* ── Mobile header spacing ────────────────────────────── */
+@media (max-width: 767px) {
+  body {
+    padding-top: calc(var(--header-height) + var(--safe-top));
+  }
 }
 
 /* ── Scrollbar (desktop) — minimal, warm ─────────────── */
