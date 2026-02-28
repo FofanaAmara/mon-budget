@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { AuthView } from '@neondatabase/auth/react';
 import type { AuthLocalization } from '@neondatabase/auth/react';
 
@@ -61,7 +62,7 @@ export default async function AuthPage({
       padding: '24px 20px',
       background: 'var(--surface-ground)',
     }}>
-      <div style={{ marginBottom: '32px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+      <Link href="/landing" style={{ marginBottom: '32px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
         <div style={{
           width: '48px',
           height: '48px',
@@ -83,7 +84,7 @@ export default async function AuthPage({
         }}>
           Mes Finances
         </h1>
-      </div>
+      </Link>
       <div style={{ width: '100%', maxWidth: '400px' }}>
         <AuthView pathname={`/auth/${path}`} localization={frLocalization} />
       </div>

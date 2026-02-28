@@ -143,7 +143,6 @@ export default function LandingPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Link
               href="/auth/sign-in"
-              className="hidden md:inline-flex"
               style={{
                 padding: '8px 16px',
                 fontSize: 'var(--text-xs)',
