@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MonthNavigator from '@/components/MonthNavigator';
+import Onboarding from '@/components/Onboarding';
 import TabTableauDeBord from '@/components/accueil/TabTableauDeBord';
 import TabTimeline from '@/components/accueil/TabTimeline';
 import TabSanteFinanciere from '@/components/accueil/TabSanteFinanciere';
@@ -29,20 +30,29 @@ type Props = {
   totalDebtBalance: number;
   savingsSummary: MonthlySavingsSummary;
   debtSummary: MonthlyDebtSummary;
+  isNewUser?: boolean;
 };
 
 export default function AccueilClient({
   summary, incomeSummary, expenses, monthlyIncomes, month,
   monthlyIncomeFromTemplates, totalMonthlyExpenses, projets, totalDebtBalance,
-  savingsSummary, debtSummary,
+  savingsSummary, debtSummary, isNewUser,
 }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    if (isNewUser && !localStorage.getItem('mes-finances-onboarding-done')) {
+      setShowOnboarding(true);
+    }
+  }, [isNewUser]);
 
   const totalEpargne = projets.reduce((s, p) => s + Number(p.saved_amount ?? 0), 0);
   const valeurNette = totalEpargne - totalDebtBalance;
 
   return (
     <div style={{ padding: '36px 20px 96px', minHeight: '100vh' }}>
+      {showOnboarding && <Onboarding onComplete={() => setShowOnboarding(false)} />}
       {/* Patrimoine — above month nav, snapshot at instant T */}
       <Link href="/projets" className="block card card-press" style={{
         marginBottom: '20px',

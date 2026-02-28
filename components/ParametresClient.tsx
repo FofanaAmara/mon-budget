@@ -1,7 +1,9 @@
 'use client';
 
+import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { authClient } from '@/lib/auth/client';
+import { loadDemoData, clearAllUserData } from '@/lib/actions/demo-data';
 
 const PREFERENCE_ITEMS = [
   {
@@ -91,7 +93,38 @@ function LinkRow({ href, label, icon }: { href: string; label: string; icon: Rea
   );
 }
 
-export default function ParametresClient() {
+export default function ParametresClient({ hasData }: { hasData: boolean }) {
+  const [showClearModal, setShowClearModal] = useState(false);
+  const [isPendingLoad, startLoadTransition] = useTransition();
+  const [isPendingClear, startClearTransition] = useTransition();
+  const [feedback, setFeedback] = useState<string | null>(null);
+
+  function handleLoadDemo() {
+    setFeedback(null);
+    startLoadTransition(async () => {
+      const result = await loadDemoData();
+      if (result.success) {
+        window.location.reload();
+      } else {
+        setFeedback(result.error ?? 'Erreur');
+      }
+    });
+  }
+
+  function handleClearAll() {
+    setFeedback(null);
+    startClearTransition(async () => {
+      const result = await clearAllUserData();
+      if (result.success) {
+        localStorage.removeItem('mes-finances-onboarding-done');
+        window.location.href = '/';
+      } else {
+        setFeedback(result.error ?? 'Erreur');
+        setShowClearModal(false);
+      }
+    });
+  }
+
   return (
     <div style={{ padding: '36px 20px 24px', minHeight: '100vh' }}>
       <div style={{ marginBottom: '28px' }}>
@@ -147,6 +180,61 @@ export default function ParametresClient() {
           ))}
         </div>
 
+        {/* Donnees */}
+        <div className="list-card">
+          <div style={{ padding: '16px 20px 8px' }}>
+            <h2 style={{
+              fontSize: 'var(--text-sm)', fontWeight: 650,
+              color: 'var(--text-primary)',
+            }}>Donnees</h2>
+          </div>
+          <div style={{ padding: '8px 20px 16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {/* Load demo */}
+            <button
+              onClick={handleLoadDemo}
+              disabled={hasData || isPendingLoad}
+              style={{
+                width: '100%', padding: '12px',
+                fontSize: 'var(--text-sm)', fontWeight: 600,
+                background: hasData ? 'var(--surface-inset)' : 'var(--accent)',
+                color: hasData ? 'var(--text-tertiary)' : 'white',
+                border: 'none', borderRadius: 'var(--radius-md)',
+                cursor: hasData ? 'not-allowed' : isPendingLoad ? 'wait' : 'pointer',
+                opacity: isPendingLoad ? 0.7 : 1,
+                transition: 'opacity 0.2s',
+              }}
+            >
+              {isPendingLoad ? 'Chargement...' : '✨ Charger les donnees de demo'}
+            </button>
+            {hasData && (
+              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textAlign: 'center' }}>
+                Disponible uniquement quand le compte est vide
+              </p>
+            )}
+
+            {/* Clear all */}
+            <button
+              onClick={() => setShowClearModal(true)}
+              disabled={!hasData}
+              style={{
+                width: '100%', padding: '12px',
+                fontSize: 'var(--text-sm)', fontWeight: 600,
+                background: 'transparent',
+                color: hasData ? '#DC2626' : 'var(--text-tertiary)',
+                border: `1px solid ${hasData ? '#DC2626' : 'var(--border)'}`,
+                borderRadius: 'var(--radius-md)',
+                cursor: hasData ? 'pointer' : 'not-allowed',
+              }}
+            >
+              Vider toutes les donnees
+            </button>
+
+            {feedback && (
+              <p style={{ fontSize: 'var(--text-xs)', color: '#DC2626', textAlign: 'center' }}>{feedback}</p>
+            )}
+          </div>
+        </div>
+
         {/* Sign out */}
         <button
           onClick={async () => {
@@ -169,6 +257,68 @@ export default function ParametresClient() {
           Se deconnecter
         </button>
       </div>
+
+      {/* Clear confirmation modal */}
+      {showClearModal && (
+        <div
+          className="sheet-backdrop"
+          onClick={() => !isPendingClear && setShowClearModal(false)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 9999,
+            background: 'rgba(0,0,0,0.5)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '24px',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: '100%', maxWidth: '360px',
+              background: 'var(--bg-card)',
+              borderRadius: 'var(--radius-lg)',
+              padding: '24px',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+            }}
+          >
+            <h3 style={{
+              fontSize: 'var(--text-base)', fontWeight: 700,
+              color: 'var(--text-primary)', marginBottom: '12px',
+            }}>Tout supprimer ?</h3>
+            <p style={{
+              fontSize: 'var(--text-sm)', color: 'var(--text-secondary)',
+              lineHeight: '1.6', marginBottom: '24px',
+            }}>
+              Cette action est irreversible. Toutes vos donnees seront supprimees (depenses, revenus, cartes, dettes, epargne).
+            </p>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={() => setShowClearModal(false)}
+                disabled={isPendingClear}
+                style={{
+                  flex: 1, padding: '12px',
+                  fontSize: 'var(--text-sm)', fontWeight: 600,
+                  background: 'var(--surface-inset)',
+                  color: 'var(--text-primary)',
+                  border: 'none', borderRadius: 'var(--radius-md)',
+                  cursor: 'pointer',
+                }}
+              >Annuler</button>
+              <button
+                onClick={handleClearAll}
+                disabled={isPendingClear}
+                style={{
+                  flex: 1, padding: '12px',
+                  fontSize: 'var(--text-sm)', fontWeight: 600,
+                  background: '#DC2626', color: 'white',
+                  border: 'none', borderRadius: 'var(--radius-md)',
+                  cursor: isPendingClear ? 'wait' : 'pointer',
+                  opacity: isPendingClear ? 0.7 : 1,
+                }}
+              >{isPendingClear ? 'Suppression...' : 'Tout supprimer'}</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
