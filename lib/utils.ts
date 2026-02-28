@@ -56,6 +56,12 @@ export function calcNextDueDate(
   } else if (frequency === 'BIWEEKLY') {
     const daysUntil = (day - today.getDay() + 14) % 14 || 14;
     next.setDate(today.getDate() + daysUntil);
+  } else if (frequency === 'BIMONTHLY') {
+    next.setDate(day);
+    if (next <= today) {
+      next.setMonth(next.getMonth() + 2);
+      next.setDate(day);
+    }
   } else if (frequency === 'QUARTERLY') {
     next.setDate(day);
     if (next <= today) {
@@ -77,18 +83,20 @@ export function calcNextDueDate(
  * Calculate the monthly cost of an expense (normalized).
  */
 export function calcMonthlyCost(expense: Expense): number {
-  if (expense.type === 'ONE_TIME') return expense.amount;
-  if (!expense.recurrence_frequency) return expense.amount;
+  const amt = Number(expense.amount);
+  if (expense.type === 'ONE_TIME') return amt;
+  if (!expense.recurrence_frequency) return amt;
 
   const multipliers: Record<RecurrenceFrequency, number> = {
     WEEKLY: 52 / 12,
     BIWEEKLY: 26 / 12,
     MONTHLY: 1,
+    BIMONTHLY: 1 / 2,
     QUARTERLY: 1 / 3,
     YEARLY: 1 / 12,
   };
 
-  return expense.amount * (multipliers[expense.recurrence_frequency] ?? 1);
+  return amt * (multipliers[expense.recurrence_frequency] ?? 1);
 }
 
 /**

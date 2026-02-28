@@ -1,0 +1,26 @@
+<!--
+  Mes Finances — Reversed Logo (for dark backgrounds)
+  Usage: Dark UI, dark mode, dark photography overlays
+-->
+<svg viewBox="0 0 280 56" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- Symbol -->
+  <path
+    d="M8 40 L18 14 L28 32 L38 8 L48 40"
+    stroke="#9C9BF7"
+    stroke-width="5.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+
+  <!-- Wordmark -->
+  <text
+    x="64"
+    y="37"
+    font-family="'Geist', 'Inter', 'SF Pro Display', -apple-system, system-ui, sans-serif"
+    font-size="26"
+    font-weight="600"
+    letter-spacing="-0.02em"
+    fill="#FAFAF8"
+  >Mes Finances</text>
+</svg>

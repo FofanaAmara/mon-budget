@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Revenus — Mes Finances</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .income-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--border-default);
+      min-height: 60px;
+    }
+    .income-row:last-child { border-bottom: none; }
+
+    .income-row__icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .income-row__content { flex: 1; min-width: 0; }
+    .income-row__name {
+      font-size: var(--text-base);
+      font-weight: var(--weight-medium);
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .income-row__meta {
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-top: 2px;
+    }
+    .income-row__right {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .income-row__expected {
+      font-size: var(--text-sm);
+      color: var(--text-tertiary);
+      font-variant-numeric: tabular-nums;
+    }
+    .income-row__actual {
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .source-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 10px;
+      font-weight: var(--weight-bold);
+      letter-spacing: var(--tracking-widest);
+      text-transform: uppercase;
+    }
+    .source-badge--emploi { background: var(--accent-subtle); color: var(--accent); }
+    .source-badge--business { background: var(--warning-subtle); color: var(--warning-text); }
+    .source-badge--investissement { background: var(--positive-subtle); color: var(--positive-text); }
+    .source-badge--autre { background: var(--surface-sunken); color: var(--text-secondary); }
+
+    .income-action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--duration-fast) var(--ease-out);
+      flex-shrink: 0;
+    }
+    .income-action-btn:hover { background: var(--surface-sunken); }
+    .income-action-btn svg { width: 16px; height: 16px; }
+
+    /* Variable income input row */
+    .variable-input {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-top: var(--space-2);
+    }
+    .variable-input input {
+      width: 100px;
+      height: 32px;
+      padding: 0 var(--space-2);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+    .variable-input input:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(61,59,243,0.12);
+    }
+  </style>
+</head>
+<body>
+  <!-- Desktop Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar__logo">
+      <svg viewBox="0 0 280 56" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <path d="M8 40 L18 14 L28 32 L38 8 L48 40" stroke="#3D3BF3" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <text x="64" y="37" font-family="'Geist','Inter','SF Pro Display',-apple-system,system-ui,sans-serif" font-size="26" font-weight="600" letter-spacing="-0.02em" fill="#0D0D0D">Mes Finances</text>
+      </svg>
+    </div>
+    <div class="sidebar__nav">
+      <a href="accueil.html" class="sidebar__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>Accueil</a>
+      <a href="depenses.html" class="sidebar__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>Depenses</a>
+      <a href="revenus.html" class="sidebar__item active"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Revenus</a>
+      <a href="patrimoine.html" class="sidebar__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>Patrimoine</a>
+      <a href="reglages.html" class="sidebar__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/></svg>Reglages</a>
+    </div>
+    <div class="sidebar__footer">Mes Finances v1.0</div>
+  </nav>
+
+  <main class="app-shell">
+    <!-- Month Nav -->
+    <div class="month-nav" style="margin-top: var(--space-4);">
+      <button class="month-nav__btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <span class="month-nav__label">Mars 2026</span>
+      <button class="month-nav__btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>
+
+    <!-- Hero Card -->
+    <div class="hero-card" style="margin-top: var(--space-3);">
+      <div class="hero-label">Revenus du mois</div>
+      <div class="hero-amount text-positive">3 200,00 $</div>
+      <div class="hero-sub">sur 4 850,00 $ attendus</div>
+      <div class="progress">
+        <div class="progress-fill progress-fill--positive" style="width: 66%;"></div>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-top: var(--space-2);">
+        <span style="font-size: var(--text-xs); color: var(--text-tertiary); font-weight:500;">66% recu</span>
+        <span style="font-size: var(--text-xs); color: var(--text-secondary); font-weight:500;">Reste: 1 650,00 $</span>
+      </div>
+    </div>
+
+    <!-- Income List -->
+    <div style="margin-top: var(--space-5);">
+
+      <!-- RECEIVED -->
+      <div class="status-group">
+        <div class="status-group__label" style="color: var(--positive);">
+          <span style="width:8px; height:8px; border-radius:50%; background:var(--positive);"></span>
+          Recu
+          <span class="badge badge--positive badge--count" style="margin-left:auto;">1</span>
+        </div>
+        <div class="card" style="padding: 0 var(--space-4);">
+          <div class="income-row">
+            <div class="income-row__icon" style="background: var(--positive-subtle);">&#128188;</div>
+            <div class="income-row__content">
+              <div class="income-row__name">
+                Salaire principal
+                <span class="source-badge source-badge--emploi">Emploi</span>
+              </div>
+              <div class="income-row__meta">
+                <span>Mensuel</span>
+                <span style="color:var(--border-strong);">&#183;</span>
+                <span>Recu le 1 mars</span>
+              </div>
+            </div>
+            <div class="income-row__right">
+              <div class="income-row__expected">Attendu: 3 200 $</div>
+              <div class="income-row__actual text-positive">3 200,00 $</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPECTED (not received) -->
+      <div class="status-group" style="margin-top: var(--space-5);">
+        <div class="status-group__label" style="color: var(--text-secondary);">
+          <span style="width:8px; height:8px; border-radius:50%; background:var(--text-tertiary);"></span>
+          Attendu
+          <span class="badge badge--neutral badge--count" style="margin-left:auto;">3</span>
+        </div>
+        <div class="card" style="padding: 0 var(--space-4);">
+          <!-- Freelance -->
+          <div class="income-row">
+            <div class="income-row__icon" style="background: var(--warning-subtle);">&#128187;</div>
+            <div class="income-row__content">
+              <div class="income-row__name">
+                Pige freelance
+                <span class="source-badge source-badge--business">Business</span>
+              </div>
+              <div class="income-row__meta">
+                <span>Mensuel</span>
+                <span style="color:var(--border-strong);">&#183;</span>
+                <span>Prevu le 15 mars</span>
+              </div>
+            </div>
+            <div class="income-row__right">
+              <div class="income-row__expected">Attendu: 650 $</div>
+              <div class="income-row__actual" style="color: var(--text-tertiary);">--</div>
+            </div>
+            <button class="income-action-btn" title="Marquer recu" style="color:var(--positive);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </button>
+          </div>
+
+          <!-- Revenu locatif -->
+          <div class="income-row">
+            <div class="income-row__icon" style="background: var(--positive-subtle);">&#127968;</div>
+            <div class="income-row__content">
+              <div class="income-row__name">
+                Revenu locatif
+                <span class="source-badge source-badge--investissement">Investissement</span>
+              </div>
+              <div class="income-row__meta">
+                <span>Mensuel</span>
+                <span style="color:var(--border-strong);">&#183;</span>
+                <span>Prevu le 28 mars</span>
+              </div>
+            </div>
+            <div class="income-row__right">
+              <div class="income-row__expected">Attendu: 1 000 $</div>
+              <div class="income-row__actual" style="color: var(--text-tertiary);">--</div>
+            </div>
+            <button class="income-action-btn" title="Marquer recu" style="color:var(--positive);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </button>
+          </div>
+
+          <!-- Variable income: Tips -->
+          <div class="income-row" style="flex-wrap: wrap;">
+            <div class="income-row__icon" style="background: var(--surface-inset);">&#128176;</div>
+            <div class="income-row__content">
+              <div class="income-row__name">
+                Pourboires
+                <span class="source-badge source-badge--autre">Autre</span>
+              </div>
+              <div class="income-row__meta">
+                <span>Variable</span>
+                <span style="color:var(--border-strong);">&#183;</span>
+                <span>Montant a saisir</span>
+              </div>
+              <div class="variable-input">
+                <input type="number" placeholder="0,00" inputmode="decimal">
+                <span style="font-size: var(--text-sm); color: var(--text-tertiary);">$</span>
+                <button class="btn btn-primary btn-sm" style="padding: 4px 12px; min-height: 32px;">Confirmer</button>
+              </div>
+            </div>
+            <div class="income-row__right" style="align-self: flex-start;">
+              <div class="income-row__expected">Variable</div>
+              <div class="income-row__actual" style="color: var(--text-tertiary);">--</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div style="height: 80px;"></div>
+  </main>
+
+  <!-- FAB -->
+  <button class="fab" id="fab-add" aria-label="Ajouter un revenu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+
+  <!-- Add income bottom sheet -->
+  <div class="sheet-overlay" id="sheet-overlay"></div>
+  <div class="sheet" id="sheet-income">
+    <div class="sheet__handle"></div>
+    <div class="sheet__title">Nouveau revenu</div>
+    <div class="form-group">
+      <label class="form-label">Nom</label>
+      <input class="form-input" type="text" placeholder="Ex: Prime, Remboursement...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Source</label>
+      <select class="form-input form-select">
+        <option>Choisir une source</option>
+        <option>Emploi</option>
+        <option>Business</option>
+        <option>Investissement</option>
+        <option>Autre</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Montant ($)</label>
+      <input class="form-input" type="number" placeholder="0,00" inputmode="decimal">
+    </div>
+    <div class="form-group" style="display:flex; align-items:center; justify-content:space-between;">
+      <label class="form-label" style="margin-bottom:0;">Deja recu</label>
+      <button class="toggle active" onclick="this.classList.toggle('active')"></button>
+    </div>
+    <div style="margin-top: var(--space-5); display:flex; gap: var(--space-3);">
+      <button class="btn btn-secondary" style="flex:1;" onclick="closeSheet()">Annuler</button>
+      <button class="btn btn-primary" style="flex:1;">Ajouter</button>
+    </div>
+  </div>
+
+  <!-- Mark received confirmation sheet -->
+  <div class="sheet" id="sheet-confirm" style="z-index:202;">
+    <div class="sheet__handle"></div>
+    <div class="sheet__title">Confirmer la reception</div>
+    <div style="display:flex; align-items:center; gap: var(--space-3); padding: var(--space-3); background: var(--surface-inset); border-radius: var(--radius-lg); margin-bottom: var(--space-4);">
+      <div style="font-size:24px;">&#128188;</div>
+      <div>
+        <div style="font-weight: var(--weight-semibold);">Pige freelance</div>
+        <div style="font-size: var(--text-sm); color: var(--text-secondary);">Attendu: 650,00 $</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Montant recu ($)</label>
+      <input class="form-input" type="number" value="650.00" inputmode="decimal">
+    </div>
+    <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-4);">
+      Modifie le montant si tu as recu un montant different de celui attendu.
+    </div>
+    <div style="display:flex; gap: var(--space-3);">
+      <button class="btn btn-secondary" style="flex:1;" onclick="closeSheet()">Annuler</button>
+      <button class="btn btn-primary" style="flex:1;">Confirmer</button>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <a href="accueil.html" class="bottom-nav__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg><span>Accueil</span></a>
+    <a href="depenses.html" class="bottom-nav__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg><span>Depenses</span></a>
+    <a href="revenus.html" class="bottom-nav__item active"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span>Revenus</span></a>
+    <a href="patrimoine.html" class="bottom-nav__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg><span>Patrimoine</span></a>
+    <a href="reglages.html" class="bottom-nav__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/></svg><span>Menu</span></a>
+  </nav>
+
+  <script>
+    const fab = document.getElementById('fab-add');
+    const overlay = document.getElementById('sheet-overlay');
+    const sheet = document.getElementById('sheet-income');
+
+    fab.addEventListener('click', () => { overlay.classList.add('open'); sheet.classList.add('open'); });
+    overlay.addEventListener('click', closeSheet);
+
+    function closeSheet() {
+      overlay.classList.remove('open');
+      document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open'));
+    }
+  </script>
+</body>
+</html>

@@ -9,16 +9,17 @@ import { GROUP_ORDER, GROUP_LABELS } from '@/lib/constants';
 import MonthNavigator from '@/components/MonthNavigator';
 import ExpenseTrackingRow from '@/components/ExpenseTrackingRow';
 import AdhocExpenseModal from '@/components/AdhocExpenseModal';
-import type { MonthlyExpense, MonthSummary, Section } from '@/lib/types';
+import type { MonthlyExpense, MonthSummary, Section, Card } from '@/lib/types';
 
 type Props = {
   expenses: MonthlyExpense[];
   summary: MonthSummary;
   sections: Section[];
+  cards: Card[];
   month: string;
 };
 
-export default function DepensesTrackingClient({ expenses, summary, sections, month }: Props) {
+export default function DepensesTrackingClient({ expenses, summary, sections, cards, month }: Props) {
   const router = useRouter();
   const [, startTransition] = useTransition();
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
@@ -249,6 +250,7 @@ export default function DepensesTrackingClient({ expenses, summary, sections, mo
       {adhocModal && (
         <AdhocExpenseModal
           sections={sections}
+          cards={cards}
           month={month}
           onClose={() => { setAdhocModal(false); router.refresh(); }}
         />

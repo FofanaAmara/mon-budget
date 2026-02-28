@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Composants — Mes Finances</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    body { padding-bottom: var(--space-12); }
+
+    .component-section {
+      margin-bottom: var(--space-10);
+      padding-bottom: var(--space-8);
+      border-bottom: 2px solid var(--border-default);
+    }
+    .component-section:last-child { border-bottom: none; }
+
+    .component-title {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: var(--tracking-tight);
+      margin-bottom: var(--space-1);
+    }
+    .component-desc {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      margin-bottom: var(--space-5);
+    }
+
+    .component-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-widest);
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-3);
+      margin-top: var(--space-5);
+    }
+
+    /* Preview frames */
+    .preview-mobile {
+      width: 375px;
+      max-width: 100%;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      background: var(--surface-ground);
+      position: relative;
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: var(--space-3);
+    }
+    .color-swatch {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border-default);
+    }
+    .color-swatch__fill {
+      height: 48px;
+    }
+    .color-swatch__info {
+      padding: var(--space-2) var(--space-3);
+      background: var(--surface-raised);
+    }
+    .color-swatch__name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+    }
+    .color-swatch__hex {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      font-family: monospace;
+    }
+
+    .type-specimen {
+      margin-bottom: var(--space-4);
+    }
+    .type-specimen__label {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-1);
+      font-family: monospace;
+    }
+
+    /* Inline sheet preview */
+    .sheet-preview {
+      background: var(--surface-raised);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-xl);
+      padding: var(--space-4) var(--space-4) var(--space-6);
+      margin-bottom: var(--space-4);
+    }
+    .sheet-preview .sheet__handle {
+      width: 36px;
+      height: 4px;
+      border-radius: var(--radius-full);
+      background: var(--border-strong);
+      margin: 0 auto var(--space-4);
+    }
+    .sheet-preview .sheet__title {
+      font-size: var(--text-lg);
+      font-weight: var(--weight-bold);
+      letter-spacing: var(--tracking-tight);
+      margin-bottom: var(--space-4);
+    }
+
+    /* Nav preview containers */
+    .nav-preview {
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-preview .bottom-nav {
+      position: relative;
+    }
+    .nav-preview .sidebar {
+      position: relative;
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell" style="max-width: 720px;">
+    <div class="page-header" style="padding-top: var(--space-6);">
+      <h1>Composants</h1>
+      <p class="subtitle">Reference de tous les elements UI de Mes Finances</p>
+    </div>
+
+    <!-- ============ COLORS ============ -->
+    <div class="component-section">
+      <div class="component-title">Palette de couleurs</div>
+      <div class="component-desc">Couleurs systeme definies par la marque. Chaudes, jamais froides.</div>
+
+      <div class="component-label">Primaires</div>
+      <div class="color-grid">
+        <div class="color-swatch"><div class="color-swatch__fill" style="background:#3D3BF3;"></div><div class="color-swatch__info"><div class="color-swatch__name">Indigo</div><div class="color-swatch__hex">#3D3BF3</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__fill" style="background:#3230D4;"></div><div class="color-swatch__info"><div class="color-swatch__name">Indigo Hover</div><div class="color-swatch__hex">#3230D4</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__fill" style="background:#EDEDFE;"></div><div class="color-swatch__info"><div class="color-swatch__name">Indigo Subtle</div><div class="color-swatch__hex">#EDEDFE</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__fill" style="background:#9C9BF7;"></div><div class="color-swatch__info"><div class="color-swatch__name">Indigo Muted</div><div class="color-swatch__hex">#9C9BF7</div></div></div>
+      </div>
+
+      <div class="component-label">Surfaces</div>
+      <div class="color-grid">
+        <div class="color-swatch"><div class="color-swatch__fill" style="background:#F5F4F1;"></div><div class="color-swatch__info"><div class="color-swatch__name">Ground</div><div class="color-swatch__hex">#F5F4F1</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__fill" style="background:#FFFFFF;"></div><div class="color-swatch__info"><div class="color-swatch__name">Raised</div><div class="color-swatch__hex">#FFFFFF</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__fill" style="background:#EEEDEA;"></div><div class="color-swatch__info"><div class="color-swatch__name">Sunken</div><div class="color-swatch__hex">#EEEDEA</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__fill" style="background:#F8F7F5;"></div><div class="color-swatch__info"><div class="color-swatch__name">Inset</div><div class="color-swatch__hex">#F8F7F5</div></div></div>
+      </div>
+
+      <div class="component-label">Semantique</div>
+      <div class="color-grid">
+        <div class="color-swatch"><div class="color-swatch__fill" style="background:#1A7F5A;"></div><div class="color-swatch__info"><div class="color-swatch__name">Positive</div><div class="color-swatch__hex">#1A7F5A</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__fill" style="background:#C7382D;"></div><div class="color-swatch__info"><div class="color-swatch__name">Negative</div><div class="color-swatch__hex">#C7382D</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__fill" style="background:#C27815;"></div><div class="color-swatch__info"><div class="color-swatch__name">Warning</div><div class="color-swatch__hex">#C27815</div></div></div>
+      </div>
+
+      <div class="component-label">Texte</div>
+      <div class="color-grid">
+        <div class="color-swatch"><div class="color-swatch__fill" style="background:#0D0D0D;"></div><div class="color-swatch__info"><div class="color-swatch__name">Primary</div><div class="color-swatch__hex">#0D0D0D</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__fill" style="background:#6B6966;"></div><div class="color-swatch__info"><div class="color-swatch__name">Secondary</div><div class="color-swatch__hex">#6B6966</div></div></div>
+        <div class="color-swatch"><div class="color-swatch__fill" style="background:#A3A09A;"></div><div class="color-swatch__info"><div class="color-swatch__name">Tertiary</div><div class="color-swatch__hex">#A3A09A</div></div></div>
+      </div>
+    </div>
+
+    <!-- ============ TYPOGRAPHY ============ -->
+    <div class="component-section">
+      <div class="component-title">Typographie</div>
+      <div class="component-desc">Geist Sans exclusivement. Hierarchie par poids et taille.</div>
+
+      <div class="type-specimen">
+        <div class="type-specimen__label">--text-3xl / 36px / weight-heavy</div>
+        <div style="font-size: 36px; font-weight: 750; letter-spacing: -0.02em; font-variant-numeric: tabular-nums;">4 280,00 $</div>
+      </div>
+      <div class="type-specimen">
+        <div class="type-specimen__label">--text-2xl / 28px / weight-heavy</div>
+        <div style="font-size: 28px; font-weight: 750; letter-spacing: -0.02em; font-variant-numeric: tabular-nums;">2 840,00 $</div>
+      </div>
+      <div class="type-specimen">
+        <div class="type-specimen__label">--text-xl / 22px / weight-bold</div>
+        <div style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em;">Tableau de bord</div>
+      </div>
+      <div class="type-specimen">
+        <div class="type-specimen__label">--text-lg / 18px / weight-bold</div>
+        <div style="font-size: 18px; font-weight: 700; letter-spacing: -0.02em;">Mars 2026</div>
+      </div>
+      <div class="type-specimen">
+        <div class="type-specimen__label">--text-base / 15px / weight-medium</div>
+        <div style="font-size: 15px; font-weight: 500;">Loyer — Logement</div>
+      </div>
+      <div class="type-specimen">
+        <div class="type-specimen__label">--text-sm / 13px / weight-semibold</div>
+        <div style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">DEPENSES DU MOIS</div>
+      </div>
+      <div class="type-specimen">
+        <div class="type-specimen__label">--text-xs / 11px / weight-medium</div>
+        <div style="font-size: 11px; font-weight: 500; color: var(--text-tertiary);">Paye le 1 mars 2026</div>
+      </div>
+    </div>
+
+    <!-- ============ BUTTONS ============ -->
+    <div class="component-section">
+      <div class="component-title">Boutons</div>
+      <div class="component-desc">Trois variantes: primaire, secondaire, fantome. Taille minimum 44px.</div>
+
+      <div style="display: flex; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-4);">
+        <button class="btn btn-primary">Ajouter</button>
+        <button class="btn btn-secondary">Annuler</button>
+        <button class="btn btn-ghost">Supprimer</button>
+      </div>
+      <div style="display: flex; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-4);">
+        <button class="btn btn-primary btn-sm">Confirmer</button>
+        <button class="btn btn-secondary btn-sm">Annuler</button>
+      </div>
+      <div style="display: flex; gap: var(--space-3); align-items: center;">
+        <button class="btn-icon" style="background: var(--surface-sunken);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        </button>
+        <div class="fab" style="position:relative; bottom:auto; right:auto;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ BADGES ============ -->
+    <div class="component-section">
+      <div class="component-title">Badges</div>
+      <div class="component-desc">Statut, compteurs, sources de revenus. Toujours compacts.</div>
+
+      <div style="display:flex; gap:var(--space-2); flex-wrap:wrap; margin-bottom: var(--space-4);">
+        <span class="badge badge--positive">Paye</span>
+        <span class="badge badge--negative">En retard</span>
+        <span class="badge badge--warning">A venir</span>
+        <span class="badge badge--neutral">Reporte</span>
+        <span class="badge badge--accent">Actif</span>
+      </div>
+      <div style="display:flex; gap:var(--space-2); flex-wrap:wrap; margin-bottom: var(--space-4);">
+        <span class="badge badge--negative badge--count">3</span>
+        <span class="badge badge--positive badge--count">7</span>
+        <span class="badge badge--neutral badge--count">12</span>
+      </div>
+      <div style="display:flex; gap:var(--space-2); flex-wrap:wrap;">
+        <span style="display:inline-flex; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; background:var(--accent-subtle); color:var(--accent);">Emploi</span>
+        <span style="display:inline-flex; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; background:var(--warning-subtle); color:var(--warning-text);">Business</span>
+        <span style="display:inline-flex; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; background:var(--positive-subtle); color:var(--positive-text);">Investissement</span>
+        <span style="display:inline-flex; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; background:var(--surface-sunken); color:var(--text-secondary);">Autre</span>
+      </div>
+    </div>
+
+    <!-- ============ PILLS ============ -->
+    <div class="component-section">
+      <div class="component-title">Pills</div>
+      <div class="component-desc">Onglets et filtres. Scrollables horizontalement sur mobile.</div>
+
+      <div class="pills">
+        <button class="pill active" onclick="pillToggle(this)">Tableau de bord</button>
+        <button class="pill" onclick="pillToggle(this)">Timeline</button>
+        <button class="pill" onclick="pillToggle(this)">Sante</button>
+      </div>
+      <div class="pills" style="margin-top: var(--space-3);">
+        <button class="pill active" onclick="pillToggle(this)">Tout</button>
+        <button class="pill" onclick="pillToggle(this)">&#127968; Logement</button>
+        <button class="pill" onclick="pillToggle(this)">&#128663; Transport</button>
+        <button class="pill" onclick="pillToggle(this)">&#127829; Alimentation</button>
+        <button class="pill" onclick="pillToggle(this)">&#128250; Abonnements</button>
+      </div>
+    </div>
+
+    <!-- ============ PROGRESS BARS ============ -->
+    <div class="component-section">
+      <div class="component-title">Barres de progression</div>
+      <div class="component-desc">6px, arrondies, gradient fluide. Quatre variantes de couleur.</div>
+
+      <div style="display:flex; flex-direction:column; gap: var(--space-4);">
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:var(--text-sm); margin-bottom:4px;">
+            <span style="font-weight:500;">Accent (defaut)</span><span style="font-weight:600;">48%</span>
+          </div>
+          <div class="progress"><div class="progress-fill" style="width:48%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:var(--text-sm); margin-bottom:4px;">
+            <span style="font-weight:500;">Positive</span><span style="font-weight:600;">72%</span>
+          </div>
+          <div class="progress"><div class="progress-fill progress-fill--positive" style="width:72%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:var(--text-sm); margin-bottom:4px;">
+            <span style="font-weight:500;">Warning</span><span style="font-weight:600;">35%</span>
+          </div>
+          <div class="progress"><div class="progress-fill progress-fill--warning" style="width:35%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:var(--text-sm); margin-bottom:4px;">
+            <span style="font-weight:500;">Negative</span><span style="font-weight:600;">15%</span>
+          </div>
+          <div class="progress"><div class="progress-fill progress-fill--negative" style="width:15%;"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ CARDS ============ -->
+    <div class="component-section">
+      <div class="component-title">Cartes</div>
+      <div class="component-desc">Surface blanche, bordure chaude, rayon 16px. Interactives optionnellement.</div>
+
+      <div class="card" style="margin-bottom: var(--space-3);">
+        <div style="font-size:var(--text-sm); font-weight:600; color:var(--text-secondary); letter-spacing:0.04em; margin-bottom: var(--space-3);">Revenus</div>
+        <div style="font-size:22px; font-weight:750; font-variant-numeric:tabular-nums; letter-spacing:-0.02em;">3 200,00 $</div>
+        <div class="progress" style="margin-top: var(--space-3);"><div class="progress-fill progress-fill--positive" style="width:66%;"></div></div>
+      </div>
+
+      <div class="card card--interactive">
+        <div style="display:flex; align-items:center; gap: var(--space-3);">
+          <div style="width:40px;height:40px;border-radius:12px;background:var(--accent-subtle);display:flex;align-items:center;justify-content:center;font-size:18px;">&#128188;</div>
+          <div style="flex:1;">
+            <div style="font-weight:500;">Salaire principal</div>
+            <div style="font-size:13px; color: var(--text-secondary);">Emploi - Mensuel</div>
+          </div>
+          <div style="font-weight:600; font-variant-numeric:tabular-nums;">3 200 $</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ FORMS ============ -->
+    <div class="component-section">
+      <div class="component-title">Formulaires</div>
+      <div class="component-desc">Inputs, selects, toggles. Hauteur minimum 44px pour les cibles tactiles.</div>
+
+      <div class="form-group">
+        <label class="form-label">Champ texte</label>
+        <input class="form-input" type="text" placeholder="Placeholder...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Champ numerique</label>
+        <input class="form-input" type="number" placeholder="0,00" inputmode="decimal">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Selection</label>
+        <select class="form-input form-select">
+          <option>Option 1</option>
+          <option>Option 2</option>
+          <option>Option 3</option>
+        </select>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; padding: var(--space-2) 0;">
+        <span style="font-size:var(--text-sm); font-weight:600; color: var(--text-secondary);">Toggle inactif</span>
+        <button class="toggle" onclick="this.classList.toggle('active')"></button>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; padding: var(--space-2) 0;">
+        <span style="font-size:var(--text-sm); font-weight:600; color: var(--text-secondary);">Toggle actif</span>
+        <button class="toggle active" onclick="this.classList.toggle('active')"></button>
+      </div>
+    </div>
+
+    <!-- ============ ALERTS ============ -->
+    <div class="component-section">
+      <div class="component-title">Alertes</div>
+      <div class="component-desc">Trois niveaux de severite. Icone + texte.</div>
+
+      <div class="alert alert--negative">
+        <span style="flex-shrink:0;">&#9888;</span>
+        <div><strong>3 depenses en retard</strong><br><span style="opacity:0.85;">Internet Bell, Assurance auto, Spotify</span></div>
+      </div>
+      <div class="alert alert--warning">
+        <span style="flex-shrink:0;">&#9201;</span>
+        <div><strong>1 depense dans 5 jours</strong><br><span style="opacity:0.85;">Telephone Fizz — 45,00 $</span></div>
+      </div>
+      <div class="alert alert--positive">
+        <span style="flex-shrink:0;">&#10003;</span>
+        <div><strong>Tous tes paiements sont a jour</strong><br><span style="opacity:0.85;">Excellent travail ce mois-ci.</span></div>
+      </div>
+    </div>
+
+    <!-- ============ EMPTY STATES ============ -->
+    <div class="component-section">
+      <div class="component-title">Etats vides</div>
+      <div class="component-desc">Quand il n'y a pas encore de donnees. Toujours un CTA.</div>
+
+      <div class="card" style="margin-bottom: var(--space-4);">
+        <div class="empty-state">
+          <div class="empty-state__icon">&#128203;</div>
+          <div class="empty-state__title">Aucune depense ce mois-ci</div>
+          <div class="empty-state__text">Ajoute tes charges fixes dans les reglages pour les voir apparaitre ici automatiquement.</div>
+          <button class="btn btn-primary">Configurer mes charges</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: var(--space-4);">
+        <div class="empty-state">
+          <div class="empty-state__icon">&#128176;</div>
+          <div class="empty-state__title">Aucun revenu configure</div>
+          <div class="empty-state__text">Ajoute tes sources de revenus pour suivre ta progression chaque mois.</div>
+          <button class="btn btn-primary">Ajouter un revenu</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="empty-state">
+          <div class="empty-state__icon">&#127919;</div>
+          <div class="empty-state__title">Aucun projet d'epargne</div>
+          <div class="empty-state__text">Cree ton premier objectif et suis ta progression vers celui-ci.</div>
+          <button class="btn btn-primary">Creer un projet</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ MODALS / SHEETS ============ -->
+    <div class="component-section">
+      <div class="component-title">Modales (Bottom Sheets)</div>
+      <div class="component-desc">Tous les formulaires modaux de l'application.</div>
+
+      <div class="component-label">Modale depense</div>
+      <div class="sheet-preview">
+        <div class="sheet__handle"></div>
+        <div class="sheet__title">Nouvelle depense</div>
+        <div class="form-group">
+          <label class="form-label">Nom</label>
+          <input class="form-input" type="text" placeholder="Ex: Restaurant, Pharmacie...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Montant ($)</label>
+          <input class="form-input" type="number" placeholder="0,00">
+        </div>
+        <div style="display:flex; gap:var(--space-3);">
+          <div class="form-group" style="flex:1;">
+            <label class="form-label">Section</label>
+            <select class="form-input form-select"><option>Alimentation</option></select>
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label class="form-label">Carte</label>
+            <select class="form-input form-select"><option>Visa ****4521</option></select>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: var(--space-4);">
+          <span class="form-label" style="margin:0;">Deja payee</span>
+          <button class="toggle" onclick="this.classList.toggle('active')"></button>
+        </div>
+        <div style="display:flex; gap:var(--space-3);">
+          <button class="btn btn-secondary" style="flex:1;">Annuler</button>
+          <button class="btn btn-primary" style="flex:1;">Ajouter</button>
+        </div>
+      </div>
+
+      <div class="component-label">Modale projet d'epargne</div>
+      <div class="sheet-preview">
+        <div class="sheet__handle"></div>
+        <div class="sheet__title">Nouveau projet d'epargne</div>
+        <div class="form-group">
+          <label class="form-label">Nom du projet</label>
+          <input class="form-input" type="text" value="Voyage Japon">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Montant cible ($)</label>
+          <input class="form-input" type="number" value="5000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date cible</label>
+          <input class="form-input" type="date" value="2027-04-01">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Montant initial ($)</label>
+          <input class="form-input" type="number" value="500">
+        </div>
+        <div style="display:flex; gap:var(--space-3);">
+          <button class="btn btn-secondary" style="flex:1;">Annuler</button>
+          <button class="btn btn-primary" style="flex:1;">Creer</button>
+        </div>
+      </div>
+
+      <div class="component-label">Modale ajout epargne</div>
+      <div class="sheet-preview">
+        <div class="sheet__handle"></div>
+        <div class="sheet__title">Ajouter a l'epargne</div>
+        <div style="display:flex; align-items:center; gap:var(--space-3); padding:var(--space-3); background:var(--surface-inset); border-radius:var(--radius-lg); margin-bottom: var(--space-4);">
+          <span style="font-size:24px;">&#128737;</span>
+          <div>
+            <div style="font-weight:600;">Fonds d'urgence</div>
+            <div style="font-size:var(--text-sm); color:var(--text-secondary);">6 500 $ / 10 000 $</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Montant ($)</label>
+          <input class="form-input" type="number" placeholder="0,00">
+        </div>
+        <div style="display:flex; gap:var(--space-3);">
+          <button class="btn btn-secondary" style="flex:1;">Annuler</button>
+          <button class="btn btn-primary" style="flex:1;">Ajouter</button>
+        </div>
+      </div>
+
+      <div class="component-label">Confirmation de suppression</div>
+      <div class="sheet-preview">
+        <div class="sheet__handle"></div>
+        <div class="sheet__title">Supprimer cette charge?</div>
+        <div style="display:flex; align-items:center; gap:var(--space-3); padding:var(--space-3); background:var(--negative-subtle); border-radius:var(--radius-lg); margin-bottom: var(--space-4);">
+          <span style="font-size:20px;">&#9888;</span>
+          <div style="font-size:var(--text-sm); color:var(--negative-text);">
+            <strong>Netflix — 22,99 $/mois</strong><br>
+            Cette action est irreversible. Les instances mensuelles associees seront aussi supprimees.
+          </div>
+        </div>
+        <div style="display:flex; gap:var(--space-3);">
+          <button class="btn btn-secondary" style="flex:1;">Annuler</button>
+          <button class="btn btn-primary" style="flex:1; background:var(--negative); color:white;">Supprimer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ NAVIGATION ============ -->
+    <div class="component-section">
+      <div class="component-title">Navigation</div>
+      <div class="component-desc">Mobile: barre de navigation inferieure (56px, frosted glass). Desktop: sidebar fixe (240px).</div>
+
+      <div class="component-label">Navigation mobile (bottom bar)</div>
+      <div class="preview-mobile" style="height: 56px;">
+        <nav class="bottom-nav" style="position:relative;">
+          <a href="#" class="bottom-nav__item active">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>
+            <span>Accueil</span>
+          </a>
+          <a href="#" class="bottom-nav__item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+            <span>Depenses</span>
+          </a>
+          <a href="#" class="bottom-nav__item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Revenus</span>
+          </a>
+          <a href="#" class="bottom-nav__item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            <span>Patrimoine</span>
+          </a>
+          <a href="#" class="bottom-nav__item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            <span>Menu</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="component-label">Sidebar desktop (240px)</div>
+      <div class="nav-preview" style="width: 240px; border: 1px solid var(--border-default); border-radius: var(--radius-xl); overflow: hidden;">
+        <nav class="sidebar" style="position:relative; display:flex; height: auto; padding: var(--space-5) var(--space-4);">
+          <div class="sidebar__logo" style="margin-bottom: var(--space-6);">
+            <svg viewBox="0 0 280 56" xmlns="http://www.w3.org/2000/svg" fill="none" style="height:24px; width:auto;">
+              <path d="M8 40 L18 14 L28 32 L38 8 L48 40" stroke="#3D3BF3" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              <text x="64" y="37" font-family="'Geist','Inter','SF Pro Display',-apple-system,system-ui,sans-serif" font-size="26" font-weight="600" letter-spacing="-0.02em" fill="#0D0D0D">Mes Finances</text>
+            </svg>
+          </div>
+          <div class="sidebar__nav" style="gap: var(--space-1);">
+            <a href="#" class="sidebar__item active" style="position:relative;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>
+              Accueil
+            </a>
+            <a href="#" class="sidebar__item">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+              Depenses
+            </a>
+            <a href="#" class="sidebar__item">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Revenus
+            </a>
+            <a href="#" class="sidebar__item">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+              Patrimoine
+            </a>
+            <a href="#" class="sidebar__item">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/></svg>
+              Reglages
+            </a>
+          </div>
+          <div class="sidebar__footer" style="margin-top: var(--space-6);">Mes Finances v1.0</div>
+        </nav>
+      </div>
+    </div>
+
+    <!-- ============ SPACING & RADIUS ============ -->
+    <div class="component-section">
+      <div class="component-title">Espacement et rayons</div>
+      <div class="component-desc">Grille de 4px. Rayons hierarchiques.</div>
+
+      <div class="component-label">Grille d'espacement</div>
+      <div style="display:flex; flex-wrap:wrap; gap:var(--space-4); margin-bottom: var(--space-5);">
+        <div style="text-align:center;">
+          <div style="width:4px; height:40px; background:var(--accent); border-radius:2px; margin:0 auto 4px;"></div>
+          <div style="font-size:10px; color:var(--text-tertiary); font-family:monospace;">4px</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:8px; height:40px; background:var(--accent); border-radius:2px; margin:0 auto 4px;"></div>
+          <div style="font-size:10px; color:var(--text-tertiary); font-family:monospace;">8px</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:12px; height:40px; background:var(--accent); border-radius:2px; margin:0 auto 4px;"></div>
+          <div style="font-size:10px; color:var(--text-tertiary); font-family:monospace;">12px</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:16px; height:40px; background:var(--accent); border-radius:2px; margin:0 auto 4px;"></div>
+          <div style="font-size:10px; color:var(--text-tertiary); font-family:monospace;">16px</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:20px; height:40px; background:var(--accent); border-radius:2px; margin:0 auto 4px;"></div>
+          <div style="font-size:10px; color:var(--text-tertiary); font-family:monospace;">20px</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:24px; height:40px; background:var(--accent); border-radius:2px; margin:0 auto 4px;"></div>
+          <div style="font-size:10px; color:var(--text-tertiary); font-family:monospace;">24px</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:32px; height:40px; background:var(--accent); border-radius:2px; margin:0 auto 4px;"></div>
+          <div style="font-size:10px; color:var(--text-tertiary); font-family:monospace;">32px</div>
+        </div>
+      </div>
+
+      <div class="component-label">Rayons de bordure</div>
+      <div style="display:flex; flex-wrap:wrap; gap:var(--space-4);">
+        <div style="text-align:center;">
+          <div style="width:48px; height:48px; background:var(--accent-subtle); border:1px solid var(--accent-muted); border-radius:4px;"></div>
+          <div style="font-size:10px; color:var(--text-tertiary); margin-top:4px; font-family:monospace;">4px xs</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:48px; height:48px; background:var(--accent-subtle); border:1px solid var(--accent-muted); border-radius:6px;"></div>
+          <div style="font-size:10px; color:var(--text-tertiary); margin-top:4px; font-family:monospace;">6px sm</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:48px; height:48px; background:var(--accent-subtle); border:1px solid var(--accent-muted); border-radius:10px;"></div>
+          <div style="font-size:10px; color:var(--text-tertiary); margin-top:4px; font-family:monospace;">10px md</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:48px; height:48px; background:var(--accent-subtle); border:1px solid var(--accent-muted); border-radius:12px;"></div>
+          <div style="font-size:10px; color:var(--text-tertiary); margin-top:4px; font-family:monospace;">12px lg</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:48px; height:48px; background:var(--accent-subtle); border:1px solid var(--accent-muted); border-radius:16px;"></div>
+          <div style="font-size:10px; color:var(--text-tertiary); margin-top:4px; font-family:monospace;">16px xl</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:48px; height:48px; background:var(--accent-subtle); border:1px solid var(--accent-muted); border-radius:20px;"></div>
+          <div style="font-size:10px; color:var(--text-tertiary); margin-top:4px; font-family:monospace;">20px pill</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:48px; height:48px; background:var(--accent-subtle); border:1px solid var(--accent-muted); border-radius:9999px;"></div>
+          <div style="font-size:10px; color:var(--text-tertiary); margin-top:4px; font-family:monospace;">full</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    function pillToggle(el) {
+      el.parentElement.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+    }
+  </script>
+</body>
+</html>

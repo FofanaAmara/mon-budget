@@ -124,6 +124,12 @@ export async function makeExtraPayment(id: string, amount: number): Promise<void
     UPDATE debts SET is_active = false, updated_at = NOW()
     WHERE id = ${id} AND user_id = ${userId} AND remaining_balance <= 0
   `;
+  // Log the extra payment as a debt transaction
+  const txMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+  await sql`
+    INSERT INTO debt_transactions (user_id, debt_id, type, amount, month, note, source)
+    VALUES (${userId}, ${id}, 'PAYMENT', ${amount}, ${txMonth}, 'Paiement supplementaire', 'EXTRA_PAYMENT')
+  `;
   revalidatePath('/projets');
   revalidatePath('/');
 }

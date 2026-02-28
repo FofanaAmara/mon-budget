@@ -1,0 +1,16 @@
+<!--
+  Mes Finances — Symbol Only
+  Usage: Favicon, app icon, small contexts, social media avatar
+  Minimum size: 16x16px
+  The M mark: two peaks with ascending right peak = growth
+-->
+<svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <path
+    d="M8 44 L18 14 L28 34 L38 8 L48 44"
+    stroke="#3D3BF3"
+    stroke-width="6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>

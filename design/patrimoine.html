@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Patrimoine — Mes Finances</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .patrimoine-hero {
+      background: var(--surface-raised);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+      text-align: center;
+    }
+    .patrimoine-hero__label {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--text-secondary);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+    }
+    .patrimoine-hero__amount {
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-heavy);
+      letter-spacing: var(--tracking-tight);
+      font-variant-numeric: tabular-nums;
+      margin-top: var(--space-1);
+      line-height: 1.1;
+    }
+    .patrimoine-hero__breakdown {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-6);
+      margin-top: var(--space-3);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      font-weight: var(--weight-medium);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active {
+      display: block;
+      animation: fadeIn var(--duration-slow) var(--ease-out) both;
+    }
+
+    /* Project card */
+    .project-card {
+      background: var(--surface-raised);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-xl);
+      padding: var(--space-4);
+    }
+    .project-card + .project-card { margin-top: var(--space-3); }
+    .project-card__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .project-card__name {
+      font-size: var(--text-base);
+      font-weight: var(--weight-bold);
+      line-height: 1.3;
+    }
+    .project-card__pct {
+      font-size: var(--text-lg);
+      font-weight: var(--weight-heavy);
+      font-variant-numeric: tabular-nums;
+      color: var(--accent);
+    }
+    .project-card__amounts {
+      display: flex;
+      justify-content: space-between;
+      margin-top: var(--space-2);
+      font-size: var(--text-sm);
+      font-variant-numeric: tabular-nums;
+    }
+    .project-card__target {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-top: var(--space-3);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .project-card__suggestion {
+      font-size: var(--text-xs);
+      color: var(--accent);
+      font-weight: var(--weight-semibold);
+      margin-top: var(--space-1);
+    }
+
+    /* Epargne libre card */
+    .epargne-libre {
+      background: var(--accent-subtle);
+      border: 1px solid transparent;
+      border-radius: var(--radius-xl);
+      padding: var(--space-4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .epargne-libre__amount {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-heavy);
+      font-variant-numeric: tabular-nums;
+      color: var(--accent);
+      letter-spacing: var(--tracking-tight);
+    }
+
+    /* Debt card */
+    .debt-card {
+      background: var(--surface-raised);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-xl);
+      padding: var(--space-4);
+    }
+    .debt-card + .debt-card { margin-top: var(--space-3); }
+    .debt-card__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .debt-card__name {
+      font-size: var(--text-base);
+      font-weight: var(--weight-bold);
+      line-height: 1.3;
+    }
+    .debt-card__remaining {
+      font-size: var(--text-lg);
+      font-weight: var(--weight-heavy);
+      font-variant-numeric: tabular-nums;
+      color: var(--negative);
+      letter-spacing: var(--tracking-tight);
+    }
+    .debt-card__meta {
+      display: flex;
+      gap: var(--space-4);
+      margin-top: var(--space-2);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      font-variant-numeric: tabular-nums;
+    }
+    .debt-card__progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-top: var(--space-3);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      font-weight: var(--weight-medium);
+    }
+    .debt-card__payment {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      font-weight: var(--weight-medium);
+      margin-top: var(--space-3);
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--border-default);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Total cards */
+    .total-card {
+      background: var(--surface-raised);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-xl);
+      padding: var(--space-4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .total-card__label {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--text-secondary);
+      letter-spacing: var(--tracking-wide);
+    }
+    .total-card__amount {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-heavy);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: var(--tracking-tight);
+    }
+  </style>
+</head>
+<body>
+  <!-- Desktop Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar__logo">
+      <svg viewBox="0 0 280 56" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <path d="M8 40 L18 14 L28 32 L38 8 L48 40" stroke="#3D3BF3" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <text x="64" y="37" font-family="'Geist','Inter','SF Pro Display',-apple-system,system-ui,sans-serif" font-size="26" font-weight="600" letter-spacing="-0.02em" fill="#0D0D0D">Mes Finances</text>
+      </svg>
+    </div>
+    <div class="sidebar__nav">
+      <a href="accueil.html" class="sidebar__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>Accueil</a>
+      <a href="depenses.html" class="sidebar__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>Depenses</a>
+      <a href="revenus.html" class="sidebar__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Revenus</a>
+      <a href="patrimoine.html" class="sidebar__item active"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>Patrimoine</a>
+      <a href="reglages.html" class="sidebar__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/></svg>Reglages</a>
+    </div>
+    <div class="sidebar__footer">Mes Finances v1.0</div>
+  </nav>
+
+  <main class="app-shell">
+    <!-- Net Worth Hero -->
+    <div style="padding-top: var(--space-5);">
+      <div class="patrimoine-hero">
+        <div class="patrimoine-hero__label">Valeur nette</div>
+        <div class="patrimoine-hero__amount text-positive">+4 280,00 $</div>
+        <div class="patrimoine-hero__breakdown">
+          <span class="text-positive">Actifs: 12 680 $</span>
+          <span class="text-negative">Passifs: 8 400 $</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Pills -->
+    <div class="pills" style="margin-top: var(--space-4);">
+      <button class="pill active" data-tab="actifs">Actifs</button>
+      <button class="pill" data-tab="passifs">Passifs</button>
+    </div>
+
+    <!-- =============== TAB: Actifs =============== -->
+    <div class="tab-content active" id="tab-actifs">
+      <div style="margin-top: var(--space-4);">
+
+        <!-- Total Actifs -->
+        <div class="total-card">
+          <div>
+            <div class="total-card__label">Total actifs</div>
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top:2px;">Epargne libre + projets</div>
+          </div>
+          <div class="total-card__amount text-positive">12 680,00 $</div>
+        </div>
+
+        <!-- Epargne libre -->
+        <div class="epargne-libre" style="margin-top: var(--space-3);">
+          <div>
+            <div style="font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--accent);">Epargne libre</div>
+            <div class="epargne-libre__amount">3 450,00 $</div>
+            <div style="font-size: var(--text-xs); color: var(--text-secondary); margin-top:2px;">Sans objectif specifique</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openSheet('sheet-add-savings')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            Ajouter
+          </button>
+        </div>
+
+        <!-- Savings Projects -->
+        <div style="margin-top: var(--space-5);">
+          <div style="font-size: var(--text-sm); font-weight: var(--weight-bold); color: var(--text-secondary); letter-spacing: var(--tracking-wide); text-transform: uppercase; margin-bottom: var(--space-3);">Projets d'epargne</div>
+
+          <!-- Project 1: Fonds d'urgence -->
+          <div class="project-card">
+            <div class="project-card__header">
+              <div>
+                <div class="project-card__name">&#128737; Fonds d'urgence</div>
+              </div>
+              <div class="project-card__pct">65%</div>
+            </div>
+            <div class="project-card__amounts">
+              <span style="font-weight:var(--weight-semibold);">6 500,00 $</span>
+              <span style="color: var(--text-tertiary);">sur 10 000 $</span>
+            </div>
+            <div class="progress" style="margin-top: var(--space-3);">
+              <div class="progress-fill" style="width: 65%;"></div>
+            </div>
+            <div class="project-card__target">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              Objectif: decembre 2026
+            </div>
+            <div class="project-card__suggestion">Suggestion: 389 $/mois pour atteindre l'objectif</div>
+          </div>
+
+          <!-- Project 2: Voyage Japon -->
+          <div class="project-card">
+            <div class="project-card__header">
+              <div>
+                <div class="project-card__name">&#9992; Voyage Japon</div>
+              </div>
+              <div class="project-card__pct">36%</div>
+            </div>
+            <div class="project-card__amounts">
+              <span style="font-weight:var(--weight-semibold);">1 800,00 $</span>
+              <span style="color: var(--text-tertiary);">sur 5 000 $</span>
+            </div>
+            <div class="progress" style="margin-top: var(--space-3);">
+              <div class="progress-fill" style="width: 36%;"></div>
+            </div>
+            <div class="project-card__target">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              Objectif: avril 2027
+            </div>
+            <div class="project-card__suggestion">Suggestion: 246 $/mois pour atteindre l'objectif</div>
+          </div>
+
+          <!-- Project 3: MacBook Pro -->
+          <div class="project-card">
+            <div class="project-card__header">
+              <div>
+                <div class="project-card__name">&#128187; MacBook Pro</div>
+              </div>
+              <div class="project-card__pct">31%</div>
+            </div>
+            <div class="project-card__amounts">
+              <span style="font-weight:var(--weight-semibold);">930,00 $</span>
+              <span style="color: var(--text-tertiary);">sur 3 000 $</span>
+            </div>
+            <div class="progress" style="margin-top: var(--space-3);">
+              <div class="progress-fill" style="width: 31%;"></div>
+            </div>
+            <div class="project-card__target">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              Objectif: septembre 2026
+            </div>
+            <div class="project-card__suggestion">Suggestion: 345 $/mois pour atteindre l'objectif</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- =============== TAB: Passifs =============== -->
+    <div class="tab-content" id="tab-passifs">
+      <div style="margin-top: var(--space-4);">
+
+        <!-- Total Debt -->
+        <div class="total-card">
+          <div>
+            <div class="total-card__label">Total passifs</div>
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top:2px;">Dettes et prets en cours</div>
+          </div>
+          <div class="total-card__amount text-negative">8 400,00 $</div>
+        </div>
+
+        <!-- Debt 1: Pret auto -->
+        <div class="debt-card" style="margin-top: var(--space-4);">
+          <div class="debt-card__header">
+            <div>
+              <div class="debt-card__name">&#128663; Pret automobile</div>
+            </div>
+            <div class="debt-card__remaining">5 200,00 $</div>
+          </div>
+          <div class="debt-card__meta">
+            <span>Initial: 12 000 $</span>
+            <span>Taux: 4,9%</span>
+          </div>
+          <div class="debt-card__progress-label">
+            <span>Rembourse: 57%</span>
+            <span>6 800 $ paye</span>
+          </div>
+          <div class="progress" style="margin-top: var(--space-1);">
+            <div class="progress-fill progress-fill--positive" style="width: 57%;"></div>
+          </div>
+          <div class="debt-card__payment">
+            <span>Paiement</span>
+            <span style="font-weight: var(--weight-semibold); font-variant-numeric: tabular-nums;">350,00 $ / mois</span>
+          </div>
+        </div>
+
+        <!-- Debt 2: Carte de credit -->
+        <div class="debt-card">
+          <div class="debt-card__header">
+            <div>
+              <div class="debt-card__name">&#128179; Solde carte Visa</div>
+            </div>
+            <div class="debt-card__remaining">2 100,00 $</div>
+          </div>
+          <div class="debt-card__meta">
+            <span>Limite: 5 000 $</span>
+            <span>Taux: 19,9%</span>
+          </div>
+          <div class="debt-card__progress-label">
+            <span>Utilise: 42%</span>
+            <span>2 900 $ disponible</span>
+          </div>
+          <div class="progress" style="margin-top: var(--space-1);">
+            <div class="progress-fill progress-fill--warning" style="width: 42%;"></div>
+          </div>
+          <div class="debt-card__payment">
+            <span>Paiement minimum</span>
+            <span style="font-weight: var(--weight-semibold); font-variant-numeric: tabular-nums;">75,00 $ / mois</span>
+          </div>
+        </div>
+
+        <!-- Debt 3: Pret personnel -->
+        <div class="debt-card">
+          <div class="debt-card__header">
+            <div>
+              <div class="debt-card__name">&#128181; Pret personnel</div>
+            </div>
+            <div class="debt-card__remaining">1 100,00 $</div>
+          </div>
+          <div class="debt-card__meta">
+            <span>Initial: 3 000 $</span>
+            <span>Taux: 7,5%</span>
+          </div>
+          <div class="debt-card__progress-label">
+            <span>Rembourse: 63%</span>
+            <span>1 900 $ paye</span>
+          </div>
+          <div class="progress" style="margin-top: var(--space-1);">
+            <div class="progress-fill progress-fill--positive" style="width: 63%;"></div>
+          </div>
+          <div class="debt-card__payment">
+            <span>Paiement</span>
+            <span style="font-weight: var(--weight-semibold); font-variant-numeric: tabular-nums;">150,00 $ / mois</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div style="height: 80px;"></div>
+  </main>
+
+  <!-- FAB -->
+  <button class="fab" id="fab-add" aria-label="Ajouter">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+
+  <!-- Add savings sheet -->
+  <div class="sheet-overlay" id="sheet-overlay"></div>
+  <div class="sheet" id="sheet-add-savings">
+    <div class="sheet__handle"></div>
+    <div class="sheet__title">Ajouter a l'epargne libre</div>
+    <div class="form-group">
+      <label class="form-label">Montant ($)</label>
+      <input class="form-input" type="number" placeholder="0,00" inputmode="decimal" autofocus>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Note (optionnel)</label>
+      <input class="form-input" type="text" placeholder="Ex: Prime, vente, etc.">
+    </div>
+    <div style="margin-top: var(--space-5); display:flex; gap: var(--space-3);">
+      <button class="btn btn-secondary" style="flex:1;" onclick="closeSheet()">Annuler</button>
+      <button class="btn btn-primary" style="flex:1;">Ajouter</button>
+    </div>
+  </div>
+
+  <!-- New project sheet -->
+  <div class="sheet" id="sheet-new-project" style="z-index:202;">
+    <div class="sheet__handle"></div>
+    <div class="sheet__title">Nouveau projet d'epargne</div>
+    <div class="form-group">
+      <label class="form-label">Nom du projet</label>
+      <input class="form-input" type="text" placeholder="Ex: Voyage, Voiture...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Montant cible ($)</label>
+      <input class="form-input" type="number" placeholder="0,00" inputmode="decimal">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date cible</label>
+      <input class="form-input" type="date">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Montant initial ($)</label>
+      <input class="form-input" type="number" placeholder="0,00" inputmode="decimal">
+    </div>
+    <div style="margin-top: var(--space-5); display:flex; gap: var(--space-3);">
+      <button class="btn btn-secondary" style="flex:1;" onclick="closeSheet()">Annuler</button>
+      <button class="btn btn-primary" style="flex:1;">Creer</button>
+    </div>
+  </div>
+
+  <!-- New debt sheet -->
+  <div class="sheet" id="sheet-new-debt" style="z-index:202;">
+    <div class="sheet__handle"></div>
+    <div class="sheet__title">Nouvelle dette</div>
+    <div class="form-group">
+      <label class="form-label">Nom</label>
+      <input class="form-input" type="text" placeholder="Ex: Pret, Carte de credit...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Montant initial ($)</label>
+      <input class="form-input" type="number" placeholder="0,00" inputmode="decimal">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Solde restant ($)</label>
+      <input class="form-input" type="number" placeholder="0,00" inputmode="decimal">
+    </div>
+    <div style="display:flex; gap: var(--space-3);">
+      <div class="form-group" style="flex:1;">
+        <label class="form-label">Taux d'interet (%)</label>
+        <input class="form-input" type="number" placeholder="0,0" step="0.1" inputmode="decimal">
+      </div>
+      <div class="form-group" style="flex:1;">
+        <label class="form-label">Paiement ($)</label>
+        <input class="form-input" type="number" placeholder="0,00" inputmode="decimal">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Frequence de paiement</label>
+      <select class="form-input form-select">
+        <option>Mensuel</option>
+        <option>Bihebdomadaire</option>
+        <option>Hebdomadaire</option>
+      </select>
+    </div>
+    <div style="margin-top: var(--space-5); display:flex; gap: var(--space-3);">
+      <button class="btn btn-secondary" style="flex:1;" onclick="closeSheet()">Annuler</button>
+      <button class="btn btn-primary" style="flex:1;">Ajouter</button>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <a href="accueil.html" class="bottom-nav__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg><span>Accueil</span></a>
+    <a href="depenses.html" class="bottom-nav__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg><span>Depenses</span></a>
+    <a href="revenus.html" class="bottom-nav__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span>Revenus</span></a>
+    <a href="patrimoine.html" class="bottom-nav__item active"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg><span>Patrimoine</span></a>
+    <a href="reglages.html" class="bottom-nav__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/></svg><span>Menu</span></a>
+  </nav>
+
+  <script>
+    // Tab switching
+    document.querySelectorAll('.pill[data-tab]').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.pill[data-tab]').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        pill.classList.add('active');
+        document.getElementById('tab-' + pill.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Sheet logic
+    const overlay = document.getElementById('sheet-overlay');
+    overlay.addEventListener('click', closeSheet);
+
+    function openSheet(id) {
+      overlay.classList.add('open');
+      document.getElementById(id).classList.add('open');
+    }
+    function closeSheet() {
+      overlay.classList.remove('open');
+      document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open'));
+    }
+
+    // FAB: open relevant sheet based on active tab
+    document.getElementById('fab-add').addEventListener('click', () => {
+      const activeTab = document.querySelector('.pill[data-tab].active');
+      if (activeTab && activeTab.dataset.tab === 'passifs') {
+        openSheet('sheet-new-debt');
+      } else {
+        openSheet('sheet-new-project');
+      }
+    });
+  </script>
+</body>
+</html>

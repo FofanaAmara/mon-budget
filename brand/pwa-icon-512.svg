@@ -1,0 +1,19 @@
+<!--
+  Mes Finances — PWA App Icon (512x512)
+  Usage: PWA manifest icon, app store listing, splash screen
+  Designed to work within rounded-square mask (iOS/Android)
+-->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- Background -->
+  <rect width="512" height="512" rx="0" fill="#3D3BF3"/>
+
+  <!-- M Symbol — centered, white, bold -->
+  <path
+    d="M128 368 L192 148 L256 312 L320 128 L384 368"
+    stroke="#FFFFFF"
+    stroke-width="42"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Depenses — Mes Finances</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .expense-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--border-default);
+      min-height: 60px;
+    }
+    .expense-row:last-child { border-bottom: none; }
+
+    .expense-row__icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .expense-row__content {
+      flex: 1;
+      min-width: 0;
+    }
+    .expense-row__name {
+      font-size: var(--text-base);
+      font-weight: var(--weight-medium);
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .expense-row__meta {
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-top: 2px;
+    }
+
+    .expense-row__right {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .expense-row__amount {
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      font-variant-numeric: tabular-nums;
+    }
+    .expense-row__date-badge {
+      font-size: var(--text-xs);
+      margin-top: 2px;
+    }
+
+    /* Action buttons on swipe/hover */
+    .expense-actions {
+      display: flex;
+      gap: var(--space-1);
+      margin-left: var(--space-2);
+      flex-shrink: 0;
+    }
+    .expense-action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--duration-fast) var(--ease-out);
+    }
+    .expense-action-btn:hover { background: var(--surface-sunken); }
+    .expense-action-btn svg { width: 16px; height: 16px; }
+
+    /* Card indicator dot */
+    .card-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+    }
+
+    /* Hero override for this page */
+    .hero-stats {
+      display: flex;
+      gap: var(--space-4);
+      margin-top: var(--space-3);
+    }
+    .hero-stat {
+      flex: 1;
+    }
+    .hero-stat__label {
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wide);
+    }
+    .hero-stat__value {
+      font-size: var(--text-base);
+      font-weight: var(--weight-bold);
+      font-variant-numeric: tabular-nums;
+      margin-top: 2px;
+    }
+
+    .status-group .card {
+      padding: var(--space-3) var(--space-4);
+    }
+  </style>
+</head>
+<body>
+  <!-- Desktop Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar__logo">
+      <svg viewBox="0 0 280 56" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <path d="M8 40 L18 14 L28 32 L38 8 L48 40" stroke="#3D3BF3" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <text x="64" y="37" font-family="'Geist','Inter','SF Pro Display',-apple-system,system-ui,sans-serif" font-size="26" font-weight="600" letter-spacing="-0.02em" fill="#0D0D0D">Mes Finances</text>
+      </svg>
+    </div>
+    <div class="sidebar__nav">
+      <a href="accueil.html" class="sidebar__item">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>
+        Accueil
+      </a>
+      <a href="depenses.html" class="sidebar__item active">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+        Depenses
+      </a>
+      <a href="revenus.html" class="sidebar__item">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Revenus
+      </a>
+      <a href="patrimoine.html" class="sidebar__item">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+        Patrimoine
+      </a>
+      <a href="reglages.html" class="sidebar__item">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        Reglages
+      </a>
+    </div>
+    <div class="sidebar__footer">Mes Finances v1.0</div>
+  </nav>
+
+  <main class="app-shell">
+    <!-- Month Nav -->
+    <div class="month-nav" style="margin-top: var(--space-4);">
+      <button class="month-nav__btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <span class="month-nav__label">Mars 2026</span>
+      <button class="month-nav__btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>
+
+    <!-- Hero Card -->
+    <div class="hero-card" style="margin-top: var(--space-3);">
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <div class="hero-label">Depenses du mois</div>
+        <span class="badge badge--negative badge--count">3</span>
+      </div>
+      <div class="hero-amount">2 840,00 $</div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat__label">Attendu</div>
+          <div class="hero-stat__value">2 840 $</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat__label">Paye</div>
+          <div class="hero-stat__value text-positive">1 945 $</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat__label">Reste</div>
+          <div class="hero-stat__value text-warning">895 $</div>
+        </div>
+      </div>
+      <div class="progress" style="margin-top: var(--space-3);">
+        <div class="progress-fill progress-fill--positive" style="width: 68%;"></div>
+      </div>
+    </div>
+
+    <!-- Section Filter Pills -->
+    <div class="pills" style="margin-top: var(--space-4);">
+      <button class="pill active" data-filter="all">Tout</button>
+      <button class="pill" data-filter="logement">&#127968; Logement</button>
+      <button class="pill" data-filter="transport">&#128663; Transport</button>
+      <button class="pill" data-filter="alimentation">&#127829; Alimentation</button>
+      <button class="pill" data-filter="abonnements">&#128250; Abonnements</button>
+      <button class="pill" data-filter="sante">&#128154; Sante</button>
+      <button class="pill" data-filter="loisirs">&#127918; Loisirs</button>
+    </div>
+
+    <!-- ========== OVERDUE ========== -->
+    <div class="status-group status-group--overdue" style="margin-top: var(--space-5);">
+      <div class="status-group__label">
+        <span style="width:8px; height:8px; border-radius:50%; background:var(--negative);"></span>
+        En retard
+        <span class="badge badge--negative badge--count" style="margin-left:auto;">3</span>
+      </div>
+      <div class="card" style="padding: 0 var(--space-4);">
+        <!-- Internet Bell -->
+        <div class="expense-row">
+          <div class="expense-row__icon" style="background: var(--negative-subtle);">&#128250;</div>
+          <div class="expense-row__content">
+            <div class="expense-row__name">
+              Internet Bell
+              <span class="card-dot" style="background: #E53935;" title="Visa Desjardins"></span>
+            </div>
+            <div class="expense-row__meta">
+              <span>Abonnements</span>
+              <span style="color:var(--border-strong);">&#183;</span>
+              <span>Visa ****4521</span>
+            </div>
+          </div>
+          <div class="expense-row__right">
+            <div class="expense-row__amount">89,99 $</div>
+            <div class="expense-row__date-badge"><span class="badge badge--negative">5 mars</span></div>
+          </div>
+          <div class="expense-actions">
+            <button class="expense-action-btn" title="Marquer paye" style="color:var(--positive);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </button>
+          </div>
+        </div>
+        <!-- Assurance auto -->
+        <div class="expense-row">
+          <div class="expense-row__icon" style="background: var(--negative-subtle);">&#128663;</div>
+          <div class="expense-row__content">
+            <div class="expense-row__name">
+              Assurance auto
+              <span class="card-dot" style="background: #1565C0;"></span>
+            </div>
+            <div class="expense-row__meta">
+              <span>Transport</span>
+              <span style="color:var(--border-strong);">&#183;</span>
+              <span>MC ****8834</span>
+            </div>
+          </div>
+          <div class="expense-row__right">
+            <div class="expense-row__amount">125,00 $</div>
+            <div class="expense-row__date-badge"><span class="badge badge--negative">5 mars</span></div>
+          </div>
+          <div class="expense-actions">
+            <button class="expense-action-btn" title="Marquer paye" style="color:var(--positive);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </button>
+          </div>
+        </div>
+        <!-- Spotify -->
+        <div class="expense-row">
+          <div class="expense-row__icon" style="background: var(--negative-subtle);">&#127925;</div>
+          <div class="expense-row__content">
+            <div class="expense-row__name">Spotify</div>
+            <div class="expense-row__meta">
+              <span>Abonnements</span>
+              <span style="color:var(--border-strong);">&#183;</span>
+              <span>Prelevement auto</span>
+            </div>
+          </div>
+          <div class="expense-row__right">
+            <div class="expense-row__amount">11,99 $</div>
+            <div class="expense-row__date-badge"><span class="badge badge--negative">10 mars</span></div>
+          </div>
+          <div class="expense-actions">
+            <button class="expense-action-btn" title="Marquer paye" style="color:var(--positive);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== UPCOMING ========== -->
+    <div class="status-group status-group--upcoming" style="margin-top: var(--space-5);">
+      <div class="status-group__label">
+        <span style="width:8px; height:8px; border-radius:50%; background:var(--text-tertiary);"></span>
+        A venir
+        <span class="badge badge--neutral badge--count" style="margin-left:auto;">4</span>
+      </div>
+      <div class="card" style="padding: 0 var(--space-4);">
+        <div class="expense-row">
+          <div class="expense-row__icon" style="background: var(--warning-subtle);">&#128241;</div>
+          <div class="expense-row__content">
+            <div class="expense-row__name">Telephone Fizz</div>
+            <div class="expense-row__meta"><span>Abonnements</span></div>
+          </div>
+          <div class="expense-row__right">
+            <div class="expense-row__amount">45,00 $</div>
+            <div class="expense-row__date-badge"><span class="badge badge--warning">20 mars</span></div>
+          </div>
+          <div class="expense-actions">
+            <button class="expense-action-btn" title="Marquer paye" style="color:var(--positive);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></button>
+            <button class="expense-action-btn" title="Reporter" style="color:var(--text-tertiary);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+        <div class="expense-row">
+          <div class="expense-row__icon" style="background: var(--surface-inset);">&#127947;</div>
+          <div class="expense-row__content">
+            <div class="expense-row__name">Gym Econofitness</div>
+            <div class="expense-row__meta"><span>Sante</span></div>
+          </div>
+          <div class="expense-row__right">
+            <div class="expense-row__amount">21,99 $</div>
+            <div class="expense-row__date-badge"><span class="badge badge--neutral">25 mars</span></div>
+          </div>
+          <div class="expense-actions">
+            <button class="expense-action-btn" title="Marquer paye" style="color:var(--positive);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></button>
+            <button class="expense-action-btn" title="Reporter" style="color:var(--text-tertiary);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+        <div class="expense-row">
+          <div class="expense-row__icon" style="background: var(--surface-inset);">&#127829;</div>
+          <div class="expense-row__content">
+            <div class="expense-row__name">Epicerie estimee</div>
+            <div class="expense-row__meta"><span>Alimentation</span><span style="color:var(--border-strong);">&#183;</span><span>Ad-hoc</span></div>
+          </div>
+          <div class="expense-row__right">
+            <div class="expense-row__amount">400,00 $</div>
+            <div class="expense-row__date-badge"><span class="badge badge--neutral">25 mars</span></div>
+          </div>
+          <div class="expense-actions">
+            <button class="expense-action-btn" title="Marquer paye" style="color:var(--positive);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></button>
+            <button class="expense-action-btn" title="Reporter" style="color:var(--text-tertiary);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+        <div class="expense-row">
+          <div class="expense-row__icon" style="background: var(--surface-inset);">&#128663;</div>
+          <div class="expense-row__content">
+            <div class="expense-row__name">Pret auto</div>
+            <div class="expense-row__meta"><span>Transport</span><span style="color:var(--border-strong);">&#183;</span><span>Prelevement auto</span></div>
+          </div>
+          <div class="expense-row__right">
+            <div class="expense-row__amount">350,00 $</div>
+            <div class="expense-row__date-badge"><span class="badge badge--neutral">28 mars</span></div>
+          </div>
+          <div class="expense-actions">
+            <button class="expense-action-btn" title="Marquer paye" style="color:var(--positive);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== DEFERRED ========== -->
+    <div class="status-group status-group--deferred" style="margin-top: var(--space-5);">
+      <div class="status-group__label">
+        <span style="width:8px; height:8px; border-radius:50%; background:var(--text-tertiary); opacity:0.5;"></span>
+        Reporte
+        <span class="badge badge--neutral badge--count" style="margin-left:auto;">1</span>
+      </div>
+      <div class="card" style="padding: 0 var(--space-4);">
+        <div class="expense-row" style="opacity: 0.55;">
+          <div class="expense-row__icon" style="background: var(--surface-sunken);">&#127918;</div>
+          <div class="expense-row__content">
+            <div class="expense-row__name">Achat jeu video</div>
+            <div class="expense-row__meta"><span>Loisirs</span><span style="color:var(--border-strong);">&#183;</span><span>Ad-hoc</span></div>
+          </div>
+          <div class="expense-row__right">
+            <div class="expense-row__amount">89,99 $</div>
+            <div class="expense-row__date-badge"><span class="badge badge--neutral">Reporte</span></div>
+          </div>
+          <div class="expense-actions">
+            <button class="expense-action-btn" title="Remettre a venir" style="color:var(--text-secondary);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 109-9"/><path d="M3 3v6h6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== PAID ========== -->
+    <div class="status-group status-group--paid" style="margin-top: var(--space-5);">
+      <div class="status-group__label">
+        <span style="width:8px; height:8px; border-radius:50%; background:var(--positive);"></span>
+        Paye
+        <span class="badge badge--positive badge--count" style="margin-left:auto;">4</span>
+      </div>
+      <div class="card" style="padding: 0 var(--space-4);">
+        <div class="expense-row">
+          <div class="expense-row__icon" style="background: var(--positive-subtle);">&#127968;</div>
+          <div class="expense-row__content">
+            <div class="expense-row__name">Loyer</div>
+            <div class="expense-row__meta"><span>Logement</span><span style="color:var(--border-strong);">&#183;</span><span>Paye le 1 mars</span></div>
+          </div>
+          <div class="expense-row__right">
+            <div class="expense-row__amount" style="color: var(--positive);">1 250,00 $</div>
+            <div class="expense-row__date-badge"><span class="badge badge--positive">Paye</span></div>
+          </div>
+        </div>
+        <div class="expense-row">
+          <div class="expense-row__icon" style="background: var(--positive-subtle);">&#9889;</div>
+          <div class="expense-row__content">
+            <div class="expense-row__name">Hydro-Quebec</div>
+            <div class="expense-row__meta"><span>Logement</span><span style="color:var(--border-strong);">&#183;</span><span>Paye le 3 mars</span></div>
+          </div>
+          <div class="expense-row__right">
+            <div class="expense-row__amount" style="color: var(--positive);">145,00 $</div>
+            <div class="expense-row__date-badge"><span class="badge badge--positive">Paye</span></div>
+          </div>
+        </div>
+        <div class="expense-row">
+          <div class="expense-row__icon" style="background: var(--positive-subtle);">&#128250;</div>
+          <div class="expense-row__content">
+            <div class="expense-row__name">Netflix</div>
+            <div class="expense-row__meta"><span>Abonnements</span><span style="color:var(--border-strong);">&#183;</span><span>Prelevement auto</span></div>
+          </div>
+          <div class="expense-row__right">
+            <div class="expense-row__amount" style="color: var(--positive);">22,99 $</div>
+            <div class="expense-row__date-badge"><span class="badge badge--positive">Paye</span></div>
+          </div>
+        </div>
+        <div class="expense-row">
+          <div class="expense-row__icon" style="background: var(--positive-subtle);">&#127968;</div>
+          <div class="expense-row__content">
+            <div class="expense-row__name">Assurance habitation</div>
+            <div class="expense-row__meta"><span>Logement</span><span style="color:var(--border-strong);">&#183;</span><span>Paye le 1 mars</span></div>
+          </div>
+          <div class="expense-row__right">
+            <div class="expense-row__amount" style="color: var(--positive);">527,00 $</div>
+            <div class="expense-row__date-badge"><span class="badge badge--positive">Paye</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height: 80px;"></div>
+  </main>
+
+  <!-- FAB -->
+  <button class="fab" id="fab-add" aria-label="Ajouter une depense">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+
+  <!-- Ad-hoc expense bottom sheet -->
+  <div class="sheet-overlay" id="sheet-overlay"></div>
+  <div class="sheet" id="sheet-adhoc">
+    <div class="sheet__handle"></div>
+    <div class="sheet__title">Nouvelle depense</div>
+
+    <div class="form-group">
+      <label class="form-label">Nom</label>
+      <input class="form-input" type="text" placeholder="Ex: Restaurant, Pharmacie...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Montant ($)</label>
+      <input class="form-input" type="number" placeholder="0,00" inputmode="decimal">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Section</label>
+      <select class="form-input form-select">
+        <option>Choisir une section</option>
+        <option>&#127968; Logement</option>
+        <option>&#128663; Transport</option>
+        <option>&#127829; Alimentation</option>
+        <option>&#128250; Abonnements</option>
+        <option>&#128154; Sante</option>
+        <option>&#127918; Loisirs</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Carte bancaire</label>
+      <select class="form-input form-select">
+        <option>Aucune carte</option>
+        <option>Visa Desjardins ****4521</option>
+        <option>MC Banque Nationale ****8834</option>
+      </select>
+    </div>
+    <div class="form-group" style="display:flex; align-items:center; justify-content:space-between;">
+      <label class="form-label" style="margin-bottom:0;">Deja payee</label>
+      <button class="toggle" id="toggle-paid" onclick="this.classList.toggle('active')"></button>
+    </div>
+
+    <div style="margin-top: var(--space-5); display:flex; gap: var(--space-3);">
+      <button class="btn btn-secondary" style="flex:1;" onclick="closeSheet()">Annuler</button>
+      <button class="btn btn-primary" style="flex:1;">Ajouter</button>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <a href="accueil.html" class="bottom-nav__item">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>
+      <span>Accueil</span>
+    </a>
+    <a href="depenses.html" class="bottom-nav__item active">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+      <span>Depenses</span>
+    </a>
+    <a href="revenus.html" class="bottom-nav__item">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <span>Revenus</span>
+    </a>
+    <a href="patrimoine.html" class="bottom-nav__item">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+      <span>Patrimoine</span>
+    </a>
+    <a href="reglages.html" class="bottom-nav__item">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <span>Menu</span>
+    </a>
+  </nav>
+
+  <script>
+    // FAB / Sheet
+    const fab = document.getElementById('fab-add');
+    const overlay = document.getElementById('sheet-overlay');
+    const sheet = document.getElementById('sheet-adhoc');
+
+    fab.addEventListener('click', () => {
+      overlay.classList.add('open');
+      sheet.classList.add('open');
+    });
+    overlay.addEventListener('click', closeSheet);
+
+    function closeSheet() {
+      overlay.classList.remove('open');
+      sheet.classList.remove('open');
+    }
+
+    // Filter pills
+    document.querySelectorAll('.pill[data-filter]').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.pill[data-filter]').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

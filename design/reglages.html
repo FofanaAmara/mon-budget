@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Reglages — Mes Finances</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .settings-section {
+      margin-bottom: var(--space-6);
+    }
+    .settings-section__title {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-widest);
+      color: var(--text-tertiary);
+      padding: 0 var(--space-1);
+      margin-bottom: var(--space-3);
+    }
+
+    /* Charge fixe row */
+    .charge-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--border-default);
+    }
+    .charge-row:last-child { border-bottom: none; }
+
+    .charge-row__icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .charge-row__content { flex: 1; min-width: 0; }
+    .charge-row__name {
+      font-size: var(--text-base);
+      font-weight: var(--weight-medium);
+      line-height: 1.3;
+    }
+    .charge-row__details {
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-top: 1px;
+    }
+    .charge-row__right {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .charge-row__amount {
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      font-variant-numeric: tabular-nums;
+    }
+    .charge-row__freq {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+    }
+
+    /* Section subtotal */
+    .section-subtotal {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--space-2) var(--space-3);
+      background: var(--surface-inset);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      margin-top: var(--space-2);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Charges total at top */
+    .charges-total {
+      background: var(--surface-raised);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-xl);
+      padding: var(--space-4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-4);
+    }
+    .charges-total__label {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--text-secondary);
+    }
+    .charges-total__value {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-heavy);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: var(--tracking-tight);
+    }
+
+    /* Revenus recurrents */
+    .revenu-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--border-default);
+    }
+    .revenu-row:last-child { border-bottom: none; }
+
+    .signout-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      width: 100%;
+      padding: var(--space-3);
+      border-radius: var(--radius-lg);
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      color: var(--negative);
+      background: var(--negative-subtle);
+      transition: all var(--duration-fast) var(--ease-out);
+    }
+    .signout-btn:hover { background: #f5d5d2; }
+  </style>
+</head>
+<body>
+  <!-- Desktop Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar__logo">
+      <svg viewBox="0 0 280 56" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <path d="M8 40 L18 14 L28 32 L38 8 L48 40" stroke="#3D3BF3" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <text x="64" y="37" font-family="'Geist','Inter','SF Pro Display',-apple-system,system-ui,sans-serif" font-size="26" font-weight="600" letter-spacing="-0.02em" fill="#0D0D0D">Mes Finances</text>
+      </svg>
+    </div>
+    <div class="sidebar__nav">
+      <a href="accueil.html" class="sidebar__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>Accueil</a>
+      <a href="depenses.html" class="sidebar__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>Depenses</a>
+      <a href="revenus.html" class="sidebar__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Revenus</a>
+      <a href="patrimoine.html" class="sidebar__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>Patrimoine</a>
+      <a href="reglages.html" class="sidebar__item active"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/></svg>Reglages</a>
+    </div>
+    <div class="sidebar__footer">Mes Finances v1.0</div>
+  </nav>
+
+  <main class="app-shell">
+    <div class="page-header" style="padding-top: var(--space-5);">
+      <h1>Reglages</h1>
+    </div>
+
+    <!-- ===== PREFERENCES ===== -->
+    <div class="settings-section">
+      <div class="settings-section__title">Preferences</div>
+
+      <div class="settings-link">
+        <div class="settings-link__icon">&#128276;</div>
+        <div class="settings-link__content">
+          <div class="settings-link__title">Notifications push</div>
+          <div class="settings-link__desc">Activees</div>
+        </div>
+        <div style="flex-shrink:0;"><button class="toggle active" onclick="this.classList.toggle('active')"></button></div>
+      </div>
+
+      <div class="settings-link">
+        <div class="settings-link__icon">&#9200;</div>
+        <div class="settings-link__content">
+          <div class="settings-link__title">Rappels par defaut</div>
+          <div class="settings-link__desc">3 jours et 1 jour avant l'echeance</div>
+        </div>
+        <div class="settings-link__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+      </div>
+
+      <div class="settings-link">
+        <div class="settings-link__icon">&#128178;</div>
+        <div class="settings-link__content">
+          <div class="settings-link__title">Devise</div>
+          <div class="settings-link__desc">Dollar canadien (CAD)</div>
+        </div>
+        <div class="settings-link__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+      </div>
+    </div>
+
+    <!-- ===== GESTION ===== -->
+    <div class="settings-section">
+      <div class="settings-section__title">Gestion</div>
+
+      <div class="settings-link">
+        <div class="settings-link__icon">&#127912;</div>
+        <div class="settings-link__content">
+          <div class="settings-link__title">Sections</div>
+          <div class="settings-link__desc">6 categories</div>
+        </div>
+        <div class="settings-link__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+      </div>
+
+      <div class="settings-link">
+        <div class="settings-link__icon">&#128179;</div>
+        <div class="settings-link__content">
+          <div class="settings-link__title">Cartes bancaires</div>
+          <div class="settings-link__desc">2 cartes</div>
+        </div>
+        <div class="settings-link__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+      </div>
+    </div>
+
+    <!-- ===== CHARGES FIXES ===== -->
+    <div class="settings-section">
+      <div class="settings-section__title">Mes charges fixes</div>
+
+      <div class="charges-total">
+        <div>
+          <div class="charges-total__label">Cout mensuel total</div>
+          <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top:1px;">14 charges normalisees</div>
+        </div>
+        <div class="charges-total__value">2 465,00 $</div>
+      </div>
+
+      <!-- Section: Logement -->
+      <div style="margin-bottom: var(--space-4);">
+        <div class="section-group__header">
+          <div class="section-group__dot" style="background: #E8B84B;"></div>
+          <div class="section-group__title">Logement</div>
+          <span class="section-group__count">4 charges</span>
+        </div>
+        <div class="card" style="padding: 0 var(--space-4);">
+          <div class="charge-row">
+            <div class="charge-row__icon" style="background: #FFF3E0;">&#127968;</div>
+            <div class="charge-row__content">
+              <div class="charge-row__name">Loyer</div>
+              <div class="charge-row__details">
+                <span>Mensuel</span>
+                <span style="color:var(--border-strong);">&#183;</span>
+                <span>Le 1er</span>
+              </div>
+            </div>
+            <div class="charge-row__right">
+              <div class="charge-row__amount">1 250,00 $</div>
+              <div class="charge-row__freq"><span class="badge badge--neutral" style="font-size:10px;">dans 16j</span></div>
+            </div>
+          </div>
+          <div class="charge-row">
+            <div class="charge-row__icon" style="background: #FFF3E0;">&#9889;</div>
+            <div class="charge-row__content">
+              <div class="charge-row__name">Hydro-Quebec</div>
+              <div class="charge-row__details"><span>Mensuel</span><span style="color:var(--border-strong);">&#183;</span><span>Le 3</span></div>
+            </div>
+            <div class="charge-row__right">
+              <div class="charge-row__amount">145,00 $</div>
+              <div class="charge-row__freq"><span class="badge badge--neutral" style="font-size:10px;">dans 18j</span></div>
+            </div>
+          </div>
+          <div class="charge-row">
+            <div class="charge-row__icon" style="background: #FFF3E0;">&#128293;</div>
+            <div class="charge-row__content">
+              <div class="charge-row__name">Gaz Energir</div>
+              <div class="charge-row__details"><span>Mensuel</span><span style="color:var(--border-strong);">&#183;</span><span>Le 15</span><span style="color:var(--border-strong);">&#183;</span><span>Prelevement auto</span></div>
+            </div>
+            <div class="charge-row__right">
+              <div class="charge-row__amount">85,00 $</div>
+              <div class="charge-row__freq"><span class="badge badge--warning" style="font-size:10px;">dans 1j</span></div>
+            </div>
+          </div>
+          <div class="charge-row">
+            <div class="charge-row__icon" style="background: #FFF3E0;">&#128737;</div>
+            <div class="charge-row__content">
+              <div class="charge-row__name">Assurance habitation</div>
+              <div class="charge-row__details"><span>Annuel</span><span style="color:var(--border-strong);">&#183;</span><span>Octobre</span></div>
+            </div>
+            <div class="charge-row__right">
+              <div class="charge-row__amount">527,00 $</div>
+              <div class="charge-row__freq" style="font-size: var(--text-xs); color: var(--text-tertiary);">43,92 $/mois</div>
+            </div>
+          </div>
+        </div>
+        <div class="section-subtotal">
+          <span>Sous-total Logement</span>
+          <span>1 523,92 $/mois</span>
+        </div>
+      </div>
+
+      <!-- Section: Transport -->
+      <div style="margin-bottom: var(--space-4);">
+        <div class="section-group__header">
+          <div class="section-group__dot" style="background: #42A5F5;"></div>
+          <div class="section-group__title">Transport</div>
+          <span class="section-group__count">2 charges</span>
+        </div>
+        <div class="card" style="padding: 0 var(--space-4);">
+          <div class="charge-row">
+            <div class="charge-row__icon" style="background: #E3F2FD;">&#128663;</div>
+            <div class="charge-row__content">
+              <div class="charge-row__name">Assurance auto</div>
+              <div class="charge-row__details"><span>Mensuel</span><span style="color:var(--border-strong);">&#183;</span><span>Le 5</span></div>
+            </div>
+            <div class="charge-row__right">
+              <div class="charge-row__amount">125,00 $</div>
+            </div>
+          </div>
+          <div class="charge-row">
+            <div class="charge-row__icon" style="background: #E3F2FD;">&#9981;</div>
+            <div class="charge-row__content">
+              <div class="charge-row__name">Essence</div>
+              <div class="charge-row__details"><span>Hebdomadaire</span><span style="color:var(--border-strong);">&#183;</span><span>~60 $/sem</span></div>
+            </div>
+            <div class="charge-row__right">
+              <div class="charge-row__amount">60,00 $</div>
+              <div class="charge-row__freq" style="font-size: var(--text-xs); color: var(--text-tertiary);">260,00 $/mois</div>
+            </div>
+          </div>
+        </div>
+        <div class="section-subtotal">
+          <span>Sous-total Transport</span>
+          <span>385,00 $/mois</span>
+        </div>
+      </div>
+
+      <!-- Section: Abonnements -->
+      <div style="margin-bottom: var(--space-4);">
+        <div class="section-group__header">
+          <div class="section-group__dot" style="background: #AB47BC;"></div>
+          <div class="section-group__title">Abonnements</div>
+          <span class="section-group__count">4 charges</span>
+        </div>
+        <div class="card" style="padding: 0 var(--space-4);">
+          <div class="charge-row">
+            <div class="charge-row__icon" style="background: #F3E5F5;">&#128250;</div>
+            <div class="charge-row__content">
+              <div class="charge-row__name">Netflix</div>
+              <div class="charge-row__details"><span>Mensuel</span><span style="color:var(--border-strong);">&#183;</span><span>Le 10</span><span style="color:var(--border-strong);">&#183;</span><span>Prelevement auto</span></div>
+            </div>
+            <div class="charge-row__right"><div class="charge-row__amount">22,99 $</div></div>
+          </div>
+          <div class="charge-row">
+            <div class="charge-row__icon" style="background: #F3E5F5;">&#127925;</div>
+            <div class="charge-row__content">
+              <div class="charge-row__name">Spotify</div>
+              <div class="charge-row__details"><span>Mensuel</span><span style="color:var(--border-strong);">&#183;</span><span>Le 10</span><span style="color:var(--border-strong);">&#183;</span><span>Prelevement auto</span></div>
+            </div>
+            <div class="charge-row__right"><div class="charge-row__amount">11,99 $</div></div>
+          </div>
+          <div class="charge-row">
+            <div class="charge-row__icon" style="background: #F3E5F5;">&#128241;</div>
+            <div class="charge-row__content">
+              <div class="charge-row__name">Telephone Fizz</div>
+              <div class="charge-row__details"><span>Mensuel</span><span style="color:var(--border-strong);">&#183;</span><span>Le 20</span></div>
+            </div>
+            <div class="charge-row__right"><div class="charge-row__amount">45,00 $</div></div>
+          </div>
+          <div class="charge-row">
+            <div class="charge-row__icon" style="background: #F3E5F5;">&#127760;</div>
+            <div class="charge-row__content">
+              <div class="charge-row__name">Internet Bell</div>
+              <div class="charge-row__details"><span>Mensuel</span><span style="color:var(--border-strong);">&#183;</span><span>Le 5</span></div>
+            </div>
+            <div class="charge-row__right"><div class="charge-row__amount">89,99 $</div></div>
+          </div>
+        </div>
+        <div class="section-subtotal">
+          <span>Sous-total Abonnements</span>
+          <span>169,97 $/mois</span>
+        </div>
+      </div>
+
+      <!-- Add charge button -->
+      <button class="btn btn-secondary" style="width:100%; margin-top: var(--space-2);" onclick="openSheet('sheet-charge')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        Ajouter une charge fixe
+      </button>
+    </div>
+
+    <!-- ===== REVENUS RECURRENTS ===== -->
+    <div class="settings-section">
+      <div class="settings-section__title">Mes revenus recurrents</div>
+
+      <div class="card" style="padding: 0 var(--space-4);">
+        <div class="revenu-row">
+          <div style="width:36px; height:36px; border-radius: var(--radius-lg); background: var(--accent-subtle); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">&#128188;</div>
+          <div style="flex:1;">
+            <div style="font-weight: var(--weight-medium);">Salaire principal</div>
+            <div style="font-size: var(--text-xs); color: var(--text-secondary);">
+              <span class="source-badge source-badge--emploi" style="display:inline-flex; padding:1px 6px; border-radius:4px; font-size:10px; font-weight:var(--weight-bold); letter-spacing:var(--tracking-widest); text-transform:uppercase; background:var(--accent-subtle); color:var(--accent);">Emploi</span>
+              <span style="margin-left:var(--space-2);">Mensuel, le 1er</span>
+            </div>
+          </div>
+          <div style="font-weight: var(--weight-semibold); font-variant-numeric: tabular-nums;">3 200,00 $</div>
+        </div>
+
+        <div class="revenu-row">
+          <div style="width:36px; height:36px; border-radius: var(--radius-lg); background: var(--warning-subtle); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">&#128187;</div>
+          <div style="flex:1;">
+            <div style="font-weight: var(--weight-medium);">Pige freelance</div>
+            <div style="font-size: var(--text-xs); color: var(--text-secondary);">
+              <span style="display:inline-flex; padding:1px 6px; border-radius:4px; font-size:10px; font-weight:var(--weight-bold); letter-spacing:var(--tracking-widest); text-transform:uppercase; background:var(--warning-subtle); color:var(--warning-text);">Business</span>
+              <span style="margin-left:var(--space-2);">Mensuel, le 15</span>
+            </div>
+          </div>
+          <div style="font-weight: var(--weight-semibold); font-variant-numeric: tabular-nums;">650,00 $</div>
+        </div>
+
+        <div class="revenu-row">
+          <div style="width:36px; height:36px; border-radius: var(--radius-lg); background: var(--positive-subtle); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">&#127968;</div>
+          <div style="flex:1;">
+            <div style="font-weight: var(--weight-medium);">Revenu locatif</div>
+            <div style="font-size: var(--text-xs); color: var(--text-secondary);">
+              <span style="display:inline-flex; padding:1px 6px; border-radius:4px; font-size:10px; font-weight:var(--weight-bold); letter-spacing:var(--tracking-widest); text-transform:uppercase; background:var(--positive-subtle); color:var(--positive-text);">Investissement</span>
+              <span style="margin-left:var(--space-2);">Mensuel, le 28</span>
+            </div>
+          </div>
+          <div style="font-weight: var(--weight-semibold); font-variant-numeric: tabular-nums;">1 000,00 $</div>
+        </div>
+      </div>
+
+      <button class="btn btn-secondary" style="width:100%; margin-top: var(--space-3);" onclick="openSheet('sheet-revenu')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        Ajouter un revenu recurrent
+      </button>
+    </div>
+
+    <!-- ===== COMPTE ===== -->
+    <div class="settings-section">
+      <div class="settings-section__title">Compte</div>
+      <button class="signout-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Se deconnecter
+      </button>
+    </div>
+
+    <div style="height: 80px;"></div>
+  </main>
+
+  <!-- Add charge sheet -->
+  <div class="sheet-overlay" id="sheet-overlay"></div>
+  <div class="sheet" id="sheet-charge">
+    <div class="sheet__handle"></div>
+    <div class="sheet__title">Nouvelle charge fixe</div>
+    <div class="form-group">
+      <label class="form-label">Nom</label>
+      <input class="form-input" type="text" placeholder="Ex: Loyer, Netflix...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Montant ($)</label>
+      <input class="form-input" type="number" placeholder="0,00" inputmode="decimal">
+    </div>
+    <div style="display:flex; gap: var(--space-3); margin-bottom: var(--space-4);">
+      <div class="form-group" style="flex:1; margin-bottom:0;">
+        <label class="form-label">Type</label>
+        <select class="form-input form-select">
+          <option>Recurrente</option>
+          <option>Ponctuelle</option>
+        </select>
+      </div>
+      <div class="form-group" style="flex:1; margin-bottom:0;">
+        <label class="form-label">Frequence</label>
+        <select class="form-input form-select">
+          <option>Mensuel</option>
+          <option>Hebdomadaire</option>
+          <option>Bihebdomadaire</option>
+          <option>Bimestriel</option>
+          <option>Trimestriel</option>
+          <option>Annuel</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex; gap: var(--space-3);">
+      <div class="form-group" style="flex:1;">
+        <label class="form-label">Jour d'echeance</label>
+        <select class="form-input form-select">
+          <option>1</option><option>5</option><option>10</option><option>15</option><option>20</option><option>25</option><option>28</option>
+        </select>
+      </div>
+      <div class="form-group" style="flex:1;">
+        <label class="form-label">Section</label>
+        <select class="form-input form-select">
+          <option>Logement</option>
+          <option>Transport</option>
+          <option>Alimentation</option>
+          <option>Abonnements</option>
+          <option>Sante</option>
+          <option>Loisirs</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Carte bancaire</label>
+      <select class="form-input form-select">
+        <option>Aucune</option>
+        <option>Visa Desjardins ****4521</option>
+        <option>MC Banque Nationale ****8834</option>
+      </select>
+    </div>
+    <div class="form-group" style="display:flex; align-items:center; justify-content:space-between;">
+      <label class="form-label" style="margin-bottom:0;">Prelevement automatique</label>
+      <button class="toggle" onclick="this.classList.toggle('active')"></button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes (optionnel)</label>
+      <input class="form-input" type="text" placeholder="Ex: Numero de contrat...">
+    </div>
+    <div style="margin-top: var(--space-4); display:flex; gap: var(--space-3);">
+      <button class="btn btn-secondary" style="flex:1;" onclick="closeSheet()">Annuler</button>
+      <button class="btn btn-primary" style="flex:1;">Ajouter</button>
+    </div>
+  </div>
+
+  <!-- Add revenu sheet -->
+  <div class="sheet" id="sheet-revenu" style="z-index:202;">
+    <div class="sheet__handle"></div>
+    <div class="sheet__title">Nouveau revenu recurrent</div>
+    <div class="form-group">
+      <label class="form-label">Nom</label>
+      <input class="form-input" type="text" placeholder="Ex: Salaire, Freelance...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Source</label>
+      <select class="form-input form-select">
+        <option>Emploi</option>
+        <option>Business</option>
+        <option>Investissement</option>
+        <option>Autre</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Montant ($)</label>
+      <input class="form-input" type="number" placeholder="0,00" inputmode="decimal">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Frequence</label>
+      <select class="form-input form-select">
+        <option>Mensuel</option>
+        <option>Bihebdomadaire</option>
+        <option>Annuel</option>
+        <option>Variable</option>
+      </select>
+    </div>
+    <div style="margin-top: var(--space-5); display:flex; gap: var(--space-3);">
+      <button class="btn btn-secondary" style="flex:1;" onclick="closeSheet()">Annuler</button>
+      <button class="btn btn-primary" style="flex:1;">Ajouter</button>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <a href="accueil.html" class="bottom-nav__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg><span>Accueil</span></a>
+    <a href="depenses.html" class="bottom-nav__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg><span>Depenses</span></a>
+    <a href="revenus.html" class="bottom-nav__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span>Revenus</span></a>
+    <a href="patrimoine.html" class="bottom-nav__item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg><span>Patrimoine</span></a>
+    <a href="reglages.html" class="bottom-nav__item active"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/></svg><span>Menu</span></a>
+  </nav>
+
+  <script>
+    const overlay = document.getElementById('sheet-overlay');
+    overlay.addEventListener('click', closeSheet);
+
+    function openSheet(id) {
+      overlay.classList.add('open');
+      document.getElementById(id).classList.add('open');
+    }
+    function closeSheet() {
+      overlay.classList.remove('open');
+      document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open'));
+    }
+  </script>
+</body>
+</html>

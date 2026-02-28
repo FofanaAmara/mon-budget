@@ -7,7 +7,7 @@ import TabTimeline from '@/components/accueil/TabTimeline';
 import TabSanteFinanciere from '@/components/accueil/TabSanteFinanciere';
 import Link from 'next/link';
 import { formatCAD } from '@/lib/utils';
-import type { MonthSummary, MonthlyExpense, MonthlyIncome, Expense } from '@/lib/types';
+import type { MonthSummary, MonthlyExpense, MonthlyIncome, Expense, MonthlySavingsSummary, MonthlyDebtSummary } from '@/lib/types';
 
 type Tab = 'dashboard' | 'timeline' | 'sante';
 
@@ -27,11 +27,14 @@ type Props = {
   totalMonthlyExpenses: number;
   projets: Expense[];
   totalDebtBalance: number;
+  savingsSummary: MonthlySavingsSummary;
+  debtSummary: MonthlyDebtSummary;
 };
 
 export default function AccueilClient({
   summary, incomeSummary, expenses, monthlyIncomes, month,
   monthlyIncomeFromTemplates, totalMonthlyExpenses, projets, totalDebtBalance,
+  savingsSummary, debtSummary,
 }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
 
@@ -100,6 +103,8 @@ export default function AccueilClient({
           summary={summary}
           incomeSummary={incomeSummary}
           totalMonthlyExpenses={totalMonthlyExpenses}
+          savingsSummary={savingsSummary}
+          debtSummary={debtSummary}
         />
       )}
 

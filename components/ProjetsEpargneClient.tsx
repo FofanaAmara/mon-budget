@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { deleteExpense } from '@/lib/actions/expenses';
 import { deleteDebt, makeExtraPayment } from '@/lib/actions/debts';
+import { addDebtTransaction } from '@/lib/actions/debt-transactions';
 import { formatCAD, calcMonthlySuggested, formatDate } from '@/lib/utils';
 import ProjectModal from '@/components/ProjectModal';
 import DebtModal from '@/components/DebtModal';
@@ -40,6 +41,9 @@ export default function ProjetsEpargneClient({ projets, sections, cards, freeSav
   const [editDebt, setEditDebt] = useState<Debt | null>(null);
   const [extraPayDebt, setExtraPayDebt] = useState<Debt | null>(null);
   const [extraPayAmount, setExtraPayAmount] = useState('');
+  const [chargeDebt, setChargeDebt] = useState<Debt | null>(null);
+  const [chargeAmount, setChargeAmount] = useState('');
+  const [chargeNote, setChargeNote] = useState('');
   const [savingsModal, setSavingsModal] = useState<Expense | null>(null);
   const [historyModal, setHistoryModal] = useState<Expense | null>(null);
   const [transferModal, setTransferModal] = useState<Expense | null>(null);
@@ -78,6 +82,21 @@ export default function ProjetsEpargneClient({ projets, sections, cards, freeSav
       await makeExtraPayment(extraPayDebt.id, amount);
       setExtraPayDebt(null);
       setExtraPayAmount('');
+      router.refresh();
+    });
+  }
+
+  async function handleCharge() {
+    if (!chargeDebt || !chargeAmount) return;
+    const amount = parseFloat(chargeAmount);
+    if (isNaN(amount) || amount <= 0) return;
+    const now = new Date();
+    const txMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    startTransition(async () => {
+      await addDebtTransaction(chargeDebt.id, 'CHARGE', amount, txMonth, chargeNote || null);
+      setChargeDebt(null);
+      setChargeAmount('');
+      setChargeNote('');
       router.refresh();
     });
   }
@@ -380,6 +399,12 @@ export default function ProjetsEpargneClient({ projets, sections, cards, freeSav
                             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                           </svg>
                         </button>
+                        <button onClick={() => setChargeDebt(debt)} className="icon-btn" aria-label="Nouvelle charge" title="Nouvelle charge">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                            <line x1="1" y1="10" x2="23" y2="10" />
+                          </svg>
+                        </button>
                         <button onClick={() => { setEditDebt(debt); setDebtModal(true); }} className="icon-btn" aria-label="Modifier">
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -551,6 +576,55 @@ export default function ProjetsEpargneClient({ projets, sections, cards, freeSav
                 style={{ width: '100%', padding: '16px', fontSize: 'var(--text-base)', opacity: !extraPayAmount ? 0.5 : 1 }}
               >
                 Appliquer le paiement
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* New charge modal */}
+      {chargeDebt && (
+        <div className="sheet-backdrop" onClick={(e) => e.target === e.currentTarget && setChargeDebt(null)}>
+          <div className="sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="sheet-handle" />
+            <div style={{ padding: '8px 24px 40px' }}>
+              <h2 style={{
+                fontSize: 'var(--text-lg)', fontWeight: 700,
+                color: 'var(--text-primary)', marginBottom: '8px',
+                letterSpacing: 'var(--tracking-tight)',
+              }}>
+                Nouvelle charge
+              </h2>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)', marginBottom: '20px' }}>
+                {chargeDebt.name} — Solde: {formatCAD(Number(chargeDebt.remaining_balance))}
+              </p>
+              <div style={{ marginBottom: '16px' }}>
+                <label className="field-label">Montant ($)</label>
+                <input
+                  type="number" min="0.01" step="0.01" placeholder="150.00"
+                  value={chargeAmount}
+                  onChange={(e) => setChargeAmount(e.target.value)}
+                  className="input-field"
+                  style={{ fontVariantNumeric: 'tabular-nums' }}
+                  autoFocus
+                />
+              </div>
+              <div style={{ marginBottom: '16px' }}>
+                <label className="field-label">Note (optionnel)</label>
+                <input
+                  type="text" placeholder="Ex: Achat Amazon"
+                  value={chargeNote}
+                  onChange={(e) => setChargeNote(e.target.value)}
+                  className="input-field"
+                />
+              </div>
+              <button
+                onClick={handleCharge}
+                disabled={!chargeAmount || parseFloat(chargeAmount) <= 0}
+                className="btn-primary"
+                style={{ width: '100%', padding: '16px', fontSize: 'var(--text-base)', opacity: !chargeAmount ? 0.5 : 1 }}
+              >
+                Ajouter la charge
               </button>
             </div>
           </div>

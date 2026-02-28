@@ -1,20 +1,22 @@
 'use client';
 
 import { useState } from 'react';
-import type { Section } from '@/lib/types';
+import type { Section, Card } from '@/lib/types';
 
 type Props = {
   sections: Section[];
+  cards: Card[];
   month: string;
   onClose: () => void;
 };
 
-export default function AdhocExpenseModal({ sections, month, onClose }: Props) {
+export default function AdhocExpenseModal({ sections, cards, month, onClose }: Props) {
   const [mode, setMode] = useState<'upcoming' | 'paid'>('paid');
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
   const [sectionId, setSectionId] = useState(sections[0]?.id ?? '');
   const [dueDate, setDueDate] = useState('');
+  const [cardId, setCardId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -33,6 +35,7 @@ export default function AdhocExpenseModal({ sections, month, onClose }: Props) {
         month,
         mode === 'paid',
         dueDate || undefined,
+        cardId || undefined,
       );
       onClose();
     } catch {
@@ -140,6 +143,23 @@ export default function AdhocExpenseModal({ sections, month, onClose }: Props) {
                 ))}
               </select>
             </div>
+
+            {cards.length > 0 && (
+              <div>
+                <label className="field-label">
+                  Carte
+                  <span style={{ fontWeight: 400, color: 'var(--text-tertiary)', marginLeft: '4px' }}>(optionnel)</span>
+                </label>
+                <select value={cardId} onChange={(e) => setCardId(e.target.value)} className="input-field">
+                  <option value="">Aucune carte</option>
+                  {cards.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}{c.last_four ? ` .... ${c.last_four}` : ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             {error && (
               <p style={{ fontSize: 'var(--text-sm)', color: 'var(--negative)', background: 'var(--negative-subtle)', padding: '8px 12px', borderRadius: 'var(--radius-sm)' }}>

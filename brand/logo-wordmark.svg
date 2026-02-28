@@ -1,0 +1,16 @@
+<!--
+  Mes Finances — Wordmark Only
+  Usage: Text-only contexts, footer, email signatures
+  Minimum width: 100px
+-->
+<svg viewBox="0 0 220 40" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <text
+    x="0"
+    y="30"
+    font-family="'Geist', 'Inter', 'SF Pro Display', -apple-system, system-ui, sans-serif"
+    font-size="28"
+    font-weight="600"
+    letter-spacing="-0.02em"
+    fill="#0D0D0D"
+  >Mes Finances</text>
+</svg>

@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import { getSections } from '@/lib/actions/sections';
+import { getCards } from '@/lib/actions/cards';
 import {
   generateMonthlyExpenses,
   getMonthlyExpenses,
@@ -28,10 +29,11 @@ export default async function DepensesPage({ searchParams }: PageProps) {
     await autoMarkPaidForAutoDebit(month);
   }
 
-  const [expenses, summary, sections] = await Promise.all([
+  const [expenses, summary, sections, cards] = await Promise.all([
     getMonthlyExpenses(month),
     getMonthSummary(month),
     getSections(),
+    getCards(),
   ]);
 
   return (
@@ -39,6 +41,7 @@ export default async function DepensesPage({ searchParams }: PageProps) {
       expenses={expenses}
       summary={summary}
       sections={sections}
+      cards={cards}
       month={month}
     />
   );

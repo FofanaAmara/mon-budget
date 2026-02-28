@@ -21,7 +21,7 @@ export type Card = {
 };
 
 export type ExpenseType = 'RECURRING' | 'ONE_TIME' | 'PLANNED';
-export type RecurrenceFrequency = 'WEEKLY' | 'BIWEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
+export type RecurrenceFrequency = 'WEEKLY' | 'BIWEEKLY' | 'MONTHLY' | 'BIMONTHLY' | 'QUARTERLY' | 'YEARLY';
 export type DebtFrequency = 'WEEKLY' | 'BIWEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
 
 export type Expense = {
@@ -164,4 +164,33 @@ export type SavingsContribution = {
   amount: number;
   note: string | null;
   created_at: string;
+};
+
+export type DebtTransactionType = 'PAYMENT' | 'CHARGE';
+
+export type DebtTransaction = {
+  id: string;
+  user_id: string;
+  debt_id: string;
+  type: DebtTransactionType;
+  amount: number;
+  month: string;
+  note: string | null;
+  source: string;
+  created_at: string;
+  debt_name?: string;
+};
+
+export type MonthlySavingsSummary = {
+  totalContributions: number;
+  contributionCount: number;
+  byProject: { expense_id: string; name: string; total: number }[];
+};
+
+export type MonthlyDebtSummary = {
+  totalPayments: number;
+  totalCharges: number;
+  netMovement: number;  // payments - charges (positif = dette réduite)
+  paymentCount: number;
+  chargeCount: number;
 };

@@ -16,6 +16,7 @@ const FREQUENCIES: { value: RecurrenceFrequency; label: string }[] = [
   { value: 'WEEKLY',    label: 'Hebdo' },
   { value: 'BIWEEKLY', label: 'Bi-hebdo' },
   { value: 'MONTHLY',  label: 'Mensuel' },
+  { value: 'BIMONTHLY',label: 'Bimestriel' },
   { value: 'QUARTERLY',label: 'Trim.' },
   { value: 'YEARLY',   label: 'Annuel' },
 ];
@@ -33,9 +34,6 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
   const [cardId, setCardId]               = useState(expense?.card_id ?? '');
   const [dueDate, setDueDate]             = useState(expense?.due_date ?? '');
   const [notes, setNotes]                 = useState(expense?.notes ?? '');
-  const [targetAmount, setTargetAmount]   = useState(expense?.target_amount?.toString() ?? '');
-  const [targetDate, setTargetDate]       = useState(expense?.target_date ?? '');
-  const [savedAmount, setSavedAmount]     = useState(expense?.saved_amount?.toString() ?? '0');
 
   const isValid = sectionId && name.trim() && amount && parseFloat(amount) > 0;
 
@@ -54,9 +52,6 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
         auto_debit: type === 'RECURRING' ? autoDebit : false,
         due_date: type === 'ONE_TIME' ? dueDate || undefined : undefined,
         notes: notes || undefined,
-        target_amount: type === 'PLANNED' && targetAmount ? parseFloat(targetAmount) : undefined,
-        target_date: type === 'PLANNED' ? targetDate || undefined : undefined,
-        saved_amount: type === 'PLANNED' ? parseFloat(savedAmount) || 0 : undefined,
       };
 
       if (expense) {
@@ -139,7 +134,7 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
           <div>
             <label className="field-label">Type</label>
             <div className="type-toggle">
-              {(['RECURRING', 'ONE_TIME', 'PLANNED'] as ExpenseType[]).map((t) => (
+              {(['RECURRING', 'ONE_TIME'] as ExpenseType[]).map((t) => (
                 <button
                   key={t}
                   type="button"
@@ -147,7 +142,7 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
                   className="type-toggle-btn"
                   data-active={type === t}
                 >
-                  {t === 'RECURRING' ? 'Récurrent' : t === 'ONE_TIME' ? 'Ponctuel' : 'Planifié'}
+                  {t === 'RECURRING' ? 'Récurrent' : 'Ponctuel'}
                 </button>
               ))}
             </div>
@@ -231,61 +226,6 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
                 className="input-field"
               />
             </div>
-          )}
-
-          {/* PLANNED fields */}
-          {type === 'PLANNED' && (
-            <>
-              <div>
-                <label className="field-label">Objectif ($)</label>
-                <div style={{ position: 'relative' }}>
-                  <span style={{
-                    position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)',
-                    color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)',
-                  }}>$</span>
-                  <input
-                    type="number"
-                    value={targetAmount}
-                    onChange={(e) => setTargetAmount(e.target.value)}
-                    placeholder="0.00"
-                    min="0"
-                    step="0.01"
-                    className="input-field"
-                    style={{ paddingLeft: '32px', fontVariantNumeric: 'tabular-nums' }}
-                  />
-                </div>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                <div>
-                  <label className="field-label">Date cible</label>
-                  <input
-                    type="date"
-                    value={targetDate}
-                    onChange={(e) => setTargetDate(e.target.value)}
-                    className="input-field"
-                  />
-                </div>
-                <div>
-                  <label className="field-label">Deja epargne ($)</label>
-                  <div style={{ position: 'relative' }}>
-                    <span style={{
-                      position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',
-                      color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)',
-                    }}>$</span>
-                    <input
-                      type="number"
-                      value={savedAmount}
-                      onChange={(e) => setSavedAmount(e.target.value)}
-                      placeholder="0.00"
-                      min="0"
-                      step="0.01"
-                      className="input-field"
-                      style={{ paddingLeft: '28px', fontVariantNumeric: 'tabular-nums' }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </>
           )}
 
           {/* Notes */}

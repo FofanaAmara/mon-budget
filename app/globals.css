@@ -136,6 +136,24 @@
   /* Tailwind bridge */
   --background: var(--surface-ground);
   --foreground: var(--text-primary);
+
+  /* shadcn/ui variables — required by @neondatabase/auth components */
+  --card: var(--surface-raised);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface-raised);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--text-primary);
+  --primary-foreground: var(--text-inverted);
+  --secondary: var(--surface-inset);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--surface-sunken);
+  --muted-foreground: var(--text-tertiary);
+  --accent-foreground: var(--text-inverted);
+  --destructive: var(--negative);
+  --border: var(--border-default);
+  --input: var(--border-default);
+  --ring: var(--accent);
+  --radius: 10px;
 }
 
 @theme inline {

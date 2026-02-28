@@ -3,10 +3,9 @@
  *
  * Persona: Amara, 30 ans, dev web à Montréal.
  * Salaire net 4 200$/mois + freelance ~800$/mois.
- * Locataire 4½ Rosemont. Voiture financée. 3 projets d'épargne.
+ * Locataire 4½ Rosemont. Voiture financée. 2 dettes. 3 projets d'épargne.
  *
- * Usage:  npx dotenv -e .env.local -- node scripts/seed-demo.mjs
- *    or:  node -e "require('dotenv').config({path:'.env.local'})" && node scripts/seed-demo.mjs
+ * Usage:  node scripts/seed-demo.mjs
  */
 
 import { neon } from '@neondatabase/serverless';
@@ -22,37 +21,38 @@ if (!dbUrl) {
 
 const sql = neon(dbUrl);
 
+// ─── Target user ───────────────────────────────
+const USER_ID = '03aa3dc5-6d21-4d02-9eb3-6181a01348b7'; // amara.test@monbudget.dev
+
 async function seed() {
-  console.log('🗑️  Nettoyage des données existantes...');
+  console.log(`🗑️  Nettoyage des données pour user ${USER_ID}...`);
 
-  // Truncate in correct order (children first)
-  await sql`TRUNCATE savings_contributions CASCADE`;
-  await sql`TRUNCATE monthly_incomes CASCADE`;
-  await sql`TRUNCATE monthly_expenses CASCADE`;
-  await sql`TRUNCATE notification_log CASCADE`;
-  await sql`TRUNCATE expenses CASCADE`;
-  await sql`TRUNCATE incomes CASCADE`;
-  await sql`TRUNCATE cards CASCADE`;
-  await sql`TRUNCATE push_subscriptions CASCADE`;
-  // Keep sections but truncate and re-seed
-  await sql`TRUNCATE sections CASCADE`;
-  // Reset settings
-  await sql`TRUNCATE settings CASCADE`;
+  // Delete in correct order (children first)
+  await sql`DELETE FROM debt_transactions WHERE user_id = ${USER_ID}`;
+  await sql`DELETE FROM savings_contributions WHERE user_id = ${USER_ID}`;
+  await sql`DELETE FROM monthly_incomes WHERE user_id = ${USER_ID}`;
+  await sql`DELETE FROM monthly_expenses WHERE user_id = ${USER_ID}`;
+  await sql`DELETE FROM debts WHERE user_id = ${USER_ID}`;
+  await sql`DELETE FROM expenses WHERE user_id = ${USER_ID}`;
+  await sql`DELETE FROM incomes WHERE user_id = ${USER_ID}`;
+  await sql`DELETE FROM cards WHERE user_id = ${USER_ID}`;
+  await sql`DELETE FROM sections WHERE user_id = ${USER_ID}`;
+  await sql`DELETE FROM settings WHERE user_id = ${USER_ID}`;
 
-  console.log('✅ Tables vidées');
+  console.log('✅ Données utilisateur nettoyées');
 
   // ─────────────────────────────────────────────
   // 1. SECTIONS (6 defaults)
   // ─────────────────────────────────────────────
   console.log('📁 Création des sections...');
   const sections = await sql`
-    INSERT INTO sections (name, icon, color, position) VALUES
-      ('Maison',    '🏠', '#3B82F6', 0),
-      ('Perso',     '👤', '#8B5CF6', 1),
-      ('Famille',   '👨‍👩‍👧‍👦', '#EC4899', 2),
-      ('Transport', '🚗', '#F59E0B', 3),
-      ('Business',  '💼', '#10B981', 4),
-      ('Projets',   '🎯', '#EF4444', 5)
+    INSERT INTO sections (user_id, name, icon, color, position) VALUES
+      (${USER_ID}, 'Maison',    '🏠', '#3B82F6', 0),
+      (${USER_ID}, 'Perso',     '👤', '#8B5CF6', 1),
+      (${USER_ID}, 'Famille',   '👨‍👩‍👧‍👦', '#EC4899', 2),
+      (${USER_ID}, 'Transport', '🚗', '#F59E0B', 3),
+      (${USER_ID}, 'Business',  '💼', '#10B981', 4),
+      (${USER_ID}, 'Projets',   '🎯', '#EF4444', 5)
     RETURNING id, name
   `;
   const sec = {};
@@ -64,9 +64,9 @@ async function seed() {
   // ─────────────────────────────────────────────
   console.log('💳 Création des cartes...');
   const cards = await sql`
-    INSERT INTO cards (name, last_four, bank, color) VALUES
-      ('Visa Desjardins', '4521', 'Desjardins', '#00874F'),
-      ('Mastercard TD',   '8837', 'TD',         '#34A853')
+    INSERT INTO cards (user_id, name, last_four, bank, color) VALUES
+      (${USER_ID}, 'Visa Desjardins', '4521', 'Desjardins', '#00874F'),
+      (${USER_ID}, 'Mastercard TD',   '8837', 'TD',         '#34A853')
     RETURNING id, name
   `;
   const card = {};
@@ -74,12 +74,12 @@ async function seed() {
   console.log(`   → ${cards.length} cartes`);
 
   // ─────────────────────────────────────────────
-  // 3. SETTINGS (singleton)
+  // 3. SETTINGS
   // ─────────────────────────────────────────────
   console.log('⚙️  Création des réglages...');
   await sql`
-    INSERT INTO settings (default_currency, default_reminder_offsets, notify_push)
-    VALUES ('CAD', '{1, 3, 7}', TRUE)
+    INSERT INTO settings (user_id, default_currency, default_reminder_offsets, notify_push)
+    VALUES (${USER_ID}, 'CAD', '{1, 3, 7}', TRUE)
   `;
   console.log('   → OK');
 
@@ -88,9 +88,9 @@ async function seed() {
   // ─────────────────────────────────────────────
   console.log('💰 Création des revenus...');
   const incomes = await sql`
-    INSERT INTO incomes (name, source, amount, estimated_amount, frequency, notes) VALUES
-      ('Salaire — Employeur', 'EMPLOYMENT', 4200, NULL,  'MONTHLY',  'Net après impôts, reçu le 26'),
-      ('Freelance web',       'BUSINESS',   0,    800,   'VARIABLE', 'Contrats ponctuels Upwork/direct')
+    INSERT INTO incomes (user_id, name, source, amount, estimated_amount, frequency, notes) VALUES
+      (${USER_ID}, 'Salaire — Employeur', 'EMPLOYMENT', 4200, NULL,  'MONTHLY',  'Net après impôts, reçu le 26'),
+      (${USER_ID}, 'Freelance web',       'BUSINESS',   0,    800,   'VARIABLE', 'Contrats ponctuels Upwork/direct')
     RETURNING id, name
   `;
   const inc = {};
@@ -115,15 +115,15 @@ async function seed() {
     ['iCloud+',             3.99,   'Perso',     null,               'MONTHLY', 22, true,  '200 Go'],
     ['Passe STM',           94,     'Transport', null,               'MONTHLY', 1,  false, 'Opus mensuel tout mode'],
     ['Assurance auto',      125,    'Transport', 'Visa Desjardins',  'MONTHLY', 15, true,  'Desjardins Assurances'],
-    ['Paiement auto',       350,    'Transport', 'Mastercard TD',    'MONTHLY', 20, true,  'Financement Honda Civic 2023'],
+    ['Épicerie',            400,    'Famille',   'Mastercard TD',    'MONTHLY', 1,  false, 'Budget mensuel courses'],
     ['Hébergement Vercel',  28,     'Business',  'Visa Desjardins',  'MONTHLY', 10, true,  'Pro plan'],
   ];
 
   const expenseIds = {};
   for (const [name, amount, section, cardName, freq, day, auto, notes] of recurringData) {
     const rows = await sql`
-      INSERT INTO expenses (name, amount, type, section_id, card_id, recurrence_frequency, recurrence_day, auto_debit, reminder_offsets, notes)
-      VALUES (${name}, ${amount}, 'RECURRING', ${sec[section]}, ${cardName ? card[cardName] : null}, ${freq}, ${day}, ${auto}, '{1, 3, 7}', ${notes})
+      INSERT INTO expenses (user_id, name, amount, type, section_id, card_id, recurrence_frequency, recurrence_day, auto_debit, reminder_offsets, notes)
+      VALUES (${USER_ID}, ${name}, ${amount}, 'RECURRING', ${sec[section]}, ${cardName ? card[cardName] : null}, ${freq}, ${day}, ${auto}, '{1, 3, 7}', ${notes})
       RETURNING id
     `;
     expenseIds[name] = rows[0].id;
@@ -133,10 +133,10 @@ async function seed() {
   // ─────────────────────────────────────────────
   // 6. EXPENSE — ONE_TIME (1)
   // ─────────────────────────────────────────────
-  console.log('📋 Création de la dépense ponctuelle...');
+  console.log('📋 Dépense ponctuelle...');
   const oneTimeRows = await sql`
-    INSERT INTO expenses (name, amount, type, section_id, due_date, next_due_date, reminder_offsets, notes)
-    VALUES ('Impôts 2025', 1200, 'ONE_TIME', NULL, '2026-04-30', '2026-04-30', '{7, 14, 30}', 'Solde dû à l''ARC')
+    INSERT INTO expenses (user_id, name, amount, type, section_id, due_date, next_due_date, reminder_offsets, notes)
+    VALUES (${USER_ID}, 'Impôts 2025', 1200, 'ONE_TIME', NULL, '2026-04-30', '2026-04-30', '{7, 14, 30}', 'Solde dû à l''ARC')
     RETURNING id
   `;
   expenseIds['Impôts 2025'] = oneTimeRows[0].id;
@@ -145,12 +145,12 @@ async function seed() {
   // ─────────────────────────────────────────────
   // 7. EXPENSES — PLANNED (3 projets)
   // ─────────────────────────────────────────────
-  console.log('🎯 Création des projets d\'épargne...');
+  console.log('🎯 Projets d\'épargne...');
   const plannedRows = await sql`
-    INSERT INTO expenses (name, amount, type, section_id, target_amount, saved_amount, target_date, notes) VALUES
-      ('Voyage Japon 2027', 0, 'PLANNED', ${sec['Projets']}, 8000,  2400, '2027-03-01', 'Tokyo, Kyoto, Osaka — 3 semaines'),
-      ('Fonds d''urgence',  0, 'PLANNED', ${sec['Projets']}, 10000, 6500, NULL,         '3-6 mois de dépenses courantes'),
-      ('MacBook Pro M4',    0, 'PLANNED', ${sec['Business']}, 3500, 1200, '2026-09-01', 'Pour le freelance')
+    INSERT INTO expenses (user_id, name, amount, type, section_id, target_amount, saved_amount, target_date, notes) VALUES
+      (${USER_ID}, 'Voyage Japon 2027', 0, 'PLANNED', ${sec['Projets']}, 8000,  2400, '2027-03-01', 'Tokyo, Kyoto, Osaka — 3 semaines'),
+      (${USER_ID}, 'Fonds d''urgence',  0, 'PLANNED', ${sec['Projets']}, 10000, 6500, NULL,         '3-6 mois de dépenses courantes'),
+      (${USER_ID}, 'MacBook Pro M4',    0, 'PLANNED', ${sec['Business']}, 3500, 1200, '2026-09-01', 'Pour le freelance')
     RETURNING id, name
   `;
   const planned = {};
@@ -158,85 +158,97 @@ async function seed() {
   console.log('   → 3 projets');
 
   // ─────────────────────────────────────────────
-  // 7b. ÉPARGNE LIBRE (permanent pot)
+  // 7b. ÉPARGNE LIBRE
   // ─────────────────────────────────────────────
-  console.log('💰 Création de l\'épargne libre...');
+  console.log('💰 Épargne libre...');
   const freeRows = await sql`
-    INSERT INTO expenses (name, amount, type, saved_amount)
-    VALUES ('Épargne libre', 0, 'PLANNED', 1500)
+    INSERT INTO expenses (user_id, name, amount, type, saved_amount)
+    VALUES (${USER_ID}, 'Épargne libre', 0, 'PLANNED', 1500)
     RETURNING id
   `;
   const freeSavingsId = freeRows[0].id;
   console.log('   → Épargne libre (1 500$)');
 
   // ─────────────────────────────────────────────
-  // 7c. SAVINGS CONTRIBUTIONS (historique)
+  // 7c. SAVINGS CONTRIBUTIONS
   // ─────────────────────────────────────────────
-  console.log('📜 Création de l\'historique des contributions...');
+  console.log('📜 Historique des contributions...');
 
-  // Voyage Japon — 2 400$ in 4 contributions
+  // Voyage Japon — 2 400$ en 4 contributions
   await sql`
-    INSERT INTO savings_contributions (expense_id, amount, note, created_at) VALUES
-      (${planned['Voyage Japon 2027']}, 500,  'Bonus fin d''année 2025',       '2025-12-28 10:00:00'),
-      (${planned['Voyage Japon 2027']}, 400,  'Freelance extra décembre',      '2026-01-05 14:30:00'),
-      (${planned['Voyage Japon 2027']}, 800,  'Virement mensuel janvier',      '2026-01-26 09:00:00'),
-      (${planned['Voyage Japon 2027']}, 700,  'Virement mensuel février',      '2026-02-26 09:00:00')
+    INSERT INTO savings_contributions (user_id, expense_id, amount, note, created_at) VALUES
+      (${USER_ID}, ${planned['Voyage Japon 2027']}, 500,  'Bonus fin d''année 2025',       '2025-12-28 10:00:00'),
+      (${USER_ID}, ${planned['Voyage Japon 2027']}, 400,  'Freelance extra décembre',      '2026-01-05 14:30:00'),
+      (${USER_ID}, ${planned['Voyage Japon 2027']}, 800,  'Virement mensuel janvier',      '2026-01-26 09:00:00'),
+      (${USER_ID}, ${planned['Voyage Japon 2027']}, 700,  'Virement mensuel février',      '2026-02-10 09:00:00')
   `;
 
-  // Fonds d'urgence — 6 500$ in 5 contributions
+  // Fonds d'urgence — 6 500$ en 5 contributions
   await sql`
-    INSERT INTO savings_contributions (expense_id, amount, note, created_at) VALUES
-      (${planned["Fonds d'urgence"]}, 2000, 'Transfert initial',              '2025-09-01 10:00:00'),
-      (${planned["Fonds d'urgence"]}, 1000, 'Virement octobre',               '2025-10-26 09:00:00'),
-      (${planned["Fonds d'urgence"]}, 1000, 'Virement novembre',              '2025-11-26 09:00:00'),
-      (${planned["Fonds d'urgence"]}, 1500, 'Bonus + virement décembre',      '2025-12-26 09:00:00'),
-      (${planned["Fonds d'urgence"]}, 1000, 'Virement janvier',               '2026-01-26 09:00:00')
+    INSERT INTO savings_contributions (user_id, expense_id, amount, note, created_at) VALUES
+      (${USER_ID}, ${planned["Fonds d'urgence"]}, 2000, 'Transfert initial',              '2025-09-01 10:00:00'),
+      (${USER_ID}, ${planned["Fonds d'urgence"]}, 1000, 'Virement octobre',               '2025-10-26 09:00:00'),
+      (${USER_ID}, ${planned["Fonds d'urgence"]}, 1000, 'Virement novembre',              '2025-11-26 09:00:00'),
+      (${USER_ID}, ${planned["Fonds d'urgence"]}, 1500, 'Bonus + virement décembre',      '2025-12-26 09:00:00'),
+      (${USER_ID}, ${planned["Fonds d'urgence"]}, 1000, 'Virement janvier',               '2026-01-26 09:00:00')
   `;
 
-  // MacBook Pro M4 — 1 200$ in 3 contributions
+  // MacBook Pro M4 — 1 200$ en 3 contributions
   await sql`
-    INSERT INTO savings_contributions (expense_id, amount, note, created_at) VALUES
-      (${planned['MacBook Pro M4']}, 500,  'Début du projet',                '2025-11-15 10:00:00'),
-      (${planned['MacBook Pro M4']}, 400,  'Vente ancien écran sur Kijiji',  '2026-01-10 16:00:00'),
-      (${planned['MacBook Pro M4']}, 300,  'Freelance février',              '2026-02-15 14:00:00')
+    INSERT INTO savings_contributions (user_id, expense_id, amount, note, created_at) VALUES
+      (${USER_ID}, ${planned['MacBook Pro M4']}, 500,  'Début du projet',                '2025-11-15 10:00:00'),
+      (${USER_ID}, ${planned['MacBook Pro M4']}, 400,  'Vente ancien écran sur Kijiji',  '2026-01-10 16:00:00'),
+      (${USER_ID}, ${planned['MacBook Pro M4']}, 300,  'Freelance février',              '2026-02-15 14:00:00')
   `;
 
-  // Épargne libre — 1 500$ in 3 contributions
+  // Épargne libre — 1 500$ en 3 contributions
   await sql`
-    INSERT INTO savings_contributions (expense_id, amount, note, created_at) VALUES
-      (${freeSavingsId}, 500, 'Premier dépôt épargne',       '2025-10-01 10:00:00'),
-      (${freeSavingsId}, 500, 'Virement mensuel novembre',   '2025-11-26 09:00:00'),
-      (${freeSavingsId}, 500, 'Virement mensuel janvier',    '2026-01-26 09:00:00')
+    INSERT INTO savings_contributions (user_id, expense_id, amount, note, created_at) VALUES
+      (${USER_ID}, ${freeSavingsId}, 500, 'Premier dépôt épargne',       '2025-10-01 10:00:00'),
+      (${USER_ID}, ${freeSavingsId}, 500, 'Virement mensuel novembre',   '2025-11-26 09:00:00'),
+      (${USER_ID}, ${freeSavingsId}, 500, 'Virement mensuel janvier',    '2026-01-26 09:00:00')
   `;
 
-  console.log('   → 15 contributions (4 projets + épargne libre)');
+  console.log('   → 15 contributions');
 
   // ─────────────────────────────────────────────
-  // 8. MONTHLY EXPENSES — Février 2026
+  // 8. DEBTS (2)
+  // ─────────────────────────────────────────────
+  console.log('📉 Création des dettes...');
+  const debtRows = await sql`
+    INSERT INTO debts (user_id, name, original_amount, remaining_balance, interest_rate, payment_amount, payment_frequency, payment_day, auto_debit, card_id, section_id, notes) VALUES
+      (${USER_ID}, 'Prêt auto Honda Civic',   15000,  10600, 4.50, 400, 'MONTHLY', 20, true,  ${card['Mastercard TD']},  ${sec['Transport']}, 'Financement 60 mois — Honda Civic 2023'),
+      (${USER_ID}, 'Carte de crédit Visa',      3200,   1850, 19.99, 150, 'MONTHLY', 25, false, ${card['Visa Desjardins']}, ${sec['Perso']},     'Solde carte de crédit — objectif rembourser en 12 mois')
+    RETURNING id, name
+  `;
+  const debt = {};
+  for (const d of debtRows) debt[d.name] = d.id;
+  console.log(`   → ${debtRows.length} dettes`);
+
+  // ─────────────────────────────────────────────
+  // 9. MONTHLY EXPENSES — Février 2026
   // ─────────────────────────────────────────────
   const MONTH = '2026-02';
-  console.log(`📅 Génération des instances mensuelles (${MONTH})...`);
+  console.log(`📅 Instances mensuelles dépenses (${MONTH})...`);
 
-  // Each recurring expense gets a monthly instance
-  // Status depends on: auto_debit + due_date vs today (Feb 27)
   const monthlyExpenses = [
-    // [name, day, status, paid_at]
-    ['Loyer',               1,  'PAID',    '2026-02-01'],  // manual, paid on time
-    ['Assurance habitation', 1,  'PAID',    '2026-02-01'],  // auto
-    ['Gym Econofitness',    1,  'PAID',    '2026-02-01'],  // auto
-    ['Passe STM',           1,  'PAID',    '2026-02-03'],  // manual, paid 2 days late
-    ['Spotify',             5,  'PAID',    '2026-02-05'],  // auto
-    ['Internet Vidéotron',  8,  'PAID',    '2026-02-08'],  // auto
-    ['Hébergement Vercel',  10, 'PAID',    '2026-02-10'],  // auto
-    ['Téléphone Fizz',      12, 'OVERDUE', null],           // manual, forgot!
-    ['Hydro-Québec',        15, 'PAID',    '2026-02-15'],  // auto
-    ['Assurance auto',      15, 'PAID',    '2026-02-15'],  // auto
-    ['Netflix',             18, 'PAID',    '2026-02-18'],  // auto
-    ['Paiement auto',       20, 'PAID',    '2026-02-20'],  // auto
-    ['iCloud+',             22, 'PAID',    '2026-02-22'],  // auto
+    // [name, day, status, paid_at, is_planned]
+    ['Loyer',               1,  'PAID',    '2026-02-01', true],
+    ['Assurance habitation', 1,  'PAID',    '2026-02-01', true],
+    ['Gym Econofitness',    1,  'PAID',    '2026-02-01', true],
+    ['Passe STM',           1,  'PAID',    '2026-02-03', true],
+    ['Épicerie',            1,  'PAID',    '2026-02-02', true],
+    ['Spotify',             5,  'PAID',    '2026-02-05', true],
+    ['Internet Vidéotron',  8,  'PAID',    '2026-02-08', true],
+    ['Hébergement Vercel',  10, 'PAID',    '2026-02-10', true],
+    ['Téléphone Fizz',      12, 'OVERDUE', null,          true],  // oublié !
+    ['Hydro-Québec',        15, 'PAID',    '2026-02-15', true],
+    ['Assurance auto',      15, 'PAID',    '2026-02-15', true],
+    ['Netflix',             18, 'PAID',    '2026-02-18', true],
+    ['iCloud+',             22, 'PAID',    '2026-02-22', true],
   ];
 
-  for (const [name, day, status, paidAt] of monthlyExpenses) {
+  for (const [name, day, status, paidAt, isPlanned] of monthlyExpenses) {
     const eid = expenseIds[name];
     const dueDate = `2026-02-${String(day).padStart(2, '0')}`;
     const exp = recurringData.find(r => r[0] === name);
@@ -246,42 +258,135 @@ async function seed() {
     const autoDebit = exp[6];
 
     await sql`
-      INSERT INTO monthly_expenses (expense_id, month, name, amount, due_date, status, paid_at, section_id, card_id, is_auto_charged, notes)
-      VALUES (${eid}, ${MONTH}, ${name}, ${amount}, ${dueDate}::date, ${status}, ${paidAt}::date, ${sec[sectionName]}, ${cardName ? card[cardName] : null}, ${autoDebit}, NULL)
+      INSERT INTO monthly_expenses (user_id, expense_id, month, name, amount, due_date, status, paid_at, section_id, card_id, is_auto_charged, is_planned, notes)
+      VALUES (${USER_ID}, ${eid}, ${MONTH}, ${name}, ${amount}, ${dueDate}, ${status}, ${paidAt}, ${sec[sectionName]}, ${cardName ? card[cardName] : null}, ${autoDebit}, ${isPlanned}, NULL)
     `;
   }
-  console.log(`   → ${monthlyExpenses.length} instances dépenses`);
 
-  // ─────────────────────────────────────────────
-  // 9. MONTHLY INCOMES — Février 2026
-  // ─────────────────────────────────────────────
-  console.log(`💰 Génération des instances revenus (${MONTH})...`);
-
-  // Salaire: RECEIVED on the 26th
+  // Debt monthly payments
+  // Prêt auto: PAID on the 20th
   await sql`
-    INSERT INTO monthly_incomes (income_id, month, expected_amount, actual_amount, status, received_at, notes)
-    VALUES (${inc['Salaire — Employeur']}, ${MONTH}, 4200, 4200, 'RECEIVED', '2026-02-26'::date, NULL)
+    INSERT INTO monthly_expenses (user_id, debt_id, month, name, amount, due_date, status, paid_at, section_id, card_id, is_auto_charged, is_planned, notes)
+    VALUES (${USER_ID}, ${debt['Prêt auto Honda Civic']}, ${MONTH}, 'Prêt auto Honda Civic (versement)', 400, '2026-02-20'::date, 'PAID', '2026-02-20'::date, ${sec['Transport']}, ${card['Mastercard TD']}, true, true, NULL)
   `;
 
-  // Freelance: received 650$ on the 15th (variable income, manually entered)
+  // Carte de crédit Visa: PAID on the 25th
   await sql`
-    INSERT INTO monthly_incomes (income_id, month, expected_amount, actual_amount, status, received_at, notes)
-    VALUES (${inc['Freelance web']}, ${MONTH}, 650, 650, 'RECEIVED', '2026-02-15'::date, 'Contrat refonte site restaurant')
+    INSERT INTO monthly_expenses (user_id, debt_id, month, name, amount, due_date, status, paid_at, section_id, card_id, is_auto_charged, is_planned, notes)
+    VALUES (${USER_ID}, ${debt['Carte de crédit Visa']}, ${MONTH}, 'Carte de crédit Visa (versement)', 150, '2026-02-25'::date, 'PAID', '2026-02-25'::date, ${sec['Perso']}, ${card['Visa Desjardins']}, false, true, NULL)
   `;
+
+  // 1 imprevu: achat Apple Store — insère directement dans monthly_expenses (pas de template)
+  await sql`
+    INSERT INTO monthly_expenses (user_id, expense_id, month, name, amount, due_date, status, paid_at, section_id, card_id, is_auto_charged, is_planned, notes)
+    VALUES (${USER_ID}, NULL, ${MONTH}, 'AirPods Pro 2', 329, '2026-02-14'::date, 'PAID', '2026-02-14'::date, ${sec['Perso']}, ${card['Visa Desjardins']}, false, false, 'Achat Apple Store St-Catherine')
+  `;
+
+  console.log(`   → ${monthlyExpenses.length + 3} instances dépenses (dont 2 versements dette + 1 imprévu)`);
+
+  // ─────────────────────────────────────────────
+  // 10. DEBT TRANSACTIONS — historique
+  // ─────────────────────────────────────────────
+  console.log('📊 Transactions de dette...');
+
+  // Prêt auto — paiements mensuels backfill (oct 2025 à fév 2026 = 5 mois × 400$)
+  const autoLoanMonths = ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02'];
+  for (const m of autoLoanMonths) {
+    await sql`
+      INSERT INTO debt_transactions (user_id, debt_id, type, amount, month, note, source, created_at)
+      VALUES (${USER_ID}, ${debt['Prêt auto Honda Civic']}, 'PAYMENT', 400, ${m}, 'Versement mensuel', 'MONTHLY_EXPENSE', ${m + '-20T10:00:00Z'})
+    `;
+  }
+
+  // Carte de crédit — paiements + charges (vie réaliste)
+  // Historique: solde initial 3200$, paiements de 150-300$/mois, charges variables
+  const ccTx = [
+    // Oct 2025
+    { type: 'PAYMENT', amount: 200, month: '2025-10', note: 'Paiement mensuel', source: 'MONTHLY_EXPENSE', date: '2025-10-25' },
+    { type: 'CHARGE',  amount: 85,  month: '2025-10', note: 'Achat Amazon - clavier', source: 'MANUAL', date: '2025-10-12' },
+    // Nov 2025
+    { type: 'PAYMENT', amount: 250, month: '2025-11', note: 'Paiement mensuel', source: 'MONTHLY_EXPENSE', date: '2025-11-25' },
+    { type: 'CHARGE',  amount: 120, month: '2025-11', note: 'Cadeau anniversaire', source: 'MANUAL', date: '2025-11-18' },
+    { type: 'CHARGE',  amount: 45,  month: '2025-11', note: 'Uber Eats', source: 'MANUAL', date: '2025-11-22' },
+    // Dec 2025
+    { type: 'PAYMENT', amount: 300, month: '2025-12', note: 'Paiement extra fin d\'année', source: 'EXTRA_PAYMENT', date: '2025-12-26' },
+    { type: 'CHARGE',  amount: 350, month: '2025-12', note: 'Cadeaux de Noël', source: 'MANUAL', date: '2025-12-20' },
+    { type: 'CHARGE',  amount: 65,  month: '2025-12', note: 'Sortie restaurant réveillon', source: 'MANUAL', date: '2025-12-31' },
+    // Jan 2026
+    { type: 'PAYMENT', amount: 200, month: '2026-01', note: 'Paiement mensuel', source: 'MONTHLY_EXPENSE', date: '2026-01-25' },
+    { type: 'CHARGE',  amount: 95,  month: '2026-01', note: 'Soldes Best Buy - câbles', source: 'MANUAL', date: '2026-01-05' },
+    // Feb 2026
+    { type: 'PAYMENT', amount: 150, month: '2026-02', note: 'Versement mensuel', source: 'MONTHLY_EXPENSE', date: '2026-02-25' },
+    { type: 'CHARGE',  amount: 180, month: '2026-02', note: 'Abonnement annuel Figma', source: 'MANUAL', date: '2026-02-03' },
+    { type: 'CHARGE',  amount: 42,  month: '2026-02', note: 'DoorDash St-Valentin', source: 'MANUAL', date: '2026-02-14' },
+  ];
+
+  for (const tx of ccTx) {
+    await sql`
+      INSERT INTO debt_transactions (user_id, debt_id, type, amount, month, note, source, created_at)
+      VALUES (${USER_ID}, ${debt['Carte de crédit Visa']}, ${tx.type}, ${tx.amount}, ${tx.month}, ${tx.note}, ${tx.source}, ${tx.date + 'T10:00:00Z'})
+    `;
+  }
+
+  console.log(`   → ${autoLoanMonths.length + ccTx.length} transactions de dette`);
+
+  // ─────────────────────────────────────────────
+  // 11. MONTHLY INCOMES — Février 2026
+  // ─────────────────────────────────────────────
+  console.log(`💰 Instances revenus (${MONTH})...`);
+
+  await sql`
+    INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, actual_amount, status, received_at, notes)
+    VALUES (${USER_ID}, ${inc['Salaire — Employeur']}, ${MONTH}, 4200, 4200, 'RECEIVED', '2026-02-26'::date, NULL)
+  `;
+
+  await sql`
+    INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, actual_amount, status, received_at, notes)
+    VALUES (${USER_ID}, ${inc['Freelance web']}, ${MONTH}, 800, 650, 'RECEIVED', '2026-02-15'::date, 'Contrat refonte site restaurant')
+  `;
+
+  console.log('   → 2 instances revenus');
+
+  // ─────────────────────────────────────────────
+  // 12. MONTHLY INCOMES — Janvier 2026 (mois précédent pour comparaison)
+  // ─────────────────────────────────────────────
+  console.log('💰 Instances revenus (2026-01)...');
+
+  await sql`
+    INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, actual_amount, status, received_at, notes)
+    VALUES (${USER_ID}, ${inc['Salaire — Employeur']}, '2026-01', 4200, 4200, 'RECEIVED', '2026-01-26'::date, NULL)
+  `;
+
+  await sql`
+    INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, actual_amount, status, received_at, notes)
+    VALUES (${USER_ID}, ${inc['Freelance web']}, '2026-01', 800, 1100, 'RECEIVED', '2026-01-20'::date, 'Gros contrat refactoring API')
+  `;
+
   console.log('   → 2 instances revenus');
 
   // ─────────────────────────────────────────────
   // Summary
   // ─────────────────────────────────────────────
+  const totalRecurring = recurringData.reduce((s, r) => s + r[1], 0);
+  const totalDebtPayments = 400 + 150;
+  const totalPaidExpenses = totalRecurring - 42 + totalDebtPayments + 329; // -42 (Fizz overdue) + 329 (AirPods)
+
   console.log('\n════════════════════════════════════════');
   console.log('✅ SEED TERMINÉ — Données démo chargées');
   console.log('════════════════════════════════════════');
   console.log('');
   console.log('📊 Résumé février 2026 :');
-  console.log('   Dépenses : 12 PAID + 1 OVERDUE (Téléphone 42$)');
-  console.log('   Revenus  : 4 850$ reçu (salaire 4200 + freelance 650)');
-  console.log('   Solde    : +2 538,03$');
-  console.log('   Épargne  : 11 600$ total (3 projets + libre)');
+  console.log(`   Charges récurrentes : ${recurringData.length} (dont 1 OVERDUE: Fizz 42$)`);
+  console.log(`   Versements dette    : 2 (auto 400$ + Visa 150$)`);
+  console.log(`   Imprévu             : 1 (AirPods 329$)`);
+  console.log(`   Revenus             : 4 850$ (salaire 4200 + freelance 650)`);
+  console.log(`   Dettes              : Prêt auto 10 600$ + Carte Visa 1 850$`);
+  console.log('   Épargne             : 11 600$ (3 projets + libre)');
+  console.log('   Valeur nette        : -850$ (11 600 - 12 450)');
+  console.log('');
+  console.log('   📈 Flux février :');
+  console.log('      Épargne   : 1 000$ (Japon 700 + MacBook 300)');
+  console.log('      Dettes    : 550$ payé, 222$ chargé → net +328$');
   console.log('');
   console.log('🔄 Rechargez l\'app : http://localhost:3000');
 }

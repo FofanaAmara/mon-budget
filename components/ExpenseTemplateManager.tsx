@@ -3,7 +3,7 @@
 import { useState, useTransition, useSyncExternalStore } from 'react';
 import { useRouter } from 'next/navigation';
 import { deleteExpense } from '@/lib/actions/expenses';
-import { formatCAD, formatShortDate, daysUntil } from '@/lib/utils';
+import { formatCAD, formatShortDate, daysUntil, calcMonthlyCost } from '@/lib/utils';
 import ExpenseModal from '@/components/ExpenseModal';
 import type { Expense, Section, Card } from '@/lib/types';
 
@@ -127,17 +127,21 @@ export default function ExpenseTemplateManager({ expenses, sections, cards }: Pr
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      {/* Header */}
-      <div className="flex items-center justify-between">
+      {/* Header with total */}
+      <div className="card" style={{
+        padding: '16px 20px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      }}>
         <div>
-          <h2 style={{
-            fontSize: 'var(--text-sm)', fontWeight: 650,
-            color: 'var(--text-primary)',
+          <p className="amount" style={{
+            fontSize: 'var(--text-xl)', fontWeight: 750,
+            letterSpacing: 'var(--tracking-tight)',
           }}>
-            Mes charges fixes
-          </h2>
+            {formatCAD(templateExpenses.reduce((sum, e) => sum + calcMonthlyCost(e), 0))}
+            <span style={{ fontSize: 'var(--text-xs)', fontWeight: 500, color: 'var(--text-tertiary)', marginLeft: '4px' }}>/mois</span>
+          </p>
           <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
-            {templateExpenses.length} depense{templateExpenses.length !== 1 ? 's' : ''} recurrente{templateExpenses.length !== 1 ? 's' : ''}
+            {templateExpenses.length} charge{templateExpenses.length !== 1 ? 's' : ''} fixe{templateExpenses.length !== 1 ? 's' : ''}
           </p>
         </div>
         <button
@@ -181,7 +185,7 @@ export default function ExpenseTemplateManager({ expenses, sections, cards }: Pr
               </span>
             </div>
             <span className="amount" style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
-              {formatCAD(se.reduce((sum, e) => sum + Number(e.amount), 0))}/mois
+              {formatCAD(se.reduce((sum, e) => sum + calcMonthlyCost(e), 0))}/mois
             </span>
           </div>
           <div>
@@ -224,7 +228,7 @@ export default function ExpenseTemplateManager({ expenses, sections, cards }: Pr
               Sans section
             </span>
             <span className="amount" style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
-              {formatCAD(unsectioned.reduce((s, e) => s + Number(e.amount), 0))}/mois
+              {formatCAD(unsectioned.reduce((s, e) => s + calcMonthlyCost(e), 0))}/mois
             </span>
           </div>
           <div>

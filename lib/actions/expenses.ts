@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { sql } from '@/lib/db';
 import { requireAuth } from '@/lib/auth/helpers';
 import { calcNextDueDate } from '@/lib/utils';
-import type { Expense, ExpenseType, RecurrenceFrequency, SavingsContribution } from '@/lib/types';
+import type { Expense, ExpenseType, RecurrenceFrequency, SavingsContribution, MonthlySavingsSummary } from '@/lib/types';
 
 export async function getExpenses(): Promise<Expense[]> {
   const userId = await requireAuth();
@@ -203,6 +203,7 @@ export async function getMonthlySummaryBySection(): Promise<
           WHEN e.recurrence_frequency = 'WEEKLY' THEN e.amount * 52.0 / 12
           WHEN e.recurrence_frequency = 'BIWEEKLY' THEN e.amount * 26.0 / 12
           WHEN e.recurrence_frequency = 'MONTHLY' THEN e.amount
+          WHEN e.recurrence_frequency = 'BIMONTHLY' THEN e.amount / 2.0
           WHEN e.recurrence_frequency = 'QUARTERLY' THEN e.amount / 3.0
           WHEN e.recurrence_frequency = 'YEARLY' THEN e.amount / 12.0
           ELSE e.amount
@@ -350,7 +351,51 @@ export async function getExpensesByCard(cardId: string): Promise<Expense[]> {
   return rows as Expense[];
 }
 
+export async function getMonthlySavingsSummary(month: string): Promise<MonthlySavingsSummary> {
+  const userId = await requireAuth();
+  const [year, monthNum] = month.split('-').map(Number);
+  const monthStart = `${year}-${String(monthNum).padStart(2, '0')}-01`;
+  const daysInMonth = new Date(year, monthNum, 0).getDate();
+  const monthEnd = `${year}-${String(monthNum).padStart(2, '0')}-${String(daysInMonth).padStart(2, '0')}`;
+
+  const rows = await sql`
+    SELECT
+      sc.expense_id,
+      e.name,
+      SUM(sc.amount) as total
+    FROM savings_contributions sc
+    JOIN expenses e ON sc.expense_id = e.id
+    WHERE sc.user_id = ${userId}
+      AND sc.created_at >= ${monthStart}::date
+      AND sc.created_at < (${monthEnd}::date + INTERVAL '1 day')
+    GROUP BY sc.expense_id, e.name
+    ORDER BY total DESC
+  `;
+
+  const byProject = (rows as { expense_id: string; name: string; total: number }[]).map(r => ({
+    expense_id: r.expense_id,
+    name: r.name,
+    total: Number(r.total),
+  }));
+
+  const totalContributions = byProject.reduce((s, p) => s + p.total, 0);
+  const contributionCountRows = await sql`
+    SELECT COUNT(*) as cnt
+    FROM savings_contributions
+    WHERE user_id = ${userId}
+      AND created_at >= ${monthStart}::date
+      AND created_at < (${monthEnd}::date + INTERVAL '1 day')
+  `;
+
+  return {
+    totalContributions,
+    contributionCount: Number(contributionCountRows[0].cnt),
+    byProject,
+  };
+}
+
 // Creates an adhoc (imprevu) expense directly in monthly_expenses.
+// No template is created in `expenses` — adhoc items are standalone transactions.
 export async function createAdhocExpense(
   name: string,
   amount: number,
@@ -358,32 +403,21 @@ export async function createAdhocExpense(
   month: string,
   alreadyPaid: boolean = false,
   dueDate?: string,
+  cardId?: string,
 ): Promise<void> {
   const userId = await requireAuth();
   const today = new Date().toISOString().split('T')[0];
   const effectiveDate = dueDate || today;
 
-  // Insert into expenses table as ONE_TIME
-  const rows = await sql`
-    INSERT INTO expenses (user_id, name, amount, type, section_id, is_active, next_due_date)
-    VALUES (${userId}, ${name}, ${amount}, 'ONE_TIME', ${sectionId}, true, ${effectiveDate}::date)
-    RETURNING id
-  `;
-  const expenseId = (rows[0] as { id: string }).id;
-
   if (alreadyPaid) {
-    // Already paid — log directly as PAID
     await sql`
-      INSERT INTO monthly_expenses (user_id, expense_id, section_id, month, name, amount, status, due_date, paid_at, is_planned)
-      VALUES (${userId}, ${expenseId}, ${sectionId}, ${month}, ${name}, ${amount}, 'PAID', ${effectiveDate}::date, ${effectiveDate}::date, false)
-      ON CONFLICT (expense_id, month) DO NOTHING
+      INSERT INTO monthly_expenses (user_id, expense_id, section_id, card_id, month, name, amount, status, due_date, paid_at, is_planned)
+      VALUES (${userId}, NULL, ${sectionId}, ${cardId ?? null}, ${month}, ${name}, ${amount}, 'PAID', ${effectiveDate}::date, ${effectiveDate}::date, false)
     `;
   } else {
-    // Upcoming — will need to be paid later
     await sql`
-      INSERT INTO monthly_expenses (user_id, expense_id, section_id, month, name, amount, status, due_date, is_planned)
-      VALUES (${userId}, ${expenseId}, ${sectionId}, ${month}, ${name}, ${amount}, 'UPCOMING', ${effectiveDate}::date, false)
-      ON CONFLICT (expense_id, month) DO NOTHING
+      INSERT INTO monthly_expenses (user_id, expense_id, section_id, card_id, month, name, amount, status, due_date, is_planned)
+      VALUES (${userId}, NULL, ${sectionId}, ${cardId ?? null}, ${month}, ${name}, ${amount}, 'UPCOMING', ${effectiveDate}::date, false)
     `;
   }
 

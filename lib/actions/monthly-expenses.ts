@@ -21,6 +21,18 @@ function calcDueDateForMonth(expense: {
     }
   }
 
+  // For BIMONTHLY: only generate if this month is an even number of months from the reference
+  if (expense.recurrence_frequency === 'BIMONTHLY' && expense.recurrence_day) {
+    if (expense.next_due_date) {
+      const ref = new Date(expense.next_due_date + 'T00:00:00');
+      const diffMonths = (year - ref.getFullYear()) * 12 + (monthNum - (ref.getMonth() + 1));
+      if (diffMonths % 2 !== 0) return null; // skip odd-offset months
+    }
+    const daysInMonth = new Date(year, monthNum, 0).getDate();
+    const day = Math.min(expense.recurrence_day, daysInMonth);
+    return `${year}-${String(monthNum).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  }
+
   // For MONTHLY, QUARTERLY, YEARLY: use recurrence_day in this month
   if (expense.recurrence_day && ['MONTHLY', 'QUARTERLY', 'YEARLY'].includes(expense.recurrence_frequency || '')) {
     const daysInMonth = new Date(year, monthNum, 0).getDate();
@@ -215,13 +227,13 @@ export async function markAsPaid(id: string): Promise<void> {
     WHERE id = ${id} AND user_id = ${userId}
   `;
 
-  // If this monthly expense is linked to a debt, decrement remaining_balance
+  // If this monthly expense is linked to a debt, decrement remaining_balance + log transaction
   const meRows = await sql`
-    SELECT debt_id, amount FROM monthly_expenses
+    SELECT debt_id, amount, month FROM monthly_expenses
     WHERE id = ${id} AND user_id = ${userId} AND debt_id IS NOT NULL
   `;
   if (meRows.length > 0) {
-    const { debt_id, amount } = meRows[0] as { debt_id: string; amount: number };
+    const { debt_id, amount, month } = meRows[0] as { debt_id: string; amount: number; month: string };
     await sql`
       UPDATE debts SET
         remaining_balance = GREATEST(remaining_balance - ${amount}, 0),
@@ -232,6 +244,11 @@ export async function markAsPaid(id: string): Promise<void> {
     await sql`
       UPDATE debts SET is_active = false, updated_at = NOW()
       WHERE id = ${debt_id} AND user_id = ${userId} AND remaining_balance <= 0
+    `;
+    // Log the payment as a debt transaction
+    await sql`
+      INSERT INTO debt_transactions (user_id, debt_id, type, amount, month, note, source)
+      VALUES (${userId}, ${debt_id}, 'PAYMENT', ${amount}, ${month}, 'Versement mensuel', 'MONTHLY_EXPENSE')
     `;
     revalidatePath('/projets');
   }

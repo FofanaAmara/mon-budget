@@ -1,0 +1,15 @@
+<!--
+  Mes Finances — PWA Icon 192x192
+  Usage: PWA manifest (standard icon)
+-->
+<svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <rect width="192" height="192" rx="0" fill="#3D3BF3"/>
+  <path
+    d="M48 140 L72 56 L96 118 L120 48 L144 140"
+    stroke="#FFFFFF"
+    stroke-width="16"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>

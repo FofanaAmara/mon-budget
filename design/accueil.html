@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Accueil — Mes Finances</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    /* Patrimoine card: clickable hero at top */
+    .patrimoine-link {
+      display: block;
+      background: var(--surface-raised);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-xl);
+      padding: var(--space-4) var(--space-4);
+      transition: box-shadow var(--duration-normal) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+      cursor: pointer;
+    }
+    .patrimoine-link:hover { box-shadow: var(--shadow-md); }
+    .patrimoine-link:active { transform: scale(0.99); }
+    .patrimoine-link__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .patrimoine-link__label {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--text-secondary);
+      letter-spacing: var(--tracking-wide);
+    }
+    .patrimoine-link__amount {
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-heavy);
+      letter-spacing: var(--tracking-tight);
+      font-variant-numeric: tabular-nums;
+      margin-top: var(--space-1);
+      line-height: 1.15;
+    }
+    .patrimoine-link__detail {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      font-weight: var(--weight-medium);
+      margin-top: var(--space-1);
+      font-variant-numeric: tabular-nums;
+      display: flex;
+      gap: var(--space-3);
+    }
+    .patrimoine-link__arrow {
+      color: var(--text-tertiary);
+      transition: transform var(--duration-fast) var(--ease-out);
+    }
+    .patrimoine-link:hover .patrimoine-link__arrow { transform: translateX(2px); }
+
+    /* Tab content */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Dashboard cards spacing */
+    .dashboard-cards { margin-top: var(--space-3); }
+    .dashboard-card {
+      background: var(--surface-raised);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-xl);
+      padding: var(--space-4);
+    }
+    .dashboard-card + .dashboard-card { margin-top: var(--space-3); }
+    .dashboard-card__title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--text-secondary);
+      letter-spacing: var(--tracking-wide);
+      margin-bottom: var(--space-3);
+    }
+    .dashboard-card__amount {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-heavy);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: var(--tracking-tight);
+      line-height: 1.2;
+    }
+
+    /* Solde card accent */
+    .solde-positive {
+      background: var(--positive-subtle);
+      border-color: transparent;
+    }
+    .solde-positive .dashboard-card__title { color: var(--positive-text); }
+
+    /* Sante gauge */
+    .sante-hero {
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+      padding: var(--space-4) 0;
+    }
+    .sante-details {
+      flex: 1;
+    }
+    .sante-score-label {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      font-weight: var(--weight-medium);
+    }
+    .sante-description {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      margin-top: var(--space-1);
+      line-height: 1.45;
+    }
+
+    /* Reste a vivre */
+    .rav-card {
+      background: var(--surface-raised);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-xl);
+      padding: var(--space-4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Timeline past vs future */
+    .timeline-item--future { opacity: 0.6; }
+    .timeline-item--future .timeline-item__name { font-style: normal; }
+
+    /* Tab transition */
+    .tab-content.active {
+      animation: fadeIn var(--duration-slow) var(--ease-out) both;
+    }
+  </style>
+</head>
+<body>
+  <!-- Desktop Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar__logo">
+      <svg viewBox="0 0 280 56" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <path d="M8 40 L18 14 L28 32 L38 8 L48 40" stroke="#3D3BF3" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <text x="64" y="37" font-family="'Geist','Inter','SF Pro Display',-apple-system,system-ui,sans-serif" font-size="26" font-weight="600" letter-spacing="-0.02em" fill="#0D0D0D">Mes Finances</text>
+      </svg>
+    </div>
+    <div class="sidebar__nav">
+      <a href="accueil.html" class="sidebar__item active">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>
+        Accueil
+      </a>
+      <a href="depenses.html" class="sidebar__item">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+        Depenses
+      </a>
+      <a href="revenus.html" class="sidebar__item">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Revenus
+      </a>
+      <a href="patrimoine.html" class="sidebar__item">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+        Patrimoine
+      </a>
+      <a href="reglages.html" class="sidebar__item">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        Reglages
+      </a>
+    </div>
+    <div class="sidebar__footer">Mes Finances v1.0</div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="app-shell">
+    <!-- Patrimoine Card -->
+    <div style="padding-top: var(--space-5);">
+      <a href="patrimoine.html" class="patrimoine-link">
+        <div class="patrimoine-link__header">
+          <span class="patrimoine-link__label">Patrimoine</span>
+          <span class="patrimoine-link__arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </span>
+        </div>
+        <div class="patrimoine-link__amount text-positive">+4 280,00 $</div>
+        <div class="patrimoine-link__detail">
+          <span>Actifs: 12 680 $</span>
+          <span>Passifs: 8 400 $</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Month Navigator -->
+    <div class="month-nav" style="margin-top: var(--space-4);">
+      <button class="month-nav__btn" aria-label="Mois precedent">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="month-nav__label">Mars 2026</span>
+      <button class="month-nav__btn" aria-label="Mois suivant">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <!-- Tab Pills -->
+    <div class="pills" style="margin-top: var(--space-2);">
+      <button class="pill active" data-tab="dashboard">Tableau de bord</button>
+      <button class="pill" data-tab="timeline">Timeline</button>
+      <button class="pill" data-tab="sante">Sante</button>
+    </div>
+
+    <!-- ===================== TAB: Tableau de bord ===================== -->
+    <div class="tab-content active" id="tab-dashboard">
+      <div class="dashboard-cards" style="margin-top: var(--space-4);">
+
+        <!-- Revenus Card -->
+        <div class="dashboard-card">
+          <div class="dashboard-card__title">Revenus</div>
+          <div class="dashboard-card__amount">3 200,00 $</div>
+          <div style="display:flex; justify-content:space-between; margin-top: var(--space-3);">
+            <div>
+              <div class="metric-row__label" style="font-size: var(--text-sm); color: var(--text-secondary);">Attendu</div>
+              <div style="font-weight:600; font-variant-numeric:tabular-nums; font-size: var(--text-sm);">4 850,00 $</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="metric-row__label" style="font-size: var(--text-sm); color: var(--text-secondary);">Recu</div>
+              <div style="font-weight:600; font-variant-numeric:tabular-nums; font-size: var(--text-sm); color: var(--positive);">3 200,00 $</div>
+            </div>
+          </div>
+          <div class="progress" style="margin-top: var(--space-3);">
+            <div class="progress-fill progress-fill--positive" style="width: 66%;"></div>
+          </div>
+          <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-2); font-weight:500;">66% recu</div>
+        </div>
+
+        <!-- Depenses Card -->
+        <div class="dashboard-card">
+          <div class="dashboard-card__title" style="display:flex; align-items:center; justify-content:space-between;">
+            Depenses
+            <span class="badge badge--negative badge--count">3</span>
+          </div>
+          <div class="dashboard-card__amount">2 840,00 $</div>
+          <div style="display:flex; justify-content:space-between; margin-top: var(--space-3); gap: var(--space-2);">
+            <div>
+              <div style="font-size: var(--text-xs); color: var(--text-secondary); font-weight:500;">Attendu</div>
+              <div style="font-weight:600; font-variant-numeric:tabular-nums; font-size: var(--text-sm);">2 840,00 $</div>
+            </div>
+            <div>
+              <div style="font-size: var(--text-xs); color: var(--text-secondary); font-weight:500;">Paye</div>
+              <div style="font-weight:600; font-variant-numeric:tabular-nums; font-size: var(--text-sm); color: var(--positive);">1 945,00 $</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size: var(--text-xs); color: var(--text-secondary); font-weight:500;">Reste</div>
+              <div style="font-weight:600; font-variant-numeric:tabular-nums; font-size: var(--text-sm); color: var(--warning);">895,00 $</div>
+            </div>
+          </div>
+          <div class="progress" style="margin-top: var(--space-3);">
+            <div class="progress-fill progress-fill--positive" style="width: 68%;"></div>
+          </div>
+          <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-2); font-weight:500; display:flex; justify-content:space-between;">
+            <span>68% paye</span>
+            <span style="color: var(--negative);">3 en retard</span>
+          </div>
+        </div>
+
+        <!-- Charges fixes Card -->
+        <div class="dashboard-card">
+          <div class="dashboard-card__title">Charges fixes</div>
+          <div class="dashboard-card__amount">2 465,00 $ <span style="font-size: var(--text-sm); font-weight: 500; color: var(--text-secondary);">/mois</span></div>
+          <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-top: var(--space-2); font-weight:500;">
+            Cout mensuel normalise de 14 charges
+          </div>
+        </div>
+
+        <!-- Solde previsionnel -->
+        <div class="dashboard-card solde-positive">
+          <div class="dashboard-card__title">Solde previsionnel</div>
+          <div class="dashboard-card__amount text-positive">+2 010,00 $</div>
+          <div style="font-size: var(--text-sm); color: var(--positive-text); margin-top: var(--space-2); font-weight:500;">
+            Revenus attendus - Depenses attendues
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===================== TAB: Timeline ===================== -->
+    <div class="tab-content" id="tab-timeline">
+      <div style="margin-top: var(--space-4);">
+
+        <!-- Day: Mar 1 -->
+        <div class="timeline-day">
+          <div class="timeline-date">samedi 1 mars</div>
+          <div class="timeline-item">
+            <span class="timeline-item__dot" style="background: var(--positive);"></span>
+            <span class="timeline-item__name">Salaire — Emploi</span>
+            <span class="badge badge--positive">Recu</span>
+            <span class="timeline-item__amount text-positive">+3 200,00 $</span>
+          </div>
+          <div class="timeline-item">
+            <span class="timeline-item__dot" style="background: var(--negative);"></span>
+            <span class="timeline-item__name">Loyer</span>
+            <span class="badge badge--positive">Paye</span>
+            <span class="timeline-item__amount">-1 250,00 $</span>
+          </div>
+        </div>
+
+        <!-- Day: Mar 3 -->
+        <div class="timeline-day">
+          <div class="timeline-date">lundi 3 mars</div>
+          <div class="timeline-item">
+            <span class="timeline-item__dot" style="background: var(--negative);"></span>
+            <span class="timeline-item__name">Hydro-Quebec</span>
+            <span class="badge badge--positive">Paye</span>
+            <span class="timeline-item__amount">-145,00 $</span>
+          </div>
+        </div>
+
+        <!-- Day: Mar 5 -->
+        <div class="timeline-day">
+          <div class="timeline-date">mercredi 5 mars</div>
+          <div class="timeline-item">
+            <span class="timeline-item__dot" style="background: var(--negative);"></span>
+            <span class="timeline-item__name">Internet Bell</span>
+            <span class="badge badge--negative">En retard</span>
+            <span class="timeline-item__amount">-89,99 $</span>
+          </div>
+          <div class="timeline-item">
+            <span class="timeline-item__dot" style="background: var(--negative);"></span>
+            <span class="timeline-item__name">Assurance auto</span>
+            <span class="badge badge--negative">En retard</span>
+            <span class="timeline-item__amount">-125,00 $</span>
+          </div>
+        </div>
+
+        <!-- Day: Mar 10 -->
+        <div class="timeline-day">
+          <div class="timeline-date">lundi 10 mars</div>
+          <div class="timeline-item">
+            <span class="timeline-item__dot" style="background: var(--negative);"></span>
+            <span class="timeline-item__name">Netflix</span>
+            <span class="badge badge--positive">Paye</span>
+            <span class="timeline-item__amount">-22,99 $</span>
+          </div>
+          <div class="timeline-item">
+            <span class="timeline-item__dot" style="background: var(--negative);"></span>
+            <span class="timeline-item__name">Spotify</span>
+            <span class="badge badge--negative">En retard</span>
+            <span class="timeline-item__amount">-11,99 $</span>
+          </div>
+        </div>
+
+        <!-- Day: Mar 15 (today) -->
+        <div class="timeline-day">
+          <div class="timeline-date timeline-date--today">vendredi 15 mars — Aujourd'hui</div>
+          <div class="timeline-item">
+            <span class="timeline-item__dot" style="background: var(--positive);"></span>
+            <span class="timeline-item__name">Pige freelance</span>
+            <span class="badge badge--warning">Attendu</span>
+            <span class="timeline-item__amount text-positive">+650,00 $</span>
+          </div>
+        </div>
+
+        <!-- Day: Mar 20 (future) -->
+        <div class="timeline-day">
+          <div class="timeline-date" style="color: var(--text-tertiary);">jeudi 20 mars</div>
+          <div class="timeline-item timeline-item--future">
+            <span class="timeline-item__dot" style="background: var(--surface-sunken);"></span>
+            <span class="timeline-item__name">Telephone Fizz</span>
+            <span class="badge badge--neutral">A venir</span>
+            <span class="timeline-item__amount">-45,00 $</span>
+          </div>
+        </div>
+
+        <!-- Day: Mar 25 (future) -->
+        <div class="timeline-day">
+          <div class="timeline-date" style="color: var(--text-tertiary);">mardi 25 mars</div>
+          <div class="timeline-item timeline-item--future">
+            <span class="timeline-item__dot" style="background: var(--surface-sunken);"></span>
+            <span class="timeline-item__name">Gym Econofitness</span>
+            <span class="badge badge--neutral">A venir</span>
+            <span class="timeline-item__amount">-21,99 $</span>
+          </div>
+          <div class="timeline-item timeline-item--future">
+            <span class="timeline-item__dot" style="background: var(--surface-sunken);"></span>
+            <span class="timeline-item__name">Epicerie estimee</span>
+            <span class="badge badge--neutral">A venir</span>
+            <span class="timeline-item__amount">-400,00 $</span>
+          </div>
+        </div>
+
+        <!-- Day: Mar 28 (future) -->
+        <div class="timeline-day">
+          <div class="timeline-date" style="color: var(--text-tertiary);">vendredi 28 mars</div>
+          <div class="timeline-item timeline-item--future">
+            <span class="timeline-item__dot" style="background: var(--surface-sunken);"></span>
+            <span class="timeline-item__name">Pret auto</span>
+            <span class="badge badge--neutral">A venir</span>
+            <span class="timeline-item__amount">-350,00 $</span>
+          </div>
+          <div class="timeline-item timeline-item--future">
+            <span class="timeline-item__dot" style="background: var(--positive);"></span>
+            <span class="timeline-item__name">Revenu locatif</span>
+            <span class="badge badge--neutral">A venir</span>
+            <span class="timeline-item__amount text-positive">+1 000,00 $</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===================== TAB: Sante ===================== -->
+    <div class="tab-content" id="tab-sante">
+      <div style="margin-top: var(--space-4);">
+
+        <!-- Health Score Gauge -->
+        <div class="dashboard-card" style="text-align:center; padding: var(--space-6) var(--space-4);">
+          <div class="gauge">
+            <svg viewBox="0 0 120 120">
+              <circle class="gauge-bg" cx="60" cy="60" r="50"/>
+              <circle class="gauge-fill" cx="60" cy="60" r="50"
+                stroke="#1A7F5A"
+                stroke-dasharray="314.16"
+                stroke-dashoffset="87.96"
+                />
+            </svg>
+            <div class="gauge-value">
+              <span class="gauge-number text-positive">72</span>
+              <span class="gauge-label">/ 100</span>
+            </div>
+          </div>
+          <div style="margin-top: var(--space-4);">
+            <div style="font-size: var(--text-lg); font-weight: var(--weight-bold); letter-spacing: var(--tracking-tight);">Bonne sante</div>
+            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-top: var(--space-1); line-height:1.5; max-width: 300px; margin-left:auto; margin-right:auto;">
+              Bon rythme. 3 paiements a regulariser pour ameliorer ton score.
+            </div>
+          </div>
+        </div>
+
+        <!-- Reste a vivre -->
+        <div class="rav-card" style="margin-top: var(--space-3);">
+          <div>
+            <div style="font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--text-secondary); letter-spacing: var(--tracking-wide);">Reste a vivre</div>
+            <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-top: 2px;">Revenus - Depenses du mois</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size: var(--text-xl); font-weight: var(--weight-heavy); font-variant-numeric: tabular-nums; letter-spacing: var(--tracking-tight); color: var(--positive);">+2 010 $</div>
+          </div>
+        </div>
+
+        <!-- Alertes prioritaires -->
+        <div style="margin-top: var(--space-5);">
+          <div style="font-size: var(--text-sm); font-weight: var(--weight-bold); color: var(--text-secondary); letter-spacing: var(--tracking-wide); margin-bottom: var(--space-3); text-transform: uppercase;">Alertes prioritaires</div>
+
+          <div class="alert alert--negative">
+            <span style="flex-shrink:0; font-size:16px;">&#9888;</span>
+            <div>
+              <strong>3 depenses en retard</strong>
+              <div style="margin-top:2px; opacity:0.85;">Internet Bell, Assurance auto, Spotify — total 226,98 $</div>
+            </div>
+          </div>
+
+          <div class="alert alert--warning">
+            <span style="flex-shrink:0; font-size:16px;">&#9201;</span>
+            <div>
+              <strong>1 depense dans les 5 prochains jours</strong>
+              <div style="margin-top:2px; opacity:0.85;">Telephone Fizz — 45,00 $ le 20 mars</div>
+            </div>
+          </div>
+
+          <div class="alert alert--warning">
+            <span style="flex-shrink:0; font-size:16px;">&#128176;</span>
+            <div>
+              <strong>1 revenu attendu non recu</strong>
+              <div style="margin-top:2px; opacity:0.85;">Pige freelance — 650,00 $ prevu le 15 mars</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Score breakdown -->
+        <div class="dashboard-card" style="margin-top: var(--space-4);">
+          <div class="dashboard-card__title">Detail du score</div>
+          <div style="display:flex; flex-direction:column; gap: var(--space-3);">
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom: 4px;">
+                <span style="font-size: var(--text-sm); font-weight: var(--weight-medium);">Taux de paiement</span>
+                <span style="font-size: var(--text-sm); font-weight: var(--weight-semibold);">68%</span>
+              </div>
+              <div class="progress"><div class="progress-fill progress-fill--positive" style="width:68%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom: 4px;">
+                <span style="font-size: var(--text-sm); font-weight: var(--weight-medium);">Ratio revenus/depenses</span>
+                <span style="font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--positive);">Excellent</span>
+              </div>
+              <div class="progress"><div class="progress-fill progress-fill--positive" style="width:90%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom: 4px;">
+                <span style="font-size: var(--text-sm); font-weight: var(--weight-medium);">Retards</span>
+                <span style="font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--negative);">3 actifs</span>
+              </div>
+              <div class="progress"><div class="progress-fill progress-fill--negative" style="width:30%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom: 4px;">
+                <span style="font-size: var(--text-sm); font-weight: var(--weight-medium);">Taux d'epargne</span>
+                <span style="font-size: var(--text-sm); font-weight: var(--weight-semibold);">12%</span>
+              </div>
+              <div class="progress"><div class="progress-fill" style="width:48%"></div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Bottom Nav (Mobile) -->
+  <nav class="bottom-nav">
+    <a href="accueil.html" class="bottom-nav__item active">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>
+      <span>Accueil</span>
+    </a>
+    <a href="depenses.html" class="bottom-nav__item">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+      <span>Depenses</span>
+    </a>
+    <a href="revenus.html" class="bottom-nav__item">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <span>Revenus</span>
+    </a>
+    <a href="patrimoine.html" class="bottom-nav__item">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+      <span>Patrimoine</span>
+    </a>
+    <a href="reglages.html" class="bottom-nav__item">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <span>Menu</span>
+    </a>
+  </nav>
+
+  <script>
+    // Tab switching
+    document.querySelectorAll('.pill[data-tab]').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.pill[data-tab]').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        pill.classList.add('active');
+        document.getElementById('tab-' + pill.dataset.tab).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

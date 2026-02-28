@@ -2,15 +2,17 @@
 
 import Link from 'next/link';
 import { formatCAD } from '@/lib/utils';
-import type { MonthSummary } from '@/lib/types';
+import type { MonthSummary, MonthlySavingsSummary, MonthlyDebtSummary } from '@/lib/types';
 
 type Props = {
   summary: MonthSummary;
   incomeSummary: { expectedTotal: number; actualTotal: number };
   totalMonthlyExpenses: number;
+  savingsSummary: MonthlySavingsSummary;
+  debtSummary: MonthlyDebtSummary;
 };
 
-export default function TabTableauDeBord({ summary, incomeSummary }: Props) {
+export default function TabTableauDeBord({ summary, incomeSummary, savingsSummary, debtSummary }: Props) {
   // Revenus: ratio reçu vs attendu
   const revenuPct = incomeSummary.expectedTotal > 0
     ? (incomeSummary.actualTotal / incomeSummary.expectedTotal) * 100 : 0;
@@ -156,6 +158,108 @@ export default function TabTableauDeBord({ summary, incomeSummary }: Props) {
                 ? 'Toutes les charges payees'
                 : `${formatCAD(Math.abs(depenseDelta))} restant sur les charges`}
           </p>
+        </div>
+      </Link>
+
+      {/* Epargne card */}
+      <Link href="/projets" className="block card card-press">
+        <div style={{ padding: '16px 20px' }}>
+          <div className="flex items-center justify-between" style={{ marginBottom: '12px' }}>
+            <span className="section-label">Epargne</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
+          </div>
+
+          {savingsSummary.totalContributions > 0 ? (
+            <>
+              <div className="flex items-start justify-between" style={{ marginBottom: '12px' }}>
+                <div>
+                  <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '2px' }}>Ce mois</p>
+                  <p className="amount" style={{ fontSize: 'var(--text-lg)', color: 'var(--positive)' }}>
+                    +{formatCAD(savingsSummary.totalContributions)}
+                  </p>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '2px' }}>Contributions</p>
+                  <p className="amount" style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
+                    {savingsSummary.contributionCount}
+                  </p>
+                </div>
+              </div>
+
+              {/* Breakdown by project (max 3) */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                {savingsSummary.byProject.slice(0, 3).map((p) => (
+                  <div key={p.expense_id} className="flex items-center justify-between" style={{ fontSize: 'var(--text-xs)' }}>
+                    <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>{p.name}</span>
+                    <span className="amount" style={{ color: 'var(--positive)', fontWeight: 600 }}>+{formatCAD(p.total)}</span>
+                  </div>
+                ))}
+                {savingsSummary.byProject.length > 3 && (
+                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', fontWeight: 500 }}>
+                    +{savingsSummary.byProject.length - 3} autre{savingsSummary.byProject.length - 3 > 1 ? 's' : ''}
+                  </p>
+                )}
+              </div>
+            </>
+          ) : (
+            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)', fontWeight: 500 }}>
+              Aucune contribution ce mois
+            </p>
+          )}
+        </div>
+      </Link>
+
+      {/* Dettes card */}
+      <Link href="/projets" className="block card card-press">
+        <div style={{ padding: '16px 20px' }}>
+          <div className="flex items-center justify-between" style={{ marginBottom: '12px' }}>
+            <span className="section-label">Dettes</span>
+            <div className="flex items-center" style={{ gap: '8px' }}>
+              {debtSummary.chargeCount > 0 && (
+                <span className="badge" style={{ background: 'var(--negative-subtle)', color: 'var(--negative-text)' }}>
+                  {debtSummary.chargeCount} charge{debtSummary.chargeCount > 1 ? 's' : ''}
+                </span>
+              )}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
+            </div>
+          </div>
+
+          {debtSummary.paymentCount > 0 || debtSummary.chargeCount > 0 ? (
+            <>
+              <div className="flex items-start justify-between" style={{ marginBottom: '12px' }}>
+                <div>
+                  <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '2px' }}>Paiements</p>
+                  <p className="amount" style={{ fontSize: 'var(--text-lg)', color: 'var(--positive)' }}>
+                    {formatCAD(debtSummary.totalPayments)}
+                  </p>
+                </div>
+                {debtSummary.totalCharges > 0 && (
+                  <div style={{ textAlign: 'right' }}>
+                    <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '2px' }}>Nouvelles charges</p>
+                    <p className="amount" style={{ fontSize: 'var(--text-sm)', color: 'var(--negative-text)' }}>
+                      +{formatCAD(debtSummary.totalCharges)}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Delta */}
+              <p style={{
+                fontSize: 'var(--text-xs)', fontWeight: 600,
+                color: debtSummary.netMovement > 0 ? 'var(--positive)' : debtSummary.netMovement < 0 ? 'var(--negative-text)' : 'var(--text-tertiary)',
+              }}>
+                {debtSummary.netMovement > 0
+                  ? `Dette reduite de ${formatCAD(debtSummary.netMovement)}`
+                  : debtSummary.netMovement < 0
+                    ? `Dette augmentee de ${formatCAD(Math.abs(debtSummary.netMovement))}`
+                    : 'Aucun mouvement net'}
+              </p>
+            </>
+          ) : (
+            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)', fontWeight: 500 }}>
+              Aucun mouvement ce mois
+            </p>
+          )}
         </div>
       </Link>
 
