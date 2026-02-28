@@ -5,7 +5,7 @@ import BottomNav from '@/components/BottomNav';
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isAuthPage = pathname.startsWith('/auth') || pathname.startsWith('/account');
+  const isAuthPage = pathname.startsWith('/auth') || pathname.startsWith('/account') || pathname === '/landing';
 
   if (isAuthPage) {
     return <>{children}</>;

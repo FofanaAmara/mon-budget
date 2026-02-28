@@ -9,7 +9,7 @@ export default async function middleware(req: NextRequest) {
   }
 
   // For all other matched routes, delegate to Neon Auth middleware
-  const handler = auth.middleware({ loginUrl: '/auth/sign-in' });
+  const handler = auth.middleware({ loginUrl: '/landing' });
   return handler(req);
 }
 
@@ -24,6 +24,6 @@ export const config = {
      * - api/auth (Neon Auth API handler)
      * - auth/ (auth pages themselves)
      */
-    '/((?!_next/static|_next/image|favicon\\.ico|manifest\\.json|sw\\.js|icons/|api/auth|auth/).*)',
+    '/((?!_next/static|_next/image|favicon\\.ico|manifest\\.json|sw\\.js|icons/|api/auth|auth/|landing).*)',
   ],
 };
