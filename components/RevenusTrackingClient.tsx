@@ -182,9 +182,12 @@ export default function RevenusTrackingClient({
   return (
     <div style={{ paddingBottom: '96px', minHeight: '100vh' }}>
 
+      {/* ── MONTH NAVIGATOR ─────────────────────────────────────────────── */}
+      <MonthNavigator month={month} basePath="/revenus" />
+
       {/* ── MONUMENT: THE SCOREBOARD ─────────────────────────────────────── */}
       <div style={{
-        padding: '28px 20px 20px',
+        padding: '20px 20px 20px',
         textAlign: 'center',
       }}>
         <p style={{
@@ -313,11 +316,6 @@ export default function RevenusTrackingClient({
         )}
       </div>
 
-      {/* ── MONTH NAVIGATOR ─────────────────────────────────────────────── */}
-      <div style={{ padding: '0 20px' }}>
-        <MonthNavigator month={month} basePath="/revenus" />
-      </div>
-
       {/* ── TABS — underline style ───────────────────────────────────────── */}
       <div style={{
         display: 'flex',
@@ -395,16 +393,16 @@ export default function RevenusTrackingClient({
                   {(expectedIncomes.length > 0 || unregisteredVariables.length > 0) && (
                     <div style={{ marginBottom: '20px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-                        <h2 style={{
+                        <p style={{
                           fontSize: '11px',
                           fontWeight: 700,
                           letterSpacing: '0.08em',
                           textTransform: 'uppercase' as const,
-                          color: 'var(--slate-400, #94A3B8)',
+                          color: 'var(--teal-700, #0F766E)',
                           paddingLeft: '4px',
                         }}>
                           Revenus attendus ({expectedIncomes.length + unregisteredVariables.length})
-                        </h2>
+                        </p>
                         {/* Desktop: inline add button */}
                         {isCurrentMonth && (
                           <button
@@ -466,17 +464,17 @@ export default function RevenusTrackingClient({
                   {/* Adhoc / ponctuel incomes section */}
                   {adhocIncomes.length > 0 && (
                     <div style={{ marginBottom: '20px' }}>
-                      <h2 style={{
+                      <p style={{
                         fontSize: '11px',
                         fontWeight: 700,
                         letterSpacing: '0.08em',
                         textTransform: 'uppercase' as const,
-                        color: 'var(--slate-400, #94A3B8)',
+                        color: 'var(--teal-700, #0F766E)',
                         marginBottom: '10px',
                         paddingLeft: '4px',
                       }}>
                         Revenus ponctuels ({adhocIncomes.length})
-                      </h2>
+                      </p>
                       <div style={{
                         background: 'white',
                         border: '1px solid var(--slate-200, #E2E8F0)',

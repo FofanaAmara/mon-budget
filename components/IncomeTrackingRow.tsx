@@ -36,66 +36,121 @@ export function IncomeInstanceRow({ mi, index, isCurrentMonth, onMarkReceived, o
     : 'Attendu';
 
   return (
-    <div>
-      {index > 0 && <div className="divider" style={{ marginLeft: '20px', marginRight: '20px' }} />}
-      <div style={{ padding: '12px 20px' }}>
+    <div style={{
+      borderBottom: '1px solid var(--slate-100, #F1F5F9)',
+    }}>
+      <div style={{ padding: '12px 16px 12px 18px' }}>
         <div className="flex items-center" style={{ gap: '12px' }}>
+          {/* Category icon — 38px aligned with ExpenseTrackingRow */}
           <div style={{
-            width: '32px', height: '32px', borderRadius: 'var(--radius-md)',
+            width: '38px', height: '38px', borderRadius: 'var(--radius-sm)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: srcMeta.bg, flexShrink: 0, fontSize: '14px',
+            background: srcMeta.bg, flexShrink: 0, fontSize: '18px', lineHeight: '1',
           }}>
             {srcMeta.icon}
           </div>
+
+          {/* Name + meta */}
           <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: 'var(--text-sm)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {mi.income_name ?? '—'}
-            </p>
-            <div className="flex items-center" style={{ gap: '6px', marginTop: '3px', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '10px', fontWeight: 600, padding: '1px 5px', borderRadius: '999px', background: statusBg, color: statusColor }}>
-                {statusLabel}
-              </span>
-              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
-                {mi.is_auto_deposited ? '· Auto' : ''}
-                {isReceived && mi.received_at ? ` · ${formatShortDate(mi.received_at)}` : ''}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{
+                fontSize: '14px',
+                fontWeight: 600,
+                color: 'var(--slate-900)',
+                letterSpacing: '-0.01em',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}>
+                {mi.income_name ?? '—'}
               </span>
             </div>
-            {mi.income_frequency === 'BIWEEKLY' && mi.income_pay_anchor_date && (
-              <p style={{ fontSize: '11px', color: 'var(--accent)', marginTop: '2px', fontWeight: 600 }}>
-                Prochaine : {formatShortDate(getNextBiweeklyPayDate(mi.income_pay_anchor_date))}
-              </p>
-            )}
-          </div>
-          <div style={{ textAlign: 'right', flexShrink: 0 }}>
-            {isReceived && mi.actual_amount !== null ? (
-              <span className="amount" style={{ fontSize: 'var(--text-sm)', color: 'var(--positive)' }}>
-                {formatCAD(Number(mi.actual_amount))}
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px',
+              fontSize: '11px', fontWeight: 600, color: 'var(--slate-400)',
+              letterSpacing: '0.02em',
+            }}>
+              <span style={{
+                padding: '1px 6px', borderRadius: '999px',
+                background: statusBg, color: statusColor,
+                fontSize: '10px', fontWeight: 700,
+                letterSpacing: '0.02em',
+              }}>
+                {statusLabel}
               </span>
-            ) : (
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)', fontVariantNumeric: 'tabular-nums' }}>
-                ~{formatCAD(Number(mi.expected_amount ?? 0))}
-              </span>
-            )}
+              {mi.is_auto_deposited && (
+                <>
+                  <span style={{ width: '3px', height: '3px', borderRadius: '50%', background: 'var(--slate-300)', display: 'inline-block', flexShrink: 0 }} />
+                  <span style={{ textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>Auto</span>
+                </>
+              )}
+              {isReceived && mi.received_at && (
+                <>
+                  <span style={{ width: '3px', height: '3px', borderRadius: '50%', background: 'var(--slate-300)', display: 'inline-block', flexShrink: 0 }} />
+                  <span>{formatShortDate(mi.received_at)}</span>
+                </>
+              )}
+              {mi.income_frequency === 'BIWEEKLY' && mi.income_pay_anchor_date && (
+                <>
+                  <span style={{ width: '3px', height: '3px', borderRadius: '50%', background: 'var(--slate-300)', display: 'inline-block', flexShrink: 0 }} />
+                  <span style={{ color: 'var(--accent)' }}>
+                    Prochaine : {formatShortDate(getNextBiweeklyPayDate(mi.income_pay_anchor_date))}
+                  </span>
+                </>
+              )}
+            </div>
           </div>
 
-          {isCurrentMonth && (
-            <button
-              onClick={() => setExpanded((v) => !v)}
-              style={{
-                padding: '8px', color: 'var(--text-tertiary)',
-                borderRadius: 'var(--radius-sm)',
-                transition: `color var(--duration-fast) var(--ease-out)`,
-                flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer',
-              }}
-              aria-label="Actions"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                <circle cx="12" cy="5" r="1" fill="currentColor" />
-                <circle cx="12" cy="12" r="1" fill="currentColor" />
-                <circle cx="12" cy="19" r="1" fill="currentColor" />
-              </svg>
-            </button>
-          )}
+          {/* Amount */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+            {isReceived && mi.actual_amount !== null ? (
+              <span style={{
+                fontSize: '15px',
+                fontWeight: 800,
+                letterSpacing: '-0.02em',
+                color: 'var(--positive)',
+                fontVariantNumeric: 'tabular-nums',
+                whiteSpace: 'nowrap',
+              }}>
+                <span style={{ fontSize: '0.7em', fontWeight: 600, color: 'var(--teal-700)' }}>$</span>
+                {Number(mi.actual_amount).toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+              </span>
+            ) : (
+              <span style={{
+                fontSize: '15px',
+                fontWeight: 800,
+                letterSpacing: '-0.02em',
+                color: 'var(--slate-400)',
+                fontVariantNumeric: 'tabular-nums',
+                whiteSpace: 'nowrap',
+              }}>
+                <span style={{ fontSize: '0.7em', fontWeight: 500, color: 'var(--slate-300)' }}>~$</span>
+                {Number(mi.expected_amount ?? 0).toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+              </span>
+            )}
+
+            {/* Three-dot menu */}
+            {isCurrentMonth && (
+              <button
+                onClick={() => setExpanded((v) => !v)}
+                style={{
+                  width: '28px', height: '28px',
+                  padding: '0', color: 'var(--text-tertiary)',
+                  borderRadius: 'var(--radius-sm)',
+                  transition: `color var(--duration-fast) var(--ease-out)`,
+                  flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}
+                aria-label="Actions"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <circle cx="12" cy="5" r="1" fill="currentColor" />
+                  <circle cx="12" cy="12" r="1" fill="currentColor" />
+                  <circle cx="12" cy="19" r="1" fill="currentColor" />
+                </svg>
+              </button>
+            )}
+          </div>
         </div>
 
         {expanded && isCurrentMonth && (
@@ -140,46 +195,83 @@ export function VariableIncomeRow({ inc, index, isCurrentMonth, onMarkReceived }
   const srcMeta = SOURCE_META[(inc.source ?? 'OTHER') as IncomeSource];
 
   return (
-    <div>
-      {index > 0 && <div className="divider" style={{ marginLeft: '20px', marginRight: '20px' }} />}
-      <div style={{ padding: '12px 20px' }}>
+    <div style={{
+      borderBottom: '1px solid var(--slate-100, #F1F5F9)',
+    }}>
+      <div style={{ padding: '12px 16px 12px 18px' }}>
         <div className="flex items-center" style={{ gap: '12px' }}>
+          {/* Category icon — 38px aligned with ExpenseTrackingRow */}
           <div style={{
-            width: '32px', height: '32px', borderRadius: 'var(--radius-md)',
+            width: '38px', height: '38px', borderRadius: 'var(--radius-sm)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: srcMeta.bg, flexShrink: 0, fontSize: '14px',
+            background: srcMeta.bg, flexShrink: 0, fontSize: '18px', lineHeight: '1',
           }}>
             {srcMeta.icon}
           </div>
+
+          {/* Name + meta */}
           <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: 'var(--text-sm)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <span style={{
+              fontSize: '14px',
+              fontWeight: 600,
+              color: 'var(--slate-900)',
+              letterSpacing: '-0.01em',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              display: 'block',
+            }}>
               {inc.name}
-            </p>
-            <div className="flex items-center" style={{ gap: '6px', marginTop: '3px' }}>
-              <span style={{ fontSize: '10px', fontWeight: 600, padding: '1px 5px', borderRadius: '999px', background: 'var(--surface-sunken)', color: 'var(--text-tertiary)' }}>
+            </span>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px',
+              fontSize: '11px', fontWeight: 600, color: 'var(--slate-400)',
+              letterSpacing: '0.02em',
+            }}>
+              <span style={{
+                padding: '1px 6px', borderRadius: '999px',
+                background: 'var(--surface-sunken)', color: 'var(--text-tertiary)',
+                fontSize: '10px', fontWeight: 700, letterSpacing: '0.02em',
+              }}>
                 Variable
               </span>
             </div>
           </div>
-          <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)', fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
-            {inc.estimated_amount ? `~${formatCAD(Number(inc.estimated_amount))}` : '—'}
-          </span>
-          {isCurrentMonth && (
-            <button
-              onClick={onMarkReceived}
-              style={{
-                flexShrink: 0, padding: '6px 10px',
-                fontSize: '11px', fontWeight: 650,
-                color: 'var(--accent)',
-                background: 'var(--accent-subtle)',
-                borderRadius: 'var(--radius-sm)',
-                border: 'none', cursor: 'pointer',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              Saisir
-            </button>
-          )}
+
+          {/* Amount + action */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+            <span style={{
+              fontSize: '15px',
+              fontWeight: 800,
+              letterSpacing: '-0.02em',
+              color: 'var(--slate-400)',
+              fontVariantNumeric: 'tabular-nums',
+              whiteSpace: 'nowrap',
+            }}>
+              {inc.estimated_amount ? (
+                <>
+                  <span style={{ fontSize: '0.7em', fontWeight: 500, color: 'var(--slate-300)' }}>~$</span>
+                  {Number(inc.estimated_amount).toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                </>
+              ) : '—'}
+            </span>
+            {isCurrentMonth && (
+              <button
+                onClick={onMarkReceived}
+                style={{
+                  flexShrink: 0, padding: '6px 10px',
+                  fontSize: '11px', fontWeight: 650,
+                  color: 'var(--accent)',
+                  background: 'var(--accent-subtle)',
+                  borderRadius: 'var(--radius-sm)',
+                  border: 'none', cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                Saisir
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -1084,6 +1084,194 @@ cs-design/mes-finances/
 
 ---
 
+## Pattern unifie -- Liste d'items
+
+**Statut:** Etabli le 2026-03-02. Reference pour toutes les pages existantes et futures.
+**Contexte:** Pattern consolide apres audit de coherence entre /depenses, /revenus, /parametres/charges, /parametres/revenus, /patrimoine. La page /depenses (ExpenseTrackingRow) est la reference canonique.
+
+### Page structure: MonthNavigator AVANT le monument
+
+Sur toutes les pages avec navigation mensuelle (depenses, revenus), le `MonthNavigator` est le PREMIER element du return, avant le monument typographique.
+
+```jsx
+return (
+  <div>
+    {/* 1. MonthNavigator — TOUJOURS en premier */}
+    <MonthNavigator month={month} basePath="/depenses" />
+
+    {/* 2. Monument typographique */}
+    <div style={{ padding: '20px 20px 0', textAlign: 'center' }}>
+      <p style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '0.1em',
+        textTransform: 'uppercase', color: 'var(--teal-700)', marginBottom: '10px' }}>
+        Depenses
+      </p>
+      {/* ... monument numbers ... */}
+    </div>
+
+    {/* 3. Tabs (si applicable) */}
+    {/* 4. Contenu */}
+  </div>
+);
+```
+
+### Section headings architecturaux
+
+Utiliser `<p>` (jamais `<h2>`) avec le style label architectural. Couleur: `var(--teal-700)` (pas `--slate-400`).
+
+```jsx
+<p style={{
+  fontSize: '11px',
+  fontWeight: 700,
+  letterSpacing: '0.08em',
+  textTransform: 'uppercase',
+  color: 'var(--teal-700)',      // teal, pas slate-400
+  marginBottom: '10px',
+  paddingLeft: '4px',
+}}>
+  Revenus attendus (2)
+</p>
+```
+
+### Card container de liste
+
+```jsx
+<div style={{
+  background: 'white',
+  border: '1px solid var(--slate-200)',
+  borderRadius: 'var(--radius-lg)',   // 18px
+  overflow: 'hidden',                  // coupe le borderBottom du dernier item
+}}>
+  {items.map(item => <ItemRow key={item.id} {...item} />)}
+</div>
+```
+
+### Item row pattern (reference: ExpenseTrackingRow)
+
+```jsx
+<div style={{
+  display: 'flex',
+  alignItems: 'center',
+  padding: '12px 16px 12px 18px',
+  gap: '12px',
+  borderBottom: '1px solid var(--slate-100)',    // pas de <div className="divider">
+  transition: 'background 0.15s ease',
+}}>
+  {/* Icone categorie — 38x38px */}
+  <div style={{
+    width: '38px',
+    height: '38px',
+    borderRadius: 'var(--radius-sm)',              // 8px
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '18px',
+    lineHeight: '1',
+    flexShrink: 0,
+    background: categoryBg,                        // couleur par categorie/source
+  }}>
+    {icon}
+  </div>
+
+  {/* Nom + meta ligne */}
+  <div style={{ flex: 1, minWidth: 0 }}>
+    <span style={{
+      fontSize: '14px',
+      fontWeight: 600,
+      color: 'var(--slate-900)',
+      letterSpacing: '-0.01em',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    }}>
+      {name}
+    </span>
+
+    {/* Meta ligne: 11px, 600-700 weight, slate-400, separateur dot 3px */}
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: '6px',
+      marginTop: '3px',
+      fontSize: '11px',
+      fontWeight: 600,
+      color: 'var(--slate-400)',
+      letterSpacing: '0.02em',
+    }}>
+      <span style={{ textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
+        {categoryLabel}
+      </span>
+      {/* Separateur entre meta items */}
+      <span style={{
+        width: '3px', height: '3px', borderRadius: '50%',
+        background: 'var(--slate-300)', display: 'inline-block', flexShrink: 0,
+      }} />
+      <span>{additionalMeta}</span>
+    </div>
+  </div>
+
+  {/* Montant — 15px, 800 weight, tabular-nums */}
+  <span style={{
+    fontSize: '15px',
+    fontWeight: 800,
+    letterSpacing: '-0.02em',
+    color: 'var(--slate-900)',
+    fontVariantNumeric: 'tabular-nums',
+    whiteSpace: 'nowrap',
+  }}>
+    <span style={{ fontSize: '0.7em', fontWeight: 600, color: 'var(--teal-700)' }}>$</span>
+    {amount}
+  </span>
+
+  {/* Action: toggle inline (depenses) ou three-dot (revenus) */}
+  {actionButton}
+</div>
+```
+
+### Status badges (pills)
+
+```jsx
+<span style={{
+  display: 'inline-flex',
+  padding: '1px 6px',
+  borderRadius: '999px',
+  fontSize: '10px',
+  fontWeight: 700,
+  letterSpacing: '0.02em',
+  background: statusBg,
+  color: statusColor,
+}}>
+  {statusLabel}
+</span>
+```
+
+Palettes de status:
+- Recu / Paye: `background: var(--positive-subtle)`, `color: var(--positive-text)`
+- Attendu / A venir: `background: var(--surface-sunken)`, `color: var(--text-tertiary)`
+- Partiel: `background: var(--warning-subtle)`, `color: var(--warning-text)`
+- Manque / Retard: `background: var(--negative-subtle)`, `color: var(--negative-text)`
+- Imprévu: `background: var(--amber-100)`, `color: var(--amber-600)` (amber, pas error)
+
+### Regles a ne PAS violer
+
+1. **Jamais `<div className="divider">`** pour separer les rows -- utiliser `borderBottom` sur la row elle-meme.
+2. **Jamais `<h2>`** pour les section labels de liste -- utiliser `<p>` avec style architectural.
+3. **MonthNavigator AVANT le monument** -- jamais apres.
+4. **Icone: 38px** (pas 32px) avec `border-radius: var(--radius-sm)` (pas radius-md).
+5. **Padding row: `12px 16px 12px 18px`** -- asymetrique (18px a gauche pour optique).
+6. **La couleur des section headings de liste est `var(--teal-700)`** -- pas slate-400 ni slate-500.
+
+### Variantes etablies par page
+
+| Page | Composant | Type d'action | Icone size | Specifique |
+|------|-----------|---------------|------------|------------|
+| /depenses | ExpenseTrackingRow | Toggle inline (checkmark) + chevron | 38px | Section/carte en meta |
+| /revenus | IncomeInstanceRow | Three-dot expandable | 38px | Status badge + separateurs dot |
+| /revenus | VariableIncomeRow | Bouton "Saisir" | 38px | Badge "Variable" |
+| /parametres/charges | ExpenseRow (charges) | Edit/delete buttons hover | sans icone | Badges frequence + auto |
+| /parametres/revenus | SourceCard | Three-dot dropdown | 44px (card, pas row) | Card avec border-left |
+
+---
+
 ## Quick Reference for Developers
 
 **When building a new page, always:**
