@@ -401,70 +401,39 @@ export default function DepensesTrackingClient({ expenses, summary, sections, ca
       )}
 
       {/* ====== GROUPED EXPENSES BY STATUS ====== */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '20px 20px 0' }}>
+      <div style={{ paddingTop: '20px', paddingBottom: '8px', paddingLeft: '20px', paddingRight: '20px' }}>
         {grouped.map(({ status, items }) => {
           const isCollapsed = collapsedGroups.has(status);
           const groupTotal = items.reduce((sum, e) => sum + Number(e.amount), 0);
-          const accentColor = STATUS_ACCENT[status];
-          const iconStyle = STATUS_ICON_STYLE[status];
           const isOverdueGroup = status === 'OVERDUE';
 
           return (
-            <div
-              key={status}
-              style={{
-                background: isOverdueGroup ? 'rgba(220,38,38,0.01)' : 'var(--white)',
-                borderRadius: 'var(--radius-lg)',
-                border: `1px solid ${isOverdueGroup ? 'rgba(220,38,38,0.12)' : 'var(--slate-200)'}`,
-                overflow: 'hidden',
-                position: 'relative',
-                transition: 'box-shadow 0.25s ease',
-              }}
-            >
-              {/* Left accent bar */}
-              <div style={{
-                position: 'absolute', left: 0, top: 0, bottom: 0, width: '3px',
-                background: accentColor,
-                borderRadius: '18px 0 0 18px',
-              }} />
-
-              {/* Group header */}
+            <div key={status} style={{ position: 'relative' }}>
+              {/* Group header — flat style matching TabTimeline */}
               <div
                 onClick={() => toggleGroup(status)}
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '14px 16px 12px 18px',
+                  fontSize: '12px', fontWeight: 700,
+                  letterSpacing: '0.08em', textTransform: 'uppercase' as const,
+                  color: isOverdueGroup ? 'var(--error)' : 'var(--slate-400)',
+                  padding: '16px 0 10px',
+                  borderBottom: '1px solid var(--slate-100)',
                   cursor: 'pointer',
                   userSelect: 'none',
-                  transition: 'background 0.15s',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{
-                    width: '28px', height: '28px', borderRadius: 'var(--radius-sm)',
-                    background: iconStyle.bg,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <StatusGroupIcon status={status} />
-                  </div>
-                  <div>
-                    <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--slate-900)', letterSpacing: '-0.01em' }}>
-                      {GROUP_LABELS[status]}
-                    </span>
-                    <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--slate-400)', marginLeft: '4px' }}>
-                      ({items.length})
-                    </span>
-                  </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span>{GROUP_LABELS[status]}</span>
+                  <span style={{ fontWeight: 600, opacity: 0.7 }}>({items.length})</span>
                 </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span style={{ fontSize: '15px', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--slate-900)', fontVariantNumeric: 'tabular-nums' }}>
-                    <span style={{ fontSize: '0.65em', fontWeight: 600, color: 'var(--teal-700)' }}>$</span>
-                    {groupTotal.toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontVariantNumeric: 'tabular-nums' }}>
+                    ${groupTotal.toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                   </span>
                   <svg
-                    width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="var(--slate-300)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                    width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
                     style={{ transition: 'transform 0.25s ease', transform: isCollapsed ? 'rotate(0deg)' : 'rotate(180deg)' }}
                   >
                     <polyline points="18 15 12 9 6 15" />
@@ -474,7 +443,7 @@ export default function DepensesTrackingClient({ expenses, summary, sections, ca
 
               {/* Expense list */}
               {!isCollapsed && (
-                <div style={{ borderTop: '1px solid var(--slate-100)' }}>
+                <div>
                   {items.map((expense) => (
                     <ExpenseTrackingRow
                       key={expense.id}
