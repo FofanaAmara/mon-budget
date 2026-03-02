@@ -35,7 +35,10 @@ export async function generateMonthlyIncomes(month: string): Promise<void> {
     await sql`
       INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, status, is_auto_deposited)
       VALUES (${userId}, ${inc.id}, ${month}, ${expectedAmount}, 'EXPECTED', ${inc.auto_deposit ?? false})
-      ON CONFLICT (income_id, month) DO NOTHING
+      ON CONFLICT (income_id, month) DO UPDATE
+        SET expected_amount = EXCLUDED.expected_amount,
+            is_auto_deposited = EXCLUDED.is_auto_deposited
+        WHERE monthly_incomes.status = 'EXPECTED'
     `;
   }
   // No revalidatePath — called during page render

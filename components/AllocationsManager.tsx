@@ -192,8 +192,18 @@ export default function AllocationsManager({ allocations, sections, projects, ex
                         {formatCAD(Number(alloc.amount))}/mois
                       </span>
                       {hasSectionLink && alloc.sections.map(sec => (
-                        <span key={sec.id} className="badge" style={{ background: 'var(--surface-secondary)', color: 'var(--text-secondary)' }}>
-                          {sec.icon} {sec.name}
+                        <span
+                          key={sec.id}
+                          className="badge"
+                          title={sec.name}
+                          style={{
+                            background: 'var(--surface-secondary)',
+                            color: 'var(--text-secondary)',
+                            fontSize: alloc.sections.length >= 3 ? '11px' : undefined,
+                            padding: alloc.sections.length >= 3 ? '2px 6px' : undefined,
+                          }}
+                        >
+                          {sec.icon}{alloc.sections.length < 3 ? ` ${sec.name}` : ''}
                         </span>
                       ))}
                       {hasProjectLink && !hasSectionLink && (

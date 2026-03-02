@@ -173,15 +173,14 @@ export default function LandingPage() {
           <Link
             href="/auth/sign-in"
             style={{
-              display: 'none',
-              fontSize: '14px',
+              fontSize: '13px',
               fontWeight: 600,
               color: '#334155',
               textDecoration: 'none',
               letterSpacing: '-0.01em',
               transition: 'color 0.2s',
+              whiteSpace: 'nowrap',
             }}
-            className="md:inline"
           >
             Connexion
           </Link>
