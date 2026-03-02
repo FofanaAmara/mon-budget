@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { loadDemoData } from '@/lib/actions/demo-data';
+import { completeOnboarding } from '@/lib/actions/onboarding';
 
 const STORAGE_KEY = 'mes-finances-onboarding-done';
 
@@ -93,13 +94,22 @@ export default function Onboarding({ onComplete }: Props) {
 
   // ─── Helpers ───────────────────────────────────────────────────
   function markDone() {
-    // Persist collected data to localStorage (no server action needed)
+    setError(null);
     const monthly = amount ? Math.round(toMonthly(parseFloat(amount), frequency)) : 0;
-    localStorage.setItem(STORAGE_KEY, 'true');
-    localStorage.setItem('mes-finances-onboarding-revenue', String(monthly));
-    localStorage.setItem('mes-finances-onboarding-categories', JSON.stringify([...selected]));
-    localStorage.setItem('mes-finances-onboarding-objective', objective ?? '');
-    onComplete();
+    startTransition(async () => {
+      const result = await completeOnboarding({
+        monthlyRevenue: monthly,
+        frequency,
+        categories: [...selected],
+        objective,
+      });
+      if (result.success) {
+        localStorage.setItem(STORAGE_KEY, 'true');
+        window.location.href = '/';
+      } else {
+        setError(result.error ?? 'Erreur inconnue');
+      }
+    });
   }
 
   function handleDemo() {
@@ -660,24 +670,27 @@ export default function Onboarding({ onComplete }: Props) {
                 <button
                   className="onb-btn-finish"
                   onClick={markDone}
-                  disabled={!hasObjective}
+                  disabled={!hasObjective || isPending}
                   style={{
                     flex: 1, padding: '14px 24px',
                     background: '#F59E0B', color: '#0F172A',
                     fontFamily: 'inherit',
                     fontSize: '15px', fontWeight: 700,
                     border: 'none', borderRadius: '12px',
-                    cursor: hasObjective ? 'pointer' : 'not-allowed',
+                    cursor: (hasObjective && !isPending) ? 'pointer' : 'not-allowed',
                     letterSpacing: '-0.01em',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                    opacity: hasObjective ? 1 : 0.5,
+                    opacity: (hasObjective && !isPending) ? 1 : 0.5,
                     transition: 'all 0.2s ease',
                   }}
                 >
-                  Accéder à mon tableau de bord
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 8l4 4 8-8"/></svg>
+                  {isPending ? 'Chargement...' : 'Accéder à mon tableau de bord'}
+                  {!isPending && <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 8l4 4 8-8"/></svg>}
                 </button>
               </div>
+              {error && (
+                <p style={{ color: '#DC2626', fontSize: '12px', marginTop: '12px', textAlign: 'center' }}>{error}</p>
+              )}
             </div>
           )}
 
@@ -692,15 +705,16 @@ export default function Onboarding({ onComplete }: Props) {
           }}>
             <button
               onClick={markDone}
+              disabled={isPending}
               style={{
                 background: 'none', border: 'none', padding: 0,
                 fontSize: '13px', fontWeight: 500, color: '#94A3B8',
-                textDecoration: 'none', cursor: 'pointer', fontFamily: 'inherit',
+                textDecoration: 'none', cursor: isPending ? 'wait' : 'pointer', fontFamily: 'inherit',
               }}
               onMouseEnter={e => { (e.target as HTMLButtonElement).style.color = '#64748B'; (e.target as HTMLButtonElement).style.textDecoration = 'underline'; }}
               onMouseLeave={e => { (e.target as HTMLButtonElement).style.color = '#94A3B8'; (e.target as HTMLButtonElement).style.textDecoration = 'none'; }}
             >
-              Passer la configuration
+              {isPending ? 'Chargement...' : 'Passer la configuration'}
             </button>
           </div>
         )}

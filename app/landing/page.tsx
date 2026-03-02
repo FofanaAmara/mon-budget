@@ -172,6 +172,7 @@ export default function LandingPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <Link
             href="/auth/sign-in"
+            className="nav-login-desktop"
             style={{
               fontSize: '13px',
               fontWeight: 600,
@@ -185,7 +186,7 @@ export default function LandingPage() {
             Connexion
           </Link>
           <Link
-            href="/auth/sign-up"
+            href="/auth/sign-in"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
