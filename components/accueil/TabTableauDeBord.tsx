@@ -340,7 +340,7 @@ export default function TabTableauDeBord({
             color: valeurNette >= 0 ? 'var(--teal-700)' : 'var(--error)',
             fontVariantNumeric: 'tabular-nums',
           }}>
-            {valeurNette >= 0 ? '+' : ''}
+            {valeurNette >= 0 ? '+' : '-'}
             {Math.round(Math.abs(valeurNette)).toLocaleString('fr-CA')}
             <span style={{ fontSize: '0.5em', fontWeight: 600, verticalAlign: 'super' }}>$</span>
           </div>

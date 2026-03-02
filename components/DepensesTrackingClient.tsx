@@ -736,7 +736,6 @@ export default function DepensesTrackingClient({ expenses, summary, sections, ca
                 value={editAmountValue}
                 onChange={(e) => setEditAmountValue(e.target.value)}
                 placeholder="0"
-                autoFocus
                 style={{
                   width: '100%', padding: '16px',
                   border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-sm)',

@@ -658,7 +658,6 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Visa principale"
                   className="input-field"
-                  autoFocus
                 />
               </div>
 

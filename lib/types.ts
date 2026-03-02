@@ -202,12 +202,20 @@ export type MonthlyDebtSummary = {
 
 export type AllocationLinkType = 'charges' | 'savings' | 'free';
 
+export type AllocationSection = {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+};
+
 export type IncomeAllocation = {
   id: string;
   user_id: string;
   label: string;
   amount: number;
-  section_id: string | null;
+  section_ids: string[];
+  sections: AllocationSection[];
   project_id: string | null;
   end_month: string | null;    // "YYYY-MM" — null = permanent
   color: string;
@@ -216,9 +224,6 @@ export type IncomeAllocation = {
   created_at: string;
   updated_at: string;
   // Joined
-  section_name?: string | null;
-  section_icon?: string | null;
-  section_color?: string | null;
   project_name?: string | null;
   project_target_amount?: number | null;
   project_saved_amount?: number | null;
@@ -237,12 +242,10 @@ export type MonthlyAllocation = {
   label: string;
   color: string;
   position: number;
-  section_id: string | null;
+  section_ids: string[];
+  sections: AllocationSection[];
   project_id: string | null;
   end_month: string | null;
-  section_name?: string | null;
-  section_icon?: string | null;
-  section_color?: string | null;
   project_name?: string | null;
   project_target_amount?: number | null;
   project_saved_amount?: number | null;

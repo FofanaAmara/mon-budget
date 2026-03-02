@@ -23,7 +23,7 @@ export default function AdhocAllocationModal({ month, sections, projects, onClos
   const [label, setLabel] = useState('');
   const [amount, setAmount] = useState('');
   const [linkType, setLinkType] = useState<LinkType>('free');
-  const [sectionId, setSectionId] = useState('');
+  const [sectionIds, setSectionIds] = useState<string[]>([]);
   const [projectId, setProjectId] = useState('');
   const [color, setColor] = useState(PRESET_COLORS[0]);
   const [saving, setSaving] = useState(false);
@@ -37,7 +37,7 @@ export default function AdhocAllocationModal({ month, sections, projects, onClos
       await createAdhocMonthlyAllocation(month, {
         label: label.trim(),
         amount: amtNum,
-        section_id: linkType === 'charges' ? (sectionId || null) : null,
+        section_ids: linkType === 'charges' ? sectionIds : [],
         project_id: linkType === 'savings' ? (projectId || null) : null,
         color,
       });
@@ -68,7 +68,6 @@ export default function AdhocAllocationModal({ month, sections, projects, onClos
               onChange={(e) => setLabel(e.target.value)}
               placeholder="Ex: Épargne extra, Fond vacances, Remboursement anticipé..."
               className="input-field"
-              autoFocus
             />
           </div>
 
@@ -119,34 +118,46 @@ export default function AdhocAllocationModal({ month, sections, projects, onClos
             </div>
           </div>
 
-          {/* Section picker */}
+          {/* Multi-section picker */}
           {linkType === 'charges' && (
             <div style={{ marginBottom: '20px' }}>
-              <label className="field-label">Section</label>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '8px' }}>
-                {sections.map(s => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => setSectionId(s.id)}
-                    style={{
-                      display: 'flex', alignItems: 'center', gap: '10px',
-                      padding: '10px 14px',
-                      borderRadius: 'var(--radius-md)',
-                      border: `1.5px solid ${sectionId === s.id ? s.color : 'var(--border)'}`,
-                      background: sectionId === s.id ? `${s.color}18` : 'var(--surface)',
-                      cursor: 'pointer', textAlign: 'left',
-                    }}
-                  >
-                    <span style={{ fontSize: '1.1rem' }}>{s.icon}</span>
-                    <span style={{ fontWeight: 600, fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>
-                      {s.name}
-                    </span>
-                    {sectionId === s.id && (
-                      <span style={{ marginLeft: 'auto', color: s.color, fontWeight: 700 }}>✓</span>
-                    )}
-                  </button>
-                ))}
+              <label className="field-label">Sections</label>
+              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginBottom: '8px' }}>
+                Sélectionnez une ou plusieurs sections
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {sections.map(s => {
+                  const isSelected = sectionIds.includes(s.id);
+                  return (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => {
+                        setSectionIds(prev =>
+                          prev.includes(s.id)
+                            ? prev.filter(id => id !== s.id)
+                            : [...prev, s.id]
+                        );
+                      }}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '10px',
+                        padding: '10px 14px',
+                        borderRadius: 'var(--radius-md)',
+                        border: `1.5px solid ${isSelected ? s.color : 'var(--border)'}`,
+                        background: isSelected ? `${s.color}18` : 'var(--surface)',
+                        cursor: 'pointer', textAlign: 'left',
+                      }}
+                    >
+                      <span style={{ fontSize: '1.1rem' }}>{s.icon}</span>
+                      <span style={{ fontWeight: 600, fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>
+                        {s.name}
+                      </span>
+                      {isSelected && (
+                        <span style={{ marginLeft: 'auto', color: s.color, fontWeight: 700 }}>✓</span>
+                      )}
+                    </button>
+                  );
+                })}
                 {sections.length === 0 && (
                   <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
                     Aucune section configurée

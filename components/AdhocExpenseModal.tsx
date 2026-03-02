@@ -127,7 +127,6 @@ export default function AdhocExpenseModal({ sections, cards, month, onClose }: P
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 style={inputStyle}
-                autoFocus
                 onFocus={(e) => { e.target.style.borderColor = 'var(--teal-700)'; e.target.style.boxShadow = '0 0 0 3px rgba(15, 118, 110, 0.08)'; }}
                 onBlur={(e) => { e.target.style.borderColor = 'var(--slate-200)'; e.target.style.boxShadow = 'none'; }}
               />

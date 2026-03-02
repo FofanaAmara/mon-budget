@@ -134,9 +134,9 @@ export default function AllocationsManager({ allocations, sections, projects, ex
       ) : (
         <>
           {([
-            { key: 'charges', label: '📦 Charges', filter: (a: IncomeAllocation) => !!a.section_id },
-            { key: 'savings', label: '💰 Épargne', filter: (a: IncomeAllocation) => !a.section_id && !!a.project_id },
-            { key: 'free', label: '🔖 Autre', filter: (a: IncomeAllocation) => !a.section_id && !a.project_id },
+            { key: 'charges', label: '📦 Charges', filter: (a: IncomeAllocation) => a.section_ids.length > 0 },
+            { key: 'savings', label: '💰 Épargne', filter: (a: IncomeAllocation) => a.section_ids.length === 0 && !!a.project_id },
+            { key: 'free', label: '🔖 Autre', filter: (a: IncomeAllocation) => a.section_ids.length === 0 && !a.project_id },
           ] as { key: string; label: string; filter: (a: IncomeAllocation) => boolean }[]).map(group => {
             const groupItems = allocations.filter(group.filter);
             if (groupItems.length === 0) return null;
@@ -152,7 +152,7 @@ export default function AllocationsManager({ allocations, sections, projects, ex
               && alloc.project_target_amount !== undefined
               && Number(alloc.project_saved_amount ?? 0) >= Number(alloc.project_target_amount);
 
-            const hasSectionLink = !!alloc.section_id;
+            const hasSectionLink = alloc.section_ids.length > 0;
             const hasProjectLink = !!alloc.project_id;
 
             const globalIndex = allocations.findIndex(a => a.id === alloc.id);
@@ -190,11 +190,11 @@ export default function AllocationsManager({ allocations, sections, projects, ex
                       <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', fontWeight: 500 }}>
                         {formatCAD(Number(alloc.amount))}/mois
                       </span>
-                      {hasSectionLink && (
-                        <span className="badge" style={{ background: 'var(--surface-secondary)', color: 'var(--text-secondary)' }}>
-                          {alloc.section_icon} {alloc.section_name}
+                      {hasSectionLink && alloc.sections.map(sec => (
+                        <span key={sec.id} className="badge" style={{ background: 'var(--surface-secondary)', color: 'var(--text-secondary)' }}>
+                          {sec.icon} {sec.name}
                         </span>
-                      )}
+                      ))}
                       {hasProjectLink && !hasSectionLink && (
                         <span className="badge" style={{ background: 'var(--accent-subtle)', color: 'var(--accent)' }}>
                           💰 {alloc.project_name}

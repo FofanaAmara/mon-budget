@@ -485,6 +485,23 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
         {/* Body */}
         <div className="em-modal-body" style={{ padding: '20px 20px 0' }}>
 
+          {/* Section — en premier */}
+          <div style={{ marginBottom: '18px' }}>
+            <label className="em-label">Section</label>
+            <select
+              value={sectionId}
+              onChange={(e) => setSectionId(e.target.value)}
+              className="expense-modal-select"
+            >
+              <option value="">Choisir une section...</option>
+              {sections.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.icon} {s.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Nom de la charge */}
           <div style={{ marginBottom: '18px' }}>
             <label className="em-label">Nom de la charge</label>
@@ -564,27 +581,81 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
                 </div>
               </div>
 
-              {/* Jour de prelevement */}
+              {/* Prelevement automatique toggle */}
               <div style={{ marginBottom: '18px' }}>
-                <label className="em-label">Jour de prélèvement</label>
-                <input
-                  type="number"
-                  value={day}
-                  onChange={(e) => setDay(e.target.value)}
-                  min="1"
-                  max="31"
-                  className="expense-modal-day-input"
-                />
-                <p style={{
-                  fontSize: '11px',
-                  fontWeight: 500,
-                  color: 'var(--text-tertiary)',
-                  marginTop: '4px',
-                  letterSpacing: '-0.01em',
-                }}>
-                  Entre 1 et 31. Le prélèvement aura lieu le jour le plus proche si le mois est plus court.
-                </p>
+                <div className="em-toggle-row">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    <span style={{
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: 'var(--text-primary)',
+                      letterSpacing: '-0.01em',
+                    }}>
+                      Prélèvement automatique
+                    </span>
+                    <span style={{
+                      fontSize: '12px',
+                      fontWeight: 500,
+                      color: 'var(--text-tertiary)',
+                      letterSpacing: '-0.01em',
+                    }}>
+                      La charge sera marquée payée sans action
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { setAutoDebit(!autoDebit); if (autoDebit) setCardId(''); }}
+                    className="em-toggle-switch"
+                    data-active={autoDebit ? 'true' : 'false'}
+                    aria-label="Prélèvement automatique"
+                  >
+                    <div className="em-toggle-knob" />
+                  </button>
+                </div>
               </div>
+
+              {/* Jour de prelevement — seulement si auto-debit */}
+              {autoDebit && (
+                <div style={{ marginBottom: '18px' }}>
+                  <label className="em-label">Jour de prélèvement</label>
+                  <input
+                    type="number"
+                    value={day}
+                    onChange={(e) => setDay(e.target.value)}
+                    min="1"
+                    max="31"
+                    className="expense-modal-day-input"
+                  />
+                  <p style={{
+                    fontSize: '11px',
+                    fontWeight: 500,
+                    color: 'var(--text-tertiary)',
+                    marginTop: '4px',
+                    letterSpacing: '-0.01em',
+                  }}>
+                    Entre 1 et 31. Le prélèvement aura lieu le jour le plus proche si le mois est plus court.
+                  </p>
+                </div>
+              )}
+
+              {/* Carte bancaire — seulement si auto-debit */}
+              {autoDebit && cards.length > 0 && (
+                <div style={{ marginBottom: '18px' }}>
+                  <label className="em-label">Carte bancaire</label>
+                  <select
+                    value={cardId}
+                    onChange={(e) => setCardId(e.target.value)}
+                    className="expense-modal-select"
+                  >
+                    <option value="">Choisir une carte...</option>
+                    {cards.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}{c.last_four ? ` ****${c.last_four}` : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </>
           )}
 
@@ -598,77 +669,6 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
                 onChange={(e) => setDueDate(e.target.value)}
                 className="expense-modal-input"
               />
-            </div>
-          )}
-
-          {/* Section */}
-          <div style={{ marginBottom: '18px' }}>
-            <label className="em-label">Section</label>
-            <select
-              value={sectionId}
-              onChange={(e) => setSectionId(e.target.value)}
-              className="expense-modal-select"
-            >
-              <option value="">Choisir une section...</option>
-              {sections.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.icon} {s.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Carte bancaire */}
-          {cards.length > 0 && (
-            <div style={{ marginBottom: '18px' }}>
-              <label className="em-label">Carte bancaire</label>
-              <select
-                value={cardId}
-                onChange={(e) => setCardId(e.target.value)}
-                className="expense-modal-select"
-              >
-                <option value="">Choisir une carte...</option>
-                {cards.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}{c.last_four ? ` ****${c.last_four}` : ''}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          {/* Prelevement automatique (RECURRING only) */}
-          {type === 'RECURRING' && (
-            <div style={{ marginBottom: '18px' }}>
-              <div className="em-toggle-row">
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                  <span style={{
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    color: 'var(--text-primary)',
-                    letterSpacing: '-0.01em',
-                  }}>
-                    Prélèvement automatique
-                  </span>
-                  <span style={{
-                    fontSize: '12px',
-                    fontWeight: 500,
-                    color: 'var(--text-tertiary)',
-                    letterSpacing: '-0.01em',
-                  }}>
-                    La charge sera marquée payée sans action
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => { setAutoDebit(!autoDebit); if (autoDebit) setCardId(''); }}
-                  className="em-toggle-switch"
-                  data-active={autoDebit ? 'true' : 'false'}
-                  aria-label="Prélèvement automatique"
-                >
-                  <div className="em-toggle-knob" />
-                </button>
-              </div>
             </div>
           )}
 

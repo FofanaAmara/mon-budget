@@ -125,7 +125,6 @@ export default function AddSavingsModal({ expenseId, projectName, currentSaved, 
                     background: 'var(--white, #fff)', fontVariantNumeric: 'tabular-nums',
                     outline: 'none',
                   }}
-                  autoFocus
                 />
                 <span style={{
                   position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)',

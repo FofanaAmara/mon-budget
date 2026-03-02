@@ -189,17 +189,43 @@ export default function ExpenseTemplateManager({ expenses, sections, cards }: Pr
 
         {/* Right: amount + actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-          <span style={{
-            fontSize: '15px',
-            fontWeight: 800,
-            letterSpacing: '-0.02em',
-            color: 'var(--text-primary)',
-            fontVariantNumeric: 'tabular-nums',
-            whiteSpace: 'nowrap',
-          }}>
-            <span style={{ fontSize: '0.7em', fontWeight: 600, color: 'var(--accent)' }}>$</span>
-            {Number(expense.amount).toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </span>
+          <div style={{ textAlign: 'right' }}>
+            {(() => {
+              const isNonMonthly = expense.type === 'RECURRING'
+                && expense.recurrence_frequency
+                && expense.recurrence_frequency !== 'MONTHLY';
+              const monthly = isNonMonthly ? calcMonthlyCost(expense) : null;
+              return (
+                <>
+                  <span style={{
+                    fontSize: '15px',
+                    fontWeight: 800,
+                    letterSpacing: '-0.02em',
+                    color: 'var(--text-primary)',
+                    fontVariantNumeric: 'tabular-nums',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    <span style={{ fontSize: '0.7em', fontWeight: 600, color: 'var(--accent)' }}>$</span>
+                    {(monthly ?? Number(expense.amount)).toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    {monthly != null && (
+                      <span style={{ fontSize: '10px', fontWeight: 500, color: 'var(--text-tertiary)', letterSpacing: 0 }}>/mois</span>
+                    )}
+                  </span>
+                  {monthly != null && (
+                    <div style={{
+                      fontSize: '11px',
+                      fontWeight: 500,
+                      color: 'var(--text-tertiary)',
+                      letterSpacing: '-0.01em',
+                      marginTop: '1px',
+                    }}>
+                      {Number(expense.amount).toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}$/{FREQ_LABELS[expense.recurrence_frequency!]?.toLowerCase()}
+                    </div>
+                  )}
+                </>
+              );
+            })()}
+          </div>
 
           {deletingId === expense.id ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -292,8 +318,6 @@ export default function ExpenseTemplateManager({ expenses, sections, cards }: Pr
 
   const SectionCard = ({ section, expenses: se }: { section: Section; expenses: Expense[] }) => {
     const sectionTotal = se.reduce((sum, e) => sum + calcMonthlyCost(e), 0);
-    const preview = se.slice(0, 3);
-
     return (
       <div style={{
         background: 'var(--surface-raised)',
@@ -348,32 +372,10 @@ export default function ExpenseTemplateManager({ expenses, sections, cards }: Pr
 
         {/* Expense rows */}
         <div>
-          {preview.map((e) => (
+          {se.map((e) => (
             <ExpenseRow key={e.id} expense={e} />
           ))}
         </div>
-
-        {/* See all */}
-        {se.length > 3 && (
-          <button
-            onClick={() => setSectionModal({ section, expenses: se })}
-            style={{
-              width: '100%',
-              padding: '12px 18px',
-              fontSize: '13px',
-              fontWeight: 600,
-              color: 'var(--accent)',
-              background: 'var(--surface-sunken)',
-              cursor: 'pointer',
-              border: 'none',
-              borderTop: '1px solid var(--surface-sunken)',
-              letterSpacing: '-0.01em',
-              transition: 'background 0.15s ease',
-            }}
-          >
-            Voir tout ({se.length})
-          </button>
-        )}
       </div>
     );
   };

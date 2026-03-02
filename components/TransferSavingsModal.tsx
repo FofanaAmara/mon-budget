@@ -167,7 +167,6 @@ export default function TransferSavingsModal({ source, allPots, onDone, onClose 
                     background: 'var(--white, #fff)', fontVariantNumeric: 'tabular-nums',
                     outline: 'none',
                   }}
-                  autoFocus
                 />
                 <span style={{
                   position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)',

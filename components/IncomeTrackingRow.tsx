@@ -129,8 +129,8 @@ export function IncomeInstanceRow({ mi, index, isCurrentMonth, onMarkReceived, o
               </span>
             )}
 
-            {/* Three-dot menu */}
-            {isCurrentMonth && (
+            {/* Three-dot menu — only when actions exist */}
+            {isCurrentMonth && (!isReceived || (!mi.is_auto_deposited && isReceived) || (!!onDelete && Number(mi.expected_amount ?? 0) === 0)) && (
               <button
                 onClick={() => setExpanded((v) => !v)}
                 style={{

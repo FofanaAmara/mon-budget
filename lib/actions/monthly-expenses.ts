@@ -78,16 +78,30 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
       AND next_due_date <= ${monthEnd}::date
   `;
 
+  // Monthly cost multipliers (non-monthly → monthly equivalent)
+  const monthlyMultipliers: Record<string, number> = {
+    WEEKLY: 52 / 12,
+    BIWEEKLY: 26 / 12,
+    MONTHLY: 1,
+    BIMONTHLY: 1 / 2,
+    QUARTERLY: 1 / 3,
+    YEARLY: 1 / 12,
+  };
+
   // Insert RECURRING instances
   for (const expense of recurringExpenses as { id: string; name: string; amount: number; section_id: string | null; card_id: string | null; auto_debit: boolean; recurrence_frequency: string | null; recurrence_day: number | null; next_due_date: string | null; notes: string | null }[]) {
     const dueDate = calcDueDateForMonth(expense, month);
     if (!dueDate) continue;
 
+    // Store monthly equivalent for non-monthly charges
+    const multiplier = monthlyMultipliers[expense.recurrence_frequency ?? 'MONTHLY'] ?? 1;
+    const monthlyAmount = Math.round(expense.amount * multiplier * 100) / 100;
+
     await sql`
       INSERT INTO monthly_expenses
         (user_id, expense_id, month, name, amount, due_date, status, section_id, card_id, is_auto_charged, notes)
       VALUES
-        (${userId}, ${expense.id}, ${month}, ${expense.name}, ${expense.amount},
+        (${userId}, ${expense.id}, ${month}, ${expense.name}, ${monthlyAmount},
          ${dueDate}::date, 'UPCOMING', ${expense.section_id}, ${expense.card_id},
          ${expense.auto_debit}, ${expense.notes})
       ON CONFLICT (expense_id, month) DO NOTHING

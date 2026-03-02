@@ -652,9 +652,11 @@ export default function RevenusTrackingClient({
                 marginTop: '20px',
               }}>
                 {monthlyAllocations.map((alloc, i) => {
-                  const hasSectionLink = !!alloc.section_id;
+                  const hasSectionLink = alloc.section_ids.length > 0;
                   const hasProjectLink = !!alloc.project_id;
-                  const actualSpent = hasSectionLink ? (sectionActualsMap.get(alloc.section_id!) ?? 0) : null;
+                  const actualSpent = hasSectionLink
+                    ? alloc.section_ids.reduce((sum, sid) => sum + (sectionActualsMap.get(sid) ?? 0), 0)
+                    : null;
                   const isGoalReached = hasProjectLink
                     && alloc.project_target_amount !== null && alloc.project_target_amount !== undefined
                     && Number(alloc.project_saved_amount ?? 0) >= Number(alloc.project_target_amount);
@@ -1042,7 +1044,6 @@ export default function RevenusTrackingClient({
                   onChange={(e) => setReceiveAmount(e.target.value)}
                   className="input-field"
                   style={{ fontVariantNumeric: 'tabular-nums' }}
-                  autoFocus
                 />
               </div>
               <button
@@ -1125,7 +1126,6 @@ export default function RevenusTrackingClient({
                   onChange={(e) => setUpdateAmount(e.target.value)}
                   className="input-field"
                   style={{ fontVariantNumeric: 'tabular-nums' }}
-                  autoFocus
                 />
               </div>
               <button
@@ -1163,7 +1163,6 @@ export default function RevenusTrackingClient({
                   onChange={(e) => setOverrideAmount(e.target.value)}
                   className="input-field"
                   style={{ fontVariantNumeric: 'tabular-nums' }}
-                  autoFocus
                 />
               </div>
               <div style={{ marginBottom: '20px' }}>

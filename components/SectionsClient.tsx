@@ -73,9 +73,13 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
     if (!name.trim()) return;
     startTransition(async () => {
       if (modal.mode === 'create') {
-        await createSection({ name: name.trim(), icon, color });
+        const newSection = await createSection({ name: name.trim(), icon, color });
+        setSections((prev) => [...prev, newSection]);
       } else if (modal.mode === 'edit') {
         await updateSection(modal.section.id, { name: name.trim(), icon, color });
+        setSections((prev) => prev.map((s) =>
+          s.id === modal.section.id ? { ...s, name: name.trim(), icon, color } : s
+        ));
       }
       router.refresh();
       closeModal();
@@ -505,7 +509,6 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Ex : Maison, Transport, Sport…"
                   className="input-field"
-                  autoFocus
                 />
               </div>
 
