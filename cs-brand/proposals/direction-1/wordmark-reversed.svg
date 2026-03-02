@@ -1,0 +1,9 @@
+<svg viewBox="0 0 200 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Mes Finances — Wordmark Only (reversed, for dark backgrounds) -->
+  <text x="0" y="24"
+        font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif"
+        font-weight="600"
+        font-size="24"
+        fill="#F7F5F0"
+        letter-spacing="-0.48">Mes Finances</text>
+</svg>

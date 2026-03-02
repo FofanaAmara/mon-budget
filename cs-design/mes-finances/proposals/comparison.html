@@ -1,0 +1,2546 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Finances — Comparaison des 3 directions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* =============================================================
+       COMPARISON PAGE — MES FINANCES
+       3 Design Directions Side by Side
+       Brand: Teal #0F766E + Amber #F59E0B + Plus Jakarta Sans
+       ============================================================= */
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --teal-700: #0F766E;
+      --teal-800: #115E59;
+      --teal-600: #0D9488;
+      --teal-50: #F0FDFA;
+      --amber-500: #F59E0B;
+      --amber-400: #FBBF24;
+      --amber-100: #FEF3C7;
+      --slate-900: #0F172A;
+      --slate-800: #1E293B;
+      --slate-700: #334155;
+      --slate-500: #64748B;
+      --slate-400: #94A3B8;
+      --slate-300: #CBD5E1;
+      --slate-200: #E2E8F0;
+      --slate-100: #F1F5F9;
+      --slate-50: #FAFBFC;
+      --white: #FFFFFF;
+      --success: #059669;
+      --error: #DC2626;
+
+      --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --shadow-sm: 0 1px 2px rgba(15, 118, 110, 0.05);
+      --shadow-md: 0 4px 12px rgba(15, 118, 110, 0.08);
+      --shadow-lg: 0 8px 24px rgba(15, 118, 110, 0.12);
+      --shadow-xl: 0 16px 48px rgba(15, 118, 110, 0.15);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font);
+      color: var(--slate-900);
+      background: var(--slate-50);
+      line-height: 1.6;
+    }
+
+    ::selection {
+      background: rgba(15, 118, 110, 0.15);
+      color: var(--slate-900);
+    }
+
+    /* ── ANIMATIONS ── */
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── NAV ── */
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 14px 20px;
+      background: rgba(250, 251, 252, 0.9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .nav-wordmark {
+      font-size: 17px;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-wordmark b {
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .nav-wordmark span {
+      font-weight: 600;
+      color: var(--teal-700);
+    }
+
+    .nav-badge {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--teal-700);
+      background: var(--teal-50);
+      border: 1px solid rgba(15, 118, 110, 0.1);
+      padding: 4px 10px;
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    @media (min-width: 768px) {
+      .nav {
+        padding: 14px 32px;
+      }
+    }
+
+    /* ── HERO ── */
+
+    .hero {
+      padding: 120px 20px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(15, 118, 110, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 118, 110, 0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 70%);
+    }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: var(--teal-50);
+      border: 1px solid rgba(15, 118, 110, 0.1);
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--teal-700);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      animation: fadeSlideUp 0.6s ease both;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-label-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--amber-500);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 7vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--slate-900);
+      max-width: 800px;
+      margin: 0 auto 16px;
+      animation: fadeSlideUp 0.6s ease 0.1s both;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 .teal {
+      color: var(--teal-700);
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      font-weight: 400;
+      color: var(--slate-500);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.5;
+      animation: fadeSlideUp 0.6s ease 0.2s both;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-directions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+      animation: fadeSlideUp 0.6s ease 0.3s both;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-dir-tag {
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-dir-tag.d1 {
+      background: var(--teal-50);
+      color: var(--teal-700);
+      border: 1px solid rgba(15, 118, 110, 0.15);
+    }
+
+    .hero-dir-tag.d2 {
+      background: var(--slate-800);
+      color: var(--slate-100);
+      border: 1px solid var(--slate-700);
+    }
+
+    .hero-dir-tag.d3 {
+      background: var(--white);
+      color: var(--slate-900);
+      border: 1px solid var(--slate-200);
+      font-weight: 800;
+    }
+
+    /* ── RECOMMENDATION BANNER ── */
+
+    .recommendation {
+      max-width: 1200px;
+      margin: 0 auto 48px;
+      padding: 0 20px;
+    }
+
+    .recommendation-card {
+      background: linear-gradient(135deg, var(--teal-700) 0%, var(--teal-800) 100%);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(15, 118, 110, 0.25);
+    }
+
+    .recommendation-card::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .rec-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--amber-400);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      align-self: flex-start;
+    }
+
+    .rec-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--amber-500);
+      border-radius: 50%;
+    }
+
+    .rec-title {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: white;
+      line-height: 1.15;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rec-text {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.6;
+      max-width: 640px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rec-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rec-point {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .rec-point svg {
+      width: 14px;
+      height: 14px;
+      color: var(--amber-400);
+      flex-shrink: 0;
+    }
+
+    @media (min-width: 768px) {
+      .recommendation {
+        padding: 0 32px;
+      }
+      .recommendation-card {
+        padding: 40px 40px;
+      }
+    }
+
+    /* ── SECTION HEADERS ── */
+
+    .section-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal-700);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--slate-900);
+    }
+
+    .section-subtitle {
+      font-size: 15px;
+      color: var(--slate-500);
+      margin-top: 12px;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (min-width: 768px) {
+      .section-wrapper {
+        padding: 0 32px;
+      }
+    }
+
+    /* ── DIRECTION CARDS GRID ── */
+
+    .directions-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 80px;
+    }
+
+    @media (min-width: 768px) {
+      .directions-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+    }
+
+    .dir-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .dir-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .dir-card.recommended {
+      border-color: var(--teal-700);
+      border-width: 2px;
+      box-shadow: var(--shadow-md), 0 0 0 3px rgba(15, 118, 110, 0.08);
+    }
+
+    .dir-card.recommended:hover {
+      box-shadow: var(--shadow-xl), 0 0 0 3px rgba(15, 118, 110, 0.12);
+    }
+
+    /* Direction card header */
+    .dir-header {
+      padding: 24px 20px 20px;
+      position: relative;
+    }
+
+    .dir-header.dark {
+      background: var(--slate-800);
+      color: var(--slate-100);
+    }
+
+    .dir-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate-400);
+      margin-bottom: 8px;
+    }
+
+    .dir-header.dark .dir-num {
+      color: var(--slate-400);
+    }
+
+    .dir-name {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--slate-900);
+      margin-bottom: 4px;
+    }
+
+    .dir-header.dark .dir-name {
+      color: var(--white);
+    }
+
+    .dir-stance {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--teal-700);
+    }
+
+    .dir-header.dark .dir-stance {
+      color: var(--teal-600);
+    }
+
+    .dir-rec-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 4px 10px;
+      background: var(--amber-500);
+      color: var(--slate-900);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 100px;
+    }
+
+    .dir-summary {
+      font-size: 14px;
+      color: var(--slate-500);
+      line-height: 1.6;
+      margin-top: 12px;
+    }
+
+    .dir-header.dark .dir-summary {
+      color: var(--slate-400);
+    }
+
+    /* ── DIRECTION PREVIEW (inline dashboard mockup) ── */
+
+    .dir-preview {
+      padding: 16px;
+      border-top: 1px solid var(--slate-200);
+    }
+
+    .dir-preview.dark {
+      background: #080C14;
+      border-color: var(--slate-700);
+    }
+
+    .dir-preview-frame {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--slate-200);
+    }
+
+    .dir-preview.dark .dir-preview-frame {
+      border-color: var(--slate-700);
+    }
+
+    /* Mini dashboard mockup shared styles */
+    .mini-dashboard {
+      padding: 16px;
+      font-size: 12px;
+    }
+
+    .mini-dashboard.light {
+      background: var(--slate-50);
+    }
+
+    .mini-dashboard.dark {
+      background: var(--slate-900);
+      color: var(--slate-100);
+    }
+
+    .mini-greeting {
+      font-size: 11px;
+      color: var(--slate-400);
+      margin-bottom: 2px;
+    }
+
+    .mini-amount {
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .mini-amount.size-lg {
+      font-size: 32px;
+      color: var(--slate-900);
+    }
+
+    .mini-amount.size-xl {
+      font-size: 36px;
+      text-align: center;
+      color: var(--slate-900);
+    }
+
+    .mini-amount.size-xl .dollar {
+      font-size: 0.4em;
+      font-weight: 600;
+      color: var(--teal-700);
+      vertical-align: super;
+    }
+
+    .mini-amount.dark-text {
+      color: var(--slate-100);
+      font-family: var(--font-mono);
+    }
+
+    .mini-sublabel {
+      font-size: 11px;
+      color: var(--slate-400);
+    }
+
+    .mini-sublabel.center {
+      text-align: center;
+    }
+
+    .mini-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 100px;
+      font-size: 10px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .mini-status.green {
+      background: rgba(5, 150, 105, 0.1);
+      color: var(--success);
+    }
+
+    .mini-status.dark-green {
+      background: rgba(5, 150, 105, 0.15);
+      color: #10B981;
+    }
+
+    .mini-status.center {
+      display: flex;
+      justify-content: center;
+      margin-top: 6px;
+    }
+
+    .mini-bars {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mini-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .mini-bar-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+    }
+
+    .mini-bar-label {
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--slate-500);
+    }
+
+    .mini-bar-label.dark-text {
+      color: var(--slate-400);
+    }
+
+    .mini-bar-value {
+      font-weight: 600;
+      color: var(--slate-700);
+    }
+
+    .mini-bar-value.dark-text {
+      color: var(--slate-200);
+      font-family: var(--font-mono);
+    }
+
+    .mini-bar-track {
+      height: 4px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .mini-bar-track.light-bg {
+      background: var(--slate-100);
+    }
+
+    .mini-bar-track.dark-bg {
+      background: #1E293B;
+    }
+
+    .mini-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+    }
+
+    .mini-bar-fill.teal { background: var(--teal-700); }
+    .mini-bar-fill.amber { background: var(--amber-500); }
+    .mini-bar-fill.teal-bright { background: #0D9488; }
+
+    /* Mini flow triptych */
+    .mini-flow {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: 10px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .mini-flow.light-bg {
+      background: var(--slate-100);
+    }
+
+    .mini-flow.dark-bg {
+      background: var(--slate-700);
+    }
+
+    .mini-flow-item {
+      padding: 8px 4px;
+      text-align: center;
+    }
+
+    .mini-flow-item.light-bg {
+      background: var(--white);
+    }
+
+    .mini-flow-item.dark-bg {
+      background: var(--slate-800);
+    }
+
+    .mini-flow-label {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .mini-flow-label.light-text { color: var(--slate-400); }
+    .mini-flow-label.dark-text { color: var(--slate-500); }
+
+    .mini-flow-value {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .mini-flow-value.income { color: var(--teal-700); }
+    .mini-flow-value.spent { color: var(--slate-900); }
+    .mini-flow-value.saved { color: var(--success); }
+    .mini-flow-value.income-dark { color: #0D9488; }
+    .mini-flow-value.spent-dark { color: var(--slate-100); }
+    .mini-flow-value.saved-dark { color: #10B981; }
+
+    /* Mini stat grid (for dark mode preview) */
+    .mini-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .mini-stat-box {
+      padding: 8px;
+      border-radius: 4px;
+    }
+
+    .mini-stat-box.dark-bg {
+      background: #1E293B;
+      border: 1px solid rgba(51, 65, 85, 0.4);
+    }
+
+    .mini-stat-box-label {
+      font-size: 9px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748B;
+      margin-bottom: 2px;
+    }
+
+    .mini-stat-box-value {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .mini-stat-box-value.positive { color: #10B981; }
+    .mini-stat-box-value.negative { color: var(--slate-100); }
+    .mini-stat-box-value.highlight { color: var(--amber-500); }
+
+    /* ── DESIGN DECISIONS ── */
+
+    .dir-details {
+      padding: 20px;
+    }
+
+    .dir-detail-group {
+      margin-bottom: 16px;
+    }
+
+    .dir-detail-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal-700);
+      margin-bottom: 6px;
+    }
+
+    .dir-detail-text {
+      font-size: 13px;
+      color: var(--slate-700);
+      line-height: 1.5;
+    }
+
+    .dir-detail-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .dir-detail-list li {
+      font-size: 13px;
+      color: var(--slate-700);
+      line-height: 1.4;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .dir-detail-list li::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--teal-700);
+      flex-shrink: 0;
+      margin-top: 7px;
+    }
+
+    /* ── POUR / CONTRE ── */
+
+    .dir-pros-cons {
+      padding: 0 20px 20px;
+    }
+
+    .pros-cons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .pros, .cons {
+      padding: 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    .pros {
+      background: rgba(5, 150, 105, 0.05);
+    }
+
+    .cons {
+      background: rgba(220, 38, 38, 0.04);
+    }
+
+    .pros-label, .cons-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .pros-label { color: var(--success); }
+    .cons-label { color: var(--error); }
+
+    .pros-list, .cons-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .pros-list li, .cons-list li {
+      font-size: 12px;
+      line-height: 1.4;
+      display: flex;
+      align-items: flex-start;
+      gap: 4px;
+    }
+
+    .pros-list li { color: var(--slate-700); }
+    .cons-list li { color: var(--slate-700); }
+
+    .pros-list li::before {
+      content: '+';
+      font-weight: 800;
+      color: var(--success);
+      flex-shrink: 0;
+    }
+
+    .cons-list li::before {
+      content: '-';
+      font-weight: 800;
+      color: var(--error);
+      flex-shrink: 0;
+    }
+
+    /* ── DIRECTION LINKS ── */
+
+    .dir-links {
+      padding: 0 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .dir-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background 0.15s ease;
+    }
+
+    .dir-link.light {
+      background: var(--slate-100);
+      color: var(--slate-700);
+    }
+
+    .dir-link.light:hover {
+      background: var(--teal-50);
+      color: var(--teal-700);
+    }
+
+    .dir-link.dark {
+      background: var(--slate-800);
+      color: var(--slate-300);
+    }
+
+    .dir-link.dark:hover {
+      background: var(--slate-700);
+      color: var(--white);
+    }
+
+    .dir-link svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    /* ── SAME SCREEN COMPARISON ── */
+
+    .same-screen-section {
+      padding: 80px 0;
+      background: var(--white);
+      border-top: 1px solid var(--slate-200);
+      border-bottom: 1px solid var(--slate-200);
+    }
+
+    .same-screen-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    @media (min-width: 768px) {
+      .same-screen-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+    }
+
+    .same-screen-item {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--slate-200);
+    }
+
+    .same-screen-item.dark-border {
+      border-color: var(--slate-700);
+    }
+
+    .same-screen-label {
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .same-screen-label.light {
+      background: var(--white);
+      color: var(--slate-500);
+      border-bottom: 1px solid var(--slate-200);
+    }
+
+    .same-screen-label.dark {
+      background: var(--slate-800);
+      color: var(--slate-400);
+      border-bottom: 1px solid var(--slate-700);
+    }
+
+    .same-screen-label .rec-mini {
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      background: var(--amber-500);
+      color: var(--slate-900);
+      border-radius: 100px;
+    }
+
+    /* ── PALETTE SECTION ── */
+
+    .palette-section {
+      padding: 80px 0;
+    }
+
+    .palette-comparison {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      margin-top: 40px;
+    }
+
+    @media (min-width: 768px) {
+      .palette-comparison {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+    }
+
+    .palette-item {
+      text-align: center;
+    }
+
+    .palette-item-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate-900);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .palette-swatches {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .swatch {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      position: relative;
+    }
+
+    .swatch-label {
+      position: absolute;
+      bottom: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--slate-400);
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+    }
+
+    .palette-philosophy {
+      font-size: 12px;
+      color: var(--slate-500);
+      line-height: 1.5;
+      margin-top: 28px;
+    }
+
+    /* ── TYPOGRAPHY SECTION ── */
+
+    .typo-section {
+      padding: 80px 0;
+      background: var(--white);
+      border-top: 1px solid var(--slate-200);
+      border-bottom: 1px solid var(--slate-200);
+    }
+
+    .typo-comparison {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      margin-top: 40px;
+    }
+
+    @media (min-width: 768px) {
+      .typo-comparison {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+    }
+
+    .typo-item {
+      padding: 24px;
+      border-radius: var(--radius-md);
+    }
+
+    .typo-item.light-bg {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+    }
+
+    .typo-item.dark-bg {
+      background: var(--slate-900);
+      border: 1px solid var(--slate-700);
+    }
+
+    .typo-item-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .typo-item-title.light-text { color: var(--teal-700); }
+    .typo-item-title.dark-text { color: #0D9488; }
+
+    .typo-sample {
+      margin-bottom: 12px;
+    }
+
+    .typo-heading {
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .typo-heading.light { color: var(--slate-900); }
+    .typo-heading.dark { color: var(--slate-100); }
+
+    .typo-body-text {
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    .typo-body-text.light { color: var(--slate-500); font-size: 14px; }
+    .typo-body-text.dark { color: var(--slate-400); font-size: 13px; }
+
+    .typo-number {
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-top: 8px;
+    }
+
+    .typo-number-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .typo-number-label.light { color: var(--slate-400); }
+    .typo-number-label.dark { color: var(--slate-500); }
+
+    /* ── NAVIGATION SECTION ── */
+
+    .nav-section {
+      padding: 80px 0;
+    }
+
+    .nav-comparison {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      margin-top: 40px;
+    }
+
+    @media (min-width: 768px) {
+      .nav-comparison {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+    }
+
+    .nav-item {
+      padding: 24px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--slate-200);
+      background: var(--white);
+    }
+
+    .nav-item-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate-900);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .nav-demo {
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    /* Mini nav demos */
+    .mini-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+    }
+
+    .mini-topbar-links {
+      display: flex;
+      gap: 8px;
+    }
+
+    .mini-topbar-link {
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+      color: var(--slate-500);
+    }
+
+    .mini-topbar-link.active {
+      background: var(--teal-50);
+      color: var(--teal-700);
+      font-weight: 600;
+    }
+
+    .mini-sidebar-demo {
+      display: flex;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      height: 100px;
+    }
+
+    .mini-sidebar-bar {
+      width: 60px;
+      padding: 8px 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .mini-sidebar-bar.light-bg {
+      background: var(--white);
+      border-right: 1px solid var(--slate-200);
+    }
+
+    .mini-sidebar-bar.dark-bg {
+      background: var(--slate-800);
+      border-right: 1px solid var(--slate-700);
+    }
+
+    .mini-sidebar-item {
+      padding: 4px 6px;
+      border-radius: 3px;
+      font-size: 8px;
+      font-weight: 600;
+    }
+
+    .mini-sidebar-item.light-active {
+      background: var(--teal-50);
+      color: var(--teal-700);
+    }
+
+    .mini-sidebar-item.light-inactive {
+      color: var(--slate-400);
+    }
+
+    .mini-sidebar-item.dark-active {
+      background: rgba(15, 118, 110, 0.15);
+      color: #0D9488;
+    }
+
+    .mini-sidebar-item.dark-inactive {
+      color: var(--slate-500);
+    }
+
+    .mini-sidebar-content {
+      flex: 1;
+    }
+
+    .mini-sidebar-content.light-bg {
+      background: var(--slate-50);
+    }
+
+    .mini-sidebar-content.dark-bg {
+      background: #080C14;
+    }
+
+    .mini-bottombar {
+      display: flex;
+      justify-content: space-around;
+      padding: 6px 0;
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+    }
+
+    .mini-bottombar-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+      font-size: 7px;
+      font-weight: 600;
+    }
+
+    .mini-bottombar-item.active { color: var(--teal-700); }
+    .mini-bottombar-item.inactive { color: var(--slate-400); }
+
+    .mini-bottombar-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+      background: currentColor;
+      opacity: 0.3;
+    }
+
+    .mini-bottombar-item.active .mini-bottombar-dot {
+      opacity: 1;
+    }
+
+    .nav-pattern-label {
+      font-size: 12px;
+      color: var(--slate-500);
+      line-height: 1.5;
+    }
+
+    /* ── SYNTHESIS TABLE ── */
+
+    .synthesis-section {
+      padding: 80px 0;
+      background: var(--white);
+      border-top: 1px solid var(--slate-200);
+    }
+
+    .synthesis-table-wrap {
+      margin-top: 40px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .synthesis-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+    }
+
+    .synthesis-table thead th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-bottom: 2px solid var(--slate-200);
+    }
+
+    .synthesis-table thead th:first-child {
+      color: var(--slate-400);
+    }
+
+    .synthesis-table thead th.d1 { color: var(--teal-700); }
+    .synthesis-table thead th.d2 { color: var(--slate-500); }
+    .synthesis-table thead th.d3 { color: var(--slate-900); }
+    .synthesis-table thead th.rec { color: var(--teal-700); position: relative; }
+
+    .synthesis-table thead th.rec::after {
+      content: 'REC';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 8px;
+      font-weight: 800;
+      background: var(--amber-500);
+      color: var(--slate-900);
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+
+    .synthesis-table tbody td {
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--slate-700);
+      border-bottom: 1px solid var(--slate-100);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .synthesis-table tbody td:first-child {
+      font-weight: 700;
+      color: var(--slate-500);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .synthesis-table tbody tr:hover td {
+      background: var(--teal-50);
+    }
+
+    .synthesis-table tbody td.rec-col {
+      background: rgba(15, 118, 110, 0.03);
+    }
+
+    .rating {
+      display: inline-flex;
+      gap: 2px;
+    }
+
+    .rating-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .rating-dot.filled { background: var(--teal-700); }
+    .rating-dot.half { background: var(--teal-700); opacity: 0.4; }
+    .rating-dot.empty { background: var(--slate-200); }
+
+    /* ── DETAILED RECOMMENDATION ── */
+
+    .final-rec-section {
+      padding: 80px 0;
+    }
+
+    .final-rec-card {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 2px solid var(--teal-700);
+      box-shadow: var(--shadow-md);
+    }
+
+    .final-rec-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: var(--amber-100);
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--amber-500);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .final-rec-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--slate-900);
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+
+    .final-rec-text {
+      font-size: 15px;
+      color: var(--slate-700);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .final-rec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .final-rec-point {
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      background: var(--teal-50);
+    }
+
+    .final-rec-point-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal-700);
+      margin-bottom: 4px;
+    }
+
+    .final-rec-point-text {
+      font-size: 13px;
+      color: var(--slate-700);
+      line-height: 1.5;
+    }
+
+    @media (min-width: 768px) {
+      .final-rec-card {
+        padding: 40px 40px;
+      }
+    }
+
+    /* ── FOOTER ── */
+
+    .page-footer {
+      padding: 32px 20px;
+      text-align: center;
+      border-top: 1px solid var(--slate-200);
+    }
+
+    .page-footer-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .page-footer-logo svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .page-footer-wordmark {
+      font-size: 15px;
+      letter-spacing: -0.02em;
+    }
+
+    .page-footer-wordmark b { font-weight: 800; color: var(--slate-900); }
+    .page-footer-wordmark span { font-weight: 600; color: var(--teal-700); }
+
+    .page-footer-text {
+      font-size: 12px;
+      color: var(--slate-400);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======== NAV ======== -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <svg viewBox="-50 -50 100 100" fill="none">
+          <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+          <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+        </svg>
+        <span class="nav-wordmark"><b>Mes</b><span> Finances</span></span>
+      </a>
+      <span class="nav-badge">Comparaison design</span>
+    </div>
+  </nav>
+
+  <!-- ======== HERO ======== -->
+  <section class="hero">
+    <div class="hero-label">
+      <span class="hero-label-dot"></span>
+      3 directions de design
+    </div>
+    <h1>Comparaison<br>des <span class="teal">3 directions</span></h1>
+    <p class="hero-sub">
+      Le meme produit, trois stances radicalement differentes. Laquelle exprime le mieux l'ADN de Mes Finances?
+    </p>
+    <div class="hero-directions">
+      <span class="hero-dir-tag d1">D1 Radical Simplicity</span>
+      <span class="hero-dir-tag d2">D2 Invisible Interface</span>
+      <span class="hero-dir-tag d3">D3 Typography Monument</span>
+    </div>
+  </section>
+
+  <!-- ======== RECOMMENDATION BANNER ======== -->
+  <div class="recommendation reveal">
+    <div class="recommendation-card">
+      <span class="rec-badge">Recommandation</span>
+      <h2 class="rec-title">Direction 3 — Typography Monument</h2>
+      <p class="rec-text">
+        La Direction 3 est mon choix sans hesitation. Elle aligne parfaitement la brand promise de clarte avec une execution typographique qui rend les chiffres financiers monumentaux. Le "847 $" a 6rem n'est pas juste un nombre — c'est de la confiance rendue visible. C'est la direction qui fait dire "wow" tout en restant parfaitement fonctionnelle.
+      </p>
+      <div class="rec-points">
+        <span class="rec-point">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Hierarchie visuelle impeccable
+        </span>
+        <span class="rec-point">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Sidebar + desktop grid
+        </span>
+        <span class="rec-point">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Le plus complet en features
+        </span>
+        <span class="rec-point">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Brand-consistent light mode
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== DIRECTION CARDS ======== -->
+  <div class="section-wrapper">
+    <div class="section-header reveal">
+      <p class="section-label">Les 3 directions</p>
+      <h2 class="section-title">Meme produit, trois partis pris</h2>
+      <p class="section-subtitle">Chaque direction applique un stance different sur les memes ecrans : landing, dashboard, depenses.</p>
+    </div>
+
+    <div class="directions-grid">
+
+      <!-- ── DIRECTION 1 ── -->
+      <div class="dir-card reveal">
+        <div class="dir-header">
+          <p class="dir-num">Direction 1 — Le choix naturel</p>
+          <h3 class="dir-name">Radical Simplicity</h3>
+          <p class="dir-stance">Stance : invisible_interface</p>
+          <p class="dir-summary">L'interface disparait. Un seul nombre domine chaque ecran. Tout est au service de la clarte instantanee. Le choix naturel pour un outil de finances personnelles.</p>
+        </div>
+
+        <!-- Mini Dashboard Preview -->
+        <div class="dir-preview">
+          <div class="dir-preview-frame">
+            <div class="mini-dashboard light">
+              <p class="mini-greeting">Bonjour, Amara</p>
+              <p class="mini-amount size-lg">847 $</p>
+              <p class="mini-sublabel">disponibles ce mois-ci</p>
+              <div class="mini-status green">Dans les temps</div>
+              <div class="mini-bars">
+                <div class="mini-bar">
+                  <div class="mini-bar-header">
+                    <span class="mini-bar-label">Revenus</span>
+                    <span class="mini-bar-value">2 850 $ / 4 400 $</span>
+                  </div>
+                  <div class="mini-bar-track light-bg">
+                    <div class="mini-bar-fill teal" style="width: 65%;"></div>
+                  </div>
+                </div>
+                <div class="mini-bar">
+                  <div class="mini-bar-header">
+                    <span class="mini-bar-label">Depenses</span>
+                    <span class="mini-bar-value">1 620 $ / 3 600 $</span>
+                  </div>
+                  <div class="mini-bar-track light-bg">
+                    <div class="mini-bar-fill amber" style="width: 45%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Design Decisions -->
+        <div class="dir-details">
+          <div class="dir-detail-group">
+            <p class="dir-detail-label">Layout</p>
+            <p class="dir-detail-text">Colonne unique 640px. Pas de sidebar. Contenu centre, lineaire. Le scroll raconte une histoire.</p>
+          </div>
+          <div class="dir-detail-group">
+            <p class="dir-detail-label">Navigation</p>
+            <p class="dir-detail-text">Top-bar desktop + bottom-bar mobile. Simple, classique. 4 items : Accueil, Depenses, Revenus, Reglages.</p>
+          </div>
+          <div class="dir-detail-group">
+            <p class="dir-detail-label">Couleur</p>
+            <p class="dir-detail-text">Fond #FAFBFC, teal limite aux labels et CTA, amber pour les barres de depenses. Utilisation minimale de la couleur.</p>
+          </div>
+          <div class="dir-detail-group">
+            <p class="dir-detail-label">Densite</p>
+            <p class="dir-detail-text">Faible. Beaucoup d'espace blanc. Le nombre principal (56-72px) monopolise l'attention. C'est le parti pris.</p>
+          </div>
+        </div>
+
+        <!-- Pour / Contre -->
+        <div class="dir-pros-cons">
+          <div class="pros-cons-grid">
+            <div class="pros">
+              <p class="pros-label">Pour</p>
+              <ul class="pros-list">
+                <li>Alignement parfait avec "Radical Simplicity" du brand</li>
+                <li>Zero courbe d'apprentissage</li>
+                <li>Mobile-first irreprochable</li>
+                <li>Pas de surcharge cognitive</li>
+              </ul>
+            </div>
+            <div class="cons">
+              <p class="cons-label">Contre</p>
+              <ul class="cons-list">
+                <li>Peut sembler "trop simple" pour les power users</li>
+                <li>Manque de profondeur fonctionnelle (pas d'objectifs, pas d'insights)</li>
+                <li>Top-bar desktop peu distinctive</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div class="dir-links">
+          <a href="direction-1/landing.html" class="dir-link light">
+            Landing
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="direction-1/dashboard.html" class="dir-link light">
+            Dashboard
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="direction-1/depenses.html" class="dir-link light">
+            Depenses
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- ── DIRECTION 2 ── -->
+      <div class="dir-card reveal">
+        <div class="dir-header dark">
+          <p class="dir-num">Direction 2 — L'alternative credible</p>
+          <h3 class="dir-name">Invisible Interface</h3>
+          <p class="dir-stance">Stance : invisible_interface + data_density</p>
+          <p class="dir-summary">Dark mode total. L'interface disparait dans le noir. Les chiffres en JetBrains Mono brillent. Bloomberg rencontre Notion dark. Densite maximum.</p>
+        </div>
+
+        <!-- Mini Dashboard Preview -->
+        <div class="dir-preview dark">
+          <div class="dir-preview-frame">
+            <div class="mini-dashboard dark">
+              <div class="mini-stat-grid">
+                <div class="mini-stat-box dark-bg">
+                  <p class="mini-stat-box-label">Revenus</p>
+                  <p class="mini-stat-box-value positive">4 850 $</p>
+                </div>
+                <div class="mini-stat-box dark-bg">
+                  <p class="mini-stat-box-label">Depenses</p>
+                  <p class="mini-stat-box-value negative">2 134 $</p>
+                </div>
+                <div class="mini-stat-box dark-bg">
+                  <p class="mini-stat-box-label">Disponible</p>
+                  <p class="mini-stat-box-value highlight">2 716 $</p>
+                </div>
+                <div class="mini-stat-box dark-bg">
+                  <p class="mini-stat-box-label">Epargne</p>
+                  <p class="mini-stat-box-value positive">620 $</p>
+                </div>
+              </div>
+              <div class="mini-bars" style="margin-top: 10px;">
+                <div class="mini-bar">
+                  <div class="mini-bar-header">
+                    <span class="mini-bar-label dark-text">Loyer</span>
+                    <span class="mini-bar-value dark-text">1 200 $</span>
+                  </div>
+                  <div class="mini-bar-track dark-bg">
+                    <div class="mini-bar-fill teal-bright" style="width: 85%;"></div>
+                  </div>
+                </div>
+                <div class="mini-bar">
+                  <div class="mini-bar-header">
+                    <span class="mini-bar-label dark-text">Epicerie</span>
+                    <span class="mini-bar-value dark-text">412 $</span>
+                  </div>
+                  <div class="mini-bar-track dark-bg">
+                    <div class="mini-bar-fill teal-bright" style="width: 55%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Design Decisions -->
+        <div class="dir-details">
+          <div class="dir-detail-group">
+            <p class="dir-detail-label">Layout</p>
+            <p class="dir-detail-text">Sidebar desktop (240px) + grille dense. Landing en deux colonnes (texte + preview). Dashboard en grid de stat cards.</p>
+          </div>
+          <div class="dir-detail-group">
+            <p class="dir-detail-label">Navigation</p>
+            <p class="dir-detail-text">Sidebar dark desktop + bottom-bar mobile. "Ghost nav" sur la landing. Frosted glass sur fond noir.</p>
+          </div>
+          <div class="dir-detail-group">
+            <p class="dir-detail-label">Couleur</p>
+            <p class="dir-detail-text">Fond #080C14, surfaces #0F172A/#1E293B. Teal utilise comme glow subtil et texte accent. Amber pour les highlights. Grille texture de fond.</p>
+          </div>
+          <div class="dir-detail-group">
+            <p class="dir-detail-label">Densite</p>
+            <p class="dir-detail-text">Haute. Stat grid 4 colonnes, filtres compacts, table view sur les depenses. Ratio signal/bruit eleve. Monospace pour les montants.</p>
+          </div>
+        </div>
+
+        <!-- Pour / Contre -->
+        <div class="dir-pros-cons">
+          <div class="pros-cons-grid">
+            <div class="pros">
+              <p class="pros-label">Pour</p>
+              <ul class="pros-list">
+                <li>Esthetique pro, distinctive, memorable</li>
+                <li>JetBrains Mono rend les chiffres ultra-lisibles</li>
+                <li>Densite d'information elevee sans chaos</li>
+                <li>Dark mode repose les yeux en soiree</li>
+              </ul>
+            </div>
+            <div class="cons">
+              <p class="cons-label">Contre</p>
+              <ul class="cons-list">
+                <li>Dark mode peut intimider un public non-tech</li>
+                <li>S'eloigne du teal-on-white du brand-config</li>
+                <li>Courbe d'apprentissage plus raide</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div class="dir-links">
+          <a href="direction-2/landing.html" class="dir-link dark">
+            Landing
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="direction-2/dashboard.html" class="dir-link dark">
+            Dashboard
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="direction-2/depenses.html" class="dir-link dark">
+            Depenses
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- ── DIRECTION 3 (RECOMMENDED) ── -->
+      <div class="dir-card recommended reveal">
+        <div class="dir-header">
+          <p class="dir-num">Direction 3 — La surprise</p>
+          <h3 class="dir-name">Typography Monument</h3>
+          <p class="dir-stance">Stance : typography_monument</p>
+          <span class="dir-rec-badge">Recommandee</span>
+          <p class="dir-summary">Le chiffre EST l'architecture. Le "847 $" a 6rem est un monument typographique. Tout orbite autour. Sidebar, insight cards, objectifs d'epargne — le set de features le plus complet.</p>
+        </div>
+
+        <!-- Mini Dashboard Preview -->
+        <div class="dir-preview">
+          <div class="dir-preview-frame">
+            <div class="mini-dashboard light" style="text-align: center; padding: 20px 16px;">
+              <p class="mini-greeting">Bonjour Amara</p>
+              <p style="font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal-700); margin-bottom: 8px;">MARS 2026</p>
+              <p class="mini-amount size-xl">847<span class="dollar">$</span></p>
+              <p class="mini-sublabel center">Disponible ce mois-ci</p>
+              <div class="mini-status green center" style="margin: 6px auto 0; display: inline-flex;">Dans les temps</div>
+              <div class="mini-flow light-bg" style="margin-top: 14px;">
+                <div class="mini-flow-item light-bg">
+                  <p class="mini-flow-label light-text">Revenus</p>
+                  <p class="mini-flow-value income">4 200$</p>
+                </div>
+                <div class="mini-flow-item light-bg">
+                  <p class="mini-flow-label light-text">Depense</p>
+                  <p class="mini-flow-value spent">2 953$</p>
+                </div>
+                <div class="mini-flow-item light-bg">
+                  <p class="mini-flow-label light-text">Epargne</p>
+                  <p class="mini-flow-value saved">400$</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Design Decisions -->
+        <div class="dir-details">
+          <div class="dir-detail-group">
+            <p class="dir-detail-label">Layout</p>
+            <p class="dir-detail-text">Sidebar 260px desktop + desktop grid 2 colonnes. Monument central puis grille de sections. Le plus riche en contenu.</p>
+          </div>
+          <div class="dir-detail-group">
+            <p class="dir-detail-label">Navigation</p>
+            <p class="dir-detail-text">Sidebar desktop avec logo, liens, bouton "Ajouter", profil. Bottom-bar mobile. Sticky mobile header. Complet.</p>
+          </div>
+          <div class="dir-detail-group">
+            <p class="dir-detail-label">Couleur</p>
+            <p class="dir-detail-text">Fond #FAFBFC, cards blanches, teal pour accents et labels, amber pour objectifs. Respect strict du 60/30/10 du brand-config.</p>
+          </div>
+          <div class="dir-detail-group">
+            <p class="dir-detail-label">Densite</p>
+            <p class="dir-detail-text">Moyenne-haute. Le monument respire, mais budget bars, transactions, savings goals et insights remplissent la page. Equilibre optimal.</p>
+          </div>
+        </div>
+
+        <!-- Pour / Contre -->
+        <div class="dir-pros-cons">
+          <div class="pros-cons-grid">
+            <div class="pros">
+              <p class="pros-label">Pour</p>
+              <ul class="pros-list">
+                <li>Hierarchie typographique exceptionnelle</li>
+                <li>Set de features le plus complet (budget, tx, savings, insights)</li>
+                <li>Sidebar desktop = navigation professionnelle</li>
+                <li>Alignement parfait avec le brand-config</li>
+                <li>Memorable sans etre intimidant</li>
+              </ul>
+            </div>
+            <div class="cons">
+              <p class="cons-label">Contre</p>
+              <ul class="cons-list">
+                <li>Plus complexe a implementer</li>
+                <li>Le monument peut paraitre "trop grand" pour certains</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div class="dir-links">
+          <a href="direction-3/landing.html" class="dir-link light">
+            Landing
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="direction-3/dashboard.html" class="dir-link light">
+            Dashboard
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="direction-3/depenses.html" class="dir-link light">
+            Depenses
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======== SAME SCREEN: DASHBOARD ======== -->
+  <section class="same-screen-section">
+    <div class="section-wrapper">
+      <div class="section-header reveal">
+        <p class="section-label">Meme ecran, 3 stances</p>
+        <h2 class="section-title">Le dashboard dans chaque direction</h2>
+        <p class="section-subtitle">Le meme solde disponible (847 $), les memes donnees — trois experiences radicalement differentes.</p>
+      </div>
+
+      <div class="same-screen-grid">
+        <!-- D1 Dashboard -->
+        <div class="same-screen-item reveal">
+          <div class="same-screen-label light">
+            D1 Radical Simplicity
+          </div>
+          <div class="mini-dashboard light">
+            <p class="mini-greeting">Bonjour, Amara</p>
+            <p class="mini-amount size-lg">847 $</p>
+            <p class="mini-sublabel">disponibles ce mois-ci</p>
+            <div class="mini-status green">Dans les temps</div>
+            <div class="mini-bars">
+              <div class="mini-bar">
+                <div class="mini-bar-header">
+                  <span class="mini-bar-label">Revenus</span>
+                  <span class="mini-bar-value">2 850 $</span>
+                </div>
+                <div class="mini-bar-track light-bg">
+                  <div class="mini-bar-fill teal" style="width: 65%;"></div>
+                </div>
+              </div>
+              <div class="mini-bar">
+                <div class="mini-bar-header">
+                  <span class="mini-bar-label">Depenses</span>
+                  <span class="mini-bar-value">1 620 $</span>
+                </div>
+                <div class="mini-bar-track light-bg">
+                  <div class="mini-bar-fill amber" style="width: 45%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- D2 Dashboard -->
+        <div class="same-screen-item dark-border reveal">
+          <div class="same-screen-label dark">
+            D2 Invisible Interface
+          </div>
+          <div class="mini-dashboard dark">
+            <div class="mini-stat-grid">
+              <div class="mini-stat-box dark-bg">
+                <p class="mini-stat-box-label">Revenus</p>
+                <p class="mini-stat-box-value positive">4 850 $</p>
+              </div>
+              <div class="mini-stat-box dark-bg">
+                <p class="mini-stat-box-label">Disponible</p>
+                <p class="mini-stat-box-value highlight">2 716 $</p>
+              </div>
+            </div>
+            <div class="mini-bars" style="margin-top: 8px;">
+              <div class="mini-bar">
+                <div class="mini-bar-header">
+                  <span class="mini-bar-label dark-text">Loyer</span>
+                  <span class="mini-bar-value dark-text">1 200 $</span>
+                </div>
+                <div class="mini-bar-track dark-bg">
+                  <div class="mini-bar-fill teal-bright" style="width: 85%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- D3 Dashboard -->
+        <div class="same-screen-item reveal">
+          <div class="same-screen-label light">
+            D3 Typography Monument
+            <span class="rec-mini">REC</span>
+          </div>
+          <div class="mini-dashboard light" style="text-align: center; padding: 16px;">
+            <p style="font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal-700); margin-bottom: 6px;">MARS 2026</p>
+            <p class="mini-amount size-xl">847<span class="dollar">$</span></p>
+            <p class="mini-sublabel center">Disponible ce mois-ci</p>
+            <div style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 100px; font-size: 10px; font-weight: 600; background: rgba(5, 150, 105, 0.1); color: var(--success); margin-top: 4px;">Dans les temps</div>
+            <div class="mini-flow light-bg" style="margin-top: 10px;">
+              <div class="mini-flow-item light-bg">
+                <p class="mini-flow-label light-text">Revenus</p>
+                <p class="mini-flow-value income">4 200$</p>
+              </div>
+              <div class="mini-flow-item light-bg">
+                <p class="mini-flow-label light-text">Depense</p>
+                <p class="mini-flow-value spent">2 953$</p>
+              </div>
+              <div class="mini-flow-item light-bg">
+                <p class="mini-flow-label light-text">Epargne</p>
+                <p class="mini-flow-value saved">400$</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== PALETTE COMPARISON ======== -->
+  <section class="palette-section">
+    <div class="section-wrapper">
+      <div class="section-header reveal">
+        <p class="section-label">Palettes</p>
+        <h2 class="section-title">Philosophie couleur</h2>
+        <p class="section-subtitle">Meme palette de base (teal/amber/slate), trois approches d'application.</p>
+      </div>
+
+      <div class="palette-comparison">
+        <!-- D1 Palette -->
+        <div class="palette-item reveal">
+          <p class="palette-item-title">D1 — Radical Simplicity</p>
+          <div class="palette-swatches">
+            <div class="swatch" style="background: #FAFBFC;"><span class="swatch-label">Fond</span></div>
+            <div class="swatch" style="background: #FFFFFF;"><span class="swatch-label">Cards</span></div>
+            <div class="swatch" style="background: #0F766E;"><span class="swatch-label">Teal</span></div>
+            <div class="swatch" style="background: #F59E0B;"><span class="swatch-label">Amber</span></div>
+            <div class="swatch" style="background: #0F172A;"><span class="swatch-label">Text</span></div>
+            <div class="swatch" style="background: #E2E8F0;"><span class="swatch-label">Border</span></div>
+          </div>
+          <p class="palette-philosophy">Utilisation chirurgicale de la couleur. Le teal apparait uniquement sur les labels, la nav et les CTAs. L'amber colore les barres de depenses. Le reste est neutre — le chiffre parle, la couleur se tait.</p>
+        </div>
+
+        <!-- D2 Palette -->
+        <div class="palette-item reveal">
+          <p class="palette-item-title">D2 — Invisible Interface</p>
+          <div class="palette-swatches">
+            <div class="swatch" style="background: #080C14; border-color: rgba(255,255,255,0.15);"><span class="swatch-label">Fond</span></div>
+            <div class="swatch" style="background: #0F172A; border-color: rgba(255,255,255,0.1);"><span class="swatch-label">Surface</span></div>
+            <div class="swatch" style="background: #1E293B; border-color: rgba(255,255,255,0.08);"><span class="swatch-label">Cards</span></div>
+            <div class="swatch" style="background: #0D9488;"><span class="swatch-label">Teal</span></div>
+            <div class="swatch" style="background: #F59E0B;"><span class="swatch-label">Amber</span></div>
+            <div class="swatch" style="background: #F1F5F9;"><span class="swatch-label">Text</span></div>
+          </div>
+          <p class="palette-philosophy">Inversion complete. Le teal devient un glow subtil et un accent sur fond noir. L'amber brille pour les highlights et les CTAs. Trois niveaux de surface sombre (#080C14 > #0F172A > #1E293B) creent la profondeur. Le texte passe en clair.</p>
+        </div>
+
+        <!-- D3 Palette -->
+        <div class="palette-item reveal">
+          <p class="palette-item-title">D3 — Typography Monument</p>
+          <div class="palette-swatches">
+            <div class="swatch" style="background: #FAFBFC;"><span class="swatch-label">Fond</span></div>
+            <div class="swatch" style="background: #FFFFFF;"><span class="swatch-label">Cards</span></div>
+            <div class="swatch" style="background: #0F766E;"><span class="swatch-label">Teal</span></div>
+            <div class="swatch" style="background: #F59E0B;"><span class="swatch-label">Amber</span></div>
+            <div class="swatch" style="background: #0F172A;"><span class="swatch-label">Text</span></div>
+            <div class="swatch" style="background: #F0FDFA;"><span class="swatch-label">Teal 50</span></div>
+          </div>
+          <p class="palette-philosophy">Respect strict du 60/30/10 du brand-config. Le teal est present dans les labels architecturaux (uppercase, 0.1em spacing). L'amber ponctue les objectifs atteints. La couleur cadre — la typographie domine. Teal 50 pour les backgrounds d'insight et savings.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== TYPOGRAPHY COMPARISON ======== -->
+  <section class="typo-section">
+    <div class="section-wrapper">
+      <div class="section-header reveal">
+        <p class="section-label">Typographie</p>
+        <h2 class="section-title">Comment chaque direction traite les chiffres</h2>
+        <p class="section-subtitle">La finance, c'est des chiffres. Leur traitement typographique definit l'experience.</p>
+      </div>
+
+      <div class="typo-comparison">
+        <!-- D1 Typography -->
+        <div class="typo-item light-bg reveal">
+          <p class="typo-item-title light-text">D1 — Radical Simplicity</p>
+          <div class="typo-sample">
+            <p class="typo-number-label light">Solde disponible</p>
+            <p class="typo-number light" style="font-size: 36px; color: var(--slate-900);">847 $</p>
+          </div>
+          <div class="typo-sample">
+            <p class="typo-heading light" style="font-size: 20px;">Depenses recentes</p>
+            <p class="typo-body-text light">IGA — epicerie semaine</p>
+          </div>
+          <div class="typo-sample" style="margin-bottom: 0;">
+            <p style="font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate-500);">REVENUS</p>
+            <p style="font-size: 14px; font-weight: 600; color: var(--slate-900);">2 850 $ / 4 400 $</p>
+          </div>
+        </div>
+
+        <!-- D2 Typography -->
+        <div class="typo-item dark-bg reveal">
+          <p class="typo-item-title dark-text">D2 — Invisible Interface</p>
+          <div class="typo-sample">
+            <p class="typo-number-label dark">Disponible</p>
+            <p class="typo-number dark" style="font-size: 30px; color: var(--amber-500); font-family: var(--font-mono);">2 716 $</p>
+          </div>
+          <div class="typo-sample">
+            <p class="typo-heading dark" style="font-size: 16px;">Dernieres transactions</p>
+            <p class="typo-body-text dark">IGA Saint-Hubert</p>
+            <p style="font-family: var(--font-mono); font-size: 13px; color: #F1F5F9; margin-top: 2px;">-87,43 $</p>
+          </div>
+          <div class="typo-sample" style="margin-bottom: 0;">
+            <p style="font-size: 9px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #64748B;">REVENUS</p>
+            <p style="font-family: var(--font-mono); font-size: 15px; font-weight: 600; color: #10B981;">4 850 $</p>
+          </div>
+        </div>
+
+        <!-- D3 Typography -->
+        <div class="typo-item light-bg reveal">
+          <p class="typo-item-title light-text">D3 — Typography Monument</p>
+          <div class="typo-sample">
+            <p style="font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal-700);">MARS 2026</p>
+            <p style="font-size: 42px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: var(--slate-900);">847<span style="font-size: 0.4em; font-weight: 600; color: var(--teal-700); vertical-align: super;">$</span></p>
+          </div>
+          <div class="typo-sample">
+            <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate-400);">RECENTES</p>
+            <p style="font-size: 14px; font-weight: 600; color: var(--slate-900); margin-top: 4px;">IGA Marche</p>
+            <p style="font-size: 15px; font-weight: 700; letter-spacing: -0.02em; color: var(--slate-900);">-67,42$</p>
+          </div>
+          <div class="typo-sample" style="margin-bottom: 0;">
+            <p style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate-400);">REVENUS</p>
+            <p style="font-size: 18px; font-weight: 800; letter-spacing: -0.03em; color: var(--teal-700);">4 200$</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== NAVIGATION COMPARISON ======== -->
+  <section class="nav-section">
+    <div class="section-wrapper">
+      <div class="section-header reveal">
+        <p class="section-label">Navigation</p>
+        <h2 class="section-title">Trois approches de navigation</h2>
+        <p class="section-subtitle">La navigation structure l'experience. Top-bar, sidebar ou les deux?</p>
+      </div>
+
+      <div class="nav-comparison">
+        <!-- D1 Nav -->
+        <div class="nav-item reveal">
+          <p class="nav-item-title">D1 — Top-bar + Bottom-bar</p>
+          <div class="nav-demo">
+            <div class="mini-topbar">
+              <span style="font-weight: 800; font-size: 12px;"><span style="color: var(--slate-900);">Mes</span> <span style="color: var(--teal-700);">Finances</span></span>
+              <div class="mini-topbar-links">
+                <span class="mini-topbar-link active">Accueil</span>
+                <span class="mini-topbar-link">Depenses</span>
+                <span class="mini-topbar-link">Revenus</span>
+              </div>
+            </div>
+          </div>
+          <div class="nav-demo" style="margin-top: 8px;">
+            <div class="mini-bottombar">
+              <div class="mini-bottombar-item active">
+                <div class="mini-bottombar-dot"></div>
+                Accueil
+              </div>
+              <div class="mini-bottombar-item inactive">
+                <div class="mini-bottombar-dot"></div>
+                Depenses
+              </div>
+              <div class="mini-bottombar-item inactive">
+                <div class="mini-bottombar-dot"></div>
+                Revenus
+              </div>
+              <div class="mini-bottombar-item inactive">
+                <div class="mini-bottombar-dot"></div>
+                Reglages
+              </div>
+            </div>
+          </div>
+          <p class="nav-pattern-label" style="margin-top: 12px;">Desktop: top-bar horizontale classique. Mobile: bottom-bar iOS-style. Simple, previsible. Aucun espace perdu. Mais generique — ressemble a toutes les apps.</p>
+        </div>
+
+        <!-- D2 Nav -->
+        <div class="nav-item reveal">
+          <p class="nav-item-title">D2 — Sidebar dark + Ghost nav</p>
+          <div class="nav-demo">
+            <div class="mini-sidebar-demo">
+              <div class="mini-sidebar-bar dark-bg">
+                <div class="mini-sidebar-item dark-active">Accueil</div>
+                <div class="mini-sidebar-item dark-inactive">Depenses</div>
+                <div class="mini-sidebar-item dark-inactive">Revenus</div>
+                <div class="mini-sidebar-item dark-inactive">Reglages</div>
+              </div>
+              <div class="mini-sidebar-content dark-bg"></div>
+            </div>
+          </div>
+          <p class="nav-pattern-label" style="margin-top: 12px;">Desktop: sidebar 240px permanente sur fond #0F172A. Mobile: bottom-bar. Landing: nav flottante "ghost" avec backdrop blur sur noir. Pro, mais heavy.</p>
+        </div>
+
+        <!-- D3 Nav -->
+        <div class="nav-item reveal">
+          <p class="nav-item-title">D3 — Sidebar light + Bottom-bar</p>
+          <div class="nav-demo">
+            <div class="mini-sidebar-demo">
+              <div class="mini-sidebar-bar light-bg">
+                <div class="mini-sidebar-item light-active">Accueil</div>
+                <div class="mini-sidebar-item light-inactive">Depenses</div>
+                <div class="mini-sidebar-item light-inactive">Revenus</div>
+                <div class="mini-sidebar-item light-inactive">Reglages</div>
+              </div>
+              <div class="mini-sidebar-content light-bg"></div>
+            </div>
+          </div>
+          <p class="nav-pattern-label" style="margin-top: 12px;">Desktop: sidebar 260px blanche avec logo, liens, bouton CTA et profil utilisateur. Mobile: sticky header + bottom-bar. Le plus complet. Inclut un bouton "Ajouter une depense" dans la sidebar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== SYNTHESIS TABLE ======== -->
+  <section class="synthesis-section">
+    <div class="section-wrapper">
+      <div class="section-header reveal">
+        <p class="section-label">Synthese</p>
+        <h2 class="section-title">Grille de comparaison</h2>
+        <p class="section-subtitle">Chaque direction evaluee sur 6 criteres cles pour le produit Mes Finances.</p>
+      </div>
+
+      <div class="synthesis-table-wrap reveal">
+        <table class="synthesis-table">
+          <thead>
+            <tr>
+              <th>Critere</th>
+              <th class="d1">D1 Simplicity</th>
+              <th class="d2">D2 Dark Mode</th>
+              <th class="d3 rec">D3 Monument</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Lisibilite</td>
+              <td>Excellente. Un nombre, un regard. Rien ne distrait.</td>
+              <td>Bonne. Monospace aide. Mais dark mode fatigue en journee.</td>
+              <td class="rec-col">Exceptionnelle. Le monument 6rem cree une clarte immediate. Les labels uppercase structurent la hierarchie.</td>
+            </tr>
+            <tr>
+              <td>Coherence marque</td>
+              <td>
+                Forte. Teal + amber respectes. Ton leger, minimaliste.
+                <div class="rating" style="margin-top: 4px;">
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot empty"></span>
+                </div>
+              </td>
+              <td>
+                Moderee. Le dark mode s'eloigne du teal-on-white defini dans brand-config.
+                <div class="rating" style="margin-top: 4px;">
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot empty"></span>
+                  <span class="rating-dot empty"></span>
+                </div>
+              </td>
+              <td class="rec-col">
+                Parfaite. Palette, typo, tons, ratios — tout colle au brand-config. 60/30/10 respecte.
+                <div class="rating" style="margin-top: 4px;">
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Modernite</td>
+              <td>
+                Classique propre. Fonctionnel mais previsible.
+                <div class="rating" style="margin-top: 4px;">
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot empty"></span>
+                  <span class="rating-dot empty"></span>
+                </div>
+              </td>
+              <td>
+                Tres moderne. Dark + mono = tendance tech 2026. Grid texture.
+                <div class="rating" style="margin-top: 4px;">
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                </div>
+              </td>
+              <td class="rec-col">
+                Moderne et intemporel. Typographie architecturale = au-dessus des tendances.
+                <div class="rating" style="margin-top: 4px;">
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot half"></span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Convivialite</td>
+              <td>
+                Maximale. Aucune barriere d'entree. Bienveillant.
+                <div class="rating" style="margin-top: 4px;">
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                </div>
+              </td>
+              <td>
+                Limitee. Le dark mode intimide les non-techies. Froid.
+                <div class="rating" style="margin-top: 4px;">
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot half"></span>
+                  <span class="rating-dot empty"></span>
+                  <span class="rating-dot empty"></span>
+                </div>
+              </td>
+              <td class="rec-col">
+                Forte. Chaleureux grace aux insight cards. "Tu es dans les temps" rassure.
+                <div class="rating" style="margin-top: 4px;">
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot half"></span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Differenciation</td>
+              <td>
+                Faible. Top-bar + liste = toutes les apps de budget.
+                <div class="rating" style="margin-top: 4px;">
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot empty"></span>
+                  <span class="rating-dot empty"></span>
+                  <span class="rating-dot empty"></span>
+                </div>
+              </td>
+              <td>
+                Forte. Aucune app de budget quebecoise n'est en dark mode.
+                <div class="rating" style="margin-top: 4px;">
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot half"></span>
+                </div>
+              </td>
+              <td class="rec-col">
+                Forte. Le monument typographique est une signature. Memorable et unique.
+                <div class="rating" style="margin-top: 4px;">
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot empty"></span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Completude</td>
+              <td>
+                Basique. Dashboard + liste depenses. Pas d'objectifs.
+                <div class="rating" style="margin-top: 4px;">
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot half"></span>
+                  <span class="rating-dot empty"></span>
+                  <span class="rating-dot empty"></span>
+                </div>
+              </td>
+              <td>
+                Bonne. Charts, stat grid, table dense. Fonctionnel.
+                <div class="rating" style="margin-top: 4px;">
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot empty"></span>
+                </div>
+              </td>
+              <td class="rec-col">
+                La plus complete. Budget bars, transactions, savings goals, insights, sidebar riche.
+                <div class="rating" style="margin-top: 4px;">
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                  <span class="rating-dot filled"></span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== DETAILED RECOMMENDATION ======== -->
+  <section class="final-rec-section">
+    <div class="section-wrapper">
+      <div class="section-header reveal">
+        <p class="section-label">Verdict</p>
+        <h2 class="section-title">Recommandation detaillee</h2>
+      </div>
+
+      <div class="final-rec-card reveal">
+        <span class="final-rec-badge">Direction 3 recommandee</span>
+        <h3 class="final-rec-title">Typography Monument — la bonne surprise</h3>
+        <p class="final-rec-text">
+          En partant, la Direction 1 (Radical Simplicity) semblait le choix naturel — elle colle litteralement au stance declare dans le brand-config. Mais elle est trop sage. Elle fait exactement ce qu'on attend, rien de plus. C'est le generique.
+        </p>
+        <p class="final-rec-text">
+          La Direction 2 (Invisible Interface / Dark Mode) est seduisante pour les power users, mais elle trahit le brand. "Le grand frere bienveillant" ne parle pas dans un terminal noir. Le dark mode intimide un public francophone non-tech. C'est l'alternative credible mais pas le bon choix pour CE produit.
+        </p>
+        <p class="final-rec-text">
+          La Direction 3 (Typography Monument) est la surprise qui fonctionne. Elle prend la clarte promise par le brand et l'amplifie via la typographie : le solde disponible devient un monument de 6rem. On ne peut pas le rater. C'est la meme palette, la meme chaleur, mais avec un point de vue fort. Et surtout, c'est la direction la plus complete en fonctionnalites : budget bars, transactions, savings goals, insight cards. Elle est prete pour la production.
+        </p>
+
+        <div class="final-rec-grid">
+          <div class="final-rec-point">
+            <p class="final-rec-point-label">Utilisateur ideal</p>
+            <p class="final-rec-point-text">Francophone, 25-45 ans, qui veut voir son solde en un coup d'oeil et comprendre ou va son argent sans jargon.</p>
+          </div>
+          <div class="final-rec-point">
+            <p class="final-rec-point-label">Compromis accepte</p>
+            <p class="final-rec-point-text">Le monument typographique prend de la place. Moins de donnees visibles "above the fold" que D2. Mais l'impact emotionnel compense.</p>
+          </div>
+          <div class="final-rec-point">
+            <p class="final-rec-point-label">Alignement brand</p>
+            <p class="final-rec-point-text">100% compatible brand-config. Palette, typo, voix, ratio couleur — tout y est. Pas de deviation.</p>
+          </div>
+          <div class="final-rec-point">
+            <p class="final-rec-point-label">Prochaine etape</p>
+            <p class="final-rec-point-text">Valider la Direction 3, generer le project-preferences.md, et commencer l'integration dans le codebase Next.js.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== FOOTER ======== -->
+  <footer class="page-footer">
+    <div class="page-footer-logo">
+      <svg viewBox="-50 -50 100 100" fill="none">
+        <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+        <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+      </svg>
+      <span class="page-footer-wordmark"><b>Mes</b><span> Finances</span></span>
+    </div>
+    <p class="page-footer-text">Comparaison design generee le 1 mars 2026. Brand-config : Direction 4 "Le Compas".</p>
+  </footer>
+
+  <!-- ======== SCROLL REVEAL ======== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const reveals = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -30px 0px'
+      });
+      reveals.forEach(el => observer.observe(el));
+    });
+  </script>
+
+</body>
+</html>

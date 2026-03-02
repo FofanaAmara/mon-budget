@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Finances — Tableau de bord</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ================================================================
+       DIRECTION 2 — INVISIBLE INTERFACE — DASHBOARD
+       The interface VANISHES. Only data remains.
+       Deep dark surfaces. Monospace money. Functional color.
+       Zero decoration. Maximum information signal.
+       ================================================================ */
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      /* Identity tokens — FIXED across all pages */
+      --teal-700: #0F766E;
+      --teal-800: #115E59;
+      --teal-600: #0D9488;
+      --teal-500: #14B8A6;
+      --teal-400: #2DD4BF;
+      --teal-50: #F0FDFA;
+      --amber-500: #F59E0B;
+      --amber-400: #FBBF24;
+      --amber-300: #FCD34D;
+
+      /* Semantic */
+      --success: #059669;
+      --success-light: #10B981;
+      --warning: #F59E0B;
+      --error: #DC2626;
+      --error-light: #EF4444;
+
+      /* Dark surface system */
+      --surface-0: #080C14;
+      --surface-1: #0F172A;
+      --surface-2: #1E293B;
+      --surface-3: #334155;
+      --surface-4: #475569;
+
+      /* Text */
+      --text-primary: #F1F5F9;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --text-ghost: #475569;
+
+      /* Typography */
+      --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+
+      /* Compact spacing for data density */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+
+      /* Sharp radii */
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+
+      /* Shadows */
+      --shadow-card: 0 1px 4px rgba(0,0,0,0.3);
+
+      /* Layout */
+      --sidebar-width: 240px;
+      --header-height: 56px;
+      --bottom-nav-height: 56px;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-display);
+      background: var(--surface-0);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ----------------------------------------------------------------
+       MOBILE HEADER — Minimal bar. Logo + user.
+       ---------------------------------------------------------------- */
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-4);
+      background: var(--surface-1);
+      border-bottom: 1px solid var(--surface-2);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .mobile-header-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .mobile-header-logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .mobile-header-name {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .mobile-header-name span {
+      color: var(--teal-600);
+      font-weight: 600;
+    }
+
+    .mobile-header-user {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      border: 1px solid var(--surface-3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* ----------------------------------------------------------------
+       SIDEBAR — Desktop only. Ghost-level chrome.
+       ---------------------------------------------------------------- */
+    .sidebar {
+      display: none;
+    }
+
+    @media (min-width: 1024px) {
+      .mobile-header {
+        display: none;
+      }
+
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: var(--sidebar-width);
+        background: var(--surface-1);
+        border-right: 1px solid var(--surface-2);
+        z-index: 50;
+        padding: var(--space-5) 0;
+      }
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: 0 var(--space-5);
+      margin-bottom: var(--space-8);
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .sidebar-logo svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .sidebar-logo-text {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .sidebar-logo-text span {
+      color: var(--teal-600);
+      font-weight: 600;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      padding: 0 var(--space-3);
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      /* transition: color 100ms ease-out, background 100ms ease-out */
+    }
+
+    .sidebar-link:hover {
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .sidebar-link.active {
+      color: var(--text-primary);
+      background: var(--surface-2);
+    }
+
+    .sidebar-link.active .sidebar-icon {
+      color: var(--teal-600);
+    }
+
+    .sidebar-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--text-ghost);
+    }
+
+    .sidebar-link.active .sidebar-icon {
+      color: var(--teal-600);
+    }
+
+    .sidebar-section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-ghost);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: var(--space-4) var(--space-3) var(--space-2);
+    }
+
+    .sidebar-footer {
+      padding: var(--space-4) var(--space-4);
+      border-top: 1px solid var(--surface-2);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .sidebar-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--surface-3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .sidebar-user-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sidebar-user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .sidebar-user-email {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ----------------------------------------------------------------
+       BOTTOM NAV — Mobile only.
+       ---------------------------------------------------------------- */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--bottom-nav-height);
+      background: var(--surface-1);
+      border-top: 1px solid var(--surface-2);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      z-index: 50;
+    }
+
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      text-decoration: none;
+      color: var(--text-ghost);
+      font-size: 10px;
+      font-weight: 500;
+      padding: var(--space-1) var(--space-3);
+      min-width: 56px;
+      /* transition: color 100ms ease-out */
+    }
+
+    .bottom-nav-item.active {
+      color: var(--teal-500);
+    }
+
+    .bottom-nav-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    @media (min-width: 1024px) {
+      .bottom-nav {
+        display: none;
+      }
+    }
+
+    /* ----------------------------------------------------------------
+       MAIN CONTENT
+       ---------------------------------------------------------------- */
+    .main {
+      padding: var(--space-4);
+      padding-bottom: calc(var(--bottom-nav-height) + var(--space-4));
+    }
+
+    @media (min-width: 1024px) {
+      .main {
+        margin-left: var(--sidebar-width);
+        padding: var(--space-6) var(--space-8);
+        padding-bottom: var(--space-8);
+        max-width: calc(100vw - var(--sidebar-width));
+      }
+    }
+
+    /* ----------------------------------------------------------------
+       PAGE HEADER — Minimal. Month context.
+       ---------------------------------------------------------------- */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-5);
+    }
+
+    .page-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .page-greeting {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .page-header-month {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .month-nav-btn {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-2);
+      border: 1px solid var(--surface-3);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      /* transition: background 100ms ease-out */
+    }
+
+    .month-nav-btn:hover {
+      background: var(--surface-3);
+    }
+
+    .month-label {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+    }
+
+    /* ----------------------------------------------------------------
+       HERO STAT — The ONE number that matters. Big. Glowing.
+       ---------------------------------------------------------------- */
+    .hero-stat {
+      padding: var(--space-6) var(--space-5);
+      background: var(--surface-1);
+      border: 1px solid var(--surface-2);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle teal glow behind the hero number */
+    .hero-stat::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 30%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(15, 118, 110, 0.06) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-stat-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: var(--space-2);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-stat-value {
+      font-family: var(--font-mono);
+      font-size: clamp(36px, 10vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-stat-value.positive {
+      color: var(--success-light);
+    }
+
+    .hero-stat-value.warning {
+      color: var(--warning);
+    }
+
+    .hero-stat-value.negative {
+      color: var(--error-light);
+    }
+
+    .hero-stat-context {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: var(--space-2);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-stat-context strong {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    /* ----------------------------------------------------------------
+       KPI ROW — Secondary stats in compact row.
+       ---------------------------------------------------------------- */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
+    }
+
+    .kpi-card {
+      padding: var(--space-4);
+      background: var(--surface-1);
+      border: 1px solid var(--surface-2);
+      border-radius: var(--radius-md);
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: var(--space-1);
+    }
+
+    .kpi-value {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .kpi-delta {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      margin-top: var(--space-1);
+    }
+
+    .kpi-delta.up { color: var(--success); }
+    .kpi-delta.down { color: var(--error); }
+    .kpi-delta.flat { color: var(--text-muted); }
+
+    @media (min-width: 768px) {
+      .kpi-card {
+        padding: var(--space-5);
+      }
+      .kpi-value {
+        font-size: 22px;
+      }
+    }
+
+    /* ----------------------------------------------------------------
+       PROGRESS BAR — Month progression. Horizontal. Minimal.
+       ---------------------------------------------------------------- */
+    .month-progress {
+      padding: var(--space-4);
+      background: var(--surface-1);
+      border: 1px solid var(--surface-2);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-5);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-3);
+    }
+
+    .progress-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .progress-percent {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .progress-track {
+      height: 6px;
+      background: var(--surface-3);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      /* transition: width 300ms ease-out */
+    }
+
+    .progress-fill.ok {
+      background: linear-gradient(90deg, var(--teal-700), var(--teal-500));
+    }
+
+    .progress-fill.warn {
+      background: linear-gradient(90deg, var(--amber-500), var(--amber-300));
+    }
+
+    .progress-fill.danger {
+      background: linear-gradient(90deg, var(--error), var(--error-light));
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-top: var(--space-2);
+    }
+
+    .progress-meta-item {
+      font-size: 11px;
+      color: var(--text-ghost);
+    }
+
+    .progress-meta-item .mono {
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+    }
+
+    /* ----------------------------------------------------------------
+       CONTENT GRID — Two columns on desktop.
+       ---------------------------------------------------------------- */
+    .content-grid {
+      display: grid;
+      gap: var(--space-4);
+    }
+
+    @media (min-width: 768px) {
+      .content-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (min-width: 1280px) {
+      .content-grid {
+        grid-template-columns: 3fr 2fr;
+      }
+    }
+
+    /* ----------------------------------------------------------------
+       CATEGORY BREAKDOWN — Compact horizontal bars.
+       ---------------------------------------------------------------- */
+    .card {
+      padding: var(--space-4);
+      background: var(--surface-1);
+      border: 1px solid var(--surface-2);
+      border-radius: var(--radius-md);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-4);
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .card-action {
+      font-size: 12px;
+      color: var(--teal-600);
+      text-decoration: none;
+      font-weight: 500;
+      /* transition: color 100ms ease-out */
+    }
+
+    .card-action:hover {
+      color: var(--teal-500);
+    }
+
+    .category-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .category-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .category-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .category-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .category-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .category-bar-track {
+      height: 3px;
+      background: var(--surface-3);
+      border-radius: 2px;
+      margin-top: 3px;
+      overflow: hidden;
+    }
+
+    .category-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+    }
+
+    .category-amount {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      flex-shrink: 0;
+      text-align: right;
+      min-width: 70px;
+    }
+
+    .category-percent {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-ghost);
+      flex-shrink: 0;
+      min-width: 36px;
+      text-align: right;
+    }
+
+    /* ----------------------------------------------------------------
+       RECENT TRANSACTIONS — Compact list. Dense but readable.
+       ---------------------------------------------------------------- */
+    .tx-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tx-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid rgba(30, 41, 59, 0.6);
+      /* transition: background 80ms ease-out */
+    }
+
+    .tx-item:last-child {
+      border-bottom: none;
+    }
+
+    .tx-item:hover {
+      background: rgba(255,255,255,0.01);
+    }
+
+    .tx-status {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .tx-status.paid { background: var(--success); }
+    .tx-status.pending { background: var(--amber-500); }
+    .tx-status.overdue { background: var(--error); }
+
+    .tx-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tx-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tx-meta {
+      font-size: 11px;
+      color: var(--text-ghost);
+      display: flex;
+      gap: var(--space-2);
+      margin-top: 1px;
+    }
+
+    .tx-amount {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      flex-shrink: 0;
+      text-align: right;
+    }
+
+    .tx-amount.expense { color: var(--text-primary); }
+    .tx-amount.income { color: var(--success-light); }
+
+    /* ----------------------------------------------------------------
+       SPARKLINE CHART — CSS-only mini visualization.
+       ---------------------------------------------------------------- */
+    .sparkline-section {
+      margin-bottom: var(--space-5);
+    }
+
+    .sparkline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-3);
+    }
+
+    .sparkline-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 64px;
+    }
+
+    .sparkline-bar {
+      flex: 1;
+      border-radius: 2px 2px 0 0;
+      position: relative;
+      min-height: 2px;
+      /* transition: opacity 100ms ease-out */
+    }
+
+    .sparkline-bar:hover {
+      opacity: 0.8;
+    }
+
+    .sparkline-bar.current {
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-bottom: none;
+    }
+
+    .sparkline-legend {
+      display: flex;
+      gap: var(--space-4);
+      margin-top: var(--space-3);
+    }
+
+    .sparkline-legend-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: 11px;
+      color: var(--text-ghost);
+    }
+
+    .sparkline-legend-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 1px;
+    }
+
+    /* ----------------------------------------------------------------
+       UPCOMING BILLS — Compact due-dates list.
+       ---------------------------------------------------------------- */
+    .bills-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bill-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid rgba(30, 41, 59, 0.6);
+    }
+
+    .bill-item:last-child {
+      border-bottom: none;
+    }
+
+    .bill-date {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-ghost);
+      min-width: 40px;
+      flex-shrink: 0;
+    }
+
+    .bill-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .bill-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .bill-status {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    .bill-status.due {
+      color: var(--amber-500);
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    .bill-status.overdue {
+      color: var(--error-light);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .bill-status.paid {
+      color: var(--success);
+      background: rgba(5, 150, 105, 0.1);
+    }
+
+    .bill-amount {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      flex-shrink: 0;
+    }
+
+    /* ----------------------------------------------------------------
+       SAVINGS GOAL — Mini progress indicator.
+       ---------------------------------------------------------------- */
+    .savings-goal {
+      margin-top: var(--space-4);
+      padding: var(--space-4);
+      background: rgba(15, 118, 110, 0.06);
+      border: 1px solid rgba(15, 118, 110, 0.12);
+      border-radius: var(--radius-md);
+    }
+
+    .savings-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-2);
+    }
+
+    .savings-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--teal-500);
+    }
+
+    .savings-value {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--teal-400);
+    }
+
+    .savings-track {
+      height: 4px;
+      background: var(--surface-3);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .savings-fill {
+      height: 100%;
+      background: var(--teal-600);
+      border-radius: 2px;
+    }
+
+    .savings-meta {
+      font-size: 11px;
+      color: var(--text-ghost);
+      margin-top: var(--space-2);
+    }
+
+    /* ----------------------------------------------------------------
+       UTILITY
+       ---------------------------------------------------------------- */
+    .mono {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .text-success { color: var(--success-light); }
+    .text-error { color: var(--error-light); }
+    .text-warning { color: var(--warning); }
+    .text-muted { color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       MOBILE HEADER
+       ============================================================ -->
+  <header class="mobile-header">
+    <a href="#" class="mobile-header-logo">
+      <svg viewBox="-50 -50 100 100" fill="none">
+        <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+        <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+      </svg>
+      <span class="mobile-header-name">Mes<span>Finances</span></span>
+    </a>
+    <div class="mobile-header-user">AF</div>
+  </header>
+
+  <!-- ============================================================
+       SIDEBAR — Desktop only
+       ============================================================ -->
+  <aside class="sidebar">
+    <a href="#" class="sidebar-logo">
+      <svg viewBox="-50 -50 100 100" fill="none">
+        <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+        <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+      </svg>
+      <span class="sidebar-logo-text">Mes<span>Finances</span></span>
+    </a>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Principal</div>
+      <a href="dashboard.html" class="sidebar-link active">
+        <span class="sidebar-icon">&#9632;</span>
+        Tableau de bord
+      </a>
+      <a href="depenses.html" class="sidebar-link">
+        <span class="sidebar-icon">&#8595;</span>
+        Depenses
+      </a>
+      <a href="#" class="sidebar-link">
+        <span class="sidebar-icon">&#8593;</span>
+        Revenus
+      </a>
+
+      <div class="sidebar-section-label">Gestion</div>
+      <a href="#" class="sidebar-link">
+        <span class="sidebar-icon">&#9776;</span>
+        Categories
+      </a>
+      <a href="#" class="sidebar-link">
+        <span class="sidebar-icon">&#9881;</span>
+        Reglages
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-avatar">AF</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name">Amara F.</div>
+        <div class="sidebar-user-email">amara@monbudget.dev</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============================================================
+       MAIN CONTENT
+       ============================================================ -->
+  <main class="main">
+    <!-- Page header -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <span class="page-greeting">Bonjour, Amara</span>
+        <h1 class="page-title">Tableau de bord</h1>
+      </div>
+      <div class="page-header-month">
+        <button class="month-nav-btn">&lsaquo;</button>
+        <span class="month-label">Mars 2026</span>
+        <button class="month-nav-btn">&rsaquo;</button>
+      </div>
+    </div>
+
+    <!-- HERO STAT — The big number -->
+    <div class="hero-stat">
+      <div class="hero-stat-label">Solde disponible</div>
+      <div class="hero-stat-value positive">2 716 $</div>
+      <div class="hero-stat-context">
+        Sur <strong>4 850 $</strong> de revenus ce mois-ci &middot; 15 jours restants
+      </div>
+    </div>
+
+    <!-- KPI ROW -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Revenus</div>
+        <div class="kpi-value text-success">4 850 $</div>
+        <div class="kpi-delta up">+200 $ vs fev.</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Depenses</div>
+        <div class="kpi-value">2 134 $</div>
+        <div class="kpi-delta down">+312 $ vs fev.</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Epargne</div>
+        <div class="kpi-value" style="color: var(--amber-500);">620 $</div>
+        <div class="kpi-delta up">Objectif: 500 $</div>
+      </div>
+    </div>
+
+    <!-- MONTH PROGRESS -->
+    <div class="month-progress">
+      <div class="progress-header">
+        <span class="progress-title">Progression du mois</span>
+        <span class="progress-percent">44%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill ok" style="width: 44%;"></div>
+      </div>
+      <div class="progress-meta">
+        <span class="progress-meta-item">Depense: <span class="mono">2 134 $</span></span>
+        <span class="progress-meta-item">Budget: <span class="mono">4 850 $</span></span>
+      </div>
+    </div>
+
+    <!-- SPARKLINE — Weekly spending -->
+    <div class="card sparkline-section">
+      <div class="sparkline-header">
+        <span class="card-title">Depenses — 4 dernieres semaines</span>
+      </div>
+      <div class="sparkline-bars">
+        <!-- Week 1: Feb 3-9 -->
+        <div class="sparkline-bar" style="height: 55%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 30%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 70%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 15%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 40%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 10%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 65%; background: var(--teal-700);"></div>
+        <!-- Week 2: Feb 10-16 -->
+        <div class="sparkline-bar" style="height: 45%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 80%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 25%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 50%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 35%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 90%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 20%; background: var(--teal-700);"></div>
+        <!-- Week 3: Feb 17-23 -->
+        <div class="sparkline-bar" style="height: 60%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 42%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 75%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 38%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 55%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 100%; background: var(--amber-500);"></div>
+        <div class="sparkline-bar" style="height: 28%; background: var(--teal-700);"></div>
+        <!-- Week 4: Feb 24 - Mar 1 (current) -->
+        <div class="sparkline-bar" style="height: 48%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 62%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 33%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar" style="height: 72%; background: var(--teal-700);"></div>
+        <div class="sparkline-bar current" style="height: 40%; background: var(--amber-500);"></div>
+      </div>
+      <div class="sparkline-legend">
+        <span class="sparkline-legend-item">
+          <span class="sparkline-legend-dot" style="background: var(--teal-700);"></span>
+          Regulier
+        </span>
+        <span class="sparkline-legend-item">
+          <span class="sparkline-legend-dot" style="background: var(--amber-500);"></span>
+          Pic / Aujourd'hui
+        </span>
+      </div>
+    </div>
+
+    <!-- TWO-COLUMN CONTENT -->
+    <div class="content-grid">
+      <!-- Left: Categories -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Depenses par categorie</span>
+          <a href="depenses.html" class="card-action">Voir tout</a>
+        </div>
+        <div class="category-list">
+          <div class="category-row">
+            <div class="category-dot" style="background: #0D9488;"></div>
+            <div class="category-info">
+              <div class="category-name">Logement</div>
+              <div class="category-bar-track">
+                <div class="category-bar-fill" style="width: 56%; background: #0D9488;"></div>
+              </div>
+            </div>
+            <span class="category-amount">1 200 $</span>
+            <span class="category-percent">56%</span>
+          </div>
+
+          <div class="category-row">
+            <div class="category-dot" style="background: #F59E0B;"></div>
+            <div class="category-info">
+              <div class="category-name">Epicerie</div>
+              <div class="category-bar-track">
+                <div class="category-bar-fill" style="width: 23%; background: #F59E0B;"></div>
+              </div>
+            </div>
+            <span class="category-amount">487 $</span>
+            <span class="category-percent">23%</span>
+          </div>
+
+          <div class="category-row">
+            <div class="category-dot" style="background: #3B82F6;"></div>
+            <div class="category-info">
+              <div class="category-name">Transport</div>
+              <div class="category-bar-track">
+                <div class="category-bar-fill" style="width: 10%; background: #3B82F6;"></div>
+              </div>
+            </div>
+            <span class="category-amount">215 $</span>
+            <span class="category-percent">10%</span>
+          </div>
+
+          <div class="category-row">
+            <div class="category-dot" style="background: #8B5CF6;"></div>
+            <div class="category-info">
+              <div class="category-name">Restos</div>
+              <div class="category-bar-track">
+                <div class="category-bar-fill" style="width: 9%; background: #8B5CF6;"></div>
+              </div>
+            </div>
+            <span class="category-amount">189 $</span>
+            <span class="category-percent">9%</span>
+          </div>
+
+          <div class="category-row">
+            <div class="category-dot" style="background: #64748B;"></div>
+            <div class="category-info">
+              <div class="category-name">Autre</div>
+              <div class="category-bar-track">
+                <div class="category-bar-fill" style="width: 2%; background: #64748B;"></div>
+              </div>
+            </div>
+            <span class="category-amount">43 $</span>
+            <span class="category-percent">2%</span>
+          </div>
+        </div>
+
+        <!-- Savings goal -->
+        <div class="savings-goal">
+          <div class="savings-header">
+            <span class="savings-label">Objectif epargne</span>
+            <span class="savings-value">620 $ / 500 $</span>
+          </div>
+          <div class="savings-track">
+            <div class="savings-fill" style="width: 100%;"></div>
+          </div>
+          <div class="savings-meta">Objectif atteint ! +120 $ en surplus.</div>
+        </div>
+      </div>
+
+      <!-- Right: Recent transactions + Bills -->
+      <div>
+        <!-- Recent transactions -->
+        <div class="card" style="margin-bottom: var(--space-4);">
+          <div class="card-header">
+            <span class="card-title">Dernieres transactions</span>
+            <a href="depenses.html" class="card-action">Tout voir</a>
+          </div>
+          <div class="tx-list">
+            <div class="tx-item">
+              <span class="tx-status paid"></span>
+              <div class="tx-info">
+                <div class="tx-name">IGA Saint-Hubert</div>
+                <div class="tx-meta">
+                  <span>Epicerie</span>
+                  <span>&middot;</span>
+                  <span>Aujourd'hui</span>
+                </div>
+              </div>
+              <span class="tx-amount expense">-87,43 $</span>
+            </div>
+
+            <div class="tx-item">
+              <span class="tx-status paid"></span>
+              <div class="tx-info">
+                <div class="tx-name">STM — Opus mensuel</div>
+                <div class="tx-meta">
+                  <span>Transport</span>
+                  <span>&middot;</span>
+                  <span>28 fev.</span>
+                </div>
+              </div>
+              <span class="tx-amount expense">-97,00 $</span>
+            </div>
+
+            <div class="tx-item">
+              <span class="tx-status paid"></span>
+              <div class="tx-info">
+                <div class="tx-name">Hydro-Quebec</div>
+                <div class="tx-meta">
+                  <span>Logement</span>
+                  <span>&middot;</span>
+                  <span>27 fev.</span>
+                </div>
+              </div>
+              <span class="tx-amount expense">-142,00 $</span>
+            </div>
+
+            <div class="tx-item">
+              <span class="tx-status paid"></span>
+              <div class="tx-info">
+                <div class="tx-name">Salaire — Desjardins</div>
+                <div class="tx-meta">
+                  <span>Revenu</span>
+                  <span>&middot;</span>
+                  <span>26 fev.</span>
+                </div>
+              </div>
+              <span class="tx-amount income">+2 425,00 $</span>
+            </div>
+
+            <div class="tx-item">
+              <span class="tx-status paid"></span>
+              <div class="tx-info">
+                <div class="tx-name">Netflix</div>
+                <div class="tx-meta">
+                  <span>Loisirs</span>
+                  <span>&middot;</span>
+                  <span>25 fev.</span>
+                </div>
+              </div>
+              <span class="tx-amount expense">-22,99 $</span>
+            </div>
+
+            <div class="tx-item">
+              <span class="tx-status paid"></span>
+              <div class="tx-info">
+                <div class="tx-name">Tim Hortons</div>
+                <div class="tx-meta">
+                  <span>Restos</span>
+                  <span>&middot;</span>
+                  <span>24 fev.</span>
+                </div>
+              </div>
+              <span class="tx-amount expense">-7,85 $</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming bills -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">A venir</span>
+          </div>
+          <div class="bills-list">
+            <div class="bill-item">
+              <span class="bill-date">05/03</span>
+              <div class="bill-info">
+                <span class="bill-name">Loyer</span>
+              </div>
+              <span class="bill-status due">A payer</span>
+              <span class="bill-amount">1 200 $</span>
+            </div>
+
+            <div class="bill-item">
+              <span class="bill-date">08/03</span>
+              <div class="bill-info">
+                <span class="bill-name">Vidéotron Internet</span>
+              </div>
+              <span class="bill-status due">A payer</span>
+              <span class="bill-amount">72,50 $</span>
+            </div>
+
+            <div class="bill-item">
+              <span class="bill-date">12/03</span>
+              <div class="bill-info">
+                <span class="bill-name">Salaire</span>
+              </div>
+              <span class="bill-status paid" style="color: var(--success);">A recevoir</span>
+              <span class="bill-amount" style="color: var(--success-light);">+2 425 $</span>
+            </div>
+
+            <div class="bill-item">
+              <span class="bill-date">15/03</span>
+              <div class="bill-info">
+                <span class="bill-name">Assurance auto</span>
+              </div>
+              <span class="bill-status due">A payer</span>
+              <span class="bill-amount">118,00 $</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============================================================
+       BOTTOM NAV — Mobile
+       ============================================================ -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="bottom-nav-item active">
+      <span class="bottom-nav-icon">&#9632;</span>
+      Accueil
+    </a>
+    <a href="depenses.html" class="bottom-nav-item">
+      <span class="bottom-nav-icon">&#8595;</span>
+      Depenses
+    </a>
+    <a href="#" class="bottom-nav-item">
+      <span class="bottom-nav-icon">&#8593;</span>
+      Revenus
+    </a>
+    <a href="#" class="bottom-nav-item">
+      <span class="bottom-nav-icon">&#9881;</span>
+      Reglages
+    </a>
+  </nav>
+
+</body>
+</html>

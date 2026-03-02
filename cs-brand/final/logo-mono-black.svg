@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -42 268 84">
+  <!-- Le Compas — Full Logo, Monochrome Black (Horizontal) -->
+
+  <!-- Symbol -->
+  <g transform="translate(-56, 0)">
+    <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F172A"/>
+    <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22"
+          stroke="#FAFBFC" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <circle cx="24" cy="-22" r="3.5" fill="#FAFBFC"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="-4" y="9" text-anchor="start" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="26" letter-spacing="-0.02em">
+    <tspan font-weight="800" fill="#0F172A">Mes</tspan>
+    <tspan font-weight="600" fill="#0F172A"> Finances</tspan>
+  </text>
+</svg>

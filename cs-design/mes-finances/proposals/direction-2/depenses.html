@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Finances — Depenses</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ================================================================
+       DIRECTION 2 — INVISIBLE INTERFACE — DEPENSES
+       Dense table view. Filters whisper. Data shouts.
+       The interface is invisible — just a spreadsheet made beautiful.
+       ================================================================ */
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      /* Identity tokens */
+      --teal-700: #0F766E;
+      --teal-800: #115E59;
+      --teal-600: #0D9488;
+      --teal-500: #14B8A6;
+      --teal-400: #2DD4BF;
+      --teal-50: #F0FDFA;
+      --amber-500: #F59E0B;
+      --amber-400: #FBBF24;
+
+      /* Semantic */
+      --success: #059669;
+      --success-light: #10B981;
+      --warning: #F59E0B;
+      --error: #DC2626;
+      --error-light: #EF4444;
+
+      /* Dark surface system */
+      --surface-0: #080C14;
+      --surface-1: #0F172A;
+      --surface-2: #1E293B;
+      --surface-3: #334155;
+      --surface-4: #475569;
+
+      /* Text */
+      --text-primary: #F1F5F9;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --text-ghost: #475569;
+
+      /* Typography */
+      --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+
+      /* Spacing */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+
+      /* Radii */
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+
+      /* Layout */
+      --sidebar-width: 240px;
+      --bottom-nav-height: 56px;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-display);
+      background: var(--surface-0);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ----------------------------------------------------------------
+       MOBILE HEADER
+       ---------------------------------------------------------------- */
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-4);
+      background: var(--surface-1);
+      border-bottom: 1px solid var(--surface-2);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .mobile-header-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .mobile-header-logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .mobile-header-name {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .mobile-header-name span {
+      color: var(--teal-600);
+      font-weight: 600;
+    }
+
+    .mobile-header-user {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      border: 1px solid var(--surface-3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* ----------------------------------------------------------------
+       SIDEBAR — Desktop only
+       ---------------------------------------------------------------- */
+    .sidebar {
+      display: none;
+    }
+
+    @media (min-width: 1024px) {
+      .mobile-header {
+        display: none;
+      }
+
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: var(--sidebar-width);
+        background: var(--surface-1);
+        border-right: 1px solid var(--surface-2);
+        z-index: 50;
+        padding: var(--space-5) 0;
+      }
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: 0 var(--space-5);
+      margin-bottom: var(--space-8);
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .sidebar-logo svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .sidebar-logo-text {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .sidebar-logo-text span {
+      color: var(--teal-600);
+      font-weight: 600;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      padding: 0 var(--space-3);
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+    }
+
+    .sidebar-link:hover {
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .sidebar-link.active {
+      color: var(--text-primary);
+      background: var(--surface-2);
+    }
+
+    .sidebar-link.active .sidebar-icon {
+      color: var(--teal-600);
+    }
+
+    .sidebar-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--text-ghost);
+    }
+
+    .sidebar-section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-ghost);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: var(--space-4) var(--space-3) var(--space-2);
+    }
+
+    .sidebar-footer {
+      padding: var(--space-4);
+      border-top: 1px solid var(--surface-2);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .sidebar-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--surface-3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .sidebar-user-info { flex: 1; min-width: 0; }
+    .sidebar-user-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+    .sidebar-user-email {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ----------------------------------------------------------------
+       BOTTOM NAV — Mobile
+       ---------------------------------------------------------------- */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--bottom-nav-height);
+      background: var(--surface-1);
+      border-top: 1px solid var(--surface-2);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      z-index: 50;
+    }
+
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      text-decoration: none;
+      color: var(--text-ghost);
+      font-size: 10px;
+      font-weight: 500;
+      padding: var(--space-1) var(--space-3);
+      min-width: 56px;
+    }
+
+    .bottom-nav-item.active { color: var(--teal-500); }
+    .bottom-nav-icon { font-size: 18px; line-height: 1; }
+
+    @media (min-width: 1024px) {
+      .bottom-nav { display: none; }
+    }
+
+    /* ----------------------------------------------------------------
+       MAIN CONTENT
+       ---------------------------------------------------------------- */
+    .main {
+      padding: var(--space-4);
+      padding-bottom: calc(var(--bottom-nav-height) + var(--space-4));
+    }
+
+    @media (min-width: 1024px) {
+      .main {
+        margin-left: var(--sidebar-width);
+        padding: var(--space-6) var(--space-8);
+        padding-bottom: var(--space-8);
+      }
+    }
+
+    /* ----------------------------------------------------------------
+       PAGE HEADER
+       ---------------------------------------------------------------- */
+    .page-header {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
+    }
+
+    .page-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .btn-add {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      background: var(--teal-700);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-add:hover {
+      background: var(--teal-800);
+    }
+
+    /* ----------------------------------------------------------------
+       SUMMARY STRIP — Total always visible. Compact.
+       ---------------------------------------------------------------- */
+    .summary-strip {
+      display: flex;
+      gap: var(--space-3);
+      overflow-x: auto;
+      padding-bottom: var(--space-1);
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .summary-strip::-webkit-scrollbar { display: none; }
+
+    .summary-chip {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      background: var(--surface-1);
+      border: 1px solid var(--surface-2);
+      border-radius: var(--radius-sm);
+    }
+
+    .summary-chip-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .summary-chip-value {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* ----------------------------------------------------------------
+       FILTERS — Whisper-level. Barely visible until interacted with.
+       ---------------------------------------------------------------- */
+    .filters {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-4);
+    }
+
+    .filter-btn {
+      padding: var(--space-1) var(--space-3);
+      background: transparent;
+      border: 1px solid var(--surface-3);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      /* transition: color 100ms ease-out, border-color 100ms ease-out, background 100ms ease-out */
+    }
+
+    .filter-btn:hover {
+      color: var(--text-secondary);
+      border-color: var(--surface-4);
+    }
+
+    .filter-btn.active {
+      color: var(--text-primary);
+      background: var(--surface-2);
+      border-color: var(--surface-3);
+    }
+
+    .filter-search {
+      flex: 1;
+      min-width: 160px;
+      padding: var(--space-1) var(--space-3);
+      background: transparent;
+      border: 1px solid var(--surface-3);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      font-size: 13px;
+      outline: none;
+      /* transition: border-color 150ms ease-out */
+    }
+
+    .filter-search::placeholder {
+      color: var(--text-ghost);
+    }
+
+    .filter-search:focus {
+      border-color: var(--teal-700);
+    }
+
+    /* ----------------------------------------------------------------
+       TABLE — Desktop: dense columns. Mobile: card layout.
+       ---------------------------------------------------------------- */
+
+    /* Mobile: Card-based layout */
+    .expenses-table-desktop {
+      display: none;
+    }
+
+    .expenses-cards {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .expense-card {
+      padding: var(--space-3) var(--space-4);
+      background: var(--surface-1);
+      border: 1px solid var(--surface-2);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      /* transition: border-color 80ms ease-out */
+    }
+
+    .expense-card:hover {
+      border-color: var(--surface-3);
+    }
+
+    .expense-card-status {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .expense-card-status.paid { background: var(--success); }
+    .expense-card-status.pending { background: var(--amber-500); }
+    .expense-card-status.overdue { background: var(--error); }
+
+    .expense-card-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .expense-card-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .expense-card-meta {
+      font-size: 12px;
+      color: var(--text-ghost);
+      display: flex;
+      gap: var(--space-2);
+      margin-top: 2px;
+    }
+
+    .expense-card-cat {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
+
+    .expense-card-cat-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 2px;
+    }
+
+    .expense-card-amount {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      flex-shrink: 0;
+      text-align: right;
+    }
+
+    /* Desktop: Dense table */
+    @media (min-width: 768px) {
+      .expenses-cards {
+        display: none;
+      }
+
+      .expenses-table-desktop {
+        display: block;
+        width: 100%;
+        background: var(--surface-1);
+        border: 1px solid var(--surface-2);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+      }
+    }
+
+    .expenses-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .expenses-table thead {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .expenses-table th {
+      padding: var(--space-3) var(--space-4);
+      background: var(--surface-2);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-align: left;
+      border-bottom: 1px solid var(--surface-3);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .expenses-table th:hover {
+      color: var(--text-secondary);
+    }
+
+    .expenses-table th.text-right {
+      text-align: right;
+    }
+
+    .expenses-table th .sort-icon {
+      font-size: 10px;
+      margin-left: var(--space-1);
+      color: var(--text-ghost);
+    }
+
+    .expenses-table td {
+      padding: var(--space-3) var(--space-4);
+      font-size: 13px;
+      border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+      vertical-align: middle;
+    }
+
+    .expenses-table tr {
+      /* transition: background 60ms ease-out */
+    }
+
+    .expenses-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.015);
+    }
+
+    .expenses-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Table cell types */
+    .td-date {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .td-name {
+      font-weight: 500;
+      color: var(--text-primary);
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .td-category {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .cat-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .cat-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .td-amount {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .td-status {
+      text-align: center;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .status-badge.paid {
+      color: var(--success);
+      background: rgba(5, 150, 105, 0.1);
+    }
+
+    .status-badge.pending {
+      color: var(--amber-500);
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    .status-badge.overdue {
+      color: var(--error-light);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .td-actions {
+      text-align: right;
+      opacity: 0;
+      /* transition: opacity 80ms ease-out */
+    }
+
+    .expenses-table tbody tr:hover .td-actions {
+      opacity: 1;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
+      color: var(--text-ghost);
+      cursor: pointer;
+      padding: var(--space-1);
+      font-size: 14px;
+    }
+
+    .action-btn:hover {
+      color: var(--text-secondary);
+    }
+
+    /* ----------------------------------------------------------------
+       PAGINATION
+       ---------------------------------------------------------------- */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-4);
+      background: var(--surface-1);
+      border: 1px solid var(--surface-2);
+      border-top: none;
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .pagination-info {
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .pagination-nav {
+      display: flex;
+      gap: var(--space-1);
+    }
+
+    .pagination-btn {
+      padding: var(--space-1) var(--space-2);
+      background: transparent;
+      border: 1px solid var(--surface-3);
+      border-radius: 4px;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .pagination-btn:hover {
+      background: var(--surface-2);
+      color: var(--text-secondary);
+    }
+
+    .pagination-btn.active {
+      background: var(--teal-700);
+      border-color: var(--teal-700);
+      color: #fff;
+    }
+
+    /* Mobile pagination */
+    .pagination-mobile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3);
+      padding: var(--space-4) 0;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .pagination-mobile-btn {
+      padding: var(--space-2) var(--space-4);
+      background: var(--surface-2);
+      border: 1px solid var(--surface-3);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    @media (min-width: 768px) {
+      .pagination-mobile { display: none; }
+    }
+
+    @media (max-width: 767px) {
+      .pagination { display: none; }
+    }
+
+    /* ----------------------------------------------------------------
+       SLIDE-OVER / ADD FORM — Inline form at top.
+       ---------------------------------------------------------------- */
+    .add-form {
+      padding: var(--space-5);
+      background: var(--surface-1);
+      border: 1px solid var(--surface-2);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-5);
+      border-left: 3px solid var(--teal-700);
+    }
+
+    .add-form-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-4);
+    }
+
+    .form-grid {
+      display: grid;
+      gap: var(--space-3);
+    }
+
+    @media (min-width: 768px) {
+      .form-grid {
+        grid-template-columns: 2fr 1fr 1fr 1fr auto;
+        align-items: end;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .form-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .form-input {
+      padding: var(--space-2) var(--space-3);
+      background: var(--surface-2);
+      border: 1px solid var(--surface-3);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      font-size: 14px;
+      outline: none;
+      /* transition: border-color 150ms ease-out */
+    }
+
+    .form-input:focus {
+      border-color: var(--teal-700);
+    }
+
+    .form-input::placeholder {
+      color: var(--text-ghost);
+    }
+
+    .form-select {
+      padding: var(--space-2) var(--space-3);
+      background: var(--surface-2);
+      border: 1px solid var(--surface-3);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: var(--font-display);
+      font-size: 14px;
+      outline: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2364748B' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+    }
+
+    .form-select:focus {
+      border-color: var(--teal-700);
+    }
+
+    .form-input-amount {
+      font-family: var(--font-mono);
+    }
+
+    .btn-submit {
+      padding: var(--space-2) var(--space-5);
+      background: var(--teal-700);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-submit:hover {
+      background: var(--teal-800);
+    }
+
+    /* ----------------------------------------------------------------
+       CATEGORY SUMMARY BAR — Horizontal breakdown at top.
+       ---------------------------------------------------------------- */
+    .category-summary {
+      display: flex;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+      overflow-x: auto;
+      padding-bottom: var(--space-1);
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .category-summary::-webkit-scrollbar { display: none; }
+
+    .cat-summary-item {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      background: var(--surface-1);
+      border: 1px solid var(--surface-2);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      /* transition: border-color 100ms ease-out */
+    }
+
+    .cat-summary-item:hover {
+      border-color: var(--surface-3);
+    }
+
+    .cat-summary-item.active {
+      border-color: var(--teal-700);
+      background: rgba(15, 118, 110, 0.05);
+    }
+
+    .cat-summary-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+
+    .cat-summary-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .cat-summary-amount {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* ----------------------------------------------------------------
+       STACKED BAR — Visual budget usage per category.
+       ---------------------------------------------------------------- */
+    .budget-bar {
+      margin-bottom: var(--space-5);
+      padding: var(--space-3) var(--space-4);
+      background: var(--surface-1);
+      border: 1px solid var(--surface-2);
+      border-radius: var(--radius-md);
+    }
+
+    .budget-bar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-2);
+    }
+
+    .budget-bar-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .budget-bar-total {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .budget-track {
+      display: flex;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--surface-3);
+      gap: 1px;
+    }
+
+    .budget-segment {
+      height: 100%;
+      min-width: 4px;
+    }
+
+    /* ----------------------------------------------------------------
+       UTILITY
+       ---------------------------------------------------------------- */
+    .mono {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MOBILE HEADER -->
+  <header class="mobile-header">
+    <a href="#" class="mobile-header-logo">
+      <svg viewBox="-50 -50 100 100" fill="none">
+        <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+        <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+      </svg>
+      <span class="mobile-header-name">Mes<span>Finances</span></span>
+    </a>
+    <div class="mobile-header-user">AF</div>
+  </header>
+
+  <!-- SIDEBAR — Desktop -->
+  <aside class="sidebar">
+    <a href="#" class="sidebar-logo">
+      <svg viewBox="-50 -50 100 100" fill="none">
+        <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+        <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+      </svg>
+      <span class="sidebar-logo-text">Mes<span>Finances</span></span>
+    </a>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Principal</div>
+      <a href="dashboard.html" class="sidebar-link">
+        <span class="sidebar-icon">&#9632;</span>
+        Tableau de bord
+      </a>
+      <a href="depenses.html" class="sidebar-link active">
+        <span class="sidebar-icon">&#8595;</span>
+        Depenses
+      </a>
+      <a href="#" class="sidebar-link">
+        <span class="sidebar-icon">&#8593;</span>
+        Revenus
+      </a>
+
+      <div class="sidebar-section-label">Gestion</div>
+      <a href="#" class="sidebar-link">
+        <span class="sidebar-icon">&#9776;</span>
+        Categories
+      </a>
+      <a href="#" class="sidebar-link">
+        <span class="sidebar-icon">&#9881;</span>
+        Reglages
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-avatar">AF</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name">Amara F.</div>
+        <div class="sidebar-user-email">amara@monbudget.dev</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <!-- Page header -->
+    <div class="page-header">
+      <div class="page-header-row">
+        <h1 class="page-title">Depenses</h1>
+        <button class="btn-add">+ Ajouter</button>
+      </div>
+
+      <!-- Summary strip -->
+      <div class="summary-strip">
+        <div class="summary-chip">
+          <span class="summary-chip-label">Total</span>
+          <span class="summary-chip-value">2 134,27 $</span>
+        </div>
+        <div class="summary-chip">
+          <span class="summary-chip-label">Ce mois</span>
+          <span class="summary-chip-value mono" style="color: var(--text-secondary);">18 depenses</span>
+        </div>
+        <div class="summary-chip">
+          <span class="summary-chip-label">Moyenne/jour</span>
+          <span class="summary-chip-value mono" style="color: var(--text-muted);">142 $</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- INLINE ADD FORM -->
+    <div class="add-form">
+      <div class="add-form-title">Nouvelle depense</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <input type="text" class="form-input" placeholder="Ex: IGA, Hydro-Quebec...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Montant</label>
+          <input type="text" class="form-input form-input-amount" placeholder="0,00 $">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Categorie</label>
+          <select class="form-select">
+            <option value="">Choisir...</option>
+            <option>Logement</option>
+            <option>Epicerie</option>
+            <option>Transport</option>
+            <option>Restos</option>
+            <option>Loisirs</option>
+            <option>Sante</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-input" value="2026-03-01">
+        </div>
+        <button class="btn-submit">Ajouter</button>
+      </div>
+    </div>
+
+    <!-- BUDGET BAR — Stacked horizontal -->
+    <div class="budget-bar">
+      <div class="budget-bar-header">
+        <span class="budget-bar-title">Repartition — Mars 2026</span>
+        <span class="budget-bar-total">2 134,27 $</span>
+      </div>
+      <div class="budget-track">
+        <div class="budget-segment" style="width: 56%; background: #0D9488;" title="Logement: 1 200 $"></div>
+        <div class="budget-segment" style="width: 23%; background: #F59E0B;" title="Epicerie: 487 $"></div>
+        <div class="budget-segment" style="width: 10%; background: #3B82F6;" title="Transport: 215 $"></div>
+        <div class="budget-segment" style="width: 9%; background: #8B5CF6;" title="Restos: 189 $"></div>
+        <div class="budget-segment" style="width: 2%; background: #64748B;" title="Autre: 43 $"></div>
+      </div>
+    </div>
+
+    <!-- CATEGORY FILTER CHIPS -->
+    <div class="category-summary">
+      <div class="cat-summary-item active">
+        <span class="cat-summary-label">Toutes</span>
+        <span class="cat-summary-amount">2 134 $</span>
+      </div>
+      <div class="cat-summary-item">
+        <span class="cat-summary-dot" style="background: #0D9488;"></span>
+        <span class="cat-summary-label">Logement</span>
+        <span class="cat-summary-amount">1 200 $</span>
+      </div>
+      <div class="cat-summary-item">
+        <span class="cat-summary-dot" style="background: #F59E0B;"></span>
+        <span class="cat-summary-label">Epicerie</span>
+        <span class="cat-summary-amount">487 $</span>
+      </div>
+      <div class="cat-summary-item">
+        <span class="cat-summary-dot" style="background: #3B82F6;"></span>
+        <span class="cat-summary-label">Transport</span>
+        <span class="cat-summary-amount">215 $</span>
+      </div>
+      <div class="cat-summary-item">
+        <span class="cat-summary-dot" style="background: #8B5CF6;"></span>
+        <span class="cat-summary-label">Restos</span>
+        <span class="cat-summary-amount">189 $</span>
+      </div>
+      <div class="cat-summary-item">
+        <span class="cat-summary-dot" style="background: #64748B;"></span>
+        <span class="cat-summary-label">Autre</span>
+        <span class="cat-summary-amount">43 $</span>
+      </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filters">
+      <input type="text" class="filter-search" placeholder="Rechercher une depense...">
+      <button class="filter-btn active">Toutes</button>
+      <button class="filter-btn">Payees</button>
+      <button class="filter-btn">A payer</button>
+      <button class="filter-btn">En retard</button>
+    </div>
+
+    <!-- ============================================================
+         DESKTOP TABLE
+         ============================================================ -->
+    <div class="expenses-table-desktop">
+      <table class="expenses-table">
+        <thead>
+          <tr>
+            <th>Date <span class="sort-icon">&#9662;</span></th>
+            <th>Description</th>
+            <th>Categorie</th>
+            <th class="text-right">Montant</th>
+            <th>Statut</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-date">01/03</td>
+            <td class="td-name">IGA Saint-Hubert</td>
+            <td><span class="td-category"><span class="cat-dot" style="background: #F59E0B;"></span><span class="cat-label">Epicerie</span></span></td>
+            <td class="td-amount">-87,43 $</td>
+            <td class="td-status"><span class="status-badge paid">Paye</span></td>
+            <td class="td-actions"><button class="action-btn" title="Modifier">&#9998;</button> <button class="action-btn" title="Supprimer">&#10005;</button></td>
+          </tr>
+          <tr>
+            <td class="td-date">28/02</td>
+            <td class="td-name">STM — Opus mensuel</td>
+            <td><span class="td-category"><span class="cat-dot" style="background: #3B82F6;"></span><span class="cat-label">Transport</span></span></td>
+            <td class="td-amount">-97,00 $</td>
+            <td class="td-status"><span class="status-badge paid">Paye</span></td>
+            <td class="td-actions"><button class="action-btn" title="Modifier">&#9998;</button> <button class="action-btn" title="Supprimer">&#10005;</button></td>
+          </tr>
+          <tr>
+            <td class="td-date">27/02</td>
+            <td class="td-name">Hydro-Quebec</td>
+            <td><span class="td-category"><span class="cat-dot" style="background: #0D9488;"></span><span class="cat-label">Logement</span></span></td>
+            <td class="td-amount">-142,00 $</td>
+            <td class="td-status"><span class="status-badge paid">Paye</span></td>
+            <td class="td-actions"><button class="action-btn" title="Modifier">&#9998;</button> <button class="action-btn" title="Supprimer">&#10005;</button></td>
+          </tr>
+          <tr>
+            <td class="td-date">25/02</td>
+            <td class="td-name">Netflix</td>
+            <td><span class="td-category"><span class="cat-dot" style="background: #EC4899;"></span><span class="cat-label">Loisirs</span></span></td>
+            <td class="td-amount">-22,99 $</td>
+            <td class="td-status"><span class="status-badge paid">Paye</span></td>
+            <td class="td-actions"><button class="action-btn" title="Modifier">&#9998;</button> <button class="action-btn" title="Supprimer">&#10005;</button></td>
+          </tr>
+          <tr>
+            <td class="td-date">24/02</td>
+            <td class="td-name">Tim Hortons</td>
+            <td><span class="td-category"><span class="cat-dot" style="background: #8B5CF6;"></span><span class="cat-label">Restos</span></span></td>
+            <td class="td-amount">-7,85 $</td>
+            <td class="td-status"><span class="status-badge paid">Paye</span></td>
+            <td class="td-actions"><button class="action-btn" title="Modifier">&#9998;</button> <button class="action-btn" title="Supprimer">&#10005;</button></td>
+          </tr>
+          <tr>
+            <td class="td-date">23/02</td>
+            <td class="td-name">Pharmaprix</td>
+            <td><span class="td-category"><span class="cat-dot" style="background: #10B981;"></span><span class="cat-label">Sante</span></span></td>
+            <td class="td-amount">-34,50 $</td>
+            <td class="td-status"><span class="status-badge paid">Paye</span></td>
+            <td class="td-actions"><button class="action-btn" title="Modifier">&#9998;</button> <button class="action-btn" title="Supprimer">&#10005;</button></td>
+          </tr>
+          <tr>
+            <td class="td-date">22/02</td>
+            <td class="td-name">Costco</td>
+            <td><span class="td-category"><span class="cat-dot" style="background: #F59E0B;"></span><span class="cat-label">Epicerie</span></span></td>
+            <td class="td-amount">-215,67 $</td>
+            <td class="td-status"><span class="status-badge paid">Paye</span></td>
+            <td class="td-actions"><button class="action-btn" title="Modifier">&#9998;</button> <button class="action-btn" title="Supprimer">&#10005;</button></td>
+          </tr>
+          <tr>
+            <td class="td-date">20/02</td>
+            <td class="td-name">Petro-Canada</td>
+            <td><span class="td-category"><span class="cat-dot" style="background: #3B82F6;"></span><span class="cat-label">Transport</span></span></td>
+            <td class="td-amount">-68,42 $</td>
+            <td class="td-status"><span class="status-badge paid">Paye</span></td>
+            <td class="td-actions"><button class="action-btn" title="Modifier">&#9998;</button> <button class="action-btn" title="Supprimer">&#10005;</button></td>
+          </tr>
+          <tr>
+            <td class="td-date">18/02</td>
+            <td class="td-name">Benny & Co</td>
+            <td><span class="td-category"><span class="cat-dot" style="background: #8B5CF6;"></span><span class="cat-label">Restos</span></span></td>
+            <td class="td-amount">-42,15 $</td>
+            <td class="td-status"><span class="status-badge paid">Paye</span></td>
+            <td class="td-actions"><button class="action-btn" title="Modifier">&#9998;</button> <button class="action-btn" title="Supprimer">&#10005;</button></td>
+          </tr>
+          <tr>
+            <td class="td-date">15/02</td>
+            <td class="td-name">Assurance auto — Desjardins</td>
+            <td><span class="td-category"><span class="cat-dot" style="background: #3B82F6;"></span><span class="cat-label">Transport</span></span></td>
+            <td class="td-amount">-118,00 $</td>
+            <td class="td-status"><span class="status-badge paid">Paye</span></td>
+            <td class="td-actions"><button class="action-btn" title="Modifier">&#9998;</button> <button class="action-btn" title="Supprimer">&#10005;</button></td>
+          </tr>
+          <tr>
+            <td class="td-date">12/02</td>
+            <td class="td-name">La Cage Brasserie</td>
+            <td><span class="td-category"><span class="cat-dot" style="background: #8B5CF6;"></span><span class="cat-label">Restos</span></span></td>
+            <td class="td-amount">-56,80 $</td>
+            <td class="td-status"><span class="status-badge paid">Paye</span></td>
+            <td class="td-actions"><button class="action-btn" title="Modifier">&#9998;</button> <button class="action-btn" title="Supprimer">&#10005;</button></td>
+          </tr>
+          <tr>
+            <td class="td-date">10/02</td>
+            <td class="td-name">Super C</td>
+            <td><span class="td-category"><span class="cat-dot" style="background: #F59E0B;"></span><span class="cat-label">Epicerie</span></span></td>
+            <td class="td-amount">-67,32 $</td>
+            <td class="td-status"><span class="status-badge paid">Paye</span></td>
+            <td class="td-actions"><button class="action-btn" title="Modifier">&#9998;</button> <button class="action-btn" title="Supprimer">&#10005;</button></td>
+          </tr>
+          <tr>
+            <td class="td-date">05/03</td>
+            <td class="td-name">Loyer — Mars</td>
+            <td><span class="td-category"><span class="cat-dot" style="background: #0D9488;"></span><span class="cat-label">Logement</span></span></td>
+            <td class="td-amount">-1 200,00 $</td>
+            <td class="td-status"><span class="status-badge pending">A payer</span></td>
+            <td class="td-actions"><button class="action-btn" title="Modifier">&#9998;</button> <button class="action-btn" title="Supprimer">&#10005;</button></td>
+          </tr>
+          <tr>
+            <td class="td-date">08/03</td>
+            <td class="td-name">Videotron Internet</td>
+            <td><span class="td-category"><span class="cat-dot" style="background: #0D9488;"></span><span class="cat-label">Logement</span></span></td>
+            <td class="td-amount">-72,50 $</td>
+            <td class="td-status"><span class="status-badge pending">A payer</span></td>
+            <td class="td-actions"><button class="action-btn" title="Modifier">&#9998;</button> <button class="action-btn" title="Supprimer">&#10005;</button></td>
+          </tr>
+          <tr>
+            <td class="td-date">01/02</td>
+            <td class="td-name">Spotify</td>
+            <td><span class="td-category"><span class="cat-dot" style="background: #EC4899;"></span><span class="cat-label">Loisirs</span></span></td>
+            <td class="td-amount">-11,99 $</td>
+            <td class="td-status"><span class="status-badge overdue">En retard</span></td>
+            <td class="td-actions"><button class="action-btn" title="Modifier">&#9998;</button> <button class="action-btn" title="Supprimer">&#10005;</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination">
+        <span class="pagination-info">1-15 sur 18 depenses</span>
+        <div class="pagination-nav">
+          <button class="pagination-btn active">1</button>
+          <button class="pagination-btn">2</button>
+          <button class="pagination-btn">&rsaquo;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         MOBILE CARDS
+         ============================================================ -->
+    <div class="expenses-cards">
+      <div class="expense-card">
+        <span class="expense-card-status paid"></span>
+        <div class="expense-card-info">
+          <div class="expense-card-name">IGA Saint-Hubert</div>
+          <div class="expense-card-meta">
+            <span class="expense-card-cat"><span class="expense-card-cat-dot" style="background: #F59E0B;"></span> Epicerie</span>
+            <span>&middot;</span>
+            <span>01/03</span>
+          </div>
+        </div>
+        <span class="expense-card-amount">-87,43 $</span>
+      </div>
+
+      <div class="expense-card">
+        <span class="expense-card-status paid"></span>
+        <div class="expense-card-info">
+          <div class="expense-card-name">STM — Opus mensuel</div>
+          <div class="expense-card-meta">
+            <span class="expense-card-cat"><span class="expense-card-cat-dot" style="background: #3B82F6;"></span> Transport</span>
+            <span>&middot;</span>
+            <span>28/02</span>
+          </div>
+        </div>
+        <span class="expense-card-amount">-97,00 $</span>
+      </div>
+
+      <div class="expense-card">
+        <span class="expense-card-status paid"></span>
+        <div class="expense-card-info">
+          <div class="expense-card-name">Hydro-Quebec</div>
+          <div class="expense-card-meta">
+            <span class="expense-card-cat"><span class="expense-card-cat-dot" style="background: #0D9488;"></span> Logement</span>
+            <span>&middot;</span>
+            <span>27/02</span>
+          </div>
+        </div>
+        <span class="expense-card-amount">-142,00 $</span>
+      </div>
+
+      <div class="expense-card">
+        <span class="expense-card-status paid"></span>
+        <div class="expense-card-info">
+          <div class="expense-card-name">Netflix</div>
+          <div class="expense-card-meta">
+            <span class="expense-card-cat"><span class="expense-card-cat-dot" style="background: #EC4899;"></span> Loisirs</span>
+            <span>&middot;</span>
+            <span>25/02</span>
+          </div>
+        </div>
+        <span class="expense-card-amount">-22,99 $</span>
+      </div>
+
+      <div class="expense-card">
+        <span class="expense-card-status paid"></span>
+        <div class="expense-card-info">
+          <div class="expense-card-name">Tim Hortons</div>
+          <div class="expense-card-meta">
+            <span class="expense-card-cat"><span class="expense-card-cat-dot" style="background: #8B5CF6;"></span> Restos</span>
+            <span>&middot;</span>
+            <span>24/02</span>
+          </div>
+        </div>
+        <span class="expense-card-amount">-7,85 $</span>
+      </div>
+
+      <div class="expense-card">
+        <span class="expense-card-status paid"></span>
+        <div class="expense-card-info">
+          <div class="expense-card-name">Pharmaprix</div>
+          <div class="expense-card-meta">
+            <span class="expense-card-cat"><span class="expense-card-cat-dot" style="background: #10B981;"></span> Sante</span>
+            <span>&middot;</span>
+            <span>23/02</span>
+          </div>
+        </div>
+        <span class="expense-card-amount">-34,50 $</span>
+      </div>
+
+      <div class="expense-card">
+        <span class="expense-card-status paid"></span>
+        <div class="expense-card-info">
+          <div class="expense-card-name">Costco</div>
+          <div class="expense-card-meta">
+            <span class="expense-card-cat"><span class="expense-card-cat-dot" style="background: #F59E0B;"></span> Epicerie</span>
+            <span>&middot;</span>
+            <span>22/02</span>
+          </div>
+        </div>
+        <span class="expense-card-amount">-215,67 $</span>
+      </div>
+
+      <div class="expense-card">
+        <span class="expense-card-status paid"></span>
+        <div class="expense-card-info">
+          <div class="expense-card-name">Petro-Canada</div>
+          <div class="expense-card-meta">
+            <span class="expense-card-cat"><span class="expense-card-cat-dot" style="background: #3B82F6;"></span> Transport</span>
+            <span>&middot;</span>
+            <span>20/02</span>
+          </div>
+        </div>
+        <span class="expense-card-amount">-68,42 $</span>
+      </div>
+
+      <div class="expense-card">
+        <span class="expense-card-status pending"></span>
+        <div class="expense-card-info">
+          <div class="expense-card-name">Loyer — Mars</div>
+          <div class="expense-card-meta">
+            <span class="expense-card-cat"><span class="expense-card-cat-dot" style="background: #0D9488;"></span> Logement</span>
+            <span>&middot;</span>
+            <span>05/03</span>
+            <span>&middot;</span>
+            <span style="color: var(--amber-500);">A payer</span>
+          </div>
+        </div>
+        <span class="expense-card-amount">-1 200,00 $</span>
+      </div>
+
+      <div class="expense-card">
+        <span class="expense-card-status pending"></span>
+        <div class="expense-card-info">
+          <div class="expense-card-name">Videotron Internet</div>
+          <div class="expense-card-meta">
+            <span class="expense-card-cat"><span class="expense-card-cat-dot" style="background: #0D9488;"></span> Logement</span>
+            <span>&middot;</span>
+            <span>08/03</span>
+            <span>&middot;</span>
+            <span style="color: var(--amber-500);">A payer</span>
+          </div>
+        </div>
+        <span class="expense-card-amount">-72,50 $</span>
+      </div>
+
+      <div class="expense-card">
+        <span class="expense-card-status overdue"></span>
+        <div class="expense-card-info">
+          <div class="expense-card-name">Spotify</div>
+          <div class="expense-card-meta">
+            <span class="expense-card-cat"><span class="expense-card-cat-dot" style="background: #EC4899;"></span> Loisirs</span>
+            <span>&middot;</span>
+            <span>01/02</span>
+            <span>&middot;</span>
+            <span style="color: var(--error-light);">En retard</span>
+          </div>
+        </div>
+        <span class="expense-card-amount">-11,99 $</span>
+      </div>
+
+      <!-- Mobile pagination -->
+      <div class="pagination-mobile">
+        <button class="pagination-mobile-btn">&lsaquo; Precedent</button>
+        <span class="mono">1 / 2</span>
+        <button class="pagination-mobile-btn">Suivant &rsaquo;</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- BOTTOM NAV — Mobile -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="bottom-nav-item">
+      <span class="bottom-nav-icon">&#9632;</span>
+      Accueil
+    </a>
+    <a href="depenses.html" class="bottom-nav-item active">
+      <span class="bottom-nav-icon">&#8595;</span>
+      Depenses
+    </a>
+    <a href="#" class="bottom-nav-item">
+      <span class="bottom-nav-icon">&#8593;</span>
+      Revenus
+    </a>
+    <a href="#" class="bottom-nav-item">
+      <span class="bottom-nav-icon">&#9881;</span>
+      Reglages
+    </a>
+  </nav>
+
+</body>
+</html>

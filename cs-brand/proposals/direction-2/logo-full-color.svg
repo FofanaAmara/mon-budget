@@ -1,0 +1,24 @@
+<svg viewBox="0 0 320 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!--
+    Mes Finances — Full Logo (Symbol + Wordmark)
+    Brand colors on transparent / light background.
+    The Summit M symbol sits to the left of the wordmark.
+  -->
+
+  <!-- Symbol: The Summit M -->
+  <path
+    d="M2 42 L15 6 L24 16 L33 6 L46 42 L37 42 L33 18 L24 26 L15 18 L11 42 Z"
+    fill="#D94F3D"
+  />
+
+  <!-- Wordmark -->
+  <text
+    x="58"
+    y="36"
+    font-family="'Space Grotesk', 'Arial Black', sans-serif"
+    font-weight="700"
+    font-size="34"
+    letter-spacing="-0.5"
+    fill="#1B1F3A"
+  >Mes Finances</text>
+</svg>

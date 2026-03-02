@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 100 100">
+  <!-- Le Compas — Symbol, Brand Colors -->
+  <!-- Conteneur protecteur arrondi -->
+  <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+  <!-- Courbe de croissance — progression financiere reguliere -->
+  <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22"
+        stroke="#FAFBFC" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <!-- Point ambre — objectif atteint -->
+  <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+</svg>

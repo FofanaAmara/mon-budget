@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 48">
+  <!-- Mes Finances — Wordmark, Reversed -->
+  <rect x="0" y="0" width="240" height="48" fill="#0F766E"/>
+  <text x="120" y="34" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="32" letter-spacing="-0.02em">
+    <tspan font-weight="800" fill="#FAFBFC">Mes</tspan>
+    <tspan font-weight="600" fill="rgba(250,251,252,0.85)"> Finances</tspan>
+  </text>
+</svg>

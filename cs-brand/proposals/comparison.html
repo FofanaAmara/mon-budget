@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Finances — 4 directions creatives</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@400;500;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background: #FAFBFC;
+      color: #1a1a2e;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* ─── HEADER ─── */
+    .page-header {
+      padding: 64px 0 40px;
+      text-align: center;
+      border-bottom: 1px solid #E2E8F0;
+    }
+    .page-header h1 {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #0F172A;
+      margin-bottom: 12px;
+    }
+    .page-header p {
+      font-size: 18px;
+      color: #64748B;
+      max-width: 640px;
+      margin: 0 auto;
+      font-weight: 400;
+    }
+    .page-header .meta {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #94A3B8;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* ─── RECOMMENDATION BANNER ─── */
+    .reco-banner {
+      margin: 40px 0;
+      background: linear-gradient(135deg, #F0FDFA 0%, #E6FFFA 50%, #FEFCE8 100%);
+      border: 2px solid #0F766E;
+      border-radius: 16px;
+      padding: 32px 40px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+    }
+    .reco-badge {
+      flex-shrink: 0;
+      background: #0F766E;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+    .reco-content h3 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0F172A;
+      margin-bottom: 8px;
+    }
+    .reco-content p {
+      font-size: 15px;
+      color: #334155;
+      line-height: 1.7;
+    }
+
+    /* ─── GRID ─── */
+    .directions-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin: 48px 0;
+    }
+
+    .direction-card {
+      background: #fff;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: box-shadow 0.2s ease;
+    }
+    .direction-card:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+    }
+    .direction-card.recommended {
+      border: 2px solid #0F766E;
+      box-shadow: 0 4px 24px rgba(15, 118, 110, 0.12);
+      position: relative;
+    }
+    .direction-card.recommended::before {
+      content: "RECOMMANDEE";
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: #0F766E;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 4px 10px;
+      border-radius: 100px;
+      z-index: 2;
+    }
+
+    .card-header {
+      padding: 24px 20px 16px;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .card-header .dir-number {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #94A3B8;
+      margin-bottom: 6px;
+    }
+    .card-header h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #0F172A;
+      line-height: 1.3;
+    }
+
+    .card-section {
+      padding: 16px 20px;
+      border-bottom: 1px solid #F8FAFC;
+    }
+    .card-section:last-child { border-bottom: none; }
+    .card-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #94A3B8;
+      margin-bottom: 10px;
+    }
+
+    /* Logo section */
+    .logo-render {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .logo-on-light {
+      background: #F8FAFC;
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 64px;
+    }
+    .logo-on-dark {
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 64px;
+    }
+    .logo-on-light svg, .logo-on-dark svg {
+      width: 100%;
+      max-width: 220px;
+      height: auto;
+    }
+    .logo-concept {
+      font-size: 12px;
+      color: #64748B;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    /* Tagline */
+    .tagline {
+      font-style: italic;
+      font-size: 15px;
+      color: #334155;
+      line-height: 1.5;
+    }
+    .tagline::before { content: "\201C"; }
+    .tagline::after { content: "\201D"; }
+
+    /* Archetype */
+    .archetype-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .archetype-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0F172A;
+    }
+    .archetype-sub {
+      font-size: 12px;
+      color: #64748B;
+    }
+
+    /* Palette */
+    .palette-swatches {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .swatch-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .swatch {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .swatch-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .swatch-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #334155;
+    }
+    .swatch-hex {
+      font-size: 11px;
+      color: #94A3B8;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    /* 60-30-10 bar */
+    .ratio-bar {
+      display: flex;
+      height: 8px;
+      border-radius: 100px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .ratio-segment {
+      height: 100%;
+    }
+
+    /* Typography */
+    .typo-sample {
+      margin-bottom: 8px;
+    }
+    .typo-name {
+      font-size: 11px;
+      color: #94A3B8;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .typo-render {
+      font-size: 18px;
+      color: #0F172A;
+      line-height: 1.3;
+    }
+
+    /* Voice */
+    .voice-keywords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .voice-keyword {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 100px;
+      border: 1px solid #E2E8F0;
+      color: #334155;
+    }
+    .voice-example {
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.6;
+      padding: 8px 12px;
+      background: #F8FAFC;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      border-left: 3px solid #E2E8F0;
+    }
+
+    /* Pros / Cons */
+    .pros-cons {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .pro-item, .con-item {
+      font-size: 13px;
+      line-height: 1.5;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .pro-icon {
+      color: #059669;
+      font-weight: 700;
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+    .con-icon {
+      color: #F59E0B;
+      font-weight: 700;
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+
+    /* CTA link */
+    .card-cta {
+      padding: 16px 20px;
+    }
+    .card-cta a {
+      display: block;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #64748B;
+      text-decoration: none;
+      padding: 10px;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      transition: all 0.15s ease;
+    }
+    .card-cta a:hover {
+      background: #F8FAFC;
+      color: #334155;
+    }
+    .direction-card.recommended .card-cta a {
+      background: #0F766E;
+      color: #fff;
+      border-color: #0F766E;
+    }
+    .direction-card.recommended .card-cta a:hover {
+      background: #115E59;
+    }
+
+    /* ─── MOCKUPS SECTION ─── */
+    .mockups-section {
+      margin: 64px 0;
+      padding: 48px 0;
+      border-top: 1px solid #E2E8F0;
+      border-bottom: 1px solid #E2E8F0;
+    }
+    .mockups-section h2 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #0F172A;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .mockups-section > p {
+      text-align: center;
+      color: #64748B;
+      font-size: 15px;
+      margin-bottom: 40px;
+    }
+    .mockups-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .mockup-card {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #E2E8F0;
+    }
+    .mockup-card.recommended-mockup {
+      border: 2px solid #0F766E;
+    }
+    .mockup-header {
+      padding: 12px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #94A3B8;
+      background: #FAFBFC;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .mockup-body {
+      padding: 20px 16px;
+    }
+    .mockup-notification {
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .mockup-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .mockup-amount {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 8px 0;
+    }
+    .mockup-status {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 100px;
+      display: inline-block;
+      font-weight: 600;
+    }
+
+    /* ─── SYNTHESIS TABLE ─── */
+    .synthesis-section {
+      margin: 64px 0;
+    }
+    .synthesis-section h2 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #0F172A;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .synthesis-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      overflow: hidden;
+      font-size: 13px;
+    }
+    .synthesis-table thead th {
+      background: #F8FAFC;
+      padding: 14px 16px;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #64748B;
+      text-align: left;
+      border-bottom: 1px solid #E2E8F0;
+    }
+    .synthesis-table thead th.col-reco {
+      background: #F0FDFA;
+      color: #0F766E;
+    }
+    .synthesis-table tbody td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #F1F5F9;
+      color: #334155;
+      vertical-align: top;
+    }
+    .synthesis-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .synthesis-table td.col-reco {
+      background: #F0FDFA;
+    }
+    .synthesis-table .criterion {
+      font-weight: 600;
+      color: #0F172A;
+      white-space: nowrap;
+    }
+    .color-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .color-chip .chip {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      display: inline-block;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    /* ─── RECOMMENDATION SECTION ─── */
+    .reco-detail {
+      margin: 64px 0;
+      padding: 48px;
+      background: linear-gradient(135deg, #F0FDFA 0%, #E6FFFA 40%, #FEFCE8 100%);
+      border-radius: 20px;
+      border: 1px solid #CCFBF1;
+    }
+    .reco-detail h2 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #0F172A;
+      margin-bottom: 24px;
+    }
+    .reco-detail h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0F766E;
+      margin: 24px 0 8px;
+    }
+    .reco-detail p {
+      font-size: 15px;
+      color: #334155;
+      line-height: 1.7;
+      max-width: 720px;
+    }
+    .reco-detail ul {
+      list-style: none;
+      padding: 0;
+    }
+    .reco-detail ul li {
+      font-size: 14px;
+      color: #334155;
+      line-height: 1.7;
+      padding-left: 20px;
+      position: relative;
+    }
+    .reco-detail ul li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 9px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #0F766E;
+    }
+
+    /* ─── FOOTER ─── */
+    .page-footer {
+      text-align: center;
+      padding: 40px 0 48px;
+      border-top: 1px solid #E2E8F0;
+      color: #94A3B8;
+      font-size: 13px;
+    }
+    .page-footer .brand-line {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1200px) {
+      .directions-grid, .mockups-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 768px) {
+      .container { padding: 0 16px; }
+      .page-header { padding: 40px 0 24px; }
+      .page-header h1 { font-size: 28px; }
+      .reco-banner { flex-direction: column; padding: 20px; }
+      .directions-grid, .mockups-grid {
+        grid-template-columns: 1fr;
+      }
+      .synthesis-table { font-size: 11px; }
+      .synthesis-table thead th,
+      .synthesis-table tbody td { padding: 8px 10px; }
+      .reco-detail { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════ HEADER ═══════════════════════════════════════ -->
+  <div class="container">
+    <header class="page-header">
+      <h1>Mes Finances — 4 directions creatives</h1>
+      <p>Quatre directions de marque distinctes, chacune avec sa propre strategie, sa voix et son identite visuelle. Comparez-les pour choisir celle qui portera le produit.</p>
+      <div class="meta">Mars 2026 &middot; 4 directions &middot; Brand Identity</div>
+    </header>
+
+    <!-- ═══════════════════════════════════ RECOMMENDATION BANNER ═══════════════════════════════════ -->
+    <div class="reco-banner">
+      <span class="reco-badge">Recommandation</span>
+      <div class="reco-content">
+        <h3>Direction 4 — Le Compas</h3>
+        <p>La Direction 4 est la plus adaptee a Mes Finances. Elle combine la chaleur du Protecteur avec la clarte du Sage dans une execution visuelle distinctive : un teal profond propre a la marque, un symbole memorable (la courbe de croissance), et un ton bienveillant en tutoiement. C'est la direction qui equilibre le mieux accessibilite, distinction et coherence avec le produit reellement construit.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ 4 DIRECTION CARDS ═══════════════════════════════════ -->
+    <div class="directions-grid">
+
+      <!-- ──────── DIRECTION 1 ──────── -->
+      <div class="direction-card">
+        <div class="card-header">
+          <div class="dir-number">Direction 1</div>
+          <h3>La Fenetre de Clarte</h3>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Logo</div>
+          <div class="logo-render">
+            <div class="logo-on-light">
+              <svg viewBox="0 0 280 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0" y="0" width="48" height="48" rx="11" fill="#1A7D6D"/>
+                <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#F7F5F0"/>
+                <text x="62" y="32" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-weight="600" font-size="22" fill="#1C2B2A" letter-spacing="-0.44">Mes Finances</text>
+              </svg>
+            </div>
+            <div class="logo-on-dark" style="background: #1C2B2A;">
+              <svg viewBox="0 0 280 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0" y="0" width="48" height="48" rx="11" fill="#24957F"/>
+                <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#F7F5F0"/>
+                <text x="62" y="32" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-weight="600" font-size="22" fill="#F7F5F0" letter-spacing="-0.44">Mes Finances</text>
+              </svg>
+            </div>
+            <div class="logo-concept">Carre arrondi protecteur + losange de clarte evide. Dessinable de memoire en 3 secondes.</div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Tagline</div>
+          <div class="tagline" style="font-family: 'Plus Jakarta Sans', sans-serif;">Tes finances, en toute clarte.</div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Archetype</div>
+          <div class="archetype-row">
+            <div class="archetype-label">Protecteur + Sage</div>
+            <div class="archetype-sub">Le gardien eclaire : chaleur bienveillante temperee par la lucidite. Ni froid ni sentimental.</div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Palette</div>
+          <div class="palette-swatches">
+            <div class="swatch-row">
+              <div class="swatch" style="background: #1A7D6D;"></div>
+              <div class="swatch-info">
+                <div class="swatch-name">Jade Calm</div>
+                <div class="swatch-hex">#1A7D6D</div>
+              </div>
+            </div>
+            <div class="swatch-row">
+              <div class="swatch" style="background: #E8913A;"></div>
+              <div class="swatch-info">
+                <div class="swatch-name">Amber Glow</div>
+                <div class="swatch-hex">#E8913A</div>
+              </div>
+            </div>
+            <div class="swatch-row">
+              <div class="swatch" style="background: #F7F5F0;"></div>
+              <div class="swatch-info">
+                <div class="swatch-name">Warm Ivory</div>
+                <div class="swatch-hex">#F7F5F0</div>
+              </div>
+            </div>
+            <div class="swatch-row">
+              <div class="swatch" style="background: #1C2B2A;"></div>
+              <div class="swatch-info">
+                <div class="swatch-name">Deep Forest</div>
+                <div class="swatch-hex">#1C2B2A</div>
+              </div>
+            </div>
+          </div>
+          <div class="ratio-bar">
+            <div class="ratio-segment" style="width:60%; background:#F7F5F0; border:1px solid #E2E8F0;"></div>
+            <div class="ratio-segment" style="width:30%; background:#1A7D6D;"></div>
+            <div class="ratio-segment" style="width:10%; background:#E8913A;"></div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Typographie</div>
+          <div class="typo-sample">
+            <div class="typo-name">Headlines + Body</div>
+            <div class="typo-render" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;">Plus Jakarta Sans</div>
+            <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; color: #5A706E; margin-top: 4px;">Famille unique, arrondis chaleureux</div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Ton de voix</div>
+          <div class="voice-keywords">
+            <span class="voice-keyword">Claire</span>
+            <span class="voice-keyword">Bienveillante</span>
+            <span class="voice-keyword">Directe</span>
+          </div>
+          <div class="voice-example">Il te reste 342 $. Ton mois est sous controle.</div>
+          <div class="voice-example">Quelque chose a coince. On reessaie?</div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Pour / A considerer</div>
+          <div class="pros-cons">
+            <div class="pro-item"><span class="pro-icon">&#10003;</span> Approche chaleureuse, rassurante — fidele a l'esprit du produit</div>
+            <div class="pro-item"><span class="pro-icon">&#10003;</span> Symbole simple et memorisable (fenetre de clarte)</div>
+            <div class="pro-item"><span class="pro-icon">&#10003;</span> Teal distinctif dans le paysage fintech</div>
+            <div class="con-item"><span class="con-icon">&rarr;</span> Tres proche de la Direction 4 — risque de se confondre</div>
+            <div class="con-item"><span class="con-icon">&rarr;</span> Identite visuelle plus conventionnelle, moins de personnalite</div>
+          </div>
+        </div>
+
+        <div class="card-cta">
+          <a href="direction-1/preview.html">Voir le preview complet &rarr;</a>
+        </div>
+      </div>
+
+      <!-- ──────── DIRECTION 2 ──────── -->
+      <div class="direction-card">
+        <div class="card-header">
+          <div class="dir-number">Direction 2</div>
+          <h3>The Summit M</h3>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Logo</div>
+          <div class="logo-render">
+            <div class="logo-on-light">
+              <svg viewBox="0 0 320 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 42 L15 6 L24 16 L33 6 L46 42 L37 42 L33 18 L24 26 L15 18 L11 42 Z" fill="#D94F3D"/>
+                <text x="58" y="36" font-family="'Space Grotesk', 'Arial Black', sans-serif" font-weight="700" font-size="34" letter-spacing="-0.5" fill="#1B1F3A">Mes Finances</text>
+              </svg>
+            </div>
+            <div class="logo-on-dark" style="background: #1B1F3A;">
+              <svg viewBox="0 0 320 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 42 L15 6 L24 16 L33 6 L46 42 L37 42 L33 18 L24 26 L15 18 L11 42 Z" fill="#D94F3D"/>
+                <text x="58" y="36" font-family="'Space Grotesk', 'Arial Black', sans-serif" font-weight="700" font-size="34" letter-spacing="-0.5" fill="#FFFFFF">Mes Finances</text>
+              </svg>
+            </div>
+            <div class="logo-concept">M abstrait en forme de sommet. Deux pics ascendants symbolisant la maitrise et le momentum.</div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Tagline</div>
+          <div class="tagline" style="font-family: 'Space Grotesk', sans-serif; font-weight: 600;">Prends les devants.</div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Archetype</div>
+          <div class="archetype-row">
+            <div class="archetype-label">Heros + Magicien</div>
+            <div class="archetype-sub">Coach energisant : "Tu peux y arriver." Transforme l'effort initial en controle automatique.</div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Palette</div>
+          <div class="palette-swatches">
+            <div class="swatch-row">
+              <div class="swatch" style="background: #D94F3D;"></div>
+              <div class="swatch-info">
+                <div class="swatch-name">Coral Vermillion</div>
+                <div class="swatch-hex">#D94F3D</div>
+              </div>
+            </div>
+            <div class="swatch-row">
+              <div class="swatch" style="background: #1B1F3A;"></div>
+              <div class="swatch-info">
+                <div class="swatch-name">Midnight Navy</div>
+                <div class="swatch-hex">#1B1F3A</div>
+              </div>
+            </div>
+            <div class="swatch-row">
+              <div class="swatch" style="background: #E8A435;"></div>
+              <div class="swatch-info">
+                <div class="swatch-name">Amber Gold</div>
+                <div class="swatch-hex">#E8A435</div>
+              </div>
+            </div>
+            <div class="swatch-row">
+              <div class="swatch" style="background: #FAF8F5;"></div>
+              <div class="swatch-info">
+                <div class="swatch-name">Warm White</div>
+                <div class="swatch-hex">#FAF8F5</div>
+              </div>
+            </div>
+          </div>
+          <div class="ratio-bar">
+            <div class="ratio-segment" style="width:60%; background:#FAF8F5; border:1px solid #E2E8F0;"></div>
+            <div class="ratio-segment" style="width:30%; background:#1B1F3A;"></div>
+            <div class="ratio-segment" style="width:10%; background:#D94F3D;"></div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Typographie</div>
+          <div class="typo-sample">
+            <div class="typo-name">Headlines</div>
+            <div class="typo-render" style="font-family: 'Space Grotesk', sans-serif; font-weight: 700;">Space Grotesk</div>
+          </div>
+          <div class="typo-sample">
+            <div class="typo-name">Body</div>
+            <div class="typo-render" style="font-family: 'DM Sans', sans-serif; font-weight: 400; font-size: 15px;">DM Sans</div>
+            <div style="font-size: 13px; color: #8B8FA0; margin-top: 2px;">Geometrique avec personnalite + lisibilite parfaite</div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Ton de voix</div>
+          <div class="voice-keywords">
+            <span class="voice-keyword">Directe</span>
+            <span class="voice-keyword">Motivante</span>
+            <span class="voice-keyword">Confiante</span>
+          </div>
+          <div class="voice-example">Ton mois? Sous controle. Continue comme ca.</div>
+          <div class="voice-example">Arrete de deviner. Maitrise.</div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Pour / A considerer</div>
+          <div class="pros-cons">
+            <div class="pro-item"><span class="pro-icon">&#10003;</span> Energie distinctive — sort du lot dans la fintech</div>
+            <div class="pro-item"><span class="pro-icon">&#10003;</span> Coral vermillion : couleur proprietary dans le secteur</div>
+            <div class="pro-item"><span class="pro-icon">&#10003;</span> Typographie a forte personnalite (Space Grotesk)</div>
+            <div class="con-item"><span class="con-icon">&rarr;</span> Ton "coach" peut sembler pressant pour un outil quotidien</div>
+            <div class="con-item"><span class="con-icon">&rarr;</span> Decalage possible entre l'energie du brand et la simplicite du produit</div>
+          </div>
+        </div>
+
+        <div class="card-cta">
+          <a href="direction-2/preview.html">Voir le preview complet &rarr;</a>
+        </div>
+      </div>
+
+      <!-- ──────── DIRECTION 3 ──────── -->
+      <div class="direction-card">
+        <div class="card-header">
+          <div class="dir-number">Direction 3</div>
+          <h3>Le Cadran</h3>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Logo</div>
+          <div class="logo-render">
+            <div class="logo-on-light">
+              <svg viewBox="0 0 320 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g transform="translate(0, 0)">
+                  <circle cx="24" cy="24" r="21" stroke="#0F1A2E" stroke-width="1.5" fill="none"/>
+                  <circle cx="24" cy="24" r="16.5" stroke="#0F1A2E" stroke-width="0.5" fill="none" opacity="0.3"/>
+                  <line x1="24" y1="24" x2="14.5" y2="9.5" stroke="#0F1A2E" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="24" y1="24" x2="33.5" y2="9.5" stroke="#0F1A2E" stroke-width="1.8" stroke-linecap="round"/>
+                  <circle cx="24" cy="24" r="1.8" fill="#B49A5C"/>
+                  <line x1="24" y1="4.5" x2="24" y2="7" stroke="#B49A5C" stroke-width="1.2" stroke-linecap="round"/>
+                </g>
+                <text x="64" y="30" font-family="'Cormorant Garamond', 'Garamond', 'Georgia', serif" font-weight="300" font-size="22" letter-spacing="0.2em" fill="#0F1A2E">MES FINANCES</text>
+              </svg>
+            </div>
+            <div class="logo-on-dark" style="background: #0F1A2E;">
+              <svg viewBox="0 0 320 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g transform="translate(0, 0)">
+                  <circle cx="24" cy="24" r="21" stroke="#F7F3ED" stroke-width="1.5" fill="none"/>
+                  <circle cx="24" cy="24" r="16.5" stroke="#F7F3ED" stroke-width="0.5" fill="none" opacity="0.3"/>
+                  <line x1="24" y1="24" x2="14.5" y2="9.5" stroke="#F7F3ED" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="24" y1="24" x2="33.5" y2="9.5" stroke="#F7F3ED" stroke-width="1.8" stroke-linecap="round"/>
+                  <circle cx="24" cy="24" r="1.8" fill="#B49A5C"/>
+                  <line x1="24" y1="4.5" x2="24" y2="7" stroke="#B49A5C" stroke-width="1.2" stroke-linecap="round"/>
+                </g>
+                <text x="64" y="30" font-family="'Cormorant Garamond', 'Garamond', 'Georgia', serif" font-weight="300" font-size="22" letter-spacing="0.2em" fill="#F7F3ED">MES FINANCES</text>
+              </svg>
+            </div>
+            <div class="logo-concept">Cadran de montre de precision. Aiguilles formant un "M" geometrique. La mesure du temps comme metaphore financiere.</div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Tagline</div>
+          <div class="tagline" style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 16px; letter-spacing: 0.02em;">Votre argent. Votre maitrise.</div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Archetype</div>
+          <div class="archetype-row">
+            <div class="archetype-label">Souverain + Sage</div>
+            <div class="archetype-sub">Le Maitre Horloger : autorite eclairee, precision absolue, elegance du silence.</div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Palette</div>
+          <div class="palette-swatches">
+            <div class="swatch-row">
+              <div class="swatch" style="background: #0F1A2E;"></div>
+              <div class="swatch-info">
+                <div class="swatch-name">Encre</div>
+                <div class="swatch-hex">#0F1A2E</div>
+              </div>
+            </div>
+            <div class="swatch-row">
+              <div class="swatch" style="background: #F7F3ED;"></div>
+              <div class="swatch-info">
+                <div class="swatch-name">Ivoire</div>
+                <div class="swatch-hex">#F7F3ED</div>
+              </div>
+            </div>
+            <div class="swatch-row">
+              <div class="swatch" style="background: #B49A5C;"></div>
+              <div class="swatch-info">
+                <div class="swatch-name">Laiton</div>
+                <div class="swatch-hex">#B49A5C</div>
+              </div>
+            </div>
+            <div class="swatch-row">
+              <div class="swatch" style="background: #6B7280;"></div>
+              <div class="swatch-info">
+                <div class="swatch-name">Etain</div>
+                <div class="swatch-hex">#6B7280</div>
+              </div>
+            </div>
+          </div>
+          <div class="ratio-bar">
+            <div class="ratio-segment" style="width:60%; background:#F7F3ED; border:1px solid #E2E8F0;"></div>
+            <div class="ratio-segment" style="width:30%; background:#0F1A2E;"></div>
+            <div class="ratio-segment" style="width:10%; background:#B49A5C;"></div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Typographie</div>
+          <div class="typo-sample">
+            <div class="typo-name">Display</div>
+            <div class="typo-render" style="font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 20px; letter-spacing: 0.05em;">Cormorant Garamond</div>
+          </div>
+          <div class="typo-sample">
+            <div class="typo-name">Body</div>
+            <div class="typo-render" style="font-family: 'Inter', sans-serif; font-weight: 400; font-size: 15px;">Inter</div>
+            <div style="font-size: 13px; color: #6B7280; margin-top: 2px;">Elegance editoriale + precision suisse</div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Ton de voix</div>
+          <div class="voice-keywords">
+            <span class="voice-keyword">Mesuree</span>
+            <span class="voice-keyword">Precise</span>
+            <span class="voice-keyword">Eclairee</span>
+          </div>
+          <div class="voice-example">La clarte n'est pas un luxe. C'est une exigence.</div>
+          <div class="voice-example">Objectif atteint. Budget a jour.</div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Pour / A considerer</div>
+          <div class="pros-cons">
+            <div class="pro-item"><span class="pro-icon">&#10003;</span> Identite visuelle la plus raffinee et distinctive</div>
+            <div class="pro-item"><span class="pro-icon">&#10003;</span> Metaphore horlogere forte et coherente</div>
+            <div class="pro-item"><span class="pro-icon">&#10003;</span> Palette encre-ivoire-laiton tres proprietary</div>
+            <div class="con-item"><span class="con-icon">&rarr;</span> Vouvoiement : decalage avec le produit actuel (tutoiement)</div>
+            <div class="con-item"><span class="con-icon">&rarr;</span> Positionnement premium incompatible avec "gratuit et simple"</div>
+            <div class="con-item"><span class="con-icon">&rarr;</span> Risque d'intimidation pour l'audience cible</div>
+          </div>
+        </div>
+
+        <div class="card-cta">
+          <a href="direction-3/preview.html">Voir le preview complet &rarr;</a>
+        </div>
+      </div>
+
+      <!-- ──────── DIRECTION 4 (RECOMMENDED) ──────── -->
+      <div class="direction-card recommended">
+        <div class="card-header">
+          <div class="dir-number">Direction 4</div>
+          <h3>Le Compas</h3>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Logo</div>
+          <div class="logo-render">
+            <div class="logo-on-light">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -42 268 84">
+                <g transform="translate(-56, 0)">
+                  <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+                  <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round" fill="none"/>
+                  <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+                </g>
+                <text x="-4" y="9" text-anchor="start" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="26" letter-spacing="-0.02em">
+                  <tspan font-weight="800" fill="#0F172A">Mes</tspan>
+                  <tspan font-weight="600" fill="#0F766E"> Finances</tspan>
+                </text>
+              </svg>
+            </div>
+            <div class="logo-on-dark" style="background: #0F172A;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -42 268 84">
+                <g transform="translate(-56, 0)">
+                  <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+                  <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round" fill="none"/>
+                  <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+                </g>
+                <text x="-4" y="9" text-anchor="start" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="26" letter-spacing="-0.02em">
+                  <tspan font-weight="800" fill="#FAFBFC">Mes</tspan>
+                  <tspan font-weight="600" fill="#5EEAD4"> Finances</tspan>
+                </text>
+              </svg>
+            </div>
+            <div class="logo-concept">Courbe de croissance dans un conteneur protecteur. Point ambre = objectif atteint. Progression sans volatilite.</div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Tagline</div>
+          <div class="tagline" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;">Tes finances. En clair.</div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Archetype</div>
+          <div class="archetype-row">
+            <div class="archetype-label">Protecteur + Sage</div>
+            <div class="archetype-sub">Le grand frere bienveillant qui est bon avec l'argent. Clair, calme, rassurant.</div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Palette</div>
+          <div class="palette-swatches">
+            <div class="swatch-row">
+              <div class="swatch" style="background: #0F766E;"></div>
+              <div class="swatch-info">
+                <div class="swatch-name">Deep Teal</div>
+                <div class="swatch-hex">#0F766E</div>
+              </div>
+            </div>
+            <div class="swatch-row">
+              <div class="swatch" style="background: #F59E0B;"></div>
+              <div class="swatch-info">
+                <div class="swatch-name">Amber</div>
+                <div class="swatch-hex">#F59E0B</div>
+              </div>
+            </div>
+            <div class="swatch-row">
+              <div class="swatch" style="background: #FAFBFC;"></div>
+              <div class="swatch-info">
+                <div class="swatch-name">Snow</div>
+                <div class="swatch-hex">#FAFBFC</div>
+              </div>
+            </div>
+            <div class="swatch-row">
+              <div class="swatch" style="background: #0F172A;"></div>
+              <div class="swatch-info">
+                <div class="swatch-name">Encre</div>
+                <div class="swatch-hex">#0F172A</div>
+              </div>
+            </div>
+          </div>
+          <div class="ratio-bar">
+            <div class="ratio-segment" style="width:60%; background:#0F766E;"></div>
+            <div class="ratio-segment" style="width:30%; background:#FAFBFC; border:1px solid #E2E8F0;"></div>
+            <div class="ratio-segment" style="width:10%; background:#F59E0B;"></div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Typographie</div>
+          <div class="typo-sample">
+            <div class="typo-name">Display + Body</div>
+            <div class="typo-render" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800;">Plus Jakarta Sans</div>
+            <div style="font-family: 'Inter', sans-serif; font-size: 13px; color: #64748B; margin-top: 4px;">Fallback: Inter &middot; Arrondis chaleureux, geometrie confiante</div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Ton de voix</div>
+          <div class="voice-keywords">
+            <span class="voice-keyword" style="border-color: #0F766E; color: #0F766E;">Clair</span>
+            <span class="voice-keyword" style="border-color: #0F766E; color: #0F766E;">Bienveillant</span>
+            <span class="voice-keyword" style="border-color: #0F766E; color: #0F766E;">Direct</span>
+          </div>
+          <div class="voice-example" style="border-left-color: #0F766E;">Ton mois est sous controle. 847 $ disponibles.</div>
+          <div class="voice-example" style="border-left-color: #0F766E;">T'approches de ta limite pour Restos.</div>
+        </div>
+
+        <div class="card-section">
+          <div class="card-section-label">Pour / A considerer</div>
+          <div class="pros-cons">
+            <div class="pro-item"><span class="pro-icon">&#10003;</span> Le plus aligne avec le produit reel (tutoiement, simplicite)</div>
+            <div class="pro-item"><span class="pro-icon">&#10003;</span> Symbole memorisable avec signification integree</div>
+            <div class="pro-item"><span class="pro-icon">&#10003;</span> Teal profond + ambre : palette equilibree et distinctive</div>
+            <div class="pro-item"><span class="pro-icon">&#10003;</span> Wordmark bi-couleur ajoute de la personnalite</div>
+            <div class="con-item"><span class="con-icon">&rarr;</span> Moins audacieux que la Direction 2 (coral)</div>
+            <div class="con-item"><span class="con-icon">&rarr;</span> Moins raffine que la Direction 3 (horlogerie)</div>
+          </div>
+        </div>
+
+        <div class="card-cta">
+          <a href="direction-4/preview.html">Voir le preview complet &rarr;</a>
+        </div>
+      </div>
+
+    </div><!-- /directions-grid -->
+
+    <!-- ═══════════════════════════════════ MOCKUPS COMPARES ═══════════════════════════════════ -->
+    <section class="mockups-section">
+      <h2>Le meme ecran, 4 identites</h2>
+      <p>Comment chaque direction styliserait une notification de budget. Le ton, les couleurs, la typo — tout change.</p>
+
+      <div class="mockups-grid">
+        <!-- Mockup D1 -->
+        <div class="mockup-card">
+          <div class="mockup-header">Direction 1 — La Fenetre</div>
+          <div class="mockup-body" style="background: #F7F5F0;">
+            <div class="mockup-notification" style="background: #E6F2EF; border: 1px solid #D0DDD9;">
+              <div class="mockup-label" style="color: #5A706E;">Budget du mois</div>
+              <div class="mockup-amount" style="font-family: 'Plus Jakarta Sans', sans-serif; color: #1C2B2A;">847 $</div>
+              <div class="mockup-status" style="background: #E6F2EF; color: #1A7D6D; border: 1px solid #1A7D6D;">Sous controle</div>
+              <div style="font-size: 13px; color: #5A706E; margin-top: 10px; font-family: 'Plus Jakarta Sans', sans-serif;">Ton mois est en ordre.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mockup D2 -->
+        <div class="mockup-card">
+          <div class="mockup-header">Direction 2 — The Summit</div>
+          <div class="mockup-body" style="background: #FAF8F5;">
+            <div class="mockup-notification" style="background: #1B1F3A; color: #fff; border-radius: 10px;">
+              <div class="mockup-label" style="color: #8B8FA0;">Budget du mois</div>
+              <div class="mockup-amount" style="font-family: 'Space Grotesk', sans-serif; color: #D94F3D;">847 $</div>
+              <div class="mockup-status" style="background: #E8A435; color: #1B1F3A;">Maitrise</div>
+              <div style="font-size: 13px; color: #8B8FA0; margin-top: 10px; font-family: 'DM Sans', sans-serif;">Continue comme ca.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mockup D3 -->
+        <div class="mockup-card">
+          <div class="mockup-header">Direction 3 — Le Cadran</div>
+          <div class="mockup-body" style="background: #F7F3ED;">
+            <div class="mockup-notification" style="background: #FFFFFF; border: 1px solid #E8E4DC;">
+              <div class="mockup-label" style="color: #6B7280; font-family: 'Inter', sans-serif; letter-spacing: 0.1em;">BUDGET DU MOIS</div>
+              <div class="mockup-amount" style="font-family: 'Cormorant Garamond', serif; font-weight: 300; color: #0F1A2E; font-size: 32px;">847 $</div>
+              <div class="mockup-status" style="color: #B49A5C; background: transparent; padding-left: 0; font-family: 'Inter', sans-serif; font-size: 12px; letter-spacing: 0.05em;">OBJECTIF ATTEINT</div>
+              <div style="font-size: 13px; color: #6B7280; margin-top: 10px; font-family: 'Inter', sans-serif;">Solde disponible conforme.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mockup D4 (recommended) -->
+        <div class="mockup-card recommended-mockup">
+          <div class="mockup-header" style="color: #0F766E;">Direction 4 — Le Compas</div>
+          <div class="mockup-body" style="background: #FAFBFC;">
+            <div class="mockup-notification" style="background: #FFFFFF; border: 1px solid #E2E8F0; box-shadow: 0 2px 8px rgba(15,118,110,0.06);">
+              <div class="mockup-label" style="color: #64748B; font-family: 'Plus Jakarta Sans', sans-serif;">Budget du mois</div>
+              <div class="mockup-amount" style="font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A;">847 $</div>
+              <div class="mockup-status" style="background: #F0FDFA; color: #0F766E;">Sous controle</div>
+              <div style="font-size: 13px; color: #64748B; margin-top: 10px; font-family: 'Plus Jakarta Sans', sans-serif;">Il te reste 15 jours. Tu es dans les temps.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════ TABLEAU DE SYNTHESE ═══════════════════════════════════ -->
+    <section class="synthesis-section">
+      <h2>Synthese comparative</h2>
+
+      <table class="synthesis-table">
+        <thead>
+          <tr>
+            <th>Critere</th>
+            <th>D1 — Fenetre</th>
+            <th>D2 — Summit</th>
+            <th>D3 — Cadran</th>
+            <th class="col-reco">D4 — Compas &#9733;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="criterion">Archetype</td>
+            <td>Protecteur + Sage</td>
+            <td>Heros + Magicien</td>
+            <td>Souverain + Sage</td>
+            <td class="col-reco">Protecteur + Sage</td>
+          </tr>
+          <tr>
+            <td class="criterion">Logo</td>
+            <td>Fenetre de clarte (losange dans carre)</td>
+            <td>Summit M (pic ascendant)</td>
+            <td>Cadran (montre de precision)</td>
+            <td class="col-reco">Compas (courbe + point ambre)</td>
+          </tr>
+          <tr>
+            <td class="criterion">Couleur signature</td>
+            <td><span class="color-chip"><span class="chip" style="background: #1A7D6D;"></span> #1A7D6D</span></td>
+            <td><span class="color-chip"><span class="chip" style="background: #D94F3D;"></span> #D94F3D</span></td>
+            <td><span class="color-chip"><span class="chip" style="background: #0F1A2E;"></span> #0F1A2E</span></td>
+            <td class="col-reco"><span class="color-chip"><span class="chip" style="background: #0F766E;"></span> #0F766E</span></td>
+          </tr>
+          <tr>
+            <td class="criterion">Typographie</td>
+            <td>Plus Jakarta Sans (seule)</td>
+            <td>Space Grotesk + DM Sans</td>
+            <td>Cormorant Garamond + Inter</td>
+            <td class="col-reco">Plus Jakarta Sans (+ Inter fallback)</td>
+          </tr>
+          <tr>
+            <td class="criterion">Pronoms</td>
+            <td>Tu</td>
+            <td>Tu</td>
+            <td>Vous</td>
+            <td class="col-reco">Tu</td>
+          </tr>
+          <tr>
+            <td class="criterion">Tagline</td>
+            <td><em>Tes finances, en toute clarte.</em></td>
+            <td><em>Prends les devants.</em></td>
+            <td><em>Votre argent. Votre maitrise.</em></td>
+            <td class="col-reco"><em>Tes finances. En clair.</em></td>
+          </tr>
+          <tr>
+            <td class="criterion">Emotion cible</td>
+            <td>Serenite, protection</td>
+            <td>Energie, momentum</td>
+            <td>Maitrise, elegance</td>
+            <td class="col-reco">Clarte, confiance</td>
+          </tr>
+          <tr>
+            <td class="criterion">Stance</td>
+            <td>Radical Simplicity</td>
+            <td>Coach energy</td>
+            <td>Luxury restraint</td>
+            <td class="col-reco">Radical Simplicity</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ═══════════════════════════════════ RECOMMANDATION DETAILLEE ═══════════════════════════════════ -->
+    <section class="reco-detail">
+      <h2>Pourquoi la Direction 4</h2>
+
+      <p>La Direction 4 — Le Compas — est la direction la plus adaptee a Mes Finances tel qu'il existe aujourd'hui et tel qu'il evoluera demain. Voici pourquoi.</p>
+
+      <h3>Ce qu'elle fait mieux</h3>
+      <ul>
+        <li><strong>Alignement produit-marque</strong> : le produit tutoie, est simple, gratuit, en francais. La Direction 4 est la seule qui incarne ces quatre attributs sans dissonance. Pas de decalage entre la promesse et l'experience.</li>
+        <li><strong>Symbole a double lecture</strong> : le Compas (courbe de croissance + point d'objectif) communique "progression" et "protection" simultanement, sans recourir a une imagerie financiere litterale. Il est memorisable et passe le test 5 secondes.</li>
+        <li><strong>Palette proprietary</strong> : le teal profond (#0F766E) n'est ni le bleu corporate ni le vert cliche. L'ambre en accent apporte la chaleur de l'accomplissement. C'est une palette qu'on peut posseder dans le secteur fintech quebecois.</li>
+        <li><strong>Wordmark bi-couleur</strong> : "Mes" en noir bold + "Finances" en teal semi-bold cree un rythme visuel qui renforce l'idee de "mes" (personnel, a moi) distincte de "finances" (le domaine).</li>
+      </ul>
+
+      <h3>Le compromis accepte</h3>
+      <p>La Direction 4 n'est pas la plus audacieuse (c'est la Direction 2 avec son coral). Elle n'est pas la plus raffinee (c'est la Direction 3 avec son univers horloger). Elle choisit deliberement la justesse plutot que l'eclat. Dans une app de finances personnelles que les gens utilisent chaque mois, la coherence entre le ton de la marque et l'experience reelle du produit est plus importante que l'impact visuel pur.</p>
+
+      <h3>Pour qui c'est adapte</h3>
+      <p>Des francophones d'Amerique du Nord — principalement au Quebec — qui veulent comprendre ou va leur argent sans y penser chaque jour. Des gens qui apprecient la clarte, le francais naturel (pas traduit), et un outil qui ne leur fait pas la morale. L'audience n'est pas premium (Direction 3), ni "hustle" (Direction 2) — elle est normale, quotidienne, humaine.</p>
+    </section>
+
+    <!-- ═══════════════════════════════════ FOOTER ═══════════════════════════════════ -->
+    <footer class="page-footer">
+      <div class="brand-line">Mes Finances — Branding 2026 &middot; cs-brand/proposals/comparison.html</div>
+      <div>Genere par Creative Studio 3</div>
+    </footer>
+
+  </div><!-- /container -->
+
+</body>
+</html>

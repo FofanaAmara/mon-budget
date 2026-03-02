@@ -1,0 +1,9 @@
+<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Mes Finances — Symbol: "The Clarity Window"
+       A warm rounded square housing a diamond cutout.
+       The rounded exterior = protection, warmth (Protecteur archetype).
+       The diamond interior = clarity, precision, focus (Sage secondary).
+       Two shapes. No gradients. Radical simplicity. -->
+  <rect x="4" y="4" width="40" height="40" rx="11" fill="#1A7D6D"/>
+  <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#F7F5F0"/>
+</svg>

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mes Finances — Brand Identity Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --color-primary: #1A7D6D;
+    --color-primary-light: #24957F;
+    --color-accent: #E8913A;
+    --color-bg: #F7F5F0;
+    --color-surface: #E6F2EF;
+    --color-text: #1C2B2A;
+    --color-text-secondary: #5A706E;
+    --color-text-tertiary: #8FA3A0;
+    --color-border: #D0DDD9;
+    --color-dark: #1C2B2A;
+    --color-success: #2D9C4A;
+    --color-warning: #D4842E;
+    --color-error: #C4463A;
+    --font: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- HERO ---- */
+  .hero {
+    padding: 80px 40px 60px;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .hero-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--color-primary); }
+  .hero p {
+    font-size: 1.15rem;
+    color: var(--color-text-secondary);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .hero .tagline {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 8px 20px;
+    background: var(--color-surface);
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    letter-spacing: 0.02em;
+  }
+
+  /* ---- SECTIONS ---- */
+  section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 40px;
+  }
+  section + section { border-top: 1px solid var(--color-border); }
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-tertiary);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+  }
+
+  /* ---- LOGO GRID ---- */
+  .logo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .logo-card {
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 140px;
+    border: 1px solid var(--color-border);
+  }
+  .logo-card.dark {
+    background: var(--color-dark);
+    border-color: var(--color-dark);
+  }
+  .logo-card svg { max-width: 260px; height: auto; }
+  .logo-card-label {
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  /* ---- SYMBOL SIZES ---- */
+  .symbol-sizes {
+    display: flex;
+    align-items: flex-end;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .symbol-size {
+    text-align: center;
+  }
+  .symbol-size span {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+  }
+
+  /* ---- COLOR PALETTE ---- */
+  .palette-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+  }
+  .color-swatch {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    background: #fff;
+  }
+  .color-swatch .swatch-block {
+    height: 80px;
+    display: flex;
+    align-items: flex-end;
+    padding: 8px 12px;
+  }
+  .color-swatch .swatch-block span {
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 2px 6px;
+  }
+  .color-swatch .swatch-info {
+    padding: 10px 12px;
+  }
+  .color-swatch .swatch-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .color-swatch .swatch-hex {
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+    font-family: 'SF Mono', 'Cascadia Code', monospace;
+  }
+
+  /* ---- TYPOGRAPHY ---- */
+  .type-showcase {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .type-row {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .type-label {
+    min-width: 120px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .type-sample { flex: 1; }
+
+  /* ---- VOICE ---- */
+  .voice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .voice-card {
+    padding: 24px;
+    border-radius: 14px;
+    background: #FFFFFF;
+    border: 1px solid var(--color-border);
+  }
+  .voice-card.do { border-left: 3px solid var(--color-success); }
+  .voice-card.dont { border-left: 3px solid var(--color-error); }
+  .voice-card .voice-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+  .voice-card.do .voice-tag { color: var(--color-success); }
+  .voice-card.dont .voice-tag { color: var(--color-error); }
+  .voice-card p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  /* ---- UI PREVIEW ---- */
+  .ui-preview {
+    background: var(--color-bg);
+    border-radius: 20px;
+    border: 1px solid var(--color-border);
+    padding: 32px;
+    max-width: 380px;
+    margin: 0 auto;
+  }
+  .ui-card {
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid var(--color-border);
+    margin-bottom: 16px;
+  }
+  .ui-card .ui-label {
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+    margin-bottom: 4px;
+  }
+  .ui-card .ui-value {
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .ui-card .ui-value.positive { color: var(--color-success); }
+  .ui-card .ui-value.warning { color: var(--color-warning); }
+  .ui-bar {
+    height: 8px;
+    background: var(--color-surface);
+    border-radius: 4px;
+    margin-top: 12px;
+    overflow: hidden;
+  }
+  .ui-bar .fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--color-primary);
+  }
+  .ui-button {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: var(--color-primary);
+    color: #F7F5F0;
+    border: none;
+    border-radius: 10px;
+    font-family: var(--font);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 8px;
+  }
+  .ui-button.secondary {
+    background: transparent;
+    color: var(--color-primary);
+    border: 1.5px solid var(--color-primary);
+  }
+
+  /* ---- ARCHETYPE ---- */
+  .archetype-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .archetype-badge.primary {
+    background: var(--color-primary);
+    color: #F7F5F0;
+  }
+  .archetype-badge.secondary {
+    background: var(--color-surface);
+    color: var(--color-primary);
+  }
+
+  /* ---- FOOTER ---- */
+  .footer {
+    text-align: center;
+    padding: 48px 40px;
+    color: var(--color-text-tertiary);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--color-border);
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 640px) {
+    .hero { padding: 48px 24px 40px; }
+    .hero h1 { font-size: 2rem; }
+    section { padding: 32px 24px; }
+    .logo-grid { grid-template-columns: 1fr; }
+    .voice-grid { grid-template-columns: 1fr; }
+    .palette-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="hero-logo">
+    <svg width="56" height="56" viewBox="0 0 48 48" fill="none">
+      <rect x="4" y="4" width="40" height="40" rx="11" fill="#1A7D6D"/>
+      <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#F7F5F0"/>
+    </svg>
+  </div>
+  <h1><span>Mes Finances</span></h1>
+  <p>Direction de marque — Le Protecteur Eclaire. Une identite construite sur la clarte, la bienveillance et la simplicite radicale.</p>
+  <div class="tagline">Tes finances, en toute clarte.</div>
+</div>
+
+<!-- ===== ARCHETYPE ===== -->
+<section>
+  <div class="section-label">Strategie</div>
+  <div class="section-title">Archetype de marque</div>
+  <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px;">
+    <span class="archetype-badge primary">Protecteur (Primary)</span>
+    <span class="archetype-badge secondary">Sage (Secondary)</span>
+  </div>
+  <p style="color: var(--color-text-secondary); max-width: 600px; line-height: 1.7;">
+    Un gardien eclaire. La chaleur du Protecteur temperee par la lucidite du Sage.
+    Ni froid ni sentimental. Juste clair, calme, et la quand ca compte.
+    Stance: <strong>Radical Simplicity</strong> — on sacrifie l'exhaustivite pour la clarte absolue.
+  </p>
+</section>
+
+<!-- ===== LOGO ===== -->
+<section>
+  <div class="section-label">Logo</div>
+  <div class="section-title">The Clarity Window</div>
+  <div class="logo-grid">
+    <!-- Full color -->
+    <div>
+      <div class="logo-card">
+        <svg viewBox="0 0 280 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="48" height="48" rx="11" fill="#1A7D6D"/>
+          <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#F7F5F0"/>
+          <text x="62" y="32" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="22" fill="#1C2B2A" letter-spacing="-0.44">Mes Finances</text>
+        </svg>
+      </div>
+      <div class="logo-card-label">Full color — fond clair</div>
+    </div>
+    <!-- Reversed -->
+    <div>
+      <div class="logo-card dark">
+        <svg viewBox="0 0 280 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="48" height="48" rx="11" fill="#24957F"/>
+          <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#1C2B2A"/>
+          <text x="62" y="32" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="22" fill="#F7F5F0" letter-spacing="-0.44">Mes Finances</text>
+        </svg>
+      </div>
+      <div class="logo-card-label">Reversed — fond sombre</div>
+    </div>
+    <!-- Mono black -->
+    <div>
+      <div class="logo-card">
+        <svg viewBox="0 0 280 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="48" height="48" rx="11" fill="#000"/>
+          <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#FFF"/>
+          <text x="62" y="32" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="22" fill="#000" letter-spacing="-0.44">Mes Finances</text>
+        </svg>
+      </div>
+      <div class="logo-card-label">Monochrome noir</div>
+    </div>
+    <!-- Mono white -->
+    <div>
+      <div class="logo-card dark">
+        <svg viewBox="0 0 280 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="48" height="48" rx="11" fill="#FFF"/>
+          <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#1C2B2A"/>
+          <text x="62" y="32" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="22" fill="#FFF" letter-spacing="-0.44">Mes Finances</text>
+        </svg>
+      </div>
+      <div class="logo-card-label">Monochrome blanc</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SYMBOL SIZES ===== -->
+<section>
+  <div class="section-label">Symbol</div>
+  <div class="section-title">Scalabilite</div>
+  <div class="symbol-sizes">
+    <div class="symbol-size">
+      <svg width="16" height="16" viewBox="0 0 48 48" fill="none">
+        <rect x="4" y="4" width="40" height="40" rx="11" fill="#1A7D6D"/>
+        <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#F7F5F0"/>
+      </svg>
+      <span>16px</span>
+    </div>
+    <div class="symbol-size">
+      <svg width="24" height="24" viewBox="0 0 48 48" fill="none">
+        <rect x="4" y="4" width="40" height="40" rx="11" fill="#1A7D6D"/>
+        <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#F7F5F0"/>
+      </svg>
+      <span>24px</span>
+    </div>
+    <div class="symbol-size">
+      <svg width="32" height="32" viewBox="0 0 48 48" fill="none">
+        <rect x="4" y="4" width="40" height="40" rx="11" fill="#1A7D6D"/>
+        <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#F7F5F0"/>
+      </svg>
+      <span>32px</span>
+    </div>
+    <div class="symbol-size">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <rect x="4" y="4" width="40" height="40" rx="11" fill="#1A7D6D"/>
+        <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#F7F5F0"/>
+      </svg>
+      <span>48px</span>
+    </div>
+    <div class="symbol-size">
+      <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
+        <rect x="4" y="4" width="40" height="40" rx="11" fill="#1A7D6D"/>
+        <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#F7F5F0"/>
+      </svg>
+      <span>64px</span>
+    </div>
+    <div class="symbol-size">
+      <svg width="96" height="96" viewBox="0 0 48 48" fill="none">
+        <rect x="4" y="4" width="40" height="40" rx="11" fill="#1A7D6D"/>
+        <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#F7F5F0"/>
+      </svg>
+      <span>96px</span>
+    </div>
+    <div class="symbol-size">
+      <svg width="128" height="128" viewBox="0 0 48 48" fill="none">
+        <rect x="4" y="4" width="40" height="40" rx="11" fill="#1A7D6D"/>
+        <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#F7F5F0"/>
+      </svg>
+      <span>128px</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COLORS ===== -->
+<section>
+  <div class="section-label">Couleurs</div>
+  <div class="section-title">Palette</div>
+  <div class="palette-grid">
+    <div class="color-swatch">
+      <div class="swatch-block" style="background: #1A7D6D;">
+        <span style="background: rgba(255,255,255,0.2); color: #fff;">Primary</span>
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">Jade Calm</div>
+        <div class="swatch-hex">#1A7D6D</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background: #24957F;">
+        <span style="background: rgba(255,255,255,0.2); color: #fff;">Primary Light</span>
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">Sage Mist</div>
+        <div class="swatch-hex">#24957F</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background: #E8913A;">
+        <span style="background: rgba(255,255,255,0.3); color: #fff;">Accent</span>
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">Amber Glow</div>
+        <div class="swatch-hex">#E8913A</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background: #F7F5F0;">
+        <span style="background: rgba(0,0,0,0.08); color: #1C2B2A;">Background</span>
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">Warm Ivory</div>
+        <div class="swatch-hex">#F7F5F0</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background: #E6F2EF;">
+        <span style="background: rgba(0,0,0,0.06); color: #1A7D6D;">Surface</span>
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">Soft Mint</div>
+        <div class="swatch-hex">#E6F2EF</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background: #1C2B2A;">
+        <span style="background: rgba(255,255,255,0.15); color: #fff;">Text</span>
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">Deep Forest</div>
+        <div class="swatch-hex">#1C2B2A</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background: #2D9C4A;">
+        <span style="background: rgba(255,255,255,0.2); color: #fff;">Success</span>
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">Forest Green</div>
+        <div class="swatch-hex">#2D9C4A</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background: #C4463A;">
+        <span style="background: rgba(255,255,255,0.2); color: #fff;">Error</span>
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">Clay Red</div>
+        <div class="swatch-hex">#C4463A</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TYPOGRAPHY ===== -->
+<section>
+  <div class="section-label">Typographie</div>
+  <div class="section-title">Plus Jakarta Sans</div>
+  <div class="type-showcase">
+    <div class="type-row">
+      <div class="type-label">Display</div>
+      <div class="type-sample" style="font-size: 2.25rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1;">
+        Tes finances, en toute clarte.
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-label">Heading 1</div>
+      <div class="type-sample" style="font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em;">
+        Ton mois en un coup d'oeil
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-label">Heading 2</div>
+      <div class="type-sample" style="font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em;">
+        Depenses du mois
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-label">Body</div>
+      <div class="type-sample" style="font-size: 1rem; font-weight: 400; color: var(--color-text-secondary);">
+        Configure une fois, l'app travaille chaque mois. Pas de connexion bancaire, pas de complexite. Juste la clarte.
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-label">Caption</div>
+      <div class="type-sample" style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-tertiary);">
+        Derniere mise a jour il y a 2 heures
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-label">Amount</div>
+      <div class="type-sample" style="font-size: 2rem; font-weight: 600; color: var(--color-primary); letter-spacing: -0.02em; font-variant-numeric: tabular-nums;">
+        2 847,50 $
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== VOICE ===== -->
+<section>
+  <div class="section-label">Voix</div>
+  <div class="section-title">Ton et langage</div>
+  <div class="voice-grid">
+    <div class="voice-card do">
+      <div class="voice-tag">On dit</div>
+      <p>"Il te reste 342 $ pour le mois."</p>
+    </div>
+    <div class="voice-card dont">
+      <div class="voice-tag">Pas ca</div>
+      <p>"Solde disponible: 342,00 $. Consultez votre historique pour plus de details."</p>
+    </div>
+    <div class="voice-card do">
+      <div class="voice-tag">On dit</div>
+      <p>"Bon mois. Budget respecte."</p>
+    </div>
+    <div class="voice-card dont">
+      <div class="voice-tag">Pas ca</div>
+      <p>"Felicitations! Vous avez atteint vos objectifs budgetaires ce mois-ci! Continue comme ca!"</p>
+    </div>
+    <div class="voice-card do">
+      <div class="voice-tag">On dit</div>
+      <p>"Quelque chose a coince. On reessaie?"</p>
+    </div>
+    <div class="voice-card dont">
+      <div class="voice-tag">Pas ca</div>
+      <p>"Erreur 500: Une erreur interne du serveur s'est produite. Veuillez reessayer ulterieurement."</p>
+    </div>
+    <div class="voice-card do">
+      <div class="voice-tag">On dit</div>
+      <p>"3 depenses cette semaine, 127 $ au total."</p>
+    </div>
+    <div class="voice-card dont">
+      <div class="voice-tag">Pas ca</div>
+      <p>"Vous avez effectue 3 transactions pour un montant cumule de 127,00 $ CAD."</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== UI PREVIEW ===== -->
+<section>
+  <div class="section-label">Apercu</div>
+  <div class="section-title">Application de la marque</div>
+  <div class="ui-preview">
+    <!-- Header -->
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 24px;">
+      <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+        <rect x="4" y="4" width="40" height="40" rx="11" fill="#1A7D6D"/>
+        <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#F7F5F0"/>
+      </svg>
+      <span style="font-weight: 600; font-size: 0.95rem;">Mes Finances</span>
+    </div>
+    <!-- Balance card -->
+    <div class="ui-card">
+      <div class="ui-label">Il te reste ce mois-ci</div>
+      <div class="ui-value positive">847 $</div>
+      <div class="ui-bar"><div class="fill" style="width: 62%;"></div></div>
+    </div>
+    <!-- Spending card -->
+    <div class="ui-card">
+      <div class="ui-label">Depenses cette semaine</div>
+      <div class="ui-value" style="font-size: 1.5rem;">312 $</div>
+      <div style="font-size: 0.8rem; color: var(--color-text-tertiary); margin-top: 4px;">5 transactions</div>
+    </div>
+    <!-- Alert card -->
+    <div class="ui-card" style="border-left: 3px solid var(--color-accent);">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" stroke="#E8913A" stroke-width="1.5"/>
+          <path d="M8 5v3.5M8 10.5v.5" stroke="#E8913A" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span style="font-size: 0.85rem; font-weight: 500;">Ton loyer est prevu demain</span>
+      </div>
+    </div>
+    <!-- Button -->
+    <div class="ui-button">Ajouter une depense</div>
+    <div class="ui-button secondary" style="margin-top: 8px;">Voir le detail</div>
+  </div>
+</section>
+
+<!-- ===== WORDMARK ===== -->
+<section>
+  <div class="section-label">Wordmark</div>
+  <div class="section-title">Variantes du texte seul</div>
+  <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div style="background: #fff; padding: 32px; border-radius: 14px; border: 1px solid var(--color-border); text-align: center;">
+      <svg viewBox="0 0 200 32" fill="none" style="max-width: 240px;">
+        <text x="0" y="24" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="24" fill="#1C2B2A" letter-spacing="-0.48">Mes Finances</text>
+      </svg>
+      <div class="logo-card-label">Wordmark — fond clair</div>
+    </div>
+    <div style="background: var(--color-dark); padding: 32px; border-radius: 14px; text-align: center;">
+      <svg viewBox="0 0 200 32" fill="none" style="max-width: 240px;">
+        <text x="0" y="24" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="24" fill="#F7F5F0" letter-spacing="-0.48">Mes Finances</text>
+      </svg>
+      <div class="logo-card-label" style="color: #8FA3A0;">Wordmark — fond sombre</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  <p>Mes Finances — Brand Identity Direction 1<br>
+  Archetype: Protecteur + Sage | Stance: Radical Simplicity<br>
+  <span style="color: var(--color-primary);">Tes finances, en toute clarte.</span></p>
+</div>
+
+</body>
+</html>

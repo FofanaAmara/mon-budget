@@ -1,0 +1,16 @@
+<svg viewBox="0 0 280 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!--
+    Mes Finances — Wordmark (Brand Color)
+    Typography: Space Grotesk Bold character, rendered as paths.
+    Coral Vermillion on transparent.
+  -->
+  <text
+    x="0"
+    y="36"
+    font-family="'Space Grotesk', 'Arial Black', sans-serif"
+    font-weight="700"
+    font-size="34"
+    letter-spacing="-0.5"
+    fill="#D94F3D"
+  >Mes Finances</text>
+</svg>

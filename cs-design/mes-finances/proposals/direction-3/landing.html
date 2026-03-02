@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Finances — Tes finances. En clair.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       DIRECTION 3 — TYPOGRAPHY MONUMENT
+       Landing Page — Mes Finances
+
+       Stance: Typography IS the architecture.
+       The tagline and financial figures are
+       sculpted monuments. No images compete
+       with the word. Teal is surgical.
+       Amber is the single spark of warmth.
+    ======================================== */
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --teal-700: #0F766E;
+      --teal-800: #115E59;
+      --teal-50: #F0FDFA;
+      --amber-500: #F59E0B;
+      --amber-400: #FBBF24;
+      --amber-600: #D97706;
+      --slate-900: #0F172A;
+      --slate-700: #334155;
+      --slate-500: #64748B;
+      --slate-300: #CBD5E1;
+      --slate-200: #E2E8F0;
+      --slate-100: #F1F5F9;
+      --slate-50: #FAFBFC;
+      --white: #FFFFFF;
+      --success: #059669;
+      --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --shadow-sm: 0 1px 2px rgba(15, 118, 110, 0.05);
+      --shadow-md: 0 4px 12px rgba(15, 118, 110, 0.08);
+      --shadow-lg: 0 8px 24px rgba(15, 118, 110, 0.12);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font);
+      color: var(--slate-900);
+      background: var(--slate-50);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ====== NAVIGATION ====== */
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(250, 251, 252, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+      transition: all 0.3s ease;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    .nav-wordmark {
+      font-size: 18px;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .nav-wordmark-bold {
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .nav-wordmark-light {
+      font-weight: 600;
+      color: var(--teal-700);
+    }
+
+    .nav-links {
+      display: none;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate-500);
+      letter-spacing: -0.01em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--slate-900);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-login {
+      display: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate-700);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+      transition: color 0.2s;
+    }
+
+    .nav-login:hover {
+      color: var(--teal-700);
+    }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      background: var(--teal-700);
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      letter-spacing: -0.01em;
+      transition: all 0.2s ease;
+    }
+
+    .nav-cta:hover {
+      background: var(--teal-800);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* ====== HERO ====== */
+
+    .hero {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 100px 20px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle grid background */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(15, 118, 110, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 118, 110, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 70%);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: var(--teal-50);
+      border: 1px solid rgba(15, 118, 110, 0.12);
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--teal-700);
+      letter-spacing: 0.02em;
+      margin-bottom: 32px;
+      animation: fadeSlideUp 0.8s ease both;
+    }
+
+    .hero-badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--amber-500);
+      border-radius: 50%;
+    }
+
+    .hero-headline {
+      font-size: clamp(3.2rem, 10vw, 9rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      color: var(--slate-900);
+      margin-bottom: 8px;
+      animation: fadeSlideUp 0.8s ease 0.1s both;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-headline-teal {
+      color: var(--teal-700);
+      display: block;
+    }
+
+    /* Amber highlight on the key word "clair" */
+    .hero-headline-amber {
+      position: relative;
+      color: var(--teal-700);
+    }
+
+    .hero-headline-amber::after {
+      content: '';
+      position: absolute;
+      bottom: 0.05em;
+      left: -0.05em;
+      right: -0.05em;
+      height: 0.18em;
+      background: rgba(245, 158, 11, 0.25);
+      border-radius: 4px;
+      z-index: -1;
+    }
+
+    .hero-sub {
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      font-weight: 400;
+      color: var(--slate-500);
+      max-width: 480px;
+      margin: 24px auto 0;
+      line-height: 1.5;
+      letter-spacing: -0.01em;
+      animation: fadeSlideUp 0.8s ease 0.2s both;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-figure {
+      margin-top: 48px;
+      animation: fadeSlideUp 0.8s ease 0.35s both;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-figure-amount {
+      font-size: clamp(4rem, 14vw, 10rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      color: var(--slate-900);
+      position: relative;
+    }
+
+    .hero-figure-amount .currency {
+      font-size: 0.45em;
+      font-weight: 600;
+      color: var(--teal-700);
+      vertical-align: super;
+      margin-left: 4px;
+      letter-spacing: 0;
+    }
+
+    .hero-figure-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate-500);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-top: 48px;
+      animation: fadeSlideUp 0.8s ease 0.45s both;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* PRIMARY CTA — Amber for conversion */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      background: var(--amber-500);
+      color: var(--slate-900);
+      font-family: var(--font);
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      letter-spacing: -0.01em;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--amber-600);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+    }
+
+    .btn-primary svg {
+      width: 18px;
+      height: 18px;
+      transition: transform 0.2s;
+    }
+
+    .btn-primary:hover svg {
+      transform: translateX(3px);
+    }
+
+    /* Secondary CTA — teal outline */
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: transparent;
+      color: var(--teal-700);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--teal-700);
+      cursor: pointer;
+      letter-spacing: -0.01em;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--teal-50);
+      transform: translateY(-1px);
+    }
+
+    .hero-note {
+      font-size: 13px;
+      color: var(--slate-500);
+      font-weight: 400;
+    }
+
+    /* ====== PROOF BANNER ====== */
+
+    .proof {
+      padding: 40px 20px;
+      background: var(--white);
+      border-top: 1px solid var(--slate-200);
+      border-bottom: 1px solid var(--slate-200);
+      text-align: center;
+    }
+
+    .proof-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate-500);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .proof-text strong {
+      color: var(--slate-900);
+      font-weight: 700;
+    }
+
+    /* Amber accent for the number in proof */
+    .proof-amber {
+      color: var(--amber-500);
+      font-weight: 700;
+    }
+
+    /* ====== VALUE PROP SECTION ====== */
+
+    .value {
+      padding: 80px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .value-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal-700);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--slate-900);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+
+    .value-item {
+      text-align: center;
+    }
+
+    .value-number {
+      font-size: clamp(3rem, 8vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--slate-900);
+      margin-bottom: 8px;
+    }
+
+    .value-number .unit {
+      font-size: 0.5em;
+      font-weight: 600;
+      color: var(--teal-700);
+      letter-spacing: 0;
+    }
+
+    /* Amber highlight for the savings number */
+    .value-number.amber-highlight {
+      color: var(--amber-500);
+    }
+
+    .value-number.amber-highlight .unit {
+      color: var(--amber-600);
+    }
+
+    .value-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .value-desc {
+      font-size: 15px;
+      color: var(--slate-500);
+      line-height: 1.6;
+      max-width: 340px;
+      margin: 0 auto;
+    }
+
+    /* ====== HOW IT WORKS ====== */
+
+    .how {
+      padding: 80px 20px;
+      background: var(--white);
+    }
+
+    .how-inner {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .how-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      padding: 32px 0;
+      position: relative;
+    }
+
+    .step + .step {
+      border-top: 1px solid var(--slate-100);
+    }
+
+    .step-number {
+      flex-shrink: 0;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--slate-200);
+      width: 64px;
+      text-align: right;
+    }
+
+    /* Amber dot on step numbers */
+    .step-number-amber {
+      color: var(--amber-500);
+      font-size: 0.6em;
+      vertical-align: super;
+    }
+
+    .step-content {
+      flex: 1;
+      padding-top: 4px;
+    }
+
+    .step-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--slate-900);
+      margin-bottom: 8px;
+    }
+
+    .step-desc {
+      font-size: 15px;
+      color: var(--slate-500);
+      line-height: 1.6;
+    }
+
+    .step-accent {
+      color: var(--teal-700);
+      font-weight: 600;
+    }
+
+    /* ====== FEATURE SHOWCASE ====== */
+
+    .features {
+      padding: 80px 20px 100px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .features-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .feature-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .feature-card {
+      padding: 32px 24px;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--slate-200);
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(15, 118, 110, 0.2);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .feature-card-icon {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--teal-50);
+      border-radius: var(--radius-sm);
+      margin-bottom: 20px;
+      color: var(--teal-700);
+    }
+
+    /* Amber icon variant for achievement/goal features */
+    .feature-card-icon.amber {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--amber-500);
+    }
+
+    .feature-card-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .feature-card-stat {
+      font-size: clamp(2rem, 5vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: var(--slate-900);
+      margin-bottom: 4px;
+    }
+
+    .feature-card-stat .currency-sm {
+      font-size: 0.5em;
+      color: var(--teal-700);
+      font-weight: 600;
+    }
+
+    /* Amber stat for achievement cards */
+    .feature-card-stat.amber {
+      color: var(--amber-500);
+    }
+
+    .feature-card-stat.amber .currency-sm {
+      color: var(--amber-600);
+    }
+
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--slate-900);
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--slate-500);
+      line-height: 1.6;
+    }
+
+    /* ====== TESTIMONIAL / SOCIAL PROOF ====== */
+
+    .social-proof {
+      padding: 80px 20px;
+      background: var(--teal-700);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .social-proof::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 50% 80% at 20% 100%, rgba(245, 158, 11, 0.1), transparent),
+        radial-gradient(ellipse 40% 50% at 80% 0%, rgba(255, 255, 255, 0.04), transparent);
+    }
+
+    .social-proof-quote {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--white);
+      max-width: 700px;
+      margin: 0 auto 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Amber quotation mark */
+    .social-proof-quote::before {
+      content: '\201C';
+      display: block;
+      font-size: 3em;
+      line-height: 0.5;
+      color: var(--amber-500);
+      margin-bottom: 16px;
+      font-weight: 800;
+    }
+
+    .social-proof-author {
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.6);
+      position: relative;
+      z-index: 1;
+    }
+
+    .social-proof-author strong {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 700;
+    }
+
+    /* Star rating */
+    .social-proof-stars {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .social-proof-stars svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--amber-500);
+    }
+
+    /* ====== FINAL CTA ====== */
+
+    .final-cta {
+      padding: 100px 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .final-cta-headline {
+      font-size: clamp(2.5rem, 8vw, 6rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 0.95;
+      color: var(--slate-900);
+      margin-bottom: 16px;
+    }
+
+    .final-cta-headline .teal {
+      color: var(--teal-700);
+    }
+
+    .final-cta-sub {
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--slate-500);
+      margin-bottom: 40px;
+      letter-spacing: -0.01em;
+    }
+
+    .final-cta .btn-primary {
+      padding: 18px 40px;
+      font-size: 17px;
+    }
+
+    /* ====== FOOTER ====== */
+
+    .footer {
+      padding: 48px 20px 32px;
+      border-top: 1px solid var(--slate-200);
+      text-align: center;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .footer-logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .footer-wordmark {
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .footer-wordmark-bold {
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .footer-wordmark-light {
+      font-weight: 600;
+      color: var(--teal-700);
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      list-style: none;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--slate-500);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--slate-900);
+    }
+
+    .footer-copy {
+      font-size: 12px;
+      color: var(--slate-300);
+    }
+
+    /* ====== ANIMATIONS ====== */
+
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Intersection Observer animation classes */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ====== RESPONSIVE ====== */
+
+    /* Tablet */
+    @media (min-width: 640px) {
+      .value-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+      }
+
+      .feature-cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero-cta-group {
+        flex-direction: row;
+        justify-content: center;
+      }
+    }
+
+    /* Desktop */
+    @media (min-width: 1024px) {
+      .nav {
+        padding: 16px 40px;
+      }
+
+      .nav-links {
+        display: flex;
+      }
+
+      .nav-login {
+        display: inline;
+      }
+
+      .hero {
+        padding: 120px 40px 80px;
+      }
+
+      .hero-headline {
+        letter-spacing: -0.05em;
+      }
+
+      .value {
+        padding: 120px 40px;
+      }
+
+      .how {
+        padding: 120px 40px;
+      }
+
+      .features {
+        padding: 120px 40px 140px;
+      }
+
+      .feature-cards {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .step-number {
+        width: 100px;
+      }
+
+      .social-proof {
+        padding: 120px 40px;
+      }
+
+      .final-cta {
+        padding: 140px 40px;
+      }
+
+      .footer {
+        padding: 48px 40px 32px;
+      }
+    }
+
+    @media (min-width: 1280px) {
+      .hero-headline {
+        max-width: 900px;
+      }
+    }
+
+    /* ====== SELECTION COLOR ====== */
+    ::selection {
+      background: rgba(15, 118, 110, 0.15);
+      color: var(--slate-900);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== NAVIGATION ====== -->
+  <nav class="nav">
+    <a href="landing.html" class="nav-logo">
+      <svg viewBox="-50 -50 100 100" fill="none">
+        <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+        <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+      </svg>
+      <span class="nav-wordmark">
+        <span class="nav-wordmark-bold">Mes</span><span class="nav-wordmark-light"> Finances</span>
+      </span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#fonctionnalites">Fonctionnalites</a></li>
+      <li><a href="#comment">Comment ca marche</a></li>
+      <li><a href="#">Tarifs</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <a href="login.html" class="nav-login">Connexion</a>
+      <a href="signup.html" class="nav-cta">
+        Commencer
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ====== HERO ====== -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      100% gratuit. Aucune carte requise.
+    </div>
+
+    <h1 class="hero-headline">
+      Tes finances.<br>
+      <span class="hero-headline-amber">En clair.</span>
+    </h1>
+
+    <p class="hero-sub">
+      Sais exactement ou va ton argent. Pas de surprise. Pas de stress. Juste de la clarte.
+    </p>
+
+    <div class="hero-figure">
+      <div class="hero-figure-amount">
+        847<span class="currency">$</span>
+      </div>
+      <div class="hero-figure-label">Disponible ce mois-ci</div>
+    </div>
+
+    <div class="hero-cta-group">
+      <a href="signup.html" class="btn-primary">
+        Commencer gratuitement
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg>
+      </a>
+      <a href="login.html" class="btn-secondary">
+        Se connecter
+      </a>
+    </div>
+
+    <p class="hero-note" style="margin-top: 16px;">Inscription en 2 minutes</p>
+  </section>
+
+  <!-- ====== PROOF BANNER ====== -->
+  <section class="proof">
+    <p class="proof-text">
+      Deja utilise par <strong class="proof-amber">2 400+</strong> Quebecois pour gerer leur budget mensuel
+    </p>
+  </section>
+
+  <!-- ====== VALUE PROPOSITION ====== -->
+  <section class="value" id="fonctionnalites">
+    <div class="value-header reveal">
+      <p class="section-label">Pourquoi Mes Finances</p>
+      <h2 class="section-title">
+        Les chiffres qui comptent, rien d'autre
+      </h2>
+    </div>
+
+    <div class="value-grid">
+      <div class="value-item reveal">
+        <div class="value-number">2<span class="unit"> min</span></div>
+        <div class="value-name">Pour commencer</div>
+        <p class="value-desc">
+          Configure ton budget en quelques taps. Pas de sync bancaire, pas de complications.
+        </p>
+      </div>
+
+      <div class="value-item reveal">
+        <div class="value-number amber-highlight">200<span class="unit"> $</span></div>
+        <div class="value-name">Epargne moyenne</div>
+        <p class="value-desc">
+          Ce que nos utilisateurs economisent de plus chaque mois apres 3 mois d'utilisation.
+        </p>
+      </div>
+
+      <div class="value-item reveal">
+        <div class="value-number">0<span class="unit"> $</span></div>
+        <div class="value-name">Pour toujours</div>
+        <p class="value-desc">
+          Gratuit, sans pub, sans vente de donnees. Ton budget reste le tien.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== HOW IT WORKS ====== -->
+  <section class="how" id="comment">
+    <div class="how-inner">
+      <div class="how-header reveal">
+        <p class="section-label">Comment ca marche</p>
+        <h2 class="section-title">
+          Trois gestes, c'est tout
+        </h2>
+      </div>
+
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-number">01</div>
+          <div class="step-content">
+            <h3 class="step-title">Configure tes revenus</h3>
+            <p class="step-desc">
+              Indique combien tu gagnes et <span class="step-accent">a quelle frequence</span>. Salaire, pourboires, pige — tout compte.
+            </p>
+          </div>
+        </div>
+
+        <div class="step reveal">
+          <div class="step-number">02</div>
+          <div class="step-content">
+            <h3 class="step-title">Note tes depenses</h3>
+            <p class="step-desc">
+              Chaque achat prend <span class="step-accent">5 secondes a entrer</span>. Montant, categorie, c'est tout. On s'occupe du reste.
+            </p>
+          </div>
+        </div>
+
+        <div class="step reveal">
+          <div class="step-number">03</div>
+          <div class="step-content">
+            <h3 class="step-title">Vois ou t'en es</h3>
+            <p class="step-desc">
+              Ton tableau de bord te dit <span class="step-accent">combien il te reste</span>, ce que t'as depense, et si tu es dans les temps.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FEATURES ====== -->
+  <section class="features" id="details">
+    <div class="features-header reveal">
+      <p class="section-label">Fonctionnalites</p>
+      <h2 class="section-title">
+        Tout ce qu'il faut, rien de trop
+      </h2>
+    </div>
+
+    <div class="feature-cards">
+      <div class="feature-card reveal">
+        <div class="feature-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        </div>
+        <div class="feature-card-stat">847<span class="currency-sm"> $</span></div>
+        <h3>Solde en direct</h3>
+        <p>Ton solde disponible, mis a jour a chaque depense. Pas besoin de calculer.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="feature-card-stat">12</div>
+        <h3>Categories</h3>
+        <p>Loyer, epicerie, transport, restos... Chaque dollar a sa place.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-card-icon amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="feature-card-stat amber">+14<span class="currency-sm"> %</span></div>
+        <h3>Suivi mensuel</h3>
+        <p>Compare tes mois. Celebre tes progres. Identifie ce qui te coute cher.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="feature-card-stat">100<span class="currency-sm"> %</span></div>
+        <h3>Prive et securise</h3>
+        <p>Tes donnees restent sur ton compte. Aucun acces a tes comptes bancaires.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        </div>
+        <div class="feature-card-stat">5<span class="currency-sm"> sec</span></div>
+        <h3>Entree rapide</h3>
+        <p>Ajouter une depense prend 5 secondes. Montant, categorie, termine.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="feature-card-stat">24<span class="currency-sm"> /7</span></div>
+        <h3>Toujours disponible</h3>
+        <p>Ton budget accessible sur mobile ou desktop, quand tu en as besoin.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== TESTIMONIAL ====== -->
+  <section class="social-proof">
+    <div class="social-proof-stars reveal">
+      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    </div>
+    <blockquote class="social-proof-quote reveal">
+      J'ai jamais su ou allait mon argent avant. Maintenant, je check mon dashboard chaque matin avec mon cafe. C'est devenu un reflexe.
+    </blockquote>
+    <p class="social-proof-author reveal">
+      <strong>Marie-Eve L.</strong> — Montreal
+    </p>
+  </section>
+
+  <!-- ====== FINAL CTA ====== -->
+  <section class="final-cta">
+    <h2 class="final-cta-headline reveal">
+      Ton argent,<br>
+      <span class="teal">ton rythme.</span>
+    </h2>
+    <p class="final-cta-sub reveal">
+      Commence a suivre tes finances en 2 minutes. C'est gratuit.
+    </p>
+    <div class="reveal">
+      <a href="signup.html" class="btn-primary">
+        Creer mon budget
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="footer">
+    <div class="footer-logo">
+      <svg viewBox="-50 -50 100 100" width="28" height="28" fill="none">
+        <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+        <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+      </svg>
+      <span class="footer-wordmark">
+        <span class="footer-wordmark-bold">Mes</span><span class="footer-wordmark-light"> Finances</span>
+      </span>
+    </div>
+
+    <ul class="footer-links">
+      <li><a href="#">Confidentialite</a></li>
+      <li><a href="#">Conditions</a></li>
+      <li><a href="#">Support</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+
+    <p class="footer-copy">2026 Mes Finances. Fait a Montreal avec soin.</p>
+  </footer>
+
+  <!-- ====== SCROLL REVEAL ====== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const reveals = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -40px 0px'
+      });
+
+      reveals.forEach(el => observer.observe(el));
+    });
+  </script>
+
+</body>
+</html>

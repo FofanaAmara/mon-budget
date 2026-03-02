@@ -1,0 +1,18 @@
+<svg viewBox="0 0 280 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Mes Finances — Full Logo (Symbol + Wordmark)
+       Primary brand color on light background.
+       Font: Plus Jakarta Sans SemiBold (600), -0.02em tracking.
+       Fallback: system-ui, -apple-system, sans-serif. -->
+
+  <!-- Symbol -->
+  <rect x="0" y="0" width="48" height="48" rx="11" fill="#1A7D6D"/>
+  <rect x="15.5" y="15.5" width="17" height="17" rx="4" transform="rotate(45 24 24)" fill="#F7F5F0"/>
+
+  <!-- Wordmark -->
+  <text x="62" y="32"
+        font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif"
+        font-weight="600"
+        font-size="22"
+        fill="#1C2B2A"
+        letter-spacing="-0.44">Mes Finances</text>
+</svg>

@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Finances -- Direction 3 : La Maitrise</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       Direction 3 : La Maitrise
+       Archetype: Souverain + Sage
+       Stance: luxury_restraint
+       ======================================== */
+
+    :root {
+      --encre: #0F1A2E;
+      --ivoire: #F7F3ED;
+      --laiton: #B49A5C;
+      --acier: #2C3440;
+      --etain: #6B7280;
+      --cendre: #E8E4DC;
+      --alerte: #8B2D2D;
+
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--ivoire);
+      color: var(--encre);
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- Layout ---- */
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    section {
+      padding: 100px 0;
+      border-bottom: 1px solid var(--cendre);
+    }
+
+    section:last-child {
+      border-bottom: none;
+    }
+
+    /* ---- Typography ---- */
+
+    .section-label {
+      font-family: var(--font-body);
+      font-size: 0.64rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--etain);
+      margin-bottom: 48px;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: 3.052rem;
+      line-height: 1.1;
+      letter-spacing: 0.02em;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: 2.441rem;
+      line-height: 1.15;
+      letter-spacing: 0.02em;
+      margin-bottom: 24px;
+    }
+
+    h3 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 1.563rem;
+      line-height: 1.3;
+      margin-bottom: 16px;
+    }
+
+    h4 {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--etain);
+      margin-bottom: 12px;
+    }
+
+    p {
+      max-width: 600px;
+      color: var(--acier);
+      line-height: 1.7;
+    }
+
+    /* ---- Hero ---- */
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 120px 40px;
+      border-bottom: 1px solid var(--cendre);
+    }
+
+    .hero .direction-label {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--laiton);
+      margin-bottom: 80px;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      margin-bottom: 32px;
+    }
+
+    .hero .tagline {
+      font-family: var(--font-display);
+      font-size: 1.563rem;
+      font-weight: 300;
+      color: var(--etain);
+      letter-spacing: 0.05em;
+    }
+
+    .hero .archetype-badge {
+      margin-top: 80px;
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .hero .archetype-badge span {
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--etain);
+    }
+
+    .hero .archetype-badge .dot {
+      width: 4px;
+      height: 4px;
+      background: var(--laiton);
+      border-radius: 50%;
+    }
+
+    /* ---- Logo Section ---- */
+
+    .logo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 48px;
+    }
+
+    .logo-card {
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 2px;
+      min-height: 200px;
+      position: relative;
+    }
+
+    .logo-card.light {
+      background: var(--ivoire);
+      border: 1px solid var(--cendre);
+    }
+
+    .logo-card.dark {
+      background: var(--encre);
+    }
+
+    .logo-card .card-label {
+      position: absolute;
+      bottom: 16px;
+      left: 20px;
+      font-size: 0.64rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .logo-card.light .card-label {
+      color: var(--etain);
+    }
+
+    .logo-card.dark .card-label {
+      color: rgba(247, 243, 237, 0.4);
+    }
+
+    .logo-card img,
+    .logo-card svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Full-width logo cards */
+    .logo-card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    /* ---- Symbol showcase ---- */
+
+    .symbol-sizes {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      margin-top: 48px;
+      padding: 60px 40px;
+      background: white;
+      border: 1px solid var(--cendre);
+      border-radius: 2px;
+    }
+
+    .symbol-sizes .size-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .symbol-sizes .size-label {
+      font-size: 0.64rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--etain);
+    }
+
+    /* ---- Palette ---- */
+
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .color-card {
+      border-radius: 2px;
+      overflow: hidden;
+      border: 1px solid var(--cendre);
+    }
+
+    .color-swatch {
+      height: 120px;
+      width: 100%;
+    }
+
+    .color-info {
+      padding: 20px;
+      background: white;
+    }
+
+    .color-name {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 1.25rem;
+      margin-bottom: 4px;
+    }
+
+    .color-role {
+      font-size: 0.75rem;
+      color: var(--etain);
+      margin-bottom: 12px;
+    }
+
+    .color-hex {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: var(--acier);
+    }
+
+    .palette-accent {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 0;
+    }
+
+    .palette-accent .color-swatch {
+      height: 80px;
+    }
+
+    /* ---- Typography ---- */
+
+    .type-showcase {
+      margin-top: 48px;
+    }
+
+    .type-specimen {
+      padding: 60px 0;
+      border-bottom: 1px solid var(--cendre);
+    }
+
+    .type-specimen:last-child {
+      border-bottom: none;
+    }
+
+    .type-specimen .font-name {
+      font-size: 0.64rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--laiton);
+      margin-bottom: 24px;
+    }
+
+    .specimen-display-xl {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: 3.052rem;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .specimen-display {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: 2.441rem;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .specimen-h1 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 1.953rem;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .specimen-body {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--acier);
+      max-width: 600px;
+    }
+
+    .specimen-small {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 0.8rem;
+      color: var(--etain);
+      margin-top: 8px;
+    }
+
+    .specimen-caption {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--etain);
+      margin-top: 8px;
+    }
+
+    .type-scale-row {
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--cendre);
+    }
+
+    .type-scale-row:last-child {
+      border-bottom: none;
+    }
+
+    .type-scale-label {
+      width: 120px;
+      flex-shrink: 0;
+      font-size: 0.64rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--etain);
+    }
+
+    .type-scale-size {
+      width: 80px;
+      flex-shrink: 0;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: var(--etain);
+    }
+
+    /* ---- Voice ---- */
+
+    .voice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 48px;
+    }
+
+    .voice-card {
+      padding: 40px;
+      border-radius: 2px;
+    }
+
+    .voice-card.do {
+      background: white;
+      border: 1px solid var(--cendre);
+    }
+
+    .voice-card.dont {
+      background: rgba(139, 45, 45, 0.03);
+      border: 1px solid rgba(139, 45, 45, 0.15);
+    }
+
+    .voice-card h4 {
+      margin-bottom: 24px;
+    }
+
+    .voice-card.do h4 {
+      color: var(--laiton);
+    }
+
+    .voice-card.dont h4 {
+      color: var(--alerte);
+    }
+
+    .voice-example {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 400;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .voice-context {
+      font-size: 0.75rem;
+      color: var(--etain);
+    }
+
+    /* ---- Messaging ---- */
+
+    .messaging-hero {
+      padding: 80px;
+      background: var(--encre);
+      border-radius: 2px;
+      text-align: center;
+      margin-top: 48px;
+    }
+
+    .messaging-hero .tagline-main {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: 3rem;
+      color: var(--ivoire);
+      letter-spacing: 0.04em;
+      margin-bottom: 24px;
+    }
+
+    .messaging-hero .tagline-sub {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: var(--etain);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .messages-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .message-card {
+      padding: 32px;
+      background: white;
+      border: 1px solid var(--cendre);
+      border-radius: 2px;
+    }
+
+    .message-card .message-label {
+      font-size: 0.64rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--laiton);
+      margin-bottom: 12px;
+    }
+
+    .message-card .message-text {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--encre);
+    }
+
+    /* ---- Application Mockup ---- */
+
+    .mockup-container {
+      margin-top: 48px;
+      background: white;
+      border: 1px solid var(--cendre);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .mockup-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--cendre);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mockup-logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mockup-logo-area .mock-symbol {
+      width: 24px;
+      height: 24px;
+    }
+
+    .mockup-logo-area .mock-name {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: 0.9rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .mockup-nav {
+      display: flex;
+      gap: 24px;
+    }
+
+    .mockup-nav a {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--etain);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+
+    .mockup-nav a.active {
+      color: var(--encre);
+    }
+
+    .mockup-body {
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 32px;
+    }
+
+    .mockup-stat {
+      padding: 24px;
+      border: 1px solid var(--cendre);
+      border-radius: 2px;
+    }
+
+    .mockup-stat .stat-label {
+      font-size: 0.64rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--etain);
+      margin-bottom: 8px;
+    }
+
+    .mockup-stat .stat-value {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: 2rem;
+      color: var(--encre);
+    }
+
+    .mockup-stat .stat-detail {
+      font-size: 0.75rem;
+      color: var(--etain);
+      margin-top: 4px;
+    }
+
+    .mockup-stat.accent .stat-value {
+      color: var(--laiton);
+    }
+
+    /* ---- Summary ---- */
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-top: 48px;
+    }
+
+    .summary-item h4 {
+      margin-bottom: 8px;
+    }
+
+    .summary-item p {
+      font-size: 0.875rem;
+      color: var(--acier);
+      line-height: 1.6;
+    }
+
+    /* ---- Footer ---- */
+
+    footer {
+      padding: 60px 0;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--etain);
+    }
+
+    /* ---- Responsive ---- */
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 0 24px;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .logo-grid,
+      .voice-grid,
+      .messages-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .palette-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .palette-accent {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mockup-body {
+        grid-template-columns: 1fr;
+      }
+
+      .messaging-hero {
+        padding: 48px 24px;
+      }
+
+      .messaging-hero .tagline-main {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======== HERO ======== -->
+  <div class="hero">
+    <div class="direction-label">Direction 3</div>
+    <h1>La Maitrise</h1>
+    <div class="tagline">Votre argent. Votre maitrise.</div>
+    <div class="archetype-badge">
+      <span>Souverain</span>
+      <div class="dot"></div>
+      <span>Sage</span>
+      <div class="dot"></div>
+      <span>Luxury Restraint</span>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <!-- ======== LOGO ======== -->
+    <section>
+      <div class="section-label">01 -- Logo complet</div>
+
+      <div class="logo-grid">
+        <!-- Full color on light -->
+        <div class="logo-card light full-width" style="padding: 80px 40px;">
+          <img src="logo-full-color.svg" alt="Logo Mes Finances couleur" style="height: 48px;">
+          <span class="card-label">Primaire -- fond clair</span>
+        </div>
+
+        <!-- Reversed on dark -->
+        <div class="logo-card dark full-width" style="padding: 80px 40px;">
+          <img src="logo-reversed.svg" alt="Logo Mes Finances inverse" style="height: 48px;">
+          <span class="card-label">Inverse -- fond sombre</span>
+        </div>
+
+        <!-- Mono black -->
+        <div class="logo-card light">
+          <img src="logo-mono-black.svg" alt="Logo mono noir" style="height: 40px;">
+          <span class="card-label">Monochrome noir</span>
+        </div>
+
+        <!-- Mono white -->
+        <div class="logo-card dark">
+          <img src="logo-mono-white.svg" alt="Logo mono blanc" style="height: 40px;">
+          <span class="card-label">Monochrome blanc</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== SYMBOL ======== -->
+    <section>
+      <div class="section-label">02 -- Symbole : Le Cadran</div>
+
+      <p style="margin-bottom: 48px;">
+        Le symbole est inspire du cadran d'une montre de precision. Deux aiguilles partant du centre forment
+        un M geometrique -- la mesure du temps comme metaphore de la maitrise financiere. Le point central en
+        laiton est le pivot : le point de controle.
+      </p>
+
+      <div class="logo-grid">
+        <div class="logo-card light">
+          <img src="symbol-color.svg" alt="Symbole couleur" style="width: 96px; height: 96px;">
+          <span class="card-label">Couleur</span>
+        </div>
+        <div class="logo-card dark">
+          <img src="symbol-reversed.svg" alt="Symbole inverse" style="width: 96px; height: 96px;">
+          <span class="card-label">Inverse</span>
+        </div>
+        <div class="logo-card light">
+          <img src="symbol-mono-black.svg" alt="Symbole mono noir" style="width: 96px; height: 96px;">
+          <span class="card-label">Mono noir</span>
+        </div>
+        <div class="logo-card dark">
+          <img src="symbol-mono-white.svg" alt="Symbole mono blanc" style="width: 96px; height: 96px;">
+          <span class="card-label">Mono blanc</span>
+        </div>
+      </div>
+
+      <!-- Size test -->
+      <div class="symbol-sizes">
+        <div class="size-item">
+          <img src="symbol-color.svg" alt="128px" style="width: 128px; height: 128px;">
+          <span class="size-label">128px</span>
+        </div>
+        <div class="size-item">
+          <img src="symbol-color.svg" alt="64px" style="width: 64px; height: 64px;">
+          <span class="size-label">64px</span>
+        </div>
+        <div class="size-item">
+          <img src="symbol-color.svg" alt="48px" style="width: 48px; height: 48px;">
+          <span class="size-label">48px</span>
+        </div>
+        <div class="size-item">
+          <img src="symbol-color.svg" alt="32px" style="width: 32px; height: 32px;">
+          <span class="size-label">32px</span>
+        </div>
+        <div class="size-item">
+          <img src="symbol-color.svg" alt="24px" style="width: 24px; height: 24px;">
+          <span class="size-label">24px</span>
+        </div>
+        <div class="size-item">
+          <img src="symbol-color.svg" alt="16px" style="width: 16px; height: 16px;">
+          <span class="size-label">16px</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== WORDMARK ======== -->
+    <section>
+      <div class="section-label">03 -- Wordmark</div>
+
+      <div class="logo-grid">
+        <div class="logo-card light full-width" style="padding: 60px 40px;">
+          <img src="wordmark-color.svg" alt="Wordmark couleur" style="height: 36px;">
+          <span class="card-label">Fond clair</span>
+        </div>
+        <div class="logo-card dark full-width" style="padding: 60px 40px;">
+          <img src="wordmark-reversed.svg" alt="Wordmark inverse" style="height: 36px;">
+          <span class="card-label">Fond sombre</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== PALETTE ======== -->
+    <section>
+      <div class="section-label">04 -- Palette de couleurs</div>
+
+      <div class="palette-grid">
+        <!-- Primary colors -->
+        <div class="color-card">
+          <div class="color-swatch" style="background: #0F1A2E;"></div>
+          <div class="color-info">
+            <div class="color-name">Encre</div>
+            <div class="color-role">Primaire -- La profondeur</div>
+            <div class="color-hex">#0F1A2E</div>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background: #F7F3ED;"></div>
+          <div class="color-info">
+            <div class="color-name">Ivoire</div>
+            <div class="color-role">Fond -- La respiration</div>
+            <div class="color-hex">#F7F3ED</div>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background: #B49A5C;"></div>
+          <div class="color-info">
+            <div class="color-name">Laiton</div>
+            <div class="color-role">Accent -- La distinction</div>
+            <div class="color-hex">#B49A5C</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Neutral + functional -->
+      <div class="palette-accent" style="margin-top: 24px;">
+        <div class="color-card">
+          <div class="color-swatch" style="background: #2C3440;"></div>
+          <div class="color-info">
+            <div class="color-name">Acier</div>
+            <div class="color-role">Structure</div>
+            <div class="color-hex">#2C3440</div>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background: #6B7280;"></div>
+          <div class="color-info">
+            <div class="color-name">Etain</div>
+            <div class="color-role">Equilibre</div>
+            <div class="color-hex">#6B7280</div>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background: #E8E4DC;"></div>
+          <div class="color-info">
+            <div class="color-name">Cendre</div>
+            <div class="color-role">Subtilite</div>
+            <div class="color-hex">#E8E4DC</div>
+          </div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background: #8B2D2D;"></div>
+          <div class="color-info">
+            <div class="color-name">Alerte</div>
+            <div class="color-role">Signal</div>
+            <div class="color-hex">#8B2D2D</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 60-30-10 visualization -->
+      <div style="margin-top: 48px;">
+        <h4>Rapport 60-30-10</h4>
+        <div style="display: flex; height: 48px; border-radius: 2px; overflow: hidden; margin-top: 16px;">
+          <div style="flex: 6; background: #F7F3ED; display: flex; align-items: center; justify-content: center; border: 1px solid #E8E4DC; border-right: none;">
+            <span style="font-size: 0.64rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: #6B7280;">60% Ivoire</span>
+          </div>
+          <div style="flex: 3; background: #0F1A2E; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 0.64rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: #F7F3ED;">30% Encre</span>
+          </div>
+          <div style="flex: 1; background: #B49A5C; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 0.55rem; font-weight: 600; color: white;">10%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== TYPOGRAPHY ======== -->
+    <section>
+      <div class="section-label">05 -- Typographie</div>
+
+      <div class="type-showcase">
+        <!-- Cormorant specimen -->
+        <div class="type-specimen">
+          <div class="font-name">Cormorant Garamond -- Display</div>
+          <div class="specimen-display-xl">La clarte financiere</div>
+          <div class="specimen-display">Chaque dollar, maitrise</div>
+          <div class="specimen-h1">L'excellence n'est pas un privilege</div>
+          <div style="margin-top: 24px; font-family: var(--font-display); font-weight: 300; font-size: 1rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--etain);">
+            ABCDEFGHIJKLMNOPQRSTUVWXYZ
+          </div>
+          <div style="margin-top: 8px; font-family: var(--font-display); font-weight: 300; font-size: 1rem; letter-spacing: 0.05em; color: var(--etain);">
+            abcdefghijklmnopqrstuvwxyz 0123456789
+          </div>
+        </div>
+
+        <!-- Inter specimen -->
+        <div class="type-specimen">
+          <div class="font-name">Inter -- Body</div>
+          <div class="specimen-body">
+            Mes Finances transforme le chaos financier en clarte absolue. Pas de connexion bancaire,
+            pas de complexite inutile. Un instrument de precision qui vous donne, en 10 secondes,
+            la maitrise complete de votre mois.
+          </div>
+          <div class="specimen-small">
+            Texte secondaire -- utilise pour les labels, descriptions et metadonnees.
+          </div>
+          <div class="specimen-caption">
+            Caption -- Utilise pour les annotations techniques et etiquettes
+          </div>
+          <div style="margin-top: 24px; font-family: var(--font-body); font-weight: 400; font-size: 0.875rem; letter-spacing: 0.02em; color: var(--etain);">
+            ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789
+          </div>
+        </div>
+
+        <!-- Type scale -->
+        <div class="type-specimen">
+          <div class="font-name">Echelle typographique -- Ratio 1.25</div>
+          <div class="type-scale-row">
+            <span class="type-scale-label">Display XL</span>
+            <span class="type-scale-size">3.052rem</span>
+            <span style="font-family: var(--font-display); font-weight: 300; font-size: 3.052rem; line-height: 1.1;">Maitrise</span>
+          </div>
+          <div class="type-scale-row">
+            <span class="type-scale-label">Display</span>
+            <span class="type-scale-size">2.441rem</span>
+            <span style="font-family: var(--font-display); font-weight: 300; font-size: 2.441rem; line-height: 1.15;">Maitrise</span>
+          </div>
+          <div class="type-scale-row">
+            <span class="type-scale-label">Heading 1</span>
+            <span class="type-scale-size">1.953rem</span>
+            <span style="font-family: var(--font-display); font-weight: 400; font-size: 1.953rem; line-height: 1.2;">Maitrise</span>
+          </div>
+          <div class="type-scale-row">
+            <span class="type-scale-label">Heading 2</span>
+            <span class="type-scale-size">1.563rem</span>
+            <span style="font-family: var(--font-body); font-weight: 600; font-size: 1.563rem; line-height: 1.3;">Maitrise</span>
+          </div>
+          <div class="type-scale-row">
+            <span class="type-scale-label">Heading 3</span>
+            <span class="type-scale-size">1.25rem</span>
+            <span style="font-family: var(--font-body); font-weight: 500; font-size: 1.25rem; line-height: 1.4;">Maitrise</span>
+          </div>
+          <div class="type-scale-row">
+            <span class="type-scale-label">Body</span>
+            <span class="type-scale-size">1rem</span>
+            <span style="font-family: var(--font-body); font-weight: 400; font-size: 1rem; line-height: 1.6;">Maitrise</span>
+          </div>
+          <div class="type-scale-row">
+            <span class="type-scale-label">Small</span>
+            <span class="type-scale-size">0.8rem</span>
+            <span style="font-family: var(--font-body); font-weight: 400; font-size: 0.8rem; line-height: 1.5;">Maitrise</span>
+          </div>
+          <div class="type-scale-row">
+            <span class="type-scale-label">Caption</span>
+            <span class="type-scale-size">0.64rem</span>
+            <span style="font-family: var(--font-body); font-weight: 500; font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.1em;">MAITRISE</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== VOICE ======== -->
+    <section>
+      <div class="section-label">06 -- Voix de marque</div>
+
+      <h2>Mesuree. Precise. Eclairee.</h2>
+      <p style="margin-bottom: 48px;">
+        Chaque mot est pese. Le ton est celui d'un conseiller prive : competent, discret, jamais excessif. L'elegance est dans ce qu'on ne dit pas.
+      </p>
+
+      <div class="voice-grid">
+        <div class="voice-card do">
+          <h4>La voix Mes Finances</h4>
+          <div class="voice-example">"Votre argent. Votre maitrise."</div>
+          <div class="voice-context">Tagline -- possessif, rythme, precision</div>
+
+          <div class="voice-example" style="margin-top: 24px;">"La clarte financiere n'est pas un luxe. C'est une exigence."</div>
+          <div class="voice-context">Marketing -- affirmatif, mesure</div>
+
+          <div class="voice-example" style="margin-top: 24px;">"Objectif atteint."</div>
+          <div class="voice-context">Interface -- sobre, factuel</div>
+
+          <div class="voice-example" style="margin-top: 24px;">"Depense enregistree. Budget a jour."</div>
+          <div class="voice-context">Notification -- minimum de mots</div>
+        </div>
+
+        <div class="voice-card dont">
+          <h4>Ce qu'on ne dit jamais</h4>
+          <div class="voice-example">"Gerez vos finances facilement et gratuitement!"</div>
+          <div class="voice-context">Trop commercial, exclamatif</div>
+
+          <div class="voice-example" style="margin-top: 24px;">"Super! Votre depense a bien ete ajoutee!"</div>
+          <div class="voice-context">Trop enthousiaste, excessif</div>
+
+          <div class="voice-example" style="margin-top: 24px;">"C'est un peu vide ici! Ajoutez vos premiers revenus!"</div>
+          <div class="voice-context">Trop casual, infantilisant</div>
+
+          <div class="voice-example" style="margin-top: 24px;">"Oops, quelque chose a mal tourne!"</div>
+          <div class="voice-context">Inapproprie pour une app de finances</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== MESSAGING ======== -->
+    <section>
+      <div class="section-label">07 -- Messaging</div>
+
+      <div class="messaging-hero">
+        <div class="tagline-main">Votre argent. Votre maitrise.</div>
+        <div class="tagline-sub">
+          Mes Finances transforme le chaos financier en clarte absolue.
+          Un instrument de precision qui vous donne, en 10 secondes,
+          la maitrise complete de votre mois.
+        </div>
+      </div>
+
+      <div class="messages-grid">
+        <div class="message-card">
+          <div class="message-label">Clarte</div>
+          <div class="message-text">La clarte financiere n'est pas un luxe. C'est une exigence.</div>
+        </div>
+        <div class="message-card">
+          <div class="message-label">Confidentialite</div>
+          <div class="message-text">Vos donnees restent les votres. Aucune exception.</div>
+        </div>
+        <div class="message-card">
+          <div class="message-label">Simplicite</div>
+          <div class="message-text">Configure une fois. Maitrise chaque mois.</div>
+        </div>
+        <div class="message-card">
+          <div class="message-label">Precision</div>
+          <div class="message-text">Chaque dollar a sa place.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== APPLICATION MOCKUP ======== -->
+    <section>
+      <div class="section-label">08 -- Application de l'identite</div>
+
+      <div class="mockup-container">
+        <div class="mockup-header">
+          <div class="mockup-logo-area">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="mock-symbol">
+              <circle cx="24" cy="24" r="21" stroke="#0F1A2E" stroke-width="1.5" fill="none"/>
+              <circle cx="24" cy="24" r="16.5" stroke="#0F1A2E" stroke-width="0.5" fill="none" opacity="0.3"/>
+              <line x1="24" y1="24" x2="14.5" y2="9.5" stroke="#0F1A2E" stroke-width="1.8" stroke-linecap="round"/>
+              <line x1="24" y1="24" x2="33.5" y2="9.5" stroke="#0F1A2E" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="24" cy="24" r="1.8" fill="#B49A5C"/>
+              <line x1="24" y1="4.5" x2="24" y2="7" stroke="#B49A5C" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+            <span class="mock-name">Mes Finances</span>
+          </div>
+          <nav class="mockup-nav">
+            <a href="#" class="active">Accueil</a>
+            <a href="#">Depenses</a>
+            <a href="#">Revenus</a>
+            <a href="#">Parametres</a>
+          </nav>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-stat">
+            <div class="stat-label">Solde disponible</div>
+            <div class="stat-value">2 847,50 $</div>
+            <div class="stat-detail">Mars 2026</div>
+          </div>
+          <div class="mockup-stat">
+            <div class="stat-label">Depenses ce mois</div>
+            <div class="stat-value">1 352,00 $</div>
+            <div class="stat-detail">67% du budget</div>
+          </div>
+          <div class="mockup-stat accent">
+            <div class="stat-label">Epargne projetee</div>
+            <div class="stat-value">495,50 $</div>
+            <div class="stat-detail">Objectif : 500,00 $</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== SUMMARY ======== -->
+    <section>
+      <div class="section-label">09 -- Resume de la direction</div>
+
+      <h2 style="margin-bottom: 48px;">Chaque detail est un choix.</h2>
+
+      <div class="summary-grid">
+        <div class="summary-item">
+          <h4>Archetype</h4>
+          <h3>Souverain + Sage</h3>
+          <p>Maitrise eclairee. L'autorite qui vient de la comprehension, pas de l'imposition.</p>
+        </div>
+        <div class="summary-item">
+          <h4>Stance</h4>
+          <h3>Luxury Restraint</h3>
+          <p>L'elegance du vide. Ce qui n'est pas montre est aussi important que ce qui l'est.</p>
+        </div>
+        <div class="summary-item">
+          <h4>Palette</h4>
+          <h3>Encre + Ivoire + Laiton</h3>
+          <p>Quasi-monochrome. Un seul accent de laiton patine eleve l'ensemble.</p>
+        </div>
+        <div class="summary-item">
+          <h4>Typographie</h4>
+          <h3>Cormorant + Inter</h3>
+          <p>Elegance editoriale pour les titres. Precision suisse pour le texte courant.</p>
+        </div>
+        <div class="summary-item">
+          <h4>Logo</h4>
+          <h3>Le Cadran</h3>
+          <p>Deux aiguilles formant un M geometrique dans un cercle de precision. La montre comme metaphore.</p>
+        </div>
+        <div class="summary-item">
+          <h4>Voix</h4>
+          <h3>Mesuree, Precise, Eclairee</h3>
+          <p>Chaque mot pese. Le ton d'un conseiller prive : competent, discret, respectueux.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <div class="page">
+      Mes Finances -- Direction 3 : La Maitrise -- Proposition de marque
+    </div>
+  </footer>
+
+</body>
+</html>

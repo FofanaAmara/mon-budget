@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 48">
+  <!-- Mes Finances — Wordmark, Brand Colors -->
+  <text x="120" y="34" text-anchor="middle" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="32" letter-spacing="-0.02em">
+    <tspan font-weight="800" fill="#0F172A">Mes</tspan>
+    <tspan font-weight="600" fill="#0F766E"> Finances</tspan>
+  </text>
+</svg>
