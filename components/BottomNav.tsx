@@ -153,27 +153,15 @@ export default function BottomNav() {
         >
           {/* Left: Logo + brand name */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{
-              width: '28px',
-              height: '28px',
-              borderRadius: 'var(--radius-sm)',
-              background: 'var(--accent)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}>
-              <svg width="14" height="14" viewBox="0 0 56 56" fill="none">
-                <path d="M8 44 L18 14 L28 34 L38 8 L48 44" stroke="white" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-            <span style={{
-              fontSize: 'var(--text-sm)',
-              fontWeight: 700,
-              color: 'var(--text-primary)',
-              letterSpacing: 'var(--tracking-tight)',
-            }}>
-              Mes Finances
+            <svg viewBox="-50 -50 100 100" width="32" height="32" fill="none">
+              <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+              <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22"
+                    stroke="#FAFBFC" strokeWidth="4" strokeLinecap="round"/>
+              <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+            </svg>
+            <span style={{ fontSize: 'var(--text-sm)', letterSpacing: '-0.02em' }}>
+              <b style={{ fontWeight: 800, color: 'var(--text-primary)' }}>Mes</b>
+              <span style={{ fontWeight: 600, color: 'var(--accent)' }}> Finances</span>
             </span>
           </div>
 
@@ -271,7 +259,7 @@ export default function BottomNav() {
         position: 'fixed',
         top: 0,
         left: 0,
-        width: '240px',
+        width: '260px',
         height: '100vh',
         flexDirection: 'column',
         background: 'var(--surface-raised)',
@@ -284,27 +272,15 @@ export default function BottomNav() {
           borderBottom: '1px solid var(--border-default)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: 'var(--radius-md)',
-              background: 'var(--accent)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}>
-              <svg width="16" height="16" viewBox="0 0 56 56" fill="none">
-                <path d="M8 44 L18 14 L28 34 L38 8 L48 44" stroke="white" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-            <span style={{
-              fontSize: 'var(--text-sm)',
-              fontWeight: 700,
-              color: 'var(--text-primary)',
-              letterSpacing: 'var(--tracking-tight)',
-            }}>
-              Mes Finances
+            <svg viewBox="-50 -50 100 100" width="32" height="32" fill="none">
+              <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+              <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22"
+                    stroke="#FAFBFC" strokeWidth="4" strokeLinecap="round"/>
+              <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+            </svg>
+            <span style={{ fontSize: '17px', letterSpacing: '-0.02em' }}>
+              <b style={{ fontWeight: 800, color: 'var(--text-primary)' }}>Mes</b>
+              <span style={{ fontWeight: 600, color: 'var(--accent)' }}> Finances</span>
             </span>
           </div>
         </div>
@@ -319,6 +295,7 @@ export default function BottomNav() {
                 href={tab.href}
                 aria-current={active ? 'page' : undefined}
                 style={{
+                  position: 'relative',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '12px',
@@ -329,6 +306,17 @@ export default function BottomNav() {
                   transition: `background var(--duration-fast) var(--ease-out)`,
                 }}
               >
+                {active && (
+                  <div style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 8,
+                    bottom: 8,
+                    width: '3px',
+                    background: 'var(--amber)',
+                    borderRadius: '0 2px 2px 0',
+                  }} />
+                )}
                 <span style={{
                   flexShrink: 0,
                   transition: `transform var(--duration-normal) var(--ease-spring)`,
@@ -345,16 +333,6 @@ export default function BottomNav() {
                 }}>
                   {tab.label}
                 </span>
-                {active && (
-                  <div style={{
-                    marginLeft: 'auto',
-                    width: '4px',
-                    height: '4px',
-                    borderRadius: 'var(--radius-full)',
-                    background: 'var(--accent)',
-                    flexShrink: 0,
-                  }} />
-                )}
               </Link>
             );
           })}
@@ -450,14 +428,12 @@ export default function BottomNav() {
         }}
         aria-label="Navigation principale"
       >
-        {/* Frosted glass background */}
+        {/* Solid white background */}
         <div
           className="absolute inset-0"
           style={{
-            background: 'rgba(255, 255, 255, 0.82)',
-            backdropFilter: 'blur(20px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-            borderTop: '1px solid rgba(229, 227, 223, 0.6)',
+            background: 'var(--surface-raised)',
+            borderTop: '1px solid var(--border-default)',
           }}
         />
         <div className="relative flex items-stretch w-full" style={{ height: 'var(--nav-height)' }}>

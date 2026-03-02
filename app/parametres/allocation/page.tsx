@@ -17,37 +17,58 @@ export default async function AllocationPage() {
     getMonthlyIncomeSummary(month),
   ]);
 
+  const expectedTotal = incomeSummary.expectedTotal;
+  const displayAmount = expectedTotal >= 1000
+    ? `${(expectedTotal / 1000).toLocaleString('fr-CA', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}k`
+    : expectedTotal.toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  const monthlyLabel = expectedTotal.toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
   return (
-    <div style={{ padding: '36px 20px 96px', minHeight: '100vh' }}>
-      <Breadcrumb items={[
-        { label: 'Reglages', href: '/parametres' },
-        { label: 'Allocation du revenu' },
-      ]} />
-      <div style={{ marginBottom: '24px' }}>
-        <h1 style={{
-          fontSize: 'var(--text-xl)',
-          fontWeight: 750,
-          color: 'var(--text-primary)',
-          letterSpacing: 'var(--tracking-tight)',
-          lineHeight: 'var(--leading-tight)',
-        }}>
-          Allocation du revenu
-        </h1>
+    <div style={{ padding: '0 0 96px', minHeight: '100vh' }}>
+      {/* Monument hero — Allocation */}
+      <div style={{ padding: '24px 20px 16px', textAlign: 'center' }}>
+        <Breadcrumb items={[
+          { label: 'Reglages', href: '/parametres' },
+          { label: 'Allocation du revenu' },
+        ]} />
         <p style={{
-          fontSize: 'var(--text-xs)',
-          color: 'var(--text-tertiary)',
-          marginTop: '4px',
-          fontWeight: 500,
+          fontSize: '12px', fontWeight: 700, letterSpacing: '0.1em',
+          textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '8px',
+          marginTop: '16px',
         }}>
-          Definir comment votre revenu est reparti chaque mois
+          Allocation
         </p>
+        <p style={{
+          fontSize: 'clamp(2.5rem, 10vw, 4rem)',
+          fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1,
+          color: 'var(--text-primary)',
+        }}>
+          <span style={{ fontSize: '0.4em', fontWeight: 600, color: 'var(--accent)', verticalAlign: 'super' }}>$</span>
+          {displayAmount}
+        </p>
+        <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-tertiary)', marginTop: '6px' }}>
+          à répartir chaque mois
+        </p>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: '4px',
+            padding: '4px 10px', borderRadius: '100px',
+            background: 'var(--positive-subtle)', color: 'var(--accent)',
+            fontSize: '13px', fontWeight: 600,
+          }}>
+            {monthlyLabel} $ / mois attendus
+          </span>
+        </div>
       </div>
-      <AllocationsManager
-        allocations={allocations}
-        sections={sections}
-        projects={projects}
-        expectedMonthlyIncome={incomeSummary.expectedTotal}
-      />
+
+      <div style={{ padding: '0 20px' }}>
+        <AllocationsManager
+          allocations={allocations}
+          sections={sections}
+          projects={projects}
+          expectedMonthlyIncome={incomeSummary.expectedTotal}
+        />
+      </div>
     </div>
   );
 }

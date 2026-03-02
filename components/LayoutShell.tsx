@@ -14,7 +14,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
   return (
     <>
       <BottomNav />
-      <div className="md:ml-[240px]">
+      <div className="md:ml-[260px]">
         <div className="max-w-lg mx-auto md:max-w-2xl min-h-dvh relative">
           {children}
         </div>

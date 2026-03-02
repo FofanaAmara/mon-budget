@@ -119,89 +119,107 @@ export default function DepensesTrackingClient({ expenses, summary, sections, ca
   }
 
   return (
-    <div style={{ padding: '36px 20px 96px', minHeight: '100vh' }}>
+    <div style={{ padding: '0 0 96px', minHeight: '100vh' }}>
       <MonthNavigator month={month} basePath="/depenses" />
 
-      {/* Hero card */}
-      <div style={{
-        borderRadius: 'var(--radius-lg)',
-        padding: '20px',
-        marginBottom: '16px',
-        background: 'linear-gradient(135deg, #3D3BF3, #3230D4)',
-        color: 'white',
-      }}>
-        <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, opacity: 0.75, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '4px' }}>
-          Charges prevues
+      {/* Monument: total dépensé */}
+      <div style={{ padding: '24px 20px 16px', textAlign: 'center' }}>
+        <p style={{
+          fontSize: '12px', fontWeight: 700, letterSpacing: '0.1em',
+          textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '8px',
+        }}>
+          Dépenses
         </p>
-        <p className="amount" style={{ fontSize: 'var(--text-2xl)', fontWeight: 750, letterSpacing: 'var(--tracking-tight)' }}>
-          {formatCAD(chargesFixes)}
+        <p style={{
+          fontSize: 'clamp(3rem, 12vw, 5rem)',
+          fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1,
+          color: 'var(--text-primary)',
+        }}>
+          <span style={{ fontSize: '0.4em', fontWeight: 600, color: 'var(--accent)', verticalAlign: 'super' }}>$</span>
+          {Math.abs(summary.paid_total).toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
         </p>
-        <div className="flex items-center" style={{ gap: '16px', marginTop: '12px', fontSize: 'var(--text-xs)', opacity: 0.85 }}>
-          <span>Depense {formatCAD(summary.paid_total)}</span>
-          <span>Reste {formatCAD(restAPayer)}</span>
-          {hasUnplanned && <span>Imprevus {formatCAD(summary.unplanned_total)}</span>}
-        </div>
+        <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-tertiary)', marginTop: '6px' }}>
+          sur <strong style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>{formatCAD(chargesFixes)}</strong> de charges prévues
+        </p>
+
         {/* Progress bar */}
         <div style={{
-          marginTop: '12px', height: '4px', borderRadius: '2px',
-          background: 'rgba(255,255,255,0.2)',
+          margin: '16px 0 0',
+          height: '6px', borderRadius: '3px',
+          background: 'var(--surface-sunken)',
           position: 'relative', overflow: 'visible',
         }}>
           {isOverBudget ? (
             <>
-              {/* White segment = charges fixes portion */}
               <div style={{
                 position: 'absolute', left: 0, top: 0, bottom: 0,
                 width: `${Math.min((chargesFixes / summary.paid_total) * 100, 100)}%`,
-                background: 'rgba(255,255,255,0.9)',
-                borderRadius: '2px 0 0 2px',
+                background: 'var(--accent)',
+                borderRadius: '3px 0 0 3px',
               }} />
-              {/* Red overflow segment */}
               <div style={{
                 position: 'absolute',
                 left: `${(chargesFixes / summary.paid_total) * 100}%`,
                 top: 0, bottom: 0,
                 width: `${100 - (chargesFixes / summary.paid_total) * 100}%`,
                 background: 'var(--negative)',
-                borderRadius: '0 2px 2px 0',
+                borderRadius: '0 3px 3px 0',
                 boxShadow: '0 0 8px rgba(220,38,38,0.3)',
               }} />
             </>
           ) : (
             <div style={{
-              height: '100%', borderRadius: '2px',
-              background: progressPct >= 90 ? 'var(--warning)' : 'rgba(255,255,255,0.9)',
+              height: '100%', borderRadius: '3px',
+              background: progressPct >= 90 ? 'var(--warning)' : 'var(--accent)',
               width: `${Math.min(progressPct, 100)}%`,
               transition: 'width 0.3s ease',
+              minWidth: progressPct > 0 ? '4px' : '0',
             }} />
           )}
         </div>
-        {isOverBudget && (
-          <div style={{
-            marginTop: '8px', display: 'inline-flex', alignItems: 'center', gap: '4px',
-            padding: '3px 8px', borderRadius: '999px',
-            background: 'rgba(220,38,38,0.25)', fontSize: 'var(--text-xs)', fontWeight: 600,
-          }}>
-            +{formatCAD(overAmount)} au-dessus des charges
-          </div>
-        )}
-        {summary.overdue_count > 0 && (
-          <div style={{
-            marginTop: '10px', display: 'inline-flex', alignItems: 'center', gap: '4px',
-            padding: '3px 8px', borderRadius: '999px',
-            background: 'rgba(255,255,255,0.2)', fontSize: 'var(--text-xs)', fontWeight: 600,
-          }}>
-            ⚠ {summary.overdue_count} en retard
-          </div>
-        )}
+
+        {/* Status badges */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '10px', flexWrap: 'wrap' }}>
+          {isOverBudget && (
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: '4px',
+              padding: '4px 10px', borderRadius: '100px',
+              background: 'var(--negative-subtle)', color: 'var(--negative-text)',
+              fontSize: '13px', fontWeight: 600,
+            }}>
+              +{formatCAD(overAmount)} au-dessus
+            </span>
+          )}
+          {summary.overdue_count > 0 && (
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: '4px',
+              padding: '4px 10px', borderRadius: '100px',
+              background: 'var(--warning-subtle)', color: 'var(--warning-text)',
+              fontSize: '13px', fontWeight: 600,
+            }}>
+              ⚠ {summary.overdue_count} en retard
+            </span>
+          )}
+          {!isOverBudget && progressPct < 90 && (
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: '4px',
+              padding: '4px 10px', borderRadius: '100px',
+              background: 'var(--positive-subtle)', color: 'var(--positive-text)',
+              fontSize: '13px', fontWeight: 600,
+            }}>
+              ✓ {formatCAD(restAPayer)} restant
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Type tab strip — same pattern as AccueilClient */}
       <div className="flex" style={{
-        gap: '6px', marginBottom: '12px',
+        gap: '6px',
         background: 'var(--surface-inset)',
         borderRadius: 'var(--radius-md)',
         padding: '4px',
+        margin: '0 20px 12px',
       }}>
         {([
           { key: 'all' as const, label: 'Tout' },
@@ -234,7 +252,8 @@ export default function DepensesTrackingClient({ expenses, summary, sections, ca
       {sections.length > 0 && (
         <div className="flex scrollbar-hide" style={{
           gap: '8px', overflowX: 'auto',
-          paddingBottom: '4px', marginBottom: '16px',
+          paddingBottom: '4px', paddingLeft: '20px', paddingRight: '20px',
+          marginBottom: '16px',
         }}>
           <button
             onClick={() => setSelectedSection(null)}
@@ -276,7 +295,7 @@ export default function DepensesTrackingClient({ expenses, summary, sections, ca
 
       {/* Empty state */}
       {expenses.length === 0 && (
-        <div className="flex flex-col items-center justify-center text-center" style={{ padding: '80px 0' }}>
+        <div className="flex flex-col items-center justify-center text-center" style={{ padding: '80px 20px' }}>
           <div style={{ fontSize: '3rem', marginBottom: '16px', opacity: 0.6 }}>📅</div>
           <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)', marginBottom: '8px', fontWeight: 500 }}>
             Aucune depense ce mois
@@ -288,7 +307,7 @@ export default function DepensesTrackingClient({ expenses, summary, sections, ca
       )}
 
       {/* Grouped expenses by status */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '0 20px' }}>
         {grouped.map(({ status, items }) => {
           const hasMore = items.length > 3;
           const visible = items.slice(0, 3);

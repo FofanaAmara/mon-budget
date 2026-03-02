@@ -159,76 +159,85 @@ export default function RevenusTrackingClient({
   }
 
   return (
-    <div style={{ padding: '36px 20px 96px', minHeight: '100vh' }}>
-      <MonthNavigator month={month} basePath="/revenus" />
-
-      {/* Hero card — always visible, shared across tabs */}
-      <div style={{
-            borderRadius: 'var(--radius-lg)',
-            padding: '20px',
-            marginBottom: '16px',
-            background: progressPct >= 80
-              ? 'linear-gradient(135deg, #1A7F5A, #145C42)'
-              : progressPct >= 40
-                ? 'linear-gradient(135deg, #C27815, #8C5710)'
-                : 'linear-gradient(135deg, #3D3BF3, #3230D4)',
-            color: 'white',
-          }}>
-            <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, opacity: 0.75, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '4px' }}>
-              Revenus du mois
-            </p>
-            <p className="amount" style={{ fontSize: 'var(--text-2xl)', fontWeight: 750, letterSpacing: 'var(--tracking-tight)' }}>
-              {formatCAD(incomeSummary.actualTotal)}
-            </p>
-            <div className="flex items-center" style={{ gap: '16px', marginTop: '12px', fontSize: 'var(--text-xs)', opacity: 0.85 }}>
-              <span>Attendu {formatCAD(incomeSummary.expectedTotal)}</span>
-              <span>Reçu {formatCAD(incomeSummary.actualTotal)}</span>
-              {isOverIncome && <span style={{ opacity: 1, fontWeight: 700 }}>+{formatCAD(surplus)}</span>}
-            </div>
-            {/* Progress bar */}
-            <div style={{
-              marginTop: '12px', height: '4px', borderRadius: '2px',
-              background: 'rgba(255,255,255,0.2)',
-              position: 'relative', overflow: 'visible',
-            }}>
-              {isOverIncome ? (
-                <>
-                  <div style={{
-                    position: 'absolute', left: 0, top: 0, bottom: 0,
-                    width: `${(incomeSummary.expectedTotal / incomeSummary.actualTotal) * 100}%`,
-                    background: 'rgba(255,255,255,0.9)',
-                    borderRadius: '2px 0 0 2px',
-                  }} />
-                  <div style={{
-                    position: 'absolute',
-                    left: `${(incomeSummary.expectedTotal / incomeSummary.actualTotal) * 100}%`,
-                    top: 0, bottom: 0,
-                    width: `${(surplus / incomeSummary.actualTotal) * 100}%`,
-                    background: '#FFD700',
-                    borderRadius: '0 2px 2px 0',
-                    boxShadow: '0 0 8px rgba(255,215,0,0.5)',
-                  }} />
-                </>
-              ) : (
-                <div style={{
-                  height: '100%', borderRadius: '2px',
-                  background: 'rgba(255,255,255,0.9)',
-                  width: `${Math.min(progressPct, 100)}%`,
-                  transition: 'width 0.3s ease',
-                }} />
-              )}
-            </div>
-            {isOverIncome && (
+    <div style={{ padding: '0 0 96px', minHeight: '100vh' }}>
+      {/* Monument — revenus du mois */}
+      <div style={{ padding: '24px 20px 16px', textAlign: 'center' }}>
+        <p style={{
+          fontSize: '13px', fontWeight: 600, letterSpacing: '0.08em',
+          textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '4px',
+        }}>
+          Revenus
+        </p>
+        <p style={{
+          fontSize: 'clamp(3rem, 12vw, 5rem)', fontWeight: 800,
+          letterSpacing: '-0.03em', lineHeight: 1, margin: '8px 0 12px',
+          color: 'var(--text-primary)',
+        }}>
+          <span style={{ fontSize: '0.4em', color: 'var(--accent)', verticalAlign: 'super' }}>$</span>
+          {incomeSummary.actualTotal.toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+        </p>
+        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: '16px' }}>
+          sur <strong style={{ color: 'var(--text-primary)' }}>{formatCAD(incomeSummary.expectedTotal)}</strong> attendus ce mois-ci
+        </p>
+        {/* Progress bar */}
+        <div style={{
+          height: '6px', borderRadius: '3px', overflow: 'hidden',
+          background: 'var(--surface-sunken)', marginBottom: '8px',
+          position: 'relative',
+        }}>
+          {isOverIncome ? (
+            <>
               <div style={{
-                marginTop: '8px', display: 'inline-flex', alignItems: 'center', gap: '4px',
-                padding: '3px 8px', borderRadius: '999px',
-                background: 'rgba(255,215,0,0.25)', fontSize: 'var(--text-xs)', fontWeight: 600,
-              }}>
-                ✦ {formatCAD(surplus)} au-dessus des attentes
-              </div>
-            )}
-          </div>
+                position: 'absolute', left: 0, top: 0, bottom: 0,
+                width: `${(incomeSummary.expectedTotal / incomeSummary.actualTotal) * 100}%`,
+                background: 'var(--accent)',
+              }} />
+              <div style={{
+                position: 'absolute',
+                left: `${(incomeSummary.expectedTotal / incomeSummary.actualTotal) * 100}%`,
+                top: 0, bottom: 0,
+                width: `${(surplus / incomeSummary.actualTotal) * 100}%`,
+                background: 'var(--amber)',
+              }} />
+            </>
+          ) : (
+            <div style={{
+              height: '100%',
+              background: progressPct >= 80 ? 'var(--accent)' : progressPct >= 40 ? 'var(--amber)' : 'var(--surface-border)',
+              width: `${Math.min(progressPct, 100)}%`,
+              transition: 'width 0.3s ease',
+            }} />
+          )}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
+          {isOverIncome ? (
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: '4px',
+              padding: '4px 10px', borderRadius: '999px',
+              background: 'var(--positive-subtle)', color: 'var(--accent)',
+              fontSize: 'var(--text-xs)', fontWeight: 600,
+            }}>
+              ✦ +{formatCAD(surplus)} au-dessus des attentes
+            </span>
+          ) : (
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: '4px',
+              padding: '4px 10px', borderRadius: '999px',
+              background: progressPct >= 80 ? 'var(--positive-subtle)' : 'var(--surface-inset)',
+              color: progressPct >= 80 ? 'var(--accent)' : 'var(--text-secondary)',
+              fontSize: 'var(--text-xs)', fontWeight: 600,
+            }}>
+              {progressPct >= 80 ? '✓ Objectif presque atteint' : `${Math.round(progressPct)}% reçu`}
+            </span>
+          )}
+        </div>
+      </div>
 
+      <div style={{ padding: '0 20px' }}>
+      <MonthNavigator month={month} basePath="/revenus" />
+      </div>
+
+      <div style={{ padding: '0 20px' }}>
       {/* Tab strip — Patrimoine style, below hero card */}
       <div className="flex" style={{
         gap: '6px', marginBottom: '20px', marginTop: '16px',
@@ -582,6 +591,8 @@ export default function RevenusTrackingClient({
           )}
         </>
       )}
+
+      </div>{/* /padding wrapper */}
 
       {/* Adhoc allocation modal */}
       {adhocAllocModal && (

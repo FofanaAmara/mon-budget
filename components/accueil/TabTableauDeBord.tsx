@@ -13,6 +13,8 @@ type Props = {
 };
 
 export default function TabTableauDeBord({ summary, incomeSummary, savingsSummary, debtSummary }: Props) {
+  const availableAmount = incomeSummary.actualTotal - summary.paid_total;
+
   // Revenus: ratio reçu vs attendu
   const revenuPct = incomeSummary.expectedTotal > 0
     ? (incomeSummary.actualTotal / incomeSummary.expectedTotal) * 100 : 0;
@@ -28,6 +30,59 @@ export default function TabTableauDeBord({ summary, incomeSummary, savingsSummar
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      {/* Flow bar: 3 columns */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: '2px',
+        background: 'var(--surface-sunken)',
+        borderRadius: 'var(--radius-md)',
+        overflow: 'hidden',
+        marginBottom: '16px',
+      }}>
+        {/* Revenus */}
+        <div style={{ padding: '16px 12px', background: 'var(--surface-raised)', textAlign: 'center' }}>
+          <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '4px' }}>
+            Revenus
+          </p>
+          <p style={{ fontSize: 'clamp(1.2rem, 4vw, 1.5rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1, color: 'var(--accent)' }}>
+            {formatCAD(incomeSummary.actualTotal)}
+          </p>
+          <p style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-tertiary)', marginTop: '2px' }}>
+            / {formatCAD(incomeSummary.expectedTotal)}
+          </p>
+        </div>
+
+        {/* Dépensé */}
+        <div style={{ padding: '16px 12px', background: 'var(--surface-raised)', textAlign: 'center' }}>
+          <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '4px' }}>
+            Dépensé
+          </p>
+          <p style={{ fontSize: 'clamp(1.2rem, 4vw, 1.5rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1, color: 'var(--text-primary)' }}>
+            {formatCAD(summary.paid_total)}
+          </p>
+          <p style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-tertiary)', marginTop: '2px' }}>
+            / {formatCAD(summary.planned_total)}
+          </p>
+        </div>
+
+        {/* Disponible */}
+        <div style={{ padding: '16px 12px', background: 'var(--surface-raised)', textAlign: 'center' }}>
+          <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '4px' }}>
+            Disponible
+          </p>
+          <p style={{
+            fontSize: 'clamp(1.2rem, 4vw, 1.5rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1,
+            color: availableAmount >= 0 ? 'var(--positive)' : 'var(--negative)',
+          }}>
+            {formatCAD(availableAmount)}
+          </p>
+          <p style={{ fontSize: '11px', fontWeight: 600, marginTop: '2px', color: availableAmount >= 0 ? 'var(--amber)' : 'var(--negative-text)' }}>
+            {availableAmount >= 0 ? '🎯 Dans les temps' : '⚠️ Dépassé'}
+          </p>
+        </div>
+      </div>
+
       {/* Revenus card */}
       <Link href="/revenus" className="block card card-press">
         <div style={{ padding: '16px 20px' }}>

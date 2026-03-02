@@ -136,20 +136,37 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
   }
 
   return (
-    <div style={{ padding: '36px 20px 24px', minHeight: '100vh' }}>
-      <div style={{ marginBottom: '28px' }}>
-        <h1 style={{
-          fontSize: 'var(--text-xl)',
-          fontWeight: 750,
-          color: 'var(--text-primary)',
-          letterSpacing: 'var(--tracking-tight)',
-          lineHeight: 'var(--leading-tight)',
+    <div style={{ padding: '0 0 24px', minHeight: '100vh' }}>
+      {/* Monument hero — Réglages */}
+      <div style={{ padding: '32px 20px 24px', textAlign: 'center' }}>
+        <p style={{
+          fontSize: '12px', fontWeight: 700, letterSpacing: '0.1em',
+          textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '16px',
         }}>
           Réglages
-        </h1>
+        </p>
+        {/* Icône Settings stylisée */}
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          width: '72px', height: '72px',
+          background: 'var(--positive-subtle)',
+          borderRadius: '20px',
+          marginBottom: '12px',
+        }}>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+        </div>
+        <p style={{
+          fontSize: 'var(--text-sm)', fontWeight: 500,
+          color: 'var(--text-tertiary)', marginTop: '4px',
+        }}>
+          Personnalisez votre expérience
+        </p>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {/* Mon compte */}
         <div className="list-card">
           <LinkRow

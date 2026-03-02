@@ -2,24 +2,28 @@
 @import "@neondatabase/auth/ui/tailwind";
 
 /* ══════════════════════════════════════════════════════════
-   MES FINANCES — Design Tokens · Micro-Obsession v2
+   MES FINANCES — Design Tokens · Teal/Amber System
    ══════════════════════════════════════════════════════════
    Concept : "Instrument de precision financiere"
-   Font    : Geist Sans (geometric, neutral, modern)
+   Font    : Plus Jakarta Sans (humanist, expressif)
+   Palette : Teal-700 (#0F766E) + Amber (#F59E0B)
    Stance  : Every pixel intentional. Every weight deliberate.
    ══════════════════════════════════════════════════════════ */
 
 /* ── Palette ──────────────────────────────────────────────
-   Not white. Not grey. A surface with WARMTH and TEXTURE.
-   Not generic blue. A deep indigo with character.
+   Not white. Not grey. A clean slate with precision.
+   Not generic blue. Teal with depth. Amber for conversion.
    ─────────────────────────────────────────────────────── */
 :root {
-  /* Surfaces — warm, never cold */
-  --surface-ground:   #F5F4F1;   /* warm stone — the canvas */
+  /* Font */
+  --font: var(--font-jakarta), system-ui, sans-serif;
+
+  /* Surfaces — clean, slate-based */
+  --surface-ground:   #FAFBFC;   /* slate-50 — the canvas */
   --surface-raised:   #FFFFFF;   /* cards, elevated elements */
-  --surface-sunken:   #EEEDEA;   /* inset areas, progress bg */
-  --surface-inset:    #F8F7F5;   /* subtle inset: filter pills, type toggles */
-  --surface-overlay:  rgba(13, 13, 13, 0.45); /* modal backdrop */
+  --surface-sunken:   #F1F5F9;   /* inset areas, progress bg — slate-100 */
+  --surface-inset:    #F1F5F9;   /* subtle inset: filter pills, type toggles */
+  --surface-overlay:  rgba(15, 23, 42, 0.5); /* modal backdrop — slate-900 */
 
   /* Text — precise weight hierarchy:
      400 = body prose
@@ -27,64 +31,67 @@
      600 = semi-bold emphasis, badges
      650 = strong emphasis (section titles)
      700 = headings, card titles
-     750 = display/hero numbers */
-  --text-primary:     #0D0D0D;   /* near-black — deep, not harsh */
-  --text-secondary:   #6B6966;   /* warm grey — readable, not washed */
-  --text-tertiary:    #A3A09A;   /* muted — labels, hints */
-  --text-inverted:    #FAFAF8;   /* on dark backgrounds */
+     800 = display/hero numbers */
+  --text-primary:     #0F172A;   /* slate-900 — deep, not harsh */
+  --text-secondary:   #334155;   /* slate-700 — readable, not washed */
+  --text-tertiary:    #64748B;   /* slate-500 — muted labels, hints */
+  --text-inverted:    #FFFFFF;   /* on dark backgrounds */
 
-  /* Accent — electric indigo, not corporate blue */
-  --accent:           #3D3BF3;   /* electric indigo — character */
-  --accent-hover:     #3230D4;   /* slightly deeper on hover */
-  --accent-subtle:    #EDEDFE;   /* tinted background */
-  --accent-muted:     #9C9BF7;   /* disabled / soft accent */
+  /* Accent — teal-700, not corporate blue */
+  --accent:           #0F766E;   /* teal-700 — purposeful, trustworthy */
+  --accent-hover:     #115E59;   /* teal-800 — slightly deeper on hover */
+  --accent-subtle:    #F0FDFA;   /* teal-50 — tinted background */
+  --accent-muted:     #5EEAD4;   /* teal-300 — disabled / soft accent */
+
+  /* Amber — conversion, achievements, highlights */
+  --amber:            #F59E0B;   /* amber-500 — CTA conversion color */
+  --amber-hover:      #D97706;   /* amber-600 — hover state */
+  --amber-subtle:     #FEF3C7;   /* amber-100 — tinted background */
 
   /* Semantic — positive */
-  --positive:         #1A7F5A;   /* forest green — not Material green */
-  --positive-subtle:  #E8F5EE;   /* soft green bg */
-  --positive-text:    #145C42;   /* dark green for text on light bg */
+  --positive:         #059669;   /* emerald-600 */
+  --positive-subtle:  #ECFDF5;   /* emerald-50 */
+  --positive-text:    #065F46;   /* emerald-800 */
 
   /* Semantic — negative */
-  --negative:         #C7382D;   /* deep terracotta red */
-  --negative-subtle:  #FBE9E7;   /* soft red bg */
-  --negative-text:    #9A2B23;   /* dark red for text */
+  --negative:         #DC2626;   /* red-600 */
+  --negative-subtle:  #FEF2F2;   /* red-50 */
+  --negative-text:    #991B1B;   /* red-800 */
 
   /* Semantic — warning */
-  --warning:          #C27815;   /* amber, warm */
-  --warning-subtle:   #FFF3E0;   /* soft amber bg */
-  --warning-text:     #8C5710;   /* dark amber for text */
+  --warning:          #F59E0B;   /* amber-500 */
+  --warning-subtle:   #FEF3C7;   /* amber-100 */
+  --warning-text:     #92400E;   /* amber-800 */
 
-  /* Borders — barely there, warm-tinted */
-  --border-default:   #E5E3DF;   /* subtle, warm */
-  --border-strong:    #D1CFC9;   /* dividers that need presence */
+  /* Borders — clean, slate-tinted */
+  --border-default:   #E2E8F0;   /* slate-200 — subtle */
+  --border-strong:    #CBD5E1;   /* slate-300 — dividers with presence */
   --border-focus:     var(--accent);
 
-  /* Shadows — warm-tinted, never grey
+  /* Shadows — teal-tinted, never grey
      Micro-obsession: each shadow is a deliberate elevation */
-  --shadow-xs:   0 1px 2px rgba(13, 13, 13, 0.04);
-  --shadow-sm:   0 1px 3px rgba(13, 13, 13, 0.05),
-                 0 1px 2px rgba(13, 13, 13, 0.03);
-  --shadow-md:   0 4px 12px rgba(13, 13, 13, 0.06),
-                 0 1px 4px rgba(13, 13, 13, 0.04);
-  --shadow-lg:   0 8px 24px rgba(13, 13, 13, 0.08),
-                 0 2px 8px rgba(13, 13, 13, 0.04);
-  --shadow-xl:   0 16px 48px rgba(13, 13, 13, 0.10),
-                 0 4px 12px rgba(13, 13, 13, 0.05);
+  --shadow-xs:   0 1px 2px rgba(15, 118, 110, 0.05);
+  --shadow-sm:   0 1px 2px rgba(15, 118, 110, 0.05),
+                 0 1px 3px rgba(15, 118, 110, 0.03);
+  --shadow-md:   0 4px 12px rgba(15, 118, 110, 0.08),
+                 0 1px 4px rgba(15, 118, 110, 0.04);
+  --shadow-lg:   0 8px 24px rgba(15, 118, 110, 0.12),
+                 0 2px 8px rgba(15, 118, 110, 0.04);
+  --shadow-xl:   0 16px 48px rgba(15, 23, 42, 0.12),
+                 0 4px 12px rgba(15, 118, 110, 0.05);
   /* Colored shadow for accent elements */
-  --shadow-accent: 0 4px 16px rgba(61, 59, 243, 0.18),
-                   0 1px 4px rgba(61, 59, 243, 0.08);
+  --shadow-accent: 0 4px 16px rgba(15, 118, 110, 0.18),
+                   0 1px 4px rgba(15, 118, 110, 0.08);
   /* Colored shadow for FAB — heavier, deliberate */
-  --shadow-fab:      0 6px 20px rgba(13, 13, 13, 0.16),
-                     0 2px 6px rgba(13, 13, 13, 0.08);
-  --shadow-fab-hover: 0 8px 28px rgba(13, 13, 13, 0.20),
-                      0 3px 8px rgba(13, 13, 13, 0.10);
+  --shadow-fab:      0 8px 24px rgba(15, 118, 110, 0.12);
+  --shadow-fab-hover: 0 12px 32px rgba(15, 118, 110, 0.16);
 
   /* Radii — a hierarchy of roundness, no random values */
   --radius-xs:   4px;    /* tiny: badges, inline tags */
-  --radius-sm:   6px;    /* small: pills, small buttons */
-  --radius-md:   10px;   /* medium: input fields, inner elements */
-  --radius-lg:   14px;   /* large: cards, sections */
-  --radius-xl:   20px;   /* extra: hero cards, header */
+  --radius-sm:   8px;    /* small: pills, small buttons */
+  --radius-md:   12px;   /* medium: input fields, buttons */
+  --radius-lg:   18px;   /* large: cards, sections */
+  --radius-xl:   24px;   /* extra: hero cards, header */
   --radius-full: 9999px; /* circles, capsules */
   --radius-sheet: 24px;  /* bottom sheet top corners */
 
@@ -155,7 +162,13 @@
   --border: var(--border-default);
   --input: var(--border-default);
   --ring: var(--accent);
-  --radius: 10px;
+  --radius: 12px;
+}
+
+/* ── Text selection — teal-tinted ─────────────────────── */
+::selection {
+  background: rgba(15, 118, 110, 0.15);
+  color: var(--text-primary);
 }
 
 @theme inline {
@@ -262,10 +275,10 @@ body {
 /* ── FAB — the anchor of every page ───────────────────── */
 .fab {
   position: fixed;
-  bottom: calc(var(--nav-height) + var(--safe-bottom) + 16px);
+  bottom: max(72px, calc(56px + var(--safe-bottom)));
   right: 20px;
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   border-radius: var(--radius-full);
   background: var(--accent);
   color: white;
@@ -652,6 +665,41 @@ body {
 
 .btn-secondary:active {
   transform: scale(0.97);
+}
+
+.btn-amber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  background: var(--amber);
+  color: #0F172A;
+  border: none;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-spring),
+              box-shadow var(--duration-fast) var(--ease-out);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.24);
+}
+
+.btn-amber:hover {
+  background: var(--amber-hover);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.32);
+}
+
+.btn-amber:active {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+.btn-amber:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .btn-action {
@@ -1161,8 +1209,8 @@ body:has(.landing-page) {
 
 /* ── Landing: CTA button pulse glow ──────────────────────── */
 @keyframes landing-cta-glow {
-  0%, 100% { box-shadow: var(--shadow-accent), 0 0 0 0 rgba(61, 59, 243, 0.15); }
-  50% { box-shadow: var(--shadow-accent), 0 0 0 8px rgba(61, 59, 243, 0); }
+  0%, 100% { box-shadow: var(--shadow-accent), 0 0 0 0 rgba(15, 118, 110, 0.15); }
+  50% { box-shadow: var(--shadow-accent), 0 0 0 8px rgba(15, 118, 110, 0); }
 }
 
 .landing-cta-glow {

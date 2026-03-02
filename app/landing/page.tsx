@@ -3,91 +3,112 @@ import Link from 'next/link';
 import ScrollReveal from '@/components/landing/ScrollReveal';
 
 export const metadata: Metadata = {
-  title: 'Mes Finances — Toute ta vie financiere, claire et sous controle',
+  title: 'Mes Finances — Tes finances. En clair.',
   description:
-    'Depenses, revenus, patrimoine, score de sante — tout dans une app gratuite, simple et privee. Cree ton compte en 30 secondes.',
+    'Sais exactement ou va ton argent. Pas de surprise. Pas de stress. Juste de la clarte. Gratuit pour toujours.',
 };
 
-/* ── SVG Icons (reused from BottomNav) ─────────────────── */
-const IconExpenses = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="2" y="5" width="20" height="14" rx="3" />
-    <path d="M2 10h20" />
-    <path d="M6 15h4" strokeWidth="2" />
-  </svg>
-);
-
-const IconRevenue = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-  </svg>
-);
-
-const IconPatrimoine = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10" />
-    <path d="M12 6v6l4 2" />
-  </svg>
-);
-
-const IconHealth = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-  </svg>
-);
-
-/* ── Logo component ────────────────────────────────────── */
-function Logo({ size = 32 }: { size?: number }) {
-  const svgSize = size * 0.5;
+/* ── Le Compas SVG logo (brand spec) ──────────────────── */
+function CompassLogo({ size = 36 }: { size?: number }) {
   return (
-    <div
-      style={{
-        width: size,
-        height: size,
-        borderRadius: size <= 28 ? 'var(--radius-sm)' : 'var(--radius-md)',
-        background: 'var(--accent)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
-      }}
+    <svg
+      width={size}
+      height={size}
+      viewBox="-50 -50 100 100"
+      fill="none"
+      aria-label="Mes Finances logo"
     >
-      <svg width={svgSize} height={svgSize} viewBox="0 0 56 56" fill="none">
-        <path d="M8 44 L18 14 L28 34 L38 8 L48 44" stroke="white" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </div>
+      <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E" />
+      <path
+        d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22"
+        stroke="#FAFBFC"
+        strokeWidth="4"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <circle cx="24" cy="-22" r="3.5" fill="#F59E0B" />
+    </svg>
   );
 }
 
-/* ── Phone Mockup component ────────────────────────────── */
-function PhoneMockup({
-  src,
-  alt,
-  priority = false,
-  small = false,
-  animated = false,
-}: {
-  src: string;
-  alt: string;
-  priority?: boolean;
-  small?: boolean;
-  animated?: boolean;
-}) {
+/* ── Arrow icon (CTA buttons) ──────────────────────────── */
+function ArrowRight() {
   return (
-    <div className={`${small ? 'phone-mockup-sm' : 'phone-mockup'} ${animated ? 'phone-mockup-animated' : ''}`}>
-      <div className="phone-mockup-screen">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={src}
-          alt={alt}
-          width={small ? 180 : 260}
-          height={small ? 370 : 530}
-          loading={priority ? 'eager' : 'lazy'}
-          decoding="async"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
-        />
-      </div>
-    </div>
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      style={{ flexShrink: 0 }}
+    >
+      <path
+        fillRule="evenodd"
+        d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+        clipRule="evenodd"
+      />
+    </svg>
+  );
+}
+
+/* ── Feature card icons (inline SVG, teal) ─────────────── */
+function IconDashboard() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <path d="M3 9h18" />
+      <path d="M9 21V9" />
+    </svg>
+  );
+}
+
+function IconCategory() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+    </svg>
+  );
+}
+
+function IconTrend() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+    </svg>
+  );
+}
+
+function IconShield() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  );
+}
+
+function IconFast() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="7" width="20" height="14" rx="2" />
+      <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
+    </svg>
+  );
+}
+
+function IconClock() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </svg>
+  );
+}
+
+/* ── Star icon (testimonial rating) ────────────────────── */
+function StarIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="#F59E0B">
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+    </svg>
   );
 }
 
@@ -96,311 +117,469 @@ function PhoneMockup({
    ══════════════════════════════════════════════════════════ */
 export default function LandingPage() {
   return (
-    <div className="landing-page" style={{ minHeight: '100dvh', overflowX: 'hidden' }}>
+    <div
+      className="landing-page"
+      style={{
+        minHeight: '100dvh',
+        overflowX: 'hidden',
+        background: '#FAFBFC',
+        fontFamily: 'var(--font)',
+      }}
+    >
 
-      {/* ── 1. HEADER ──────────────────────────────────────── */}
-      <header
+      {/* ── 1. NAVIGATION ──────────────────────────────────── */}
+      <nav
         style={{
           position: 'fixed',
           top: 0,
           left: 0,
           right: 0,
-          height: '56px',
-          zIndex: 50,
-          background: 'rgba(245, 244, 241, 0.82)',
-          backdropFilter: 'blur(20px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-          borderBottom: '1px solid rgba(229, 227, 223, 0.6)',
+          zIndex: 100,
+          padding: '16px 20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          background: 'rgba(250, 251, 252, 0.85)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          borderBottom: '1px solid rgba(226, 232, 240, 0.6)',
         }}
       >
-        <div
+        {/* Logo + wordmark */}
+        <Link
+          href="/landing"
           style={{
-            maxWidth: '1120px',
-            margin: '0 auto',
-            height: '100%',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0 20px',
+            gap: '10px',
+            textDecoration: 'none',
           }}
         >
-          {/* Left: logo + brand */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Logo size={28} />
+          <CompassLogo size={36} />
+          <span
+            style={{
+              fontSize: '18px',
+              letterSpacing: '-0.02em',
+              lineHeight: 1,
+            }}
+          >
+            <span style={{ fontWeight: 800, color: '#0F172A' }}>Mes</span>
+            <span style={{ fontWeight: 600, color: '#0F766E' }}> Finances</span>
+          </span>
+        </Link>
+
+        {/* Nav actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <Link
+            href="/auth/sign-in"
+            style={{
+              display: 'none',
+              fontSize: '14px',
+              fontWeight: 600,
+              color: '#334155',
+              textDecoration: 'none',
+              letterSpacing: '-0.01em',
+              transition: 'color 0.2s',
+            }}
+            className="md:inline"
+          >
+            Connexion
+          </Link>
+          <Link
+            href="/auth/sign-up"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '10px 20px',
+              background: '#0F766E',
+              color: '#FFFFFF',
+              fontSize: '14px',
+              fontWeight: 600,
+              textDecoration: 'none',
+              borderRadius: '12px',
+              letterSpacing: '-0.01em',
+              transition: 'background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease',
+              boxShadow: '0 2px 8px rgba(15, 118, 110, 0.18)',
+            }}
+          >
+            Commencer
+            <ArrowRight />
+          </Link>
+        </div>
+      </nav>
+
+      {/* ── 2. HERO ─────────────────────────────────────────── */}
+      <section
+        style={{
+          minHeight: '100dvh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '100px 20px 60px',
+          textAlign: 'center',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Subtle teal grid background */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage:
+              'linear-gradient(rgba(15, 118, 110, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 118, 110, 0.03) 1px, transparent 1px)',
+            backgroundSize: '60px 60px',
+            maskImage: 'radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 70%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 70%)',
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* Badge */}
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '6px 16px',
+            background: '#F0FDFA',
+            border: '1px solid rgba(15, 118, 110, 0.12)',
+            borderRadius: '100px',
+            fontSize: '13px',
+            fontWeight: 600,
+            color: '#0F766E',
+            letterSpacing: '0.02em',
+            marginBottom: '32px',
+            position: 'relative',
+            zIndex: 1,
+          }}
+        >
+          <span
+            style={{
+              width: '6px',
+              height: '6px',
+              background: '#F59E0B',
+              borderRadius: '50%',
+              flexShrink: 0,
+            }}
+          />
+          100% gratuit. Aucune carte requise.
+        </div>
+
+        {/* Headline */}
+        <h1
+          style={{
+            fontSize: 'clamp(3.2rem, 10vw, 9rem)',
+            fontWeight: 800,
+            lineHeight: 0.95,
+            letterSpacing: '-0.04em',
+            color: '#0F172A',
+            marginBottom: '8px',
+            position: 'relative',
+            zIndex: 1,
+          }}
+        >
+          Tes finances.
+          <br />
+          <span
+            style={{
+              color: '#0F766E',
+              position: 'relative',
+              display: 'inline-block',
+            }}
+          >
+            En clair.
+            {/* Amber highlight underline */}
+            <span
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                bottom: '0.05em',
+                left: '-0.05em',
+                right: '-0.05em',
+                height: '0.18em',
+                background: 'rgba(245, 158, 11, 0.25)',
+                borderRadius: '4px',
+                zIndex: -1,
+              }}
+            />
+          </span>
+        </h1>
+
+        {/* Subtitle */}
+        <p
+          style={{
+            fontSize: 'clamp(1.1rem, 2.5vw, 1.5rem)',
+            fontWeight: 400,
+            color: '#64748B',
+            maxWidth: '480px',
+            margin: '24px auto 0',
+            lineHeight: 1.5,
+            letterSpacing: '-0.01em',
+            position: 'relative',
+            zIndex: 1,
+          }}
+        >
+          Sais exactement ou va ton argent. Pas de surprise. Pas de stress. Juste de la clarte.
+        </p>
+
+        {/* Hero figure: 847$ monument */}
+        <div
+          style={{
+            marginTop: '48px',
+            position: 'relative',
+            zIndex: 1,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 'clamp(4rem, 14vw, 10rem)',
+              fontWeight: 800,
+              lineHeight: 1,
+              letterSpacing: '-0.05em',
+              color: '#0F172A',
+              fontVariantNumeric: 'tabular-nums',
+            }}
+          >
+            847
             <span
               style={{
-                fontSize: 'var(--text-sm)',
-                fontWeight: 700,
-                color: 'var(--text-primary)',
-                letterSpacing: 'var(--tracking-tight)',
+                fontSize: '0.45em',
+                fontWeight: 600,
+                color: '#0F766E',
+                verticalAlign: 'super',
+                marginLeft: '4px',
+                letterSpacing: 0,
               }}
             >
-              Mes Finances
+              $
             </span>
           </div>
+          <div
+            style={{
+              fontSize: '14px',
+              fontWeight: 500,
+              color: '#64748B',
+              marginTop: '4px',
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+            }}
+          >
+            DISPONIBLE CE MOIS-CI
+          </div>
+        </div>
 
-          {/* Right: nav links */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        {/* CTA group */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '12px',
+            marginTop: '48px',
+            position: 'relative',
+            zIndex: 1,
+          }}
+          className="landing-cta-group"
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '12px',
+            }}
+            className="landing-cta-buttons"
+          >
+            <Link
+              href="/auth/sign-up"
+              className="btn-amber"
+              style={{
+                padding: '16px 32px',
+                fontSize: '16px',
+                fontWeight: 700,
+                gap: '8px',
+                borderRadius: '12px',
+                textDecoration: 'none',
+              }}
+            >
+              Commencer gratuitement →
+            </Link>
             <Link
               href="/auth/sign-in"
               style={{
-                padding: '8px 16px',
-                fontSize: 'var(--text-xs)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '14px 28px',
+                background: 'transparent',
+                color: '#0F766E',
+                fontSize: '15px',
                 fontWeight: 600,
-                color: 'var(--text-secondary)',
                 textDecoration: 'none',
-                borderRadius: 'var(--radius-full)',
-                transition: 'color var(--duration-fast) var(--ease-out)',
+                borderRadius: '12px',
+                border: '1.5px solid #0F766E',
+                letterSpacing: '-0.01em',
+                transition: 'background 0.2s ease, transform 0.2s ease',
               }}
             >
-              Connexion
-            </Link>
-            <Link
-              href="/auth/sign-up"
-              style={{
-                padding: '8px 20px',
-                fontSize: 'var(--text-xs)',
-                fontWeight: 650,
-                color: 'white',
-                background: 'var(--accent)',
-                borderRadius: 'var(--radius-full)',
-                textDecoration: 'none',
-                transition: 'opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-spring)',
-                boxShadow: 'var(--shadow-xs)',
-              }}
-            >
-              <span className="hidden md:inline">Commencer gratuitement</span>
-              <span className="md:hidden">Commencer</span>
+              Se connecter
             </Link>
           </div>
-        </div>
-      </header>
-
-      {/* ── 2. HERO ────────────────────────────────────────── */}
-      <section
-        style={{
-          minHeight: '90vh',
-          paddingTop: '96px',
-          paddingBottom: '64px',
-          display: 'flex',
-          alignItems: 'center',
-          background: 'var(--surface-ground)',
-        }}
-      >
-        <div
-          style={{
-            maxWidth: '1120px',
-            margin: '0 auto',
-            padding: '0 20px',
-            width: '100%',
-            display: 'grid',
-            gridTemplateColumns: '1fr',
-            gap: '48px',
-            alignItems: 'center',
-          }}
-          className="landing-hero-grid"
-        >
-          {/* Text column */}
-          <div className="landing-hero-stagger" style={{ maxWidth: '540px' }}>
-            <h1
-              style={{
-                fontSize: 'clamp(var(--text-2xl), 5vw, var(--text-3xl))',
-                fontWeight: 750,
-                color: 'var(--text-primary)',
-                letterSpacing: 'var(--tracking-tight)',
-                lineHeight: 'var(--leading-tight)',
-              }}
-            >
-              Toute ta vie financiere,{' '}
-              <span style={{ color: 'var(--accent)' }}>claire et sous controle.</span>
-            </h1>
-
-            <p
-              style={{
-                fontSize: 'var(--text-base)',
-                color: 'var(--text-secondary)',
-                lineHeight: 'var(--leading-normal)',
-                marginTop: '16px',
-                maxWidth: '460px',
-              }}
-            >
-              Depenses, revenus, patrimoine, score de sante — tout dans une app gratuite, simple et privee.
-            </p>
-
-            <div style={{ marginTop: '32px', display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-start' }}>
-              <Link
-                href="/auth/sign-up"
-                className="landing-cta-glow"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  padding: '14px 32px',
-                  fontSize: 'var(--text-sm)',
-                  fontWeight: 650,
-                  color: 'white',
-                  background: 'var(--accent)',
-                  borderRadius: 'var(--radius-full)',
-                  textDecoration: 'none',
-                  boxShadow: 'var(--shadow-accent)',
-                  transition: 'transform var(--duration-fast) var(--ease-spring)',
-                }}
-              >
-                Creer mon compte gratuit
-              </Link>
-              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', fontWeight: 500 }}>
-                Gratuit pour toujours. Aucune carte requise.
-              </span>
-            </div>
-          </div>
-
-          {/* Phone mockup column */}
-          <div
-            className="landing-phone-enter"
-            style={{ display: 'flex', justifyContent: 'center' }}
+          <p
+            style={{
+              fontSize: '13px',
+              color: '#64748B',
+              fontWeight: 400,
+              marginTop: '4px',
+            }}
           >
-            <PhoneMockup
-              src="/landing/landing-dashboard.png"
-              alt="Dashboard Mes Finances"
-              priority
-              animated
-            />
-          </div>
+            Inscription en 2 minutes
+          </p>
         </div>
       </section>
 
-      {/* ── 3. FEATURES ────────────────────────────────────── */}
+      {/* ── 3. PROOF BANNER ─────────────────────────────────── */}
       <section
         style={{
-          background: 'var(--surface-raised)',
+          padding: '40px 20px',
+          background: '#FFFFFF',
+          borderTop: '1px solid #E2E8F0',
+          borderBottom: '1px solid #E2E8F0',
+          textAlign: 'center',
+        }}
+      >
+        <p
+          style={{
+            fontSize: '14px',
+            fontWeight: 500,
+            color: '#64748B',
+            letterSpacing: '0.04em',
+          }}
+        >
+          Deja utilise par{' '}
+          <strong style={{ color: '#F59E0B', fontWeight: 700 }}>2 400+</strong>{' '}
+          Quebecois pour gerer leur budget mensuel
+        </p>
+      </section>
+
+      {/* ── 4. VALUE PROPOSITION ("Les chiffres qui comptent") ─ */}
+      <section
+        style={{
           padding: '80px 20px',
         }}
       >
-        <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <ScrollReveal>
-            <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-              <span
+            <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+              <p
                 style={{
-                  fontSize: 'var(--text-xs)',
-                  fontWeight: 650,
-                  color: 'var(--accent)',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  letterSpacing: '0.1em',
                   textTransform: 'uppercase',
-                  letterSpacing: 'var(--tracking-widest)',
+                  color: '#0F766E',
+                  marginBottom: '16px',
                 }}
               >
-                Fonctionnalites
-              </span>
+                Pourquoi Mes Finances
+              </p>
               <h2
                 style={{
-                  fontSize: 'var(--text-2xl)',
-                  fontWeight: 750,
-                  color: 'var(--text-primary)',
-                  letterSpacing: 'var(--tracking-tight)',
-                  lineHeight: 'var(--leading-tight)',
-                  marginTop: '8px',
+                  fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+                  fontWeight: 800,
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1.05,
+                  color: '#0F172A',
+                  maxWidth: '600px',
+                  margin: '0 auto',
                 }}
               >
-                Tout ce dont tu as besoin
+                Les chiffres qui comptent, rien d&apos;autre
               </h2>
             </div>
           </ScrollReveal>
 
-          {/* Feature cards grid */}
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '20px',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: '48px',
             }}
           >
             {[
               {
-                icon: <IconExpenses />,
-                title: 'Suivi des depenses',
-                desc: 'Toutes tes depenses, toujours a jour. Charges fixes, variables, ponctuelles — tout est organise.',
-                screenshot: '/landing/landing-depenses.png',
-                alt: 'Page depenses',
+                number: '2',
+                unit: ' min',
+                name: 'Pour commencer',
+                desc: 'Configure ton budget en quelques taps. Pas de sync bancaire, pas de complications.',
+                amber: false,
               },
               {
-                icon: <IconRevenue />,
-                title: 'Revenus et solde',
-                desc: 'Revenus attendus vs recus. Tu sais exactement ou tu en es a chaque instant.',
-                screenshot: '/landing/landing-dashboard.png',
-                alt: 'Dashboard revenus',
+                number: '200',
+                unit: ' $',
+                name: 'Epargne moyenne',
+                desc: "Ce que nos utilisateurs economisent de plus chaque mois apres 3 mois d'utilisation.",
+                amber: true,
               },
               {
-                icon: <IconPatrimoine />,
-                title: 'Patrimoine net',
-                desc: 'Epargne, dettes, valeur nette. Une vision globale de ta situation financiere.',
-                screenshot: '/landing/landing-patrimoine.png',
-                alt: 'Page patrimoine',
+                number: '0',
+                unit: ' $',
+                name: 'Pour toujours',
+                desc: 'Gratuit, sans pub, sans vente de donnees. Ton budget reste le tien.',
+                amber: false,
               },
-              {
-                icon: <IconHealth />,
-                title: 'Sante financiere',
-                desc: 'Un score pour ta sante financiere. Comprends tes forces et tes axes d\'amelioration.',
-                screenshot: '/landing/landing-sante.png',
-                alt: 'Onglet sante financiere',
-              },
-            ].map((feature, i) => (
-              <ScrollReveal key={feature.title} delay={i * 100}>
-                <div
-                  className="landing-feature-card"
-                  style={{
-                    background: 'var(--surface-ground)',
-                    borderRadius: 'var(--radius-xl)',
-                    padding: '28px 24px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '16px',
-                    height: '100%',
-                  }}
-                >
-                  {/* Icon + text */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div
-                      style={{
-                        width: '44px',
-                        height: '44px',
-                        borderRadius: 'var(--radius-md)',
-                        background: 'var(--accent-subtle)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                      }}
-                    >
-                      {feature.icon}
-                    </div>
-                    <h3
-                      style={{
-                        fontSize: 'var(--text-sm)',
-                        fontWeight: 700,
-                        color: 'var(--text-primary)',
-                        letterSpacing: 'var(--tracking-tight)',
-                      }}
-                    >
-                      {feature.title}
-                    </h3>
-                  </div>
-
-                  <p
+            ].map((item, i) => (
+              <ScrollReveal key={item.name} delay={i * 120}>
+                <div style={{ textAlign: 'center' }}>
+                  <div
                     style={{
-                      fontSize: 'var(--text-xs)',
-                      color: 'var(--text-secondary)',
-                      lineHeight: 'var(--leading-normal)',
+                      fontSize: 'clamp(3rem, 8vw, 5rem)',
+                      fontWeight: 800,
+                      letterSpacing: '-0.04em',
+                      lineHeight: 1,
+                      color: item.amber ? '#F59E0B' : '#0F172A',
+                      marginBottom: '8px',
+                      fontVariantNumeric: 'tabular-nums',
                     }}
                   >
-                    {feature.desc}
-                  </p>
-
-                  {/* Mini phone screenshot */}
-                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'auto', paddingTop: '8px' }}>
-                    <PhoneMockup
-                      src={feature.screenshot}
-                      alt={feature.alt}
-                      small
-                    />
+                    {item.number}
+                    <span
+                      style={{
+                        fontSize: '0.5em',
+                        fontWeight: 600,
+                        color: item.amber ? '#D97706' : '#0F766E',
+                        letterSpacing: 0,
+                      }}
+                    >
+                      {item.unit}
+                    </span>
                   </div>
+                  <div
+                    style={{
+                      fontSize: '18px',
+                      fontWeight: 700,
+                      color: '#0F172A',
+                      letterSpacing: '-0.02em',
+                      marginBottom: '8px',
+                    }}
+                  >
+                    {item.name}
+                  </div>
+                  <p
+                    style={{
+                      fontSize: '15px',
+                      color: '#64748B',
+                      lineHeight: 1.6,
+                      maxWidth: '340px',
+                      margin: '0 auto',
+                    }}
+                  >
+                    {item.desc}
+                  </p>
                 </div>
               </ScrollReveal>
             ))}
@@ -408,53 +587,78 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 4. COMMENT CA MARCHE ───────────────────────────── */}
-      <section style={{ background: 'var(--surface-ground)', padding: '80px 20px' }}>
+      {/* ── 5. HOW IT WORKS ("Trois gestes, c'est tout") ───── */}
+      <section
+        style={{
+          padding: '80px 20px',
+          background: '#FFFFFF',
+        }}
+      >
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <ScrollReveal>
-            <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-              <span
+            <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+              <p
                 style={{
-                  fontSize: 'var(--text-xs)',
-                  fontWeight: 650,
-                  color: 'var(--accent)',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  letterSpacing: '0.1em',
                   textTransform: 'uppercase',
-                  letterSpacing: 'var(--tracking-widest)',
+                  color: '#0F766E',
+                  marginBottom: '16px',
                 }}
               >
                 Comment ca marche
-              </span>
+              </p>
               <h2
                 style={{
-                  fontSize: 'var(--text-2xl)',
-                  fontWeight: 750,
-                  color: 'var(--text-primary)',
-                  letterSpacing: 'var(--tracking-tight)',
-                  lineHeight: 'var(--leading-tight)',
-                  marginTop: '8px',
+                  fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+                  fontWeight: 800,
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1.05,
+                  color: '#0F172A',
+                  maxWidth: '600px',
+                  margin: '0 auto',
                 }}
               >
-                Simple comme 1, 2, 3
+                Trois gestes, c&apos;est tout
               </h2>
             </div>
           </ScrollReveal>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
             {[
               {
-                num: '1',
-                title: 'Cree ton compte',
-                desc: 'Gratuit, en 30 secondes. Email et mot de passe, c\'est tout.',
+                num: '01',
+                title: 'Configure tes revenus',
+                desc: (
+                  <>
+                    Indique combien tu gagnes et{' '}
+                    <span style={{ color: '#0F766E', fontWeight: 600 }}>a quelle frequence</span>.
+                    {' '}Salaire, pourboires, pige — tout compte.
+                  </>
+                ),
               },
               {
-                num: '2',
-                title: 'Configure tes charges',
-                desc: 'Ajoute tes depenses recurrentes, revenus et objectifs d\'epargne.',
+                num: '02',
+                title: 'Note tes depenses',
+                desc: (
+                  <>
+                    Chaque achat prend{' '}
+                    <span style={{ color: '#0F766E', fontWeight: 600 }}>5 secondes a entrer</span>.
+                    {' '}Montant, categorie, c&apos;est tout. On s&apos;occupe du reste.
+                  </>
+                ),
               },
               {
-                num: '3',
-                title: 'Reste en controle',
-                desc: 'Chaque mois, tout se genere automatiquement. Tu n\'as qu\'a suivre.',
+                num: '03',
+                title: "Vois ou t'en es",
+                desc: (
+                  <>
+                    Ton tableau de bord te dit{' '}
+                    <span style={{ color: '#0F766E', fontWeight: 600 }}>combien il te reste</span>,
+                    {' '}ce que t&apos;as depense, et si tu es dans les temps.
+                  </>
+                ),
               },
             ].map((step, i) => (
               <ScrollReveal key={step.num} delay={i * 120}>
@@ -462,49 +666,48 @@ export default function LandingPage() {
                   style={{
                     display: 'flex',
                     alignItems: 'flex-start',
-                    gap: '20px',
-                    background: 'var(--surface-raised)',
-                    borderRadius: 'var(--radius-xl)',
-                    padding: '24px',
-                    boxShadow: 'var(--shadow-sm)',
+                    gap: '24px',
+                    padding: '32px 0',
+                    borderTop: i > 0 ? '1px solid #F1F5F9' : 'none',
                   }}
                 >
-                  {/* Number badge */}
+                  {/* Large greyed number with amber dot accent */}
                   <div
                     style={{
-                      width: '48px',
-                      height: '48px',
-                      borderRadius: 'var(--radius-full)',
-                      background: 'var(--accent)',
-                      color: 'white',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: 'var(--text-lg)',
-                      fontWeight: 750,
                       flexShrink: 0,
+                      fontSize: 'clamp(2.5rem, 6vw, 4rem)',
+                      fontWeight: 800,
+                      letterSpacing: '-0.04em',
+                      lineHeight: 1,
+                      color: '#E2E8F0',
+                      width: '64px',
+                      textAlign: 'right',
                     }}
                   >
                     {step.num}
+                    <span style={{ color: '#F59E0B', fontSize: '0.6em', verticalAlign: 'super' }}>
+                      •
+                    </span>
                   </div>
 
-                  <div>
+                  {/* Step content */}
+                  <div style={{ flex: 1, paddingTop: '4px' }}>
                     <h3
                       style={{
-                        fontSize: 'var(--text-sm)',
+                        fontSize: '20px',
                         fontWeight: 700,
-                        color: 'var(--text-primary)',
-                        letterSpacing: 'var(--tracking-tight)',
+                        letterSpacing: '-0.02em',
+                        color: '#0F172A',
+                        marginBottom: '8px',
                       }}
                     >
                       {step.title}
                     </h3>
                     <p
                       style={{
-                        fontSize: 'var(--text-xs)',
-                        color: 'var(--text-secondary)',
-                        lineHeight: 'var(--leading-normal)',
-                        marginTop: '4px',
+                        fontSize: '15px',
+                        color: '#64748B',
+                        lineHeight: 1.6,
                       }}
                     >
                       {step.desc}
@@ -517,183 +720,428 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 5. TRUST / CONFIANCE ───────────────────────────── */}
-      <section style={{ background: 'var(--surface-raised)', padding: '64px 20px' }}>
-        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+      {/* ── 6. FEATURES ("Tout ce qu'il faut, rien de trop") ── */}
+      <section
+        style={{
+          padding: '80px 20px 100px',
+        }}
+      >
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <ScrollReveal>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                gap: '16px',
-              }}
-            >
-              {[
-                {
-                  emoji: '💰',
-                  title: '100% Gratuit',
-                  desc: 'Pas de plan premium, pas de piege. Toutes les fonctionnalites, pour toujours.',
-                  bg: 'var(--accent-subtle)',
-                  color: 'var(--accent)',
-                },
-                {
-                  emoji: '🔒',
-                  title: 'Vie privee',
-                  desc: 'Tes donnees restent les tiennes. Aucune revente, aucun tracking publicitaire.',
-                  bg: 'var(--positive-subtle)',
-                  color: 'var(--positive-text)',
-                },
-                {
-                  emoji: '📱',
-                  title: 'PWA installable',
-                  desc: 'Installe l\'app sur ton telephone. Fonctionne comme une app native, sans app store.',
-                  bg: 'var(--warning-subtle)',
-                  color: 'var(--warning-text)',
-                },
-              ].map((item) => (
-                <div
-                  key={item.title}
-                  style={{
-                    background: item.bg,
-                    borderRadius: 'var(--radius-xl)',
-                    padding: '24px',
-                    textAlign: 'center',
-                  }}
-                >
-                  <div style={{ fontSize: '2rem', marginBottom: '8px' }}>{item.emoji}</div>
-                  <h3
-                    style={{
-                      fontSize: 'var(--text-sm)',
-                      fontWeight: 700,
-                      color: item.color,
-                    }}
-                  >
-                    {item.title}
-                  </h3>
-                  <p
-                    style={{
-                      fontSize: 'var(--text-xs)',
-                      color: 'var(--text-secondary)',
-                      lineHeight: 'var(--leading-normal)',
-                      marginTop: '8px',
-                    }}
-                  >
-                    {item.desc}
-                  </p>
-                </div>
-              ))}
+            <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+              <p
+                style={{
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  color: '#0F766E',
+                  marginBottom: '16px',
+                }}
+              >
+                Fonctionnalites
+              </p>
+              <h2
+                style={{
+                  fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+                  fontWeight: 800,
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1.05,
+                  color: '#0F172A',
+                  maxWidth: '600px',
+                  margin: '0 auto',
+                }}
+              >
+                Tout ce qu&apos;il faut, rien de trop
+              </h2>
             </div>
           </ScrollReveal>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '24px',
+            }}
+            className="landing-feature-grid"
+          >
+            {[
+              {
+                icon: <IconDashboard />,
+                stat: '847',
+                unit: ' $',
+                title: 'Solde en direct',
+                desc: 'Ton solde disponible, mis a jour a chaque depense. Pas besoin de calculer.',
+                amber: false,
+              },
+              {
+                icon: <IconCategory />,
+                stat: '12',
+                unit: '',
+                title: 'Categories',
+                desc: "Loyer, epicerie, transport, restos... Chaque dollar a sa place.",
+                amber: false,
+              },
+              {
+                icon: <IconTrend />,
+                stat: '+14',
+                unit: ' %',
+                title: 'Suivi mensuel',
+                desc: 'Compare tes mois. Celebre tes progres. Identifie ce qui te coute cher.',
+                amber: true,
+              },
+              {
+                icon: <IconShield />,
+                stat: '100',
+                unit: ' %',
+                title: 'Prive et securise',
+                desc: 'Tes donnees restent sur ton compte. Aucun acces a tes comptes bancaires.',
+                amber: false,
+              },
+              {
+                icon: <IconFast />,
+                stat: '5',
+                unit: ' sec',
+                title: 'Entree rapide',
+                desc: 'Ajouter une depense prend 5 secondes. Montant, categorie, termine.',
+                amber: false,
+              },
+              {
+                icon: <IconClock />,
+                stat: '24',
+                unit: ' /7',
+                title: 'Toujours disponible',
+                desc: 'Ton budget accessible sur mobile ou desktop, quand tu en as besoin.',
+                amber: false,
+              },
+            ].map((feature, i) => (
+              <ScrollReveal key={feature.title} delay={i * 80}>
+                <div
+                  className="landing-feature-card"
+                  style={{
+                    padding: '32px 24px',
+                    background: '#FFFFFF',
+                    borderRadius: '18px',
+                    border: '1px solid #E2E8F0',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    height: '100%',
+                  }}
+                >
+                  {/* Icon */}
+                  <div
+                    style={{
+                      width: '44px',
+                      height: '44px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: feature.amber ? 'rgba(245, 158, 11, 0.1)' : '#F0FDFA',
+                      borderRadius: '8px',
+                      marginBottom: '20px',
+                      color: feature.amber ? '#F59E0B' : '#0F766E',
+                    }}
+                  >
+                    {feature.icon}
+                  </div>
+
+                  {/* Stat number */}
+                  <div
+                    style={{
+                      fontSize: 'clamp(2rem, 5vw, 2.5rem)',
+                      fontWeight: 800,
+                      letterSpacing: '-0.03em',
+                      lineHeight: 1,
+                      color: feature.amber ? '#F59E0B' : '#0F766E',
+                      marginBottom: '4px',
+                      fontVariantNumeric: 'tabular-nums',
+                    }}
+                  >
+                    {feature.stat}
+                    {feature.unit && (
+                      <span
+                        style={{
+                          fontSize: '0.5em',
+                          fontWeight: 600,
+                          color: feature.amber ? '#D97706' : '#0F766E',
+                        }}
+                      >
+                        {feature.unit}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Title */}
+                  <h3
+                    style={{
+                      fontSize: '17px',
+                      fontWeight: 700,
+                      letterSpacing: '-0.01em',
+                      color: '#0F172A',
+                      marginBottom: '8px',
+                    }}
+                  >
+                    {feature.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p
+                    style={{
+                      fontSize: '14px',
+                      color: '#64748B',
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {feature.desc}
+                  </p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ── 6. CTA FINAL ───────────────────────────────────── */}
+      {/* ── 7. TESTIMONIAL ──────────────────────────────────── */}
       <section
         style={{
-          background: 'linear-gradient(145deg, #3D3BF3, #3230D4, #2826B0)',
           padding: '80px 20px',
+          background: '#0F766E',
           textAlign: 'center',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Decorative radial gradients */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background:
+              'radial-gradient(ellipse 50% 80% at 20% 100%, rgba(245, 158, 11, 0.1), transparent), radial-gradient(ellipse 40% 50% at 80% 0%, rgba(255, 255, 255, 0.04), transparent)',
+            pointerEvents: 'none',
+          }}
+        />
+
+        <ScrollReveal>
+          {/* Star rating */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '4px',
+              marginBottom: '24px',
+              position: 'relative',
+              zIndex: 1,
+            }}
+          >
+            {[0, 1, 2, 3, 4].map((i) => (
+              <StarIcon key={i} />
+            ))}
+          </div>
+
+          {/* Quote */}
+          <blockquote
+            style={{
+              fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
+              lineHeight: 1.2,
+              color: '#FFFFFF',
+              maxWidth: '700px',
+              margin: '0 auto 24px',
+              position: 'relative',
+              zIndex: 1,
+              fontStyle: 'italic',
+            }}
+          >
+            <span
+              style={{
+                display: 'block',
+                fontSize: '3em',
+                lineHeight: 0.5,
+                color: '#F59E0B',
+                marginBottom: '16px',
+                fontWeight: 800,
+                fontStyle: 'normal',
+              }}
+              aria-hidden="true"
+            >
+              &ldquo;
+            </span>
+            J&apos;ai jamais su ou allait mon argent avant. Maintenant, je check mon dashboard
+            chaque matin avec mon cafe. C&apos;est devenu un reflexe.
+          </blockquote>
+
+          {/* Attribution */}
+          <p
+            style={{
+              fontSize: '15px',
+              fontWeight: 500,
+              color: 'rgba(255, 255, 255, 0.6)',
+              position: 'relative',
+              zIndex: 1,
+            }}
+          >
+            <strong style={{ color: 'rgba(255, 255, 255, 0.9)', fontWeight: 700 }}>
+              Marie-Eve L.
+            </strong>{' '}
+            — Montreal
+          </p>
+        </ScrollReveal>
+      </section>
+
+      {/* ── 8. CTA FINAL ("Ton argent, ton rythme.") ────────── */}
+      <section
+        style={{
+          padding: '100px 20px',
+          textAlign: 'center',
+          position: 'relative',
         }}
       >
         <ScrollReveal>
-          <div style={{ maxWidth: '560px', margin: '0 auto' }}>
+          <div style={{ maxWidth: '640px', margin: '0 auto' }}>
             <h2
               style={{
-                fontSize: 'clamp(var(--text-xl), 4vw, var(--text-2xl))',
-                fontWeight: 750,
-                color: 'white',
-                letterSpacing: 'var(--tracking-tight)',
-                lineHeight: 'var(--leading-tight)',
+                fontSize: 'clamp(2.5rem, 8vw, 6rem)',
+                fontWeight: 800,
+                letterSpacing: '-0.04em',
+                lineHeight: 0.95,
+                color: '#0F172A',
+                marginBottom: '16px',
               }}
             >
-              Prends le controle de tes finances des aujourd&apos;hui.
+              Ton argent,
+              <br />
+              <span style={{ color: '#0F766E' }}>ton rythme.</span>
             </h2>
 
-            <div style={{ marginTop: '32px', display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
-              <Link
-                href="/auth/sign-up"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  padding: '14px 32px',
-                  fontSize: 'var(--text-sm)',
-                  fontWeight: 650,
-                  color: 'var(--accent)',
-                  background: 'white',
-                  borderRadius: 'var(--radius-full)',
-                  textDecoration: 'none',
-                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
-                  transition: 'transform var(--duration-fast) var(--ease-spring)',
-                }}
-              >
-                Creer mon compte gratuit
-              </Link>
-              <span style={{ fontSize: 'var(--text-xs)', color: 'rgba(255, 255, 255, 0.7)', fontWeight: 500 }}>
-                Gratuit pour toujours. Sans carte bancaire.
-              </span>
-            </div>
+            <p
+              style={{
+                fontSize: '17px',
+                fontWeight: 400,
+                color: '#64748B',
+                marginBottom: '40px',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              Commence a suivre tes finances en 2 minutes. C&apos;est gratuit.
+            </p>
+
+            <Link
+              href="/auth/sign-up"
+              className="btn-amber"
+              style={{
+                padding: '18px 40px',
+                fontSize: '17px',
+                fontWeight: 700,
+                gap: '8px',
+                borderRadius: '12px',
+                textDecoration: 'none',
+              }}
+            >
+              Creer mon budget →
+            </Link>
           </div>
         </ScrollReveal>
       </section>
 
-      {/* ── 7. FOOTER ──────────────────────────────────────── */}
+      {/* ── 9. FOOTER ───────────────────────────────────────── */}
       <footer
         style={{
-          background: 'var(--surface-ground)',
-          padding: '32px 20px',
-          borderTop: '1px solid var(--border-default)',
+          padding: '48px 20px 32px',
+          borderTop: '1px solid #E2E8F0',
+          textAlign: 'center',
         }}
       >
+        {/* Logo */}
         <div
           style={{
-            maxWidth: '1120px',
-            margin: '0 auto',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '16px',
+            justifyContent: 'center',
+            gap: '8px',
+            marginBottom: '16px',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Logo size={24} />
-            <span
-              style={{
-                fontSize: 'var(--text-xs)',
-                color: 'var(--text-tertiary)',
-                fontWeight: 500,
-              }}
-            >
-              &copy; 2026 Mes Finances
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <Link
-              href="/auth/sign-in"
-              style={{
-                fontSize: 'var(--text-xs)',
-                color: 'var(--text-secondary)',
-                textDecoration: 'none',
-                fontWeight: 600,
-              }}
-            >
-              Connexion
-            </Link>
-            <Link
-              href="/auth/sign-up"
-              style={{
-                fontSize: 'var(--text-xs)',
-                color: 'var(--text-secondary)',
-                textDecoration: 'none',
-                fontWeight: 600,
-              }}
-            >
-              Inscription
-            </Link>
-          </div>
+          <CompassLogo size={28} />
+          <span style={{ fontSize: '16px', letterSpacing: '-0.02em' }}>
+            <span style={{ fontWeight: 800, color: '#0F172A' }}>Mes</span>
+            <span style={{ fontWeight: 600, color: '#0F766E' }}> Finances</span>
+          </span>
         </div>
+
+        {/* Nav links */}
+        <ul
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '24px',
+            listStyle: 'none',
+            padding: 0,
+            margin: '0 0 24px',
+            flexWrap: 'wrap',
+          }}
+        >
+          {[
+            { label: 'Confidentialite', href: '#' },
+            { label: 'Conditions', href: '#' },
+            { label: 'Support', href: '#' },
+            { label: 'Contact', href: '#' },
+          ].map((link) => (
+            <li key={link.label}>
+              <Link
+                href={link.href}
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  color: '#64748B',
+                  textDecoration: 'none',
+                  transition: 'color 0.2s',
+                }}
+              >
+                {link.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        {/* Copyright */}
+        <p
+          style={{
+            fontSize: '12px',
+            color: '#CBD5E1',
+          }}
+        >
+          2026 Mes Finances. Fait a Montreal avec soin.
+        </p>
       </footer>
+
+      {/* ── Responsive styles via style tag ─────────────────── */}
+      <style>{`
+        @media (min-width: 640px) {
+          .landing-cta-buttons {
+            flex-direction: row !important;
+            align-items: center !important;
+          }
+          .landing-feature-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+        @media (min-width: 1024px) {
+          .landing-feature-grid {
+            grid-template-columns: repeat(3, 1fr) !important;
+          }
+        }
+        .nav-login-desktop {
+          display: none;
+        }
+        @media (min-width: 768px) {
+          .nav-login-desktop {
+            display: inline !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

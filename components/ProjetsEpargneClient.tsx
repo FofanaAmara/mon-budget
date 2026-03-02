@@ -107,42 +107,40 @@ export default function ProjetsEpargneClient({ projets, sections, cards, freeSav
   }
 
   return (
-    <div style={{ padding: '36px 20px 96px', minHeight: '100vh' }}>
-      {/* Header */}
-      <div style={{ marginBottom: '24px' }}>
-        <h1 style={{
-          fontSize: 'var(--text-xl)', fontWeight: 750,
-          color: 'var(--text-primary)',
-          letterSpacing: 'var(--tracking-tight)',
+    <div style={{ padding: '0 0 96px', minHeight: '100vh' }}>
+      {/* Monument — valeur nette */}
+      <div style={{ padding: '24px 20px 16px', textAlign: 'center' }}>
+        <p style={{
+          fontSize: '13px', fontWeight: 600, letterSpacing: '0.08em',
+          textTransform: 'uppercase', color: valeurNette >= 0 ? 'var(--accent)' : 'var(--negative)', marginBottom: '4px',
         }}>
           Patrimoine
-        </h1>
+        </p>
+        <p style={{
+          fontSize: 'clamp(3rem, 12vw, 5rem)', fontWeight: 800,
+          letterSpacing: '-0.03em', lineHeight: 1, margin: '8px 0 12px',
+          color: 'var(--text-primary)',
+        }}>
+          <span style={{ fontSize: '0.4em', color: valeurNette >= 0 ? 'var(--accent)' : 'var(--negative)', verticalAlign: 'super' }}>$</span>
+          {Math.abs(valeurNette).toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+        </p>
+        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: '12px' }}>
+          Actifs: <strong style={{ color: 'var(--text-primary)' }}>{formatCAD(totalEpargne)}</strong>
+          {' '}·{' '}
+          Passifs: <strong style={{ color: 'var(--text-primary)' }}>{formatCAD(totalDebtBalance)}</strong>
+        </p>
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: '4px',
+          padding: '4px 10px', borderRadius: '999px',
+          background: valeurNette >= 0 ? 'var(--positive-subtle)' : 'var(--negative-subtle)',
+          color: valeurNette >= 0 ? 'var(--accent)' : 'var(--negative)',
+          fontSize: 'var(--text-xs)', fontWeight: 600,
+        }}>
+          {valeurNette >= 0 ? '✓ Valeur nette positive' : '↓ Valeur nette négative'}
+        </span>
       </div>
 
-      {/* Valeur nette — hero card (always visible) */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}>
-        <div className="card" style={{
-          padding: '16px 20px',
-          background: valeurNette >= 0
-            ? 'linear-gradient(135deg, #1A7F5A, #145C42)'
-            : 'linear-gradient(135deg, #DC2626, #B91C1C)',
-          color: 'white',
-          borderColor: 'transparent',
-        }}>
-          <p style={{
-            fontSize: 'var(--text-xs)', fontWeight: 600, opacity: 0.75,
-            textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '4px',
-          }}>
-            Valeur nette
-          </p>
-          <p className="amount" style={{ fontSize: 'var(--text-xl)', fontWeight: 750 }}>
-            {valeurNette >= 0 ? '+' : ''}{formatCAD(valeurNette)}
-          </p>
-          <p style={{ fontSize: 'var(--text-xs)', opacity: 0.7, marginTop: '4px' }}>
-            Actifs: {formatCAD(totalEpargne)} | Passifs: {formatCAD(totalDebtBalance)}
-          </p>
-        </div>
-      </div>
+      <div style={{ padding: '0 20px' }}>
 
       {/* Tab strip */}
       <div className="flex" style={{
@@ -456,6 +454,7 @@ export default function ProjetsEpargneClient({ projets, sections, cards, freeSav
           )}
         </div>
       )}
+      </div>{/* /padding wrapper */}
 
       {/* FAB — two options */}
       <div style={{
