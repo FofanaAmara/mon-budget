@@ -460,9 +460,9 @@ function SourceCard({
           {isVariable ? (
             <span>Montant estime pour les previsions</span>
           ) : nextDateLabel ? (
-            <>
+            <span suppressHydrationWarning>
               Prochain depot&nbsp;:&nbsp;<strong style={{ fontWeight: 700, color: 'var(--slate-700)' }}>{nextDateLabel.replace('Prochain depot : ', '')}</strong>
-            </>
+            </span>
           ) : (
             <span>{metaFreqText}</span>
           )}

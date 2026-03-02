@@ -558,7 +558,7 @@ export default function ProjetsEpargneClient({ projets, sections, cards, freeSav
 
                       {/* Monthly suggestion chip */}
                       {monthlySuggested !== null && monthlySuggested > 0 && (
-                        <span style={{
+                        <span suppressHydrationWarning style={{
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: '4px',

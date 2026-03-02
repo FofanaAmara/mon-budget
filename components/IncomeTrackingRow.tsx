@@ -93,7 +93,7 @@ export function IncomeInstanceRow({ mi, index, isCurrentMonth, onMarkReceived, o
               {mi.income_frequency === 'BIWEEKLY' && mi.income_pay_anchor_date && (
                 <>
                   <span style={{ width: '3px', height: '3px', borderRadius: '50%', background: 'var(--slate-300)', display: 'inline-block', flexShrink: 0 }} />
-                  <span style={{ color: 'var(--accent)' }}>
+                  <span style={{ color: 'var(--accent)' }} suppressHydrationWarning>
                     Prochaine : {formatShortDate(getNextBiweeklyPayDate(mi.income_pay_anchor_date))}
                   </span>
                 </>

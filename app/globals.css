@@ -18,6 +18,9 @@
   /* Font */
   --font: var(--font-jakarta), system-ui, sans-serif;
 
+  /* Pure white — referenced by many components */
+  --white: #ffffff;
+
   /* Surfaces — clean, slate-based */
   --surface-ground:   #FAFBFC;   /* slate-50 — the canvas */
   --surface-raised:   #FFFFFF;   /* cards, elevated elements */
