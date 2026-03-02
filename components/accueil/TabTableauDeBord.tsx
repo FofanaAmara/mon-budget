@@ -10,314 +10,349 @@ type Props = {
   totalMonthlyExpenses: number;
   savingsSummary: MonthlySavingsSummary;
   debtSummary: MonthlyDebtSummary;
+  totalDebtBalance: number;
+  totalEpargne: number;
+  valeurNette: number;
 };
 
-export default function TabTableauDeBord({ summary, incomeSummary, savingsSummary, debtSummary }: Props) {
-  const availableAmount = incomeSummary.actualTotal - summary.paid_total;
+// Chevron arrow for clickable cards
+function ChevronRight() {
+  return (
+    <svg
+      style={{ position: 'absolute', top: '16px', right: '14px', width: '20px', height: '20px', color: 'var(--slate-300)', transition: 'all 0.25s ease', flexShrink: 0 }}
+      viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+    >
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  );
+}
 
-  // Revenus: ratio reçu vs attendu
-  const revenuPct = incomeSummary.expectedTotal > 0
-    ? (incomeSummary.actualTotal / incomeSummary.expectedTotal) * 100 : 0;
-  const revenuOver = incomeSummary.actualTotal > incomeSummary.expectedTotal;
-  const revenuDelta = incomeSummary.actualTotal - incomeSummary.expectedTotal;
+// Card icon wrapper
+function CardIcon({ children, className }: { children: React.ReactNode; className: 'revenus' | 'depenses' | 'epargne' | 'dettes' }) {
+  const styles: Record<string, React.CSSProperties> = {
+    revenus:  { background: 'var(--teal-50)',      color: 'var(--teal-700)' },
+    depenses: { background: '#FFF7ED',             color: '#EA580C' },
+    epargne:  { background: 'var(--success-light)', color: 'var(--positive)' },
+    dettes:   { background: 'var(--error-light)',  color: 'var(--error)' },
+  };
+  return (
+    <div style={{
+      width: '40px', height: '40px',
+      borderRadius: 'var(--radius-sm)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      marginBottom: '14px',
+      ...styles[className],
+    }}>
+      {children}
+    </div>
+  );
+}
 
-  // Depenses: ratio dépensé vs charges prévues (planned_total)
-  const chargesFixes = summary.planned_total;
-  const depensePct = chargesFixes > 0
-    ? (summary.paid_total / chargesFixes) * 100 : 0;
-  const depenseOver = summary.paid_total > chargesFixes;
-  const depenseDelta = summary.paid_total - chargesFixes;
+// Reusable summary card
+function SummaryCard({ href, children, style }: { href: string; children: React.ReactNode; style?: React.CSSProperties }) {
+  return (
+    <Link
+      href={href}
+      className="block"
+      style={{
+        background: 'var(--surface-raised)',
+        border: '1px solid var(--slate-200)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '20px 16px',
+        cursor: 'pointer',
+        textDecoration: 'none',
+        display: 'block',
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'all 0.25s ease',
+        ...style,
+      }}
+      onMouseEnter={(e) => {
+        const el = e.currentTarget as HTMLElement;
+        el.style.borderColor = 'rgba(15, 118, 110, 0.2)';
+        el.style.boxShadow = 'var(--shadow-md)';
+        el.style.transform = 'translateY(-2px)';
+        const arrow = el.querySelector('[data-arrow]') as HTMLElement | null;
+        if (arrow) {
+          arrow.style.color = 'var(--teal-700)';
+          arrow.style.transform = 'translateX(2px)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget as HTMLElement;
+        el.style.borderColor = 'var(--slate-200)';
+        el.style.boxShadow = 'none';
+        el.style.transform = 'translateY(0)';
+        const arrow = el.querySelector('[data-arrow]') as HTMLElement | null;
+        if (arrow) {
+          arrow.style.color = 'var(--slate-300)';
+          arrow.style.transform = 'translateX(0)';
+        }
+      }}
+      onMouseDown={(e) => {
+        const el = e.currentTarget as HTMLElement;
+        el.style.transform = 'translateY(0)';
+        el.style.boxShadow = 'var(--shadow-sm)';
+      }}
+      onMouseUp={(e) => {
+        const el = e.currentTarget as HTMLElement;
+        el.style.transform = 'translateY(-2px)';
+        el.style.boxShadow = 'var(--shadow-md)';
+      }}
+    >
+      {/* Chevron arrow */}
+      <svg
+        data-arrow
+        style={{ position: 'absolute', top: '16px', right: '14px', width: '20px', height: '20px', color: 'var(--slate-300)', transition: 'all 0.25s ease' }}
+        viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+      >
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+      {children}
+    </Link>
+  );
+}
+
+// Card label (uppercase, muted)
+function CardLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{
+      fontSize: '11px', fontWeight: 700,
+      letterSpacing: '0.08em', textTransform: 'uppercase',
+      color: 'var(--slate-400)', marginBottom: '6px',
+    }}>
+      {children}
+    </div>
+  );
+}
+
+// Card amount
+function CardAmount({ children, color }: { children: React.ReactNode; color?: string }) {
+  return (
+    <div style={{
+      fontSize: 'clamp(1.5rem, 5vw, 2rem)',
+      fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1,
+      color: color ?? 'var(--slate-900)',
+      fontVariantNumeric: 'tabular-nums',
+    }}>
+      {children}
+    </div>
+  );
+}
+
+// Card sub-text
+function CardSub({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{
+      fontSize: '12px', fontWeight: 500,
+      color: 'var(--slate-400)', marginTop: '4px',
+      letterSpacing: '-0.01em',
+    }}>
+      {children}
+    </div>
+  );
+}
+
+// Dollar superscript
+function Dollar({ color }: { color?: string }) {
+  return (
+    <span style={{
+      fontSize: '0.5em', fontWeight: 600,
+      color: color ?? 'var(--teal-700)',
+      verticalAlign: 'super',
+    }}>
+      $
+    </span>
+  );
+}
+
+export default function TabTableauDeBord({
+  summary,
+  incomeSummary,
+  savingsSummary,
+  debtSummary,
+  totalDebtBalance,
+  totalEpargne,
+  valeurNette,
+}: Props) {
+  // Epargne progress (toward goals)
+  const savingsGoalTotal = savingsSummary.byProject.reduce((s, p) => s + p.total, 0);
+  const savingsPct = totalEpargne > 0 && savingsGoalTotal > 0
+    ? Math.min((savingsSummary.totalContributions / totalEpargne) * 100, 100)
+    : 0;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      {/* Flow bar: 3 columns */}
+    <div>
+      {/* ====== 4-CARD 2×2 GRID ====== */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '2px',
-        background: 'var(--surface-sunken)',
-        borderRadius: 'var(--radius-md)',
-        overflow: 'hidden',
-        marginBottom: '16px',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '12px',
+        paddingTop: '24px',
       }}>
-        {/* Revenus */}
-        <div style={{ padding: '16px 12px', background: 'var(--surface-raised)', textAlign: 'center' }}>
-          <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '4px' }}>
-            Revenus
-          </p>
-          <p style={{ fontSize: 'clamp(1.2rem, 4vw, 1.5rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1, color: 'var(--accent)' }}>
-            {formatCAD(incomeSummary.actualTotal)}
-          </p>
-          <p style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-tertiary)', marginTop: '2px' }}>
-            / {formatCAD(incomeSummary.expectedTotal)}
-          </p>
-        </div>
 
-        {/* Dépensé */}
-        <div style={{ padding: '16px 12px', background: 'var(--surface-raised)', textAlign: 'center' }}>
-          <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '4px' }}>
-            Dépensé
-          </p>
-          <p style={{ fontSize: 'clamp(1.2rem, 4vw, 1.5rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1, color: 'var(--text-primary)' }}>
-            {formatCAD(summary.paid_total)}
-          </p>
-          <p style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-tertiary)', marginTop: '2px' }}>
-            / {formatCAD(summary.planned_total)}
-          </p>
-        </div>
+        {/* Card 1 — Revenus */}
+        <SummaryCard href="/revenus">
+          <CardIcon className="revenus">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+              <polyline points="17 6 23 6 23 12" />
+            </svg>
+          </CardIcon>
+          <CardLabel>Revenus</CardLabel>
+          <CardAmount>
+            {Math.round(incomeSummary.actualTotal).toLocaleString('fr-CA')}
+            <Dollar color="var(--teal-700)" />
+          </CardAmount>
+          <CardSub>
+            / <strong style={{ fontWeight: 700, color: 'var(--slate-500)' }}>
+              {Math.round(incomeSummary.expectedTotal).toLocaleString('fr-CA')} $
+            </strong> attendus
+          </CardSub>
+        </SummaryCard>
 
-        {/* Disponible */}
-        <div style={{ padding: '16px 12px', background: 'var(--surface-raised)', textAlign: 'center' }}>
-          <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '4px' }}>
-            Disponible
-          </p>
-          <p style={{
-            fontSize: 'clamp(1.2rem, 4vw, 1.5rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1,
-            color: availableAmount >= 0 ? 'var(--positive)' : 'var(--negative)',
+        {/* Card 2 — Dépenses */}
+        <SummaryCard href="/depenses">
+          <CardIcon className="depenses">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23" />
+              <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+            </svg>
+          </CardIcon>
+          <CardLabel>Dépenses</CardLabel>
+          <CardAmount>
+            {Math.round(summary.paid_total).toLocaleString('fr-CA')}
+            <Dollar color="var(--teal-700)" />
+          </CardAmount>
+          <CardSub>
+            / <strong style={{ fontWeight: 700, color: 'var(--slate-500)' }}>
+              {Math.round(summary.planned_total).toLocaleString('fr-CA')} $
+            </strong> prévus
+          </CardSub>
+        </SummaryCard>
+
+        {/* Card 3 — Épargne */}
+        <SummaryCard href="/projets">
+          <CardIcon className="epargne">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />
+            </svg>
+          </CardIcon>
+          <CardLabel>Épargne</CardLabel>
+          <CardAmount>
+            {Math.round(totalEpargne).toLocaleString('fr-CA')}
+            <Dollar color="var(--teal-700)" />
+          </CardAmount>
+          {/* Progress bar */}
+          {savingsPct > 0 && (
+            <div style={{ marginTop: '10px' }}>
+              <div style={{ height: '6px', background: 'var(--slate-100)', borderRadius: '3px', overflow: 'hidden' }}>
+                <div style={{
+                  height: '100%', borderRadius: '3px',
+                  background: 'linear-gradient(90deg, var(--positive), #10B981)',
+                  width: `${savingsPct}%`,
+                  transition: 'width 0.8s ease',
+                }} />
+              </div>
+              <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--positive)', marginTop: '4px' }}>
+                {Math.round(savingsPct)}% des objectifs
+              </div>
+            </div>
+          )}
+          {savingsPct === 0 && (
+            <CardSub>
+              {savingsSummary.contributionCount > 0
+                ? `+${formatCAD(savingsSummary.totalContributions)} ce mois`
+                : 'Aucune contribution'}
+            </CardSub>
+          )}
+        </SummaryCard>
+
+        {/* Card 4 — Dettes */}
+        <SummaryCard href="/projets">
+          <CardIcon className="dettes">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+              <line x1="1" y1="10" x2="23" y2="10" />
+            </svg>
+          </CardIcon>
+          <CardLabel>Dettes</CardLabel>
+          <CardAmount color="var(--error)">
+            {Math.round(totalDebtBalance).toLocaleString('fr-CA')}
+            <span style={{ fontSize: '0.5em', fontWeight: 600, verticalAlign: 'super' }}>$</span>
+          </CardAmount>
+          <CardSub>
+            {debtSummary.totalPayments > 0
+              ? `${formatCAD(debtSummary.totalPayments)}/mois en mensualités`
+              : 'Aucune mensualité ce mois'}
+          </CardSub>
+        </SummaryCard>
+
+      </div>
+
+      {/* ====== VALEUR NETTE — wide teal-50 card ====== */}
+      <div style={{
+        paddingTop: '24px',
+        paddingBottom: '8px',
+      }}>
+        <div style={{
+          background: 'var(--teal-50)',
+          border: '1px solid rgba(15, 118, 110, 0.1)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+          {/* Left: icon + label */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div style={{
+              width: '44px', height: '44px',
+              borderRadius: 'var(--radius-md)',
+              background: 'var(--teal-700)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: 'white', flexShrink: 0,
+            }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
+            </div>
+            <div>
+              <div style={{
+                fontSize: '11px', fontWeight: 700,
+                letterSpacing: '0.08em', textTransform: 'uppercase',
+                color: 'var(--teal-700)', marginBottom: '2px',
+              }}>
+                Valeur nette
+              </div>
+              <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--slate-500)' }}>
+                Épargne − Dettes
+              </div>
+            </div>
+          </div>
+
+          {/* Right: amount */}
+          <div style={{
+            fontSize: 'clamp(1.5rem, 5vw, 2rem)',
+            fontWeight: 800, letterSpacing: '-0.03em',
+            color: valeurNette >= 0 ? 'var(--teal-700)' : 'var(--error)',
+            fontVariantNumeric: 'tabular-nums',
           }}>
-            {formatCAD(availableAmount)}
-          </p>
-          <p style={{ fontSize: '11px', fontWeight: 600, marginTop: '2px', color: availableAmount >= 0 ? 'var(--amber)' : 'var(--negative-text)' }}>
-            {availableAmount >= 0 ? '🎯 Dans les temps' : '⚠️ Dépassé'}
-          </p>
+            {valeurNette >= 0 ? '+' : ''}
+            {Math.round(Math.abs(valeurNette)).toLocaleString('fr-CA')}
+            <span style={{ fontSize: '0.5em', fontWeight: 600, verticalAlign: 'super' }}>$</span>
+          </div>
         </div>
       </div>
 
-      {/* Revenus card */}
-      <Link href="/revenus" className="block card card-press">
-        <div style={{ padding: '16px 20px' }}>
-          <div className="flex items-center justify-between" style={{ marginBottom: '12px' }}>
-            <span className="section-label">Revenus</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
-          </div>
-
-          {/* Two columns: Reçu | Attendu */}
-          <div className="flex items-start justify-between" style={{ marginBottom: '12px' }}>
-            <div>
-              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '2px' }}>Reçu</p>
-              <p className="amount" style={{ fontSize: 'var(--text-lg)', color: 'var(--positive)' }}>
-                {formatCAD(incomeSummary.actualTotal)}
-              </p>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '2px' }}>Attendu</p>
-              <p className="amount" style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
-                {formatCAD(incomeSummary.expectedTotal)}
-              </p>
-            </div>
-          </div>
-
-          {/* Progress bar with overflow */}
-          <div className="progress-track" style={{ position: 'relative', overflow: 'visible' }}>
-            {revenuOver ? (
-              <>
-                {/* Full green bar */}
-                <div className="progress-fill" style={{
-                  width: '100%',
-                  background: 'var(--positive)',
-                  boxShadow: '0 0 8px rgba(5, 150, 105, 0.4)',
-                }} />
-                {/* Overflow glow indicator */}
-                <div style={{
-                  position: 'absolute', right: '-2px', top: '-3px', bottom: '-3px',
-                  width: '6px', borderRadius: '3px',
-                  background: 'var(--positive)',
-                  boxShadow: '0 0 10px rgba(5, 150, 105, 0.6)',
-                }} />
-              </>
-            ) : (
-              <div className="progress-fill" style={{
-                width: `${Math.max(revenuPct, 2)}%`,
-                background: revenuPct >= 80 ? 'var(--positive)' : 'var(--accent)',
-              }} />
-            )}
-          </div>
-
-          {/* Delta label */}
-          <p style={{ fontSize: 'var(--text-xs)', marginTop: '6px', fontWeight: 600, color: revenuOver ? 'var(--positive)' : 'var(--text-tertiary)' }}>
-            {revenuOver
-              ? `+${formatCAD(revenuDelta)} de plus que prevu`
-              : revenuDelta === 0
-                ? 'Objectif atteint'
-                : `${formatCAD(Math.abs(revenuDelta))} restant a recevoir`}
-          </p>
-        </div>
-      </Link>
-
-      {/* Depenses card */}
-      <Link href="/depenses" className="block card card-press">
-        <div style={{ padding: '16px 20px' }}>
-          <div className="flex items-center justify-between" style={{ marginBottom: '12px' }}>
-            <span className="section-label">Depenses</span>
-            <div className="flex items-center" style={{ gap: '8px' }}>
-              {summary.overdue_count > 0 && (
-                <span className="badge" style={{ background: 'var(--negative-subtle)', color: 'var(--negative-text)' }}>
-                  {summary.overdue_count} en retard
-                </span>
-              )}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
-            </div>
-          </div>
-
-          {/* Two columns: Dépensé | Charges fixes */}
-          <div className="flex items-start justify-between" style={{ marginBottom: '12px' }}>
-            <div>
-              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '2px' }}>Depense</p>
-              <p className="amount" style={{ fontSize: 'var(--text-lg)', color: depenseOver ? 'var(--negative-text)' : 'var(--text-primary)' }}>
-                {formatCAD(summary.paid_total)}
-              </p>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '2px' }}>Charges fixes</p>
-              <p className="amount" style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
-                {formatCAD(chargesFixes)}
-              </p>
-            </div>
-          </div>
-
-          {/* Progress bar with overflow */}
-          <div className="progress-track" style={{ position: 'relative', overflow: 'visible' }}>
-            {depenseOver ? (
-              <>
-                {/* Base fills the charges portion */}
-                <div className="progress-fill" style={{
-                  width: `${Math.min((chargesFixes / summary.paid_total) * 100, 100)}%`,
-                  background: 'var(--accent)',
-                  borderRadius: 'var(--radius-sm) 0 0 var(--radius-sm)',
-                  position: 'absolute', left: 0, top: 0, bottom: 0,
-                }} />
-                {/* Red overflow segment */}
-                <div style={{
-                  position: 'absolute',
-                  left: `${(chargesFixes / summary.paid_total) * 100}%`,
-                  right: 0, top: 0, bottom: 0,
-                  width: `${100 - (chargesFixes / summary.paid_total) * 100}%`,
-                  background: 'var(--negative)',
-                  borderRadius: '0 var(--radius-sm) var(--radius-sm) 0',
-                  boxShadow: '0 0 8px rgba(220, 38, 38, 0.3)',
-                }} />
-              </>
-            ) : (
-              <div className="progress-fill" style={{
-                width: `${Math.max(Math.min(depensePct, 100), 2)}%`,
-                background: depensePct >= 90 ? 'var(--warning)' : 'var(--accent)',
-              }} />
-            )}
-          </div>
-
-          {/* Delta label */}
-          <p style={{ fontSize: 'var(--text-xs)', marginTop: '6px', fontWeight: 600, color: depenseOver ? 'var(--negative-text)' : 'var(--text-tertiary)' }}>
-            {depenseOver
-              ? `+${formatCAD(depenseDelta)} au-dessus des charges`
-              : depenseDelta === 0
-                ? 'Toutes les charges payees'
-                : `${formatCAD(Math.abs(depenseDelta))} restant sur les charges`}
-          </p>
-        </div>
-      </Link>
-
-      {/* Epargne card */}
-      <Link href="/projets" className="block card card-press">
-        <div style={{ padding: '16px 20px' }}>
-          <div className="flex items-center justify-between" style={{ marginBottom: '12px' }}>
-            <span className="section-label">Epargne</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
-          </div>
-
-          {savingsSummary.totalContributions > 0 ? (
-            <>
-              <div className="flex items-start justify-between" style={{ marginBottom: '12px' }}>
-                <div>
-                  <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '2px' }}>Ce mois</p>
-                  <p className="amount" style={{ fontSize: 'var(--text-lg)', color: 'var(--positive)' }}>
-                    +{formatCAD(savingsSummary.totalContributions)}
-                  </p>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '2px' }}>Contributions</p>
-                  <p className="amount" style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
-                    {savingsSummary.contributionCount}
-                  </p>
-                </div>
-              </div>
-
-              {/* Breakdown by project (max 3) */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                {savingsSummary.byProject.slice(0, 3).map((p) => (
-                  <div key={p.expense_id} className="flex items-center justify-between" style={{ fontSize: 'var(--text-xs)' }}>
-                    <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>{p.name}</span>
-                    <span className="amount" style={{ color: 'var(--positive)', fontWeight: 600 }}>+{formatCAD(p.total)}</span>
-                  </div>
-                ))}
-                {savingsSummary.byProject.length > 3 && (
-                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', fontWeight: 500 }}>
-                    +{savingsSummary.byProject.length - 3} autre{savingsSummary.byProject.length - 3 > 1 ? 's' : ''}
-                  </p>
-                )}
-              </div>
-            </>
-          ) : (
-            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)', fontWeight: 500 }}>
-              Aucune contribution ce mois
-            </p>
-          )}
-        </div>
-      </Link>
-
-      {/* Dettes card */}
-      <Link href="/projets" className="block card card-press">
-        <div style={{ padding: '16px 20px' }}>
-          <div className="flex items-center justify-between" style={{ marginBottom: '12px' }}>
-            <span className="section-label">Dettes</span>
-            <div className="flex items-center" style={{ gap: '8px' }}>
-              {debtSummary.chargeCount > 0 && (
-                <span className="badge" style={{ background: 'var(--negative-subtle)', color: 'var(--negative-text)' }}>
-                  {debtSummary.chargeCount} charge{debtSummary.chargeCount > 1 ? 's' : ''}
-                </span>
-              )}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
-            </div>
-          </div>
-
-          {debtSummary.paymentCount > 0 || debtSummary.chargeCount > 0 ? (
-            <>
-              <div className="flex items-start justify-between" style={{ marginBottom: '12px' }}>
-                <div>
-                  <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '2px' }}>Paiements</p>
-                  <p className="amount" style={{ fontSize: 'var(--text-lg)', color: 'var(--positive)' }}>
-                    {formatCAD(debtSummary.totalPayments)}
-                  </p>
-                </div>
-                {debtSummary.totalCharges > 0 && (
-                  <div style={{ textAlign: 'right' }}>
-                    <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: '2px' }}>Nouvelles charges</p>
-                    <p className="amount" style={{ fontSize: 'var(--text-sm)', color: 'var(--negative-text)' }}>
-                      +{formatCAD(debtSummary.totalCharges)}
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Delta */}
-              <p style={{
-                fontSize: 'var(--text-xs)', fontWeight: 600,
-                color: debtSummary.netMovement > 0 ? 'var(--positive)' : debtSummary.netMovement < 0 ? 'var(--negative-text)' : 'var(--text-tertiary)',
-              }}>
-                {debtSummary.netMovement > 0
-                  ? `Dette reduite de ${formatCAD(debtSummary.netMovement)}`
-                  : debtSummary.netMovement < 0
-                    ? `Dette augmentee de ${formatCAD(Math.abs(debtSummary.netMovement))}`
-                    : 'Aucun mouvement net'}
-              </p>
-            </>
-          ) : (
-            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)', fontWeight: 500 }}>
-              Aucun mouvement ce mois
-            </p>
-          )}
-        </div>
-      </Link>
-
+      <style>{`
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(12px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 }

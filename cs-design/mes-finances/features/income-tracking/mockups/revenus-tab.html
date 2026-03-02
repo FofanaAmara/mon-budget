@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Finances — Revenus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       INCOME TRACKING — TAB REVENUS
+       Typography Monument stance.
+
+       The monument: received / expected as a
+       scoreboard fraction. Two numbers in tension.
+       The slash is the drama. The status badge
+       resolves it.
+    ======================================== */
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --teal-700: #0F766E;
+      --teal-800: #115E59;
+      --teal-600: #0D9488;
+      --teal-50: #F0FDFA;
+      --amber-500: #F59E0B;
+      --amber-600: #D97706;
+      --amber-100: #FEF3C7;
+      --slate-900: #0F172A;
+      --slate-700: #334155;
+      --slate-500: #64748B;
+      --slate-400: #94A3B8;
+      --slate-300: #CBD5E1;
+      --slate-200: #E2E8F0;
+      --slate-100: #F1F5F9;
+      --slate-50: #FAFBFC;
+      --white: #FFFFFF;
+      --success: #059669;
+      --success-light: #ECFDF5;
+      --warning: #F59E0B;
+      --warning-light: #FEF3C7;
+      --error: #DC2626;
+      --error-light: #FEF2F2;
+      --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --shadow-sm: 0 1px 2px rgba(15, 118, 110, 0.05);
+      --shadow-md: 0 4px 12px rgba(15, 118, 110, 0.08);
+      --shadow-lg: 0 8px 24px rgba(15, 118, 110, 0.12);
+      --shadow-xl: 0 16px 48px rgba(15, 23, 42, 0.12);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font);
+      color: var(--slate-900);
+      background: var(--slate-50);
+      line-height: 1.5;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    ::selection {
+      background: rgba(15, 118, 110, 0.15);
+      color: var(--slate-900);
+    }
+
+    /* ====== MOBILE HEADER ====== */
+
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .mobile-header-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .mobile-header-logo svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .mobile-header-wordmark {
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .mobile-header-wordmark b {
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .mobile-header-wordmark span {
+      font-weight: 600;
+      color: var(--teal-700);
+    }
+
+    .mobile-header-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--teal-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
+
+    /* ====== DESKTOP SIDEBAR ====== */
+
+    .sidebar {
+      display: none;
+    }
+
+    /* ====== MAIN CONTENT ====== */
+
+    .main {
+      padding: 0 0 100px;
+    }
+
+    /* ====== MONUMENT: THE SCOREBOARD ====== */
+
+    .monument {
+      padding: 28px 20px 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .monument-label-top {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal-700);
+      margin-bottom: 12px;
+    }
+
+    .monument-scoreboard {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 0;
+      line-height: 1;
+    }
+
+    .monument-received {
+      font-size: clamp(3rem, 12vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--slate-900);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .monument-slash {
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      font-weight: 300;
+      color: var(--slate-300);
+      margin: 0 clamp(4px, 1.5vw, 10px);
+      position: relative;
+      top: -0.05em;
+    }
+
+    .monument-expected {
+      font-size: clamp(1.8rem, 7vw, 3rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--slate-400);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .monument-currency {
+      font-size: 0.4em;
+      font-weight: 600;
+      color: var(--teal-700);
+      vertical-align: super;
+      margin-left: 2px;
+    }
+
+    .monument-sublabel {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate-500);
+      margin-top: 8px;
+      letter-spacing: 0.01em;
+    }
+
+    /* Progress bar under monument */
+    .monument-progress {
+      margin: 16px auto 0;
+      max-width: 240px;
+    }
+
+    .monument-progress-bar {
+      height: 6px;
+      background: var(--slate-100);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .monument-progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.8s ease;
+    }
+
+    .monument-progress-fill.complete { background: var(--teal-700); }
+    .monument-progress-fill.partial { background: var(--amber-500); }
+    .monument-progress-fill.over { background: var(--success); }
+
+    .monument-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .monument-status.success {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .monument-status.partial {
+      background: var(--warning-light);
+      color: var(--amber-600);
+    }
+
+    .monument-status.over {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .monument-status svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    /* ====== MONTH NAVIGATOR ====== */
+
+    .month-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 12px 20px;
+    }
+
+    .month-nav-btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--slate-200);
+      background: var(--white);
+      color: var(--slate-500);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .month-nav-btn:hover {
+      border-color: var(--teal-700);
+      color: var(--teal-700);
+      background: var(--teal-50);
+    }
+
+    .month-nav-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .month-nav-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+      min-width: 140px;
+      text-align: center;
+    }
+
+    /* ====== TABS ====== */
+
+    .tabs {
+      display: flex;
+      margin: 0 20px;
+      border-bottom: 2px solid var(--slate-100);
+      gap: 0;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 12px 16px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate-400);
+      cursor: pointer;
+      border: none;
+      background: none;
+      position: relative;
+      transition: color 0.2s ease;
+      letter-spacing: -0.01em;
+    }
+
+    .tab:hover {
+      color: var(--slate-700);
+    }
+
+    .tab.active {
+      color: var(--teal-700);
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 16px;
+      right: 16px;
+      height: 2px;
+      background: var(--teal-700);
+      border-radius: 1px 1px 0 0;
+    }
+
+    /* ====== INCOME LIST ====== */
+
+    .income-section {
+      margin: 20px 20px 0;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate-400);
+      margin-bottom: 10px;
+      padding-left: 4px;
+    }
+
+    .income-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .income-row {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      gap: 12px;
+      transition: background 0.15s ease;
+    }
+
+    .income-row:not(:last-child) {
+      border-bottom: 1px solid var(--slate-100);
+    }
+
+    .income-row:active {
+      background: var(--slate-50);
+    }
+
+    /* Status icon */
+    .income-status-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .income-status-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .income-status-icon.received {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .income-status-icon.expected {
+      background: var(--slate-100);
+      color: var(--slate-400);
+    }
+
+    .income-status-icon.partial {
+      background: var(--warning-light);
+      color: var(--amber-600);
+    }
+
+    .income-status-icon.missed {
+      background: var(--error-light);
+      color: var(--error);
+    }
+
+    /* Income info */
+    .income-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .income-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .income-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .income-frequency {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate-400);
+    }
+
+    .income-status-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .income-status-badge.received {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .income-status-badge.expected {
+      background: var(--slate-100);
+      color: var(--slate-400);
+    }
+
+    .income-status-badge.partial {
+      background: var(--warning-light);
+      color: var(--amber-600);
+    }
+
+    .income-status-badge.missed {
+      background: var(--error-light);
+      color: var(--error);
+    }
+
+    /* Income amounts */
+    .income-amounts {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .income-actual {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--slate-900);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .income-actual.received {
+      color: var(--teal-700);
+    }
+
+    .income-actual.partial {
+      color: var(--amber-600);
+    }
+
+    .income-expected-sub {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--slate-400);
+      margin-top: 1px;
+    }
+
+    /* Action chevron */
+    .income-action {
+      flex-shrink: 0;
+      width: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate-300);
+    }
+
+    .income-action svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ====== ADHOC SECTION ====== */
+
+    .adhoc-section {
+      margin: 20px 20px 0;
+    }
+
+    /* ====== EMPTY STATE ====== */
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .empty-state-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+
+    .empty-state-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate-400);
+      margin-bottom: 4px;
+    }
+
+    .empty-state-sub {
+      font-size: 12px;
+      color: var(--slate-300);
+    }
+
+    /* ====== FAB ====== */
+
+    .fab {
+      position: fixed;
+      bottom: max(72px, calc(56px + env(safe-area-inset-bottom)));
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--teal-700);
+      color: var(--white);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-lg);
+      transition: all 0.2s ease;
+      z-index: 40;
+    }
+
+    .fab:hover {
+      background: var(--teal-800);
+      transform: scale(1.05);
+    }
+
+    .fab:active {
+      transform: scale(0.97);
+    }
+
+    .fab svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* FAB label (tooltip on mobile) */
+    .fab-label {
+      position: fixed;
+      bottom: max(72px, calc(56px + env(safe-area-inset-bottom)));
+      right: 84px;
+      padding: 6px 14px;
+      background: var(--slate-900);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 8px;
+      white-space: nowrap;
+      box-shadow: var(--shadow-md);
+      z-index: 40;
+      opacity: 0;
+      transform: translateX(8px);
+      transition: all 0.2s ease;
+      pointer-events: none;
+      height: 56px;
+      display: flex;
+      align-items: center;
+    }
+
+    .fab:hover + .fab-label {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ====== BOTTOM NAV ====== */
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 8px 0;
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
+      background: var(--white);
+      border-top: 1px solid var(--slate-200);
+      z-index: 50;
+    }
+
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 4px 12px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .bottom-nav-item svg {
+      width: 22px;
+      height: 22px;
+      color: var(--slate-400);
+      transition: color 0.2s;
+    }
+
+    .bottom-nav-item span {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--slate-400);
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+
+    .bottom-nav-item.active svg {
+      color: var(--teal-700);
+    }
+
+    .bottom-nav-item.active span {
+      color: var(--teal-700);
+    }
+
+    /* ====== ANIMATIONS ====== */
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .monument { animation: fadeIn 0.6s ease both; }
+    .month-nav { animation: fadeIn 0.6s ease 0.1s both; }
+    .tabs { animation: fadeIn 0.6s ease 0.15s both; }
+    .income-section:nth-child(1) { animation: fadeIn 0.5s ease 0.2s both; }
+    .income-section:nth-child(2) { animation: fadeIn 0.5s ease 0.3s both; }
+    .adhoc-section { animation: fadeIn 0.5s ease 0.35s both; }
+    .fab { animation: fadeInScale 0.3s ease 0.5s both; }
+
+    /* Staggered income rows */
+    .income-row:nth-child(1) { animation: fadeIn 0.4s ease 0.25s both; }
+    .income-row:nth-child(2) { animation: fadeIn 0.4s ease 0.3s both; }
+    .income-row:nth-child(3) { animation: fadeIn 0.4s ease 0.35s both; }
+    .income-row:nth-child(4) { animation: fadeIn 0.4s ease 0.4s both; }
+
+    /* ====== RESPONSIVE -- TABLET ====== */
+
+    @media (min-width: 768px) {
+      .income-section,
+      .adhoc-section,
+      .month-nav,
+      .tabs {
+        max-width: 560px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    /* ====== RESPONSIVE -- DESKTOP ====== */
+
+    @media (min-width: 1024px) {
+      .mobile-header { display: none; }
+      .bottom-nav { display: none; }
+      .fab { display: none; }
+      .fab-label { display: none; }
+
+      body { display: flex; }
+
+      /* Sidebar */
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 260px;
+        height: 100vh;
+        height: 100dvh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: var(--white);
+        border-right: 1px solid var(--slate-200);
+        padding: 24px 0;
+        z-index: 60;
+      }
+
+      .sidebar-top { padding: 0 24px; }
+
+      .sidebar-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+
+      .sidebar-logo svg { width: 32px; height: 32px; }
+
+      .sidebar-wordmark {
+        font-size: 17px;
+        letter-spacing: -0.02em;
+      }
+
+      .sidebar-wordmark b { font-weight: 800; color: var(--slate-900); }
+      .sidebar-wordmark span { font-weight: 600; color: var(--teal-700); }
+
+      .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 0 12px;
+        margin-top: 32px;
+      }
+
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: var(--radius-sm);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--slate-500);
+        transition: all 0.15s ease;
+        letter-spacing: -0.01em;
+        position: relative;
+      }
+
+      .sidebar-link:hover {
+        background: var(--slate-100);
+        color: var(--slate-900);
+      }
+
+      .sidebar-link.active {
+        background: var(--teal-50);
+        color: var(--teal-700);
+        font-weight: 600;
+      }
+
+      .sidebar-link.active::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 8px;
+        bottom: 8px;
+        width: 3px;
+        background: var(--amber-500);
+        border-radius: 0 2px 2px 0;
+      }
+
+      .sidebar-link svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+      .sidebar-bottom {
+        padding: 16px 12px;
+        border-top: 1px solid var(--slate-100);
+      }
+
+      .sidebar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        border-radius: var(--radius-sm);
+      }
+
+      .sidebar-user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--teal-700);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--white);
+      }
+
+      .sidebar-user-info { flex: 1; }
+      .sidebar-user-name { font-size: 13px; font-weight: 600; color: var(--slate-900); }
+      .sidebar-user-email { font-size: 11px; color: var(--slate-400); }
+
+      /* Main offset */
+      .main {
+        flex: 1;
+        padding: 0 0 80px;
+        margin-left: 260px;
+      }
+
+      .monument { padding: 40px 40px 24px; }
+
+      .income-section,
+      .adhoc-section,
+      .month-nav,
+      .tabs {
+        max-width: 640px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* Desktop: Add income button (replaces FAB) */
+      .desktop-add-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: var(--teal-700);
+        color: var(--white);
+        border: none;
+        border-radius: var(--radius-md);
+        font-family: var(--font);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        letter-spacing: -0.01em;
+      }
+
+      .desktop-add-btn:hover {
+        background: var(--teal-800);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .desktop-add-btn svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    /* Hide desktop-only elements on mobile */
+    .desktop-add-btn {
+      display: none;
+    }
+
+    @media (min-width: 1280px) {
+      .monument-received { font-size: 5rem; }
+      .monument-expected { font-size: 3rem; }
+      .monument-slash { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== MOBILE HEADER ====== -->
+  <header class="mobile-header">
+    <a href="dashboard.html" class="mobile-header-logo">
+      <svg viewBox="-50 -50 100 100" fill="none">
+        <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+        <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+      </svg>
+      <span class="mobile-header-wordmark">
+        <b>Mes</b><span> Finances</span>
+      </span>
+    </a>
+    <div class="mobile-header-avatar">AF</div>
+  </header>
+
+  <!-- ====== DESKTOP SIDEBAR ====== -->
+  <aside class="sidebar">
+    <div>
+      <div class="sidebar-top">
+        <a href="dashboard.html" class="sidebar-logo">
+          <svg viewBox="-50 -50 100 100" fill="none">
+            <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+            <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+          </svg>
+          <span class="sidebar-wordmark">
+            <b>Mes</b><span> Finances</span>
+          </span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Tableau de bord
+        </a>
+        <a href="depenses.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          Depenses
+        </a>
+        <a href="revenus-tab.html" class="sidebar-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          Revenus
+        </a>
+        <a href="#" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          Parametres
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar">AF</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Amara Fofana</div>
+          <div class="sidebar-user-email">amara@email.com</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ====== MAIN ====== -->
+  <main class="main">
+
+    <!-- THE MONUMENT: Received / Expected -->
+    <section class="monument">
+      <p class="monument-label-top">Revenus</p>
+      <div class="monument-scoreboard">
+        <span class="monument-received">
+          5 000<span class="monument-currency">$</span>
+        </span>
+        <span class="monument-slash">/</span>
+        <span class="monument-expected">
+          5 000<span class="monument-currency">$</span>
+        </span>
+      </div>
+      <p class="monument-sublabel">recu sur attendu ce mois-ci</p>
+
+      <div class="monument-progress">
+        <div class="monument-progress-bar">
+          <div class="monument-progress-fill complete" style="width: 100%"></div>
+        </div>
+      </div>
+
+      <div class="monument-status success">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Tous les revenus recus
+      </div>
+    </section>
+
+    <!-- MONTH NAVIGATOR -->
+    <div class="month-nav">
+      <button class="month-nav-btn" aria-label="Mois precedent">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="month-nav-label">Mars 2026</span>
+      <button class="month-nav-btn" aria-label="Mois suivant">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active">Revenus</button>
+      <button class="tab">Allocation</button>
+    </div>
+
+    <!-- ====== TAB CONTENT: REVENUS ====== -->
+
+    <!-- Expected incomes -->
+    <div class="income-section">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+        <p class="section-label" style="margin-bottom: 0;">Revenus attendus (3)</p>
+        <button class="desktop-add-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Revenu ponctuel
+        </button>
+      </div>
+
+      <div class="income-card">
+        <!-- Salaire -- RECEIVED -->
+        <div class="income-row">
+          <div class="income-status-icon received">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="income-info">
+            <div class="income-name">Salaire — Employeur principal</div>
+            <div class="income-meta">
+              <span class="income-frequency">Bimensuel</span>
+              <span class="income-status-badge received">Recu</span>
+            </div>
+          </div>
+          <div class="income-amounts">
+            <div class="income-actual received">4 200 $</div>
+            <div class="income-expected-sub">sur 4 200 $ attendu</div>
+          </div>
+          <div class="income-action">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- Prime -- RECEIVED -->
+        <div class="income-row">
+          <div class="income-status-icon received">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="income-info">
+            <div class="income-name">Prime trimestrielle</div>
+            <div class="income-meta">
+              <span class="income-frequency">Trimestriel</span>
+              <span class="income-status-badge received">Recu</span>
+            </div>
+          </div>
+          <div class="income-amounts">
+            <div class="income-actual received">500 $</div>
+            <div class="income-expected-sub">sur 500 $ attendu</div>
+          </div>
+          <div class="income-action">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- Freelance -- EXPECTED (not yet received) -->
+        <div class="income-row">
+          <div class="income-status-icon expected">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="income-info">
+            <div class="income-name">Freelance — Design</div>
+            <div class="income-meta">
+              <span class="income-frequency">Variable</span>
+              <span class="income-status-badge expected">Attendu</span>
+            </div>
+          </div>
+          <div class="income-amounts">
+            <div class="income-actual">-- $</div>
+            <div class="income-expected-sub">300 $ attendu</div>
+          </div>
+          <div class="income-action">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Adhoc / ponctuel incomes -->
+    <div class="adhoc-section">
+      <p class="section-label">Revenus ponctuels (1)</p>
+      <div class="income-card">
+        <!-- Remboursement RAMQ -- RECEIVED adhoc -->
+        <div class="income-row">
+          <div class="income-status-icon received">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="income-info">
+            <div class="income-name">Remboursement RAMQ</div>
+            <div class="income-meta">
+              <span class="income-frequency">Ponctuel</span>
+              <span class="income-status-badge received">Recu</span>
+            </div>
+          </div>
+          <div class="income-amounts">
+            <div class="income-actual received">125 $</div>
+            <div class="income-expected-sub">ajout manuel</div>
+          </div>
+          <div class="income-action">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ====== FAB (Mobile) ====== -->
+  <button class="fab" title="Ajouter un revenu ponctuel">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+      <line x1="12" y1="5" x2="12" y2="19"/>
+      <line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+  </button>
+  <div class="fab-label">Revenu ponctuel</div>
+
+  <!-- ====== BOTTOM NAV ====== -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <span>Accueil</span>
+    </a>
+    <a href="depenses.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      <span>Depenses</span>
+    </a>
+    <a href="revenus-tab.html" class="bottom-nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      <span>Revenus</span>
+    </a>
+    <a href="#" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span>Reglages</span>
+    </a>
+  </nav>
+
+</body>
+</html>

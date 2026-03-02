@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Finances — Nouvelle charge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       DIRECTION 3 — TYPOGRAPHY MONUMENT
+       Charge Modal — Creation / Edition
+
+       Bottom-sheet on mobile, centered card on
+       desktop. Rich form with type toggle,
+       frequency chips, auto-pay switch, and
+       section/card dropdowns.
+    ======================================== */
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --teal-700: #0F766E;
+      --teal-800: #115E59;
+      --teal-600: #0D9488;
+      --teal-50: #F0FDFA;
+      --amber-500: #F59E0B;
+      --amber-600: #D97706;
+      --amber-100: #FEF3C7;
+      --slate-900: #0F172A;
+      --slate-700: #334155;
+      --slate-500: #64748B;
+      --slate-400: #94A3B8;
+      --slate-300: #CBD5E1;
+      --slate-200: #E2E8F0;
+      --slate-100: #F1F5F9;
+      --slate-50: #FAFBFC;
+      --white: #FFFFFF;
+      --success: #059669;
+      --success-light: #ECFDF5;
+      --warning: #F59E0B;
+      --error: #DC2626;
+      --error-light: #FEF2F2;
+      --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --shadow-sm: 0 1px 2px rgba(15, 118, 110, 0.05);
+      --shadow-md: 0 4px 12px rgba(15, 118, 110, 0.08);
+      --shadow-lg: 0 8px 24px rgba(15, 118, 110, 0.12);
+      --shadow-xl: 0 16px 48px rgba(15, 23, 42, 0.12);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font);
+      color: var(--slate-900);
+      background: var(--slate-50);
+      line-height: 1.5;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    ::selection {
+      background: rgba(15, 118, 110, 0.15);
+      color: var(--slate-900);
+    }
+
+    /* ====== BACKDROP ====== */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 200;
+      animation: backdropIn 0.25s ease both;
+    }
+
+    @keyframes backdropIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* ====== MODAL — MOBILE: BOTTOM SHEET ====== */
+
+    .modal {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 210;
+      max-height: calc(100dvh - 40px);
+      overflow-y: auto;
+      background: var(--white);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      box-shadow: 0 -8px 32px rgba(15, 23, 42, 0.18), 0 -4px 12px rgba(15, 118, 110, 0.06);
+      animation: sheetUp 0.35s cubic-bezier(0.32, 0.72, 0, 1) both;
+    }
+
+    @keyframes sheetUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Drag handle */
+    .modal-handle {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0 2px;
+    }
+
+    .modal-handle-bar {
+      width: 36px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--slate-300);
+    }
+
+    /* ====== MODAL HEADER ====== */
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px 0;
+    }
+
+    .modal-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-title-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      background: var(--teal-50);
+      color: var(--teal-700);
+    }
+
+    .modal-title-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .modal-title h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.02em;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: var(--slate-100);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--slate-500);
+      transition: all 0.15s;
+    }
+
+    .modal-close:hover {
+      background: var(--slate-200);
+      color: var(--slate-900);
+    }
+
+    .modal-close svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ====== MODAL BODY ====== */
+
+    .modal-body {
+      padding: 20px 20px 0;
+    }
+
+    /* ====== FORM GROUP ====== */
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate-500);
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--slate-900);
+      background: var(--white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      letter-spacing: -0.01em;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--teal-700);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.08);
+    }
+
+    .form-input::placeholder {
+      color: var(--slate-300);
+      font-weight: 400;
+    }
+
+    /* Amount input — monument style */
+    .form-amount-wrap {
+      position: relative;
+    }
+
+    .form-amount-input {
+      width: 100%;
+      padding: 14px 14px 14px 36px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+      color: var(--slate-900);
+      background: var(--white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .form-amount-input:focus {
+      outline: none;
+      border-color: var(--teal-700);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.08);
+    }
+
+    .form-amount-input::placeholder {
+      color: var(--slate-300);
+      font-weight: 400;
+      font-size: 18px;
+    }
+
+    .form-amount-symbol {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--teal-700);
+      pointer-events: none;
+    }
+
+    /* Select dropdown */
+    .form-select {
+      width: 100%;
+      padding: 10px 40px 10px 14px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--slate-900);
+      background: var(--white) url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2394A3B8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") right 14px center no-repeat;
+      -webkit-appearance: none;
+      appearance: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-select:focus {
+      outline: none;
+      border-color: var(--teal-700);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.08);
+    }
+
+    /* Row grid */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* ====== TYPE TOGGLE ====== */
+
+    .type-toggle {
+      display: flex;
+      background: var(--slate-100);
+      border-radius: var(--radius-sm);
+      padding: 3px;
+      gap: 3px;
+    }
+
+    .type-toggle-btn {
+      flex: 1;
+      padding: 9px 12px;
+      border: none;
+      border-radius: 6px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-500);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      letter-spacing: -0.01em;
+    }
+
+    .type-toggle-btn.active {
+      background: var(--white);
+      color: var(--teal-700);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .type-toggle-btn:hover:not(.active) {
+      color: var(--slate-700);
+    }
+
+    /* ====== FREQUENCY CHIPS ====== */
+
+    .freq-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .freq-chip {
+      padding: 8px 14px;
+      border: 1.5px solid var(--slate-200);
+      border-radius: 100px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-500);
+      background: var(--white);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      letter-spacing: -0.01em;
+    }
+
+    .freq-chip:hover {
+      border-color: var(--teal-700);
+      color: var(--teal-700);
+    }
+
+    .freq-chip.active {
+      background: var(--teal-700);
+      border-color: var(--teal-700);
+      color: var(--white);
+    }
+
+    /* ====== AUTO-PAY TOGGLE ====== */
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-top: 1px solid var(--slate-100);
+      border-bottom: 1px solid var(--slate-100);
+    }
+
+    .toggle-label-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .toggle-label-main {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+    }
+
+    .toggle-label-sub {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate-400);
+      letter-spacing: -0.01em;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 28px;
+      background: var(--slate-200);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch.active {
+      background: var(--teal-700);
+    }
+
+    .toggle-switch-knob {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 22px;
+      height: 22px;
+      background: var(--white);
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      transition: transform 0.2s ease;
+    }
+
+    .toggle-switch.active .toggle-switch-knob {
+      transform: translateX(20px);
+    }
+
+    /* ====== NOTES TEXTAREA ====== */
+
+    .form-textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--slate-900);
+      background: var(--white);
+      resize: vertical;
+      min-height: 72px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      letter-spacing: -0.01em;
+      -webkit-appearance: none;
+    }
+
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--teal-700);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.08);
+    }
+
+    .form-textarea::placeholder {
+      color: var(--slate-300);
+      font-weight: 400;
+    }
+
+    /* ====== MODAL ACTIONS ====== */
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      padding: 20px;
+      background: var(--white);
+      border-top: 1px solid var(--slate-100);
+      position: sticky;
+      bottom: 0;
+    }
+
+    .btn-cancel {
+      flex: 1;
+      padding: 13px;
+      background: var(--white);
+      color: var(--slate-700);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: -0.01em;
+      transition: all 0.15s;
+    }
+
+    .btn-cancel:hover {
+      background: var(--slate-50);
+      border-color: var(--slate-300);
+    }
+
+    .btn-submit {
+      flex: 1.4;
+      padding: 13px;
+      background: var(--teal-700);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: -0.01em;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-submit:hover {
+      background: var(--teal-800);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-submit svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ====== OPTIONAL: DATE INPUT FOR ONE_TIME ====== */
+
+    .form-date-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--slate-900);
+      background: var(--white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .form-date-input:focus {
+      outline: none;
+      border-color: var(--teal-700);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.08);
+    }
+
+    /* ====== CONDITIONAL SECTIONS ====== */
+
+    .recurring-fields {
+      display: block;
+    }
+
+    .oneoff-fields {
+      display: none;
+    }
+
+    body.mode-oneoff .recurring-fields {
+      display: none;
+    }
+
+    body.mode-oneoff .oneoff-fields {
+      display: block;
+    }
+
+    /* ====== DAY INPUT (small numeric) ====== */
+
+    .form-day-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--slate-900);
+      background: var(--white);
+      text-align: center;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .form-day-input:focus {
+      outline: none;
+      border-color: var(--teal-700);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.08);
+    }
+
+    .form-hint {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--slate-400);
+      margin-top: 4px;
+    }
+
+    /* ====== DESKTOP: CENTERED CARD ====== */
+
+    @media (min-width: 640px) {
+      .modal {
+        bottom: auto;
+        top: 50%;
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+        width: calc(100% - 40px);
+        max-width: 500px;
+        max-height: calc(100dvh - 48px);
+        border-radius: var(--radius-lg);
+        box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18), 0 8px 16px rgba(15, 118, 110, 0.06);
+        animation: cardIn 0.3s ease both;
+      }
+
+      @keyframes cardIn {
+        from { transform: translate(-50%, -50%) scale(0.95); opacity: 0; }
+        to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      }
+
+      .modal-handle {
+        display: none;
+      }
+
+      .modal-header {
+        padding: 24px 24px 0;
+      }
+
+      .modal-body {
+        padding: 24px 24px 0;
+      }
+
+      .modal-actions {
+        padding: 24px;
+      }
+    }
+
+    /* ====== HELPER PAGE CONTEXT ====== */
+
+    .page-context {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 10px 20px;
+      background: var(--slate-900);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-align: center;
+      z-index: 300;
+    }
+
+    .page-context a {
+      color: var(--amber-500);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Context bar -->
+  <div class="page-context">
+    Mockup: Modale creation/edition de charge &mdash; <a href="charges-list.html">Retour a la liste</a>
+  </div>
+
+  <!-- ====== BACKDROP ====== -->
+  <div class="modal-backdrop"></div>
+
+  <!-- ====== MODAL ====== -->
+  <div class="modal">
+
+    <!-- Drag handle (mobile) -->
+    <div class="modal-handle">
+      <div class="modal-handle-bar"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="modal-title">
+        <div class="modal-title-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+        </div>
+        <h3>Nouvelle charge</h3>
+      </div>
+      <button class="modal-close">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+
+      <!-- Nom -->
+      <div class="form-group">
+        <label class="form-label">Nom de la charge</label>
+        <input type="text" class="form-input" placeholder="ex: Loyer, Netflix, Assurance..." value="Loyer appartement">
+      </div>
+
+      <!-- Type toggle -->
+      <div class="form-group">
+        <label class="form-label">Type</label>
+        <div class="type-toggle">
+          <button class="type-toggle-btn active" onclick="document.body.classList.remove('mode-oneoff'); this.classList.add('active'); this.nextElementSibling.classList.remove('active');">Recurrente</button>
+          <button class="type-toggle-btn" onclick="document.body.classList.add('mode-oneoff'); this.classList.add('active'); this.previousElementSibling.classList.remove('active');">Ponctuelle</button>
+        </div>
+      </div>
+
+      <!-- Montant -->
+      <div class="form-group">
+        <label class="form-label">Montant</label>
+        <div class="form-amount-wrap">
+          <span class="form-amount-symbol">$</span>
+          <input type="number" class="form-amount-input" placeholder="0,00" value="1450" step="0.01" min="0">
+        </div>
+      </div>
+
+      <!-- RECURRING FIELDS -->
+      <div class="recurring-fields">
+
+        <!-- Frequence -->
+        <div class="form-group">
+          <label class="form-label">Frequence</label>
+          <div class="freq-chips">
+            <button class="freq-chip" onclick="selectFreq(this)">Hebdo</button>
+            <button class="freq-chip" onclick="selectFreq(this)">Bi-hebdo</button>
+            <button class="freq-chip active" onclick="selectFreq(this)">Mensuel</button>
+            <button class="freq-chip" onclick="selectFreq(this)">Bi-mensuel</button>
+            <button class="freq-chip" onclick="selectFreq(this)">Trimestriel</button>
+            <button class="freq-chip" onclick="selectFreq(this)">Annuel</button>
+          </div>
+        </div>
+
+        <!-- Jour de prelevement -->
+        <div class="form-group">
+          <label class="form-label">Jour de prelevement</label>
+          <input type="number" class="form-day-input" value="1" min="1" max="31" style="max-width: 100px;">
+          <div class="form-hint">Entre 1 et 31. Le prelevement aura lieu le jour le plus proche si le mois est plus court.</div>
+        </div>
+
+      </div>
+
+      <!-- ONE_TIME FIELDS -->
+      <div class="oneoff-fields">
+        <div class="form-group">
+          <label class="form-label">Date exacte</label>
+          <input type="date" class="form-date-input" value="2026-09-15">
+        </div>
+      </div>
+
+      <!-- Section (categorie) -->
+      <div class="form-group">
+        <label class="form-label">Section</label>
+        <select class="form-select">
+          <option value="">Choisir une section...</option>
+          <option value="maison" selected>&#x1F3E0; Maison</option>
+          <option value="transport">&#x1F697; Transport</option>
+          <option value="perso">&#x1F464; Perso</option>
+          <option value="sante">&#x1F3E5; Sante</option>
+          <option value="education">&#x1F393; Education</option>
+          <option value="autre">&#x1F4C1; Autre</option>
+        </select>
+      </div>
+
+      <!-- Carte associee -->
+      <div class="form-group">
+        <label class="form-label">Carte bancaire</label>
+        <select class="form-select">
+          <option value="">Choisir une carte...</option>
+          <option value="desjardins" selected>Desjardins ****4521</option>
+          <option value="visa">Visa ****7890</option>
+          <option value="mc">Mastercard ****3344</option>
+        </select>
+      </div>
+
+      <!-- Toggle auto-pay -->
+      <div class="form-group">
+        <div class="toggle-row">
+          <div class="toggle-label-group">
+            <span class="toggle-label-main">Prelevement automatique</span>
+            <span class="toggle-label-sub">La charge sera marquee payee sans action</span>
+          </div>
+          <div class="toggle-switch active" onclick="this.classList.toggle('active')">
+            <div class="toggle-switch-knob"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="form-group">
+        <label class="form-label">Notes <span style="font-weight:500; text-transform:none; letter-spacing:0; color:var(--slate-400);">(optionnel)</span></label>
+        <textarea class="form-textarea" placeholder="ex: Paye par virement, inclut le stationnement..."></textarea>
+      </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="modal-actions">
+      <button class="btn-cancel">Annuler</button>
+      <button class="btn-submit">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+        Enregistrer
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    // Frequency chip selection
+    function selectFreq(el) {
+      document.querySelectorAll('.freq-chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>

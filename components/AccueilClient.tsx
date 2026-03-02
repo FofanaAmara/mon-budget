@@ -6,8 +6,6 @@ import Onboarding from '@/components/Onboarding';
 import TabTableauDeBord from '@/components/accueil/TabTableauDeBord';
 import TabTimeline from '@/components/accueil/TabTimeline';
 import TabSanteFinanciere from '@/components/accueil/TabSanteFinanciere';
-import Link from 'next/link';
-import { formatCAD } from '@/lib/utils';
 import type { MonthSummary, MonthlyExpense, MonthlyIncome, Expense, MonthlySavingsSummary, MonthlyDebtSummary } from '@/lib/types';
 
 type Tab = 'dashboard' | 'timeline' | 'sante';
@@ -15,7 +13,7 @@ type Tab = 'dashboard' | 'timeline' | 'sante';
 const TABS: { key: Tab; label: string }[] = [
   { key: 'dashboard', label: 'Tableau de bord' },
   { key: 'timeline', label: 'Timeline' },
-  { key: 'sante', label: 'Santé' },
+  { key: 'sante', label: 'Santé financière' },
 ];
 
 type Props = {
@@ -51,109 +49,139 @@ export default function AccueilClient({
   const valeurNette = totalEpargne - totalDebtBalance;
   const availableAmount = incomeSummary.actualTotal - summary.paid_total;
 
+  const isPositive = availableAmount >= 0;
+  const amountFormatted = Math.abs(availableAmount).toLocaleString('fr-CA', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+
   return (
-    <div style={{ padding: '0 0 96px', minHeight: '100vh' }}>
+    <div style={{ paddingBottom: '100px', minHeight: '100vh' }}>
       {showOnboarding && <Onboarding onComplete={() => setShowOnboarding(false)} />}
-      {/* Patrimoine — above month nav, snapshot at instant T */}
-      <div style={{ padding: '20px 20px 0' }}>
-        <Link href="/projets" className="block card card-press" style={{
-          marginBottom: '20px',
-          padding: '16px 20px',
-          borderLeft: `3px solid ${valeurNette >= 0 ? 'var(--accent)' : 'var(--negative)'}`,
-        }}>
-          <div className="flex items-center justify-between" style={{ marginBottom: '6px' }}>
-            <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Patrimoine
-            </span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ opacity: 0.4 }}><path d="M9 18l6-6-6-6" /></svg>
-          </div>
-          <p className="amount" style={{ fontSize: 'var(--text-xl)', fontWeight: 750, color: valeurNette >= 0 ? 'var(--accent)' : 'var(--negative)' }}>
-            {valeurNette >= 0 ? '+' : ''}{formatCAD(valeurNette)}
-          </p>
-          <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '4px' }}>
-            Actifs: {formatCAD(totalEpargne)} | Passifs: {formatCAD(totalDebtBalance)}
-          </p>
-        </Link>
 
-        <MonthNavigator month={month} basePath="/" />
-      </div>
-
-      {/* Monument: solde disponible */}
-      <div style={{
-        padding: '24px 20px 20px',
+      {/* ====== MONUMENT: BALANCE HERO ====== */}
+      <section style={{
+        padding: '28px 20px 0',
         textAlign: 'center',
+        animation: 'fadeInUp 0.6s ease both',
       }}>
-        <p style={{ fontSize: '15px', fontWeight: 500, color: 'var(--text-tertiary)', marginBottom: '4px' }}>
-          Bonjour 👋
-        </p>
         <p style={{
-          fontSize: '13px', fontWeight: 600, letterSpacing: '0.08em',
-          textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '16px',
+          fontSize: '15px',
+          fontWeight: 500,
+          color: 'var(--slate-500)',
+          marginBottom: '4px',
         }}>
-          {new Date(month + '-01').toLocaleDateString('fr-CA', { month: 'long', year: 'numeric' })}
+          Bonjour
         </p>
-        <p style={{
-          fontSize: 'clamp(3.5rem, 15vw, 6rem)',
-          fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1,
-          color: 'var(--text-primary)',
+
+        {/* Month Navigator */}
+        <div style={{ marginBottom: '20px' }}>
+          <MonthNavigator month={month} basePath="/" />
+        </div>
+
+        {/* THE MONUMENT: Available amount */}
+        <div style={{
+          fontSize: 'clamp(3.5rem, 14vw, 6rem)',
+          fontWeight: 800,
+          letterSpacing: '-0.04em',
+          lineHeight: 1,
+          color: isPositive ? 'var(--teal-700)' : 'var(--error)',
+          transition: 'color 0.3s ease',
+          fontVariantNumeric: 'tabular-nums',
         }}>
-          <span style={{ fontSize: '0.4em', fontWeight: 600, color: 'var(--accent)', verticalAlign: 'super' }}>$</span>
-          {Math.abs(availableAmount).toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-        </p>
-        <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-tertiary)', marginTop: '8px', letterSpacing: '0.02em' }}>
-          {availableAmount >= 0 ? 'disponibles ce mois-ci' : 'de dépassement ce mois-ci'}
-        </p>
-        {/* Status badge */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px' }}>
+          {amountFormatted}
           <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: '6px',
-            padding: '4px 12px',
-            background: availableAmount >= 0 ? 'var(--positive-subtle)' : 'var(--negative-subtle)',
-            borderRadius: '100px',
-            fontSize: '13px', fontWeight: 600,
-            color: availableAmount >= 0 ? 'var(--positive-text)' : 'var(--negative-text)',
+            fontSize: '0.4em',
+            fontWeight: 600,
+            color: 'inherit',
+            verticalAlign: 'super',
+            marginLeft: '2px',
           }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              {availableAmount >= 0
-                ? <><path d="M20 6L9 17l-5-5"/></>
-                : <><path d="M18 6L6 18M6 6l12 12"/></>
-              }
-            </svg>
-            {availableAmount >= 0 ? 'Dans les temps' : 'Budget dépassé'}
+            $
           </span>
         </div>
+
+        <p style={{
+          fontSize: '14px',
+          fontWeight: 500,
+          color: 'var(--slate-500)',
+          marginTop: '8px',
+          letterSpacing: '0.02em',
+        }}>
+          {isPositive ? 'Disponible ce mois-ci' : 'De dépassement ce mois-ci'}
+        </p>
+
+        {/* Status badge */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px', marginBottom: '4px' }}>
+          <span style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '5px 14px',
+            background: isPositive ? 'var(--success-light)' : 'var(--error-light)',
+            borderRadius: '100px',
+            fontSize: '13px',
+            fontWeight: 600,
+            color: isPositive ? 'var(--positive)' : 'var(--error)',
+          }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              {isPositive
+                ? <polyline points="20 6 9 17 4 12" />
+                : <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>
+              }
+            </svg>
+            {isPositive ? 'Ton mois est sous contrôle' : 'Budget dépassé'}
+          </span>
+        </div>
+      </section>
+
+      {/* ====== TABS — UNDERLINE STYLE ====== */}
+      <div style={{
+        display: 'flex',
+        borderBottom: '2px solid var(--slate-100)',
+        margin: '24px 20px 0',
+        gap: 0,
+        animation: 'fadeInUp 0.6s ease 0.1s both',
+      }}>
+        {TABS.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            style={{
+              flex: 1,
+              padding: '12px 4px',
+              textAlign: 'center',
+              fontSize: '13px',
+              fontWeight: activeTab === tab.key ? 700 : 600,
+              color: activeTab === tab.key ? 'var(--teal-700)' : 'var(--slate-400)',
+              background: 'none',
+              border: 'none',
+              borderBottom: `2px solid ${activeTab === tab.key ? 'var(--teal-700)' : 'transparent'}`,
+              marginBottom: '-2px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              fontFamily: 'inherit',
+              letterSpacing: '-0.01em',
+              whiteSpace: 'nowrap',
+            }}
+            onMouseEnter={(e) => {
+              if (activeTab !== tab.key) {
+                (e.currentTarget as HTMLButtonElement).style.color = 'var(--slate-700)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (activeTab !== tab.key) {
+                (e.currentTarget as HTMLButtonElement).style.color = 'var(--slate-400)';
+              }
+            }}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
-      {/* Tab strip + content */}
-      <div style={{ padding: '0 20px' }}>
-        <div className="flex scrollbar-hide" style={{
-          gap: '6px', marginBottom: '20px',
-          background: 'var(--surface-inset)',
-          borderRadius: 'var(--radius-md)',
-          padding: '4px',
-        }}>
-          {TABS.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              style={{
-                flex: 1, padding: '8px 12px',
-                borderRadius: 'var(--radius-sm)',
-                fontSize: 'var(--text-xs)', fontWeight: 650,
-                cursor: 'pointer',
-                background: activeTab === tab.key ? 'var(--surface-raised)' : 'transparent',
-                color: activeTab === tab.key ? 'var(--text-primary)' : 'var(--text-tertiary)',
-                border: 'none',
-                boxShadow: activeTab === tab.key ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-                transition: 'all 0.15s ease',
-              }}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Tab content */}
+      {/* ====== TAB CONTENT ====== */}
+      <div style={{ padding: '0 20px', animation: 'fadeInUp 0.4s ease 0.2s both' }}>
         {activeTab === 'dashboard' && (
           <TabTableauDeBord
             summary={summary}
@@ -161,6 +189,9 @@ export default function AccueilClient({
             totalMonthlyExpenses={totalMonthlyExpenses}
             savingsSummary={savingsSummary}
             debtSummary={debtSummary}
+            totalDebtBalance={totalDebtBalance}
+            totalEpargne={totalEpargne}
+            valeurNette={valeurNette}
           />
         )}
 
@@ -178,9 +209,20 @@ export default function AccueilClient({
             expenses={expenses}
             monthlyIncomeFromTemplates={monthlyIncomeFromTemplates}
             totalMonthlyExpenses={totalMonthlyExpenses}
+            availableAmount={availableAmount}
+            totalEpargne={totalEpargne}
+            totalDebtBalance={totalDebtBalance}
+            valeurNette={valeurNette}
           />
         )}
       </div>
+
+      <style>{`
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(12px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 }

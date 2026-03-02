@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Finances — Patrimoine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       DIRECTION 3 — TYPOGRAPHY MONUMENT
+       Patrimoine (Epargne & Dettes) — Mes Finances
+
+       The net worth is THE monument: a single
+       massive figure that confronts the user.
+       Teal when positive, red when negative.
+       Two sections orbit below — savings (growth,
+       teal left-border) and debts (urgency, red
+       left-border). Progress bars for savings
+       projects. No charts, no decoration.
+       The numbers ARE the design.
+    ======================================== */
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --teal-700: #0F766E;
+      --teal-800: #115E59;
+      --teal-600: #0D9488;
+      --teal-50: #F0FDFA;
+      --amber-500: #F59E0B;
+      --amber-600: #D97706;
+      --amber-100: #FEF3C7;
+      --slate-900: #0F172A;
+      --slate-700: #334155;
+      --slate-500: #64748B;
+      --slate-400: #94A3B8;
+      --slate-300: #CBD5E1;
+      --slate-200: #E2E8F0;
+      --slate-100: #F1F5F9;
+      --slate-50: #FAFBFC;
+      --white: #FFFFFF;
+      --success: #059669;
+      --success-light: #ECFDF5;
+      --warning: #F59E0B;
+      --warning-light: #FEF3C7;
+      --error: #DC2626;
+      --error-light: #FEF2F2;
+      --negative: #DC2626;
+      --accent: #0F766E;
+      --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --shadow-sm: 0 1px 2px rgba(15, 118, 110, 0.05);
+      --shadow-md: 0 4px 12px rgba(15, 118, 110, 0.08);
+      --shadow-lg: 0 8px 24px rgba(15, 118, 110, 0.12);
+      --shadow-xl: 0 16px 48px rgba(15, 23, 42, 0.12);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font);
+      color: var(--slate-900);
+      background: var(--slate-50);
+      line-height: 1.5;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    ::selection {
+      background: rgba(15, 118, 110, 0.15);
+      color: var(--slate-900);
+    }
+
+    /* ====== MOBILE HEADER ====== */
+
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .mobile-header-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .mobile-header-logo svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .mobile-header-wordmark {
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .mobile-header-wordmark b {
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .mobile-header-wordmark span {
+      font-weight: 600;
+      color: var(--teal-700);
+    }
+
+    .mobile-header-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--teal-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
+
+    /* ====== DESKTOP SIDEBAR ====== */
+
+    .sidebar {
+      display: none;
+    }
+
+    /* ====== MAIN ====== */
+
+    .main {
+      padding: 0 0 120px;
+    }
+
+    /* ====== MONUMENT: NET WORTH ====== */
+
+    .monument {
+      padding: 32px 20px 24px;
+      text-align: center;
+      position: relative;
+    }
+
+    .monument-label-top {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal-700);
+      margin-bottom: 10px;
+    }
+
+    .monument-amount {
+      font-size: clamp(3rem, 12vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .monument-amount.positive {
+      color: var(--accent);
+    }
+
+    .monument-amount.negative {
+      color: var(--negative);
+    }
+
+    .monument-amount .sign {
+      font-size: 0.65em;
+      font-weight: 700;
+      vertical-align: baseline;
+    }
+
+    .monument-amount .dollar {
+      font-size: 0.4em;
+      font-weight: 600;
+      vertical-align: super;
+      margin-left: 2px;
+    }
+
+    .monument-amount.positive .dollar {
+      color: var(--teal-800);
+    }
+
+    .monument-amount.negative .dollar {
+      color: var(--error);
+    }
+
+    .monument-sub {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate-400);
+      margin-top: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .monument-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 5px 14px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .monument-status.positive {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .monument-status.negative {
+      background: var(--error-light);
+      color: var(--error);
+    }
+
+    .monument-status svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ====== TOTALS BAR (Epargne / Dettes) ====== */
+
+    .totals-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin: 0 20px;
+      background: var(--slate-100);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .totals-item {
+      padding: 16px 12px;
+      background: var(--white);
+      text-align: center;
+    }
+
+    .totals-item:first-child {
+      border-radius: var(--radius-md) 0 0 var(--radius-md);
+    }
+
+    .totals-item:last-child {
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+
+    .totals-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate-400);
+      margin-bottom: 4px;
+    }
+
+    .totals-value {
+      font-size: clamp(1.2rem, 4vw, 1.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .totals-value.savings { color: var(--teal-700); }
+    .totals-value.debts { color: var(--error); }
+
+    .totals-value .dollar-sm {
+      font-size: 0.5em;
+      font-weight: 600;
+    }
+
+    .totals-value.savings .dollar-sm { color: var(--teal-800); }
+    .totals-value.debts .dollar-sm { color: var(--error); }
+
+    .totals-count {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--slate-400);
+      margin-top: 2px;
+    }
+
+    /* ====== SECTION HEADER ====== */
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-title.teal { color: var(--teal-700); }
+    .section-title.red { color: var(--error); }
+
+    .section-link {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--teal-700);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+
+    .section-link:hover {
+      text-decoration: underline;
+    }
+
+    /* ====== EPARGNE SECTION ====== */
+
+    .epargne-section {
+      margin: 28px 20px 0;
+    }
+
+    .pot-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Pot card (savings project) */
+    .pot-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-left: 4px solid var(--teal-700);
+      border-radius: var(--radius-lg);
+      padding: 18px 18px 16px;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .pot-card:hover {
+      border-color: rgba(15, 118, 110, 0.2);
+      border-left-color: var(--teal-700);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .pot-card:active {
+      transform: translateY(0);
+    }
+
+    .pot-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .pot-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .pot-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+    }
+
+    .pot-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 3px;
+      flex-wrap: wrap;
+    }
+
+    .pot-type-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate-400);
+    }
+
+    .pot-meta-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--slate-300);
+      flex-shrink: 0;
+    }
+
+    .pot-target-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate-500);
+    }
+
+    .pot-amount {
+      font-size: clamp(1.3rem, 5vw, 1.6rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--teal-700);
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .pot-amount .dollar-sm {
+      font-size: 0.5em;
+      font-weight: 600;
+      color: var(--teal-800);
+    }
+
+    /* Progress bar for pot */
+    .pot-progress {
+      margin-top: 14px;
+    }
+
+    .pot-progress-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .pot-progress-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate-500);
+      letter-spacing: -0.01em;
+    }
+
+    .pot-progress-label strong {
+      font-weight: 700;
+      color: var(--slate-700);
+    }
+
+    .pot-progress-percent {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--amber-500);
+    }
+
+    .pot-bar {
+      height: 8px;
+      background: var(--slate-100);
+      border-radius: 4px;
+      overflow: visible;
+      position: relative;
+    }
+
+    .pot-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--teal-700), var(--teal-800));
+      position: relative;
+      transition: width 0.8s ease;
+    }
+
+    /* Amber dot at progress tip */
+    .pot-bar-fill::after {
+      content: '';
+      position: absolute;
+      right: -1px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 12px;
+      height: 12px;
+      background: var(--amber-500);
+      border-radius: 50%;
+      border: 2px solid var(--white);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+
+    /* Monthly suggestion chip */
+    .pot-suggestion {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 10px;
+      padding: 4px 10px;
+      background: var(--teal-50);
+      border: 1px solid rgba(15, 118, 110, 0.1);
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--teal-700);
+      letter-spacing: 0.01em;
+    }
+
+    .pot-suggestion svg {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+    }
+
+    /* Libre pot: no progress bar, simpler */
+    .pot-card.libre .pot-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pot-libre-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      background: var(--teal-50);
+      color: var(--teal-700);
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ====== DETTES SECTION ====== */
+
+    .dettes-section {
+      margin: 32px 20px 0;
+    }
+
+    .dette-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Debt card */
+    .dette-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-left: 4px solid var(--error);
+      border-radius: var(--radius-lg);
+      padding: 18px 18px 16px;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .dette-card:hover {
+      border-color: rgba(220, 38, 38, 0.15);
+      border-left-color: var(--error);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .dette-card:active {
+      transform: translateY(0);
+    }
+
+    .dette-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .dette-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .dette-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+    }
+
+    .dette-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 3px;
+      flex-wrap: wrap;
+    }
+
+    .dette-type-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate-400);
+    }
+
+    .dette-meta-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--slate-300);
+      flex-shrink: 0;
+    }
+
+    .dette-rate {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--error);
+      letter-spacing: -0.01em;
+    }
+
+    .dette-amount {
+      font-size: clamp(1.3rem, 5vw, 1.6rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--error);
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .dette-amount .dollar-sm {
+      font-size: 0.5em;
+      font-weight: 600;
+      color: var(--error);
+    }
+
+    /* Debt details row */
+    .dette-details {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--slate-100);
+      gap: 8px;
+    }
+
+    .dette-payment {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--slate-500);
+      letter-spacing: -0.01em;
+    }
+
+    .dette-payment svg {
+      width: 14px;
+      height: 14px;
+      color: var(--slate-400);
+      flex-shrink: 0;
+    }
+
+    .dette-payment strong {
+      font-weight: 700;
+      color: var(--slate-700);
+    }
+
+    .dette-remaining {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate-400);
+      letter-spacing: -0.01em;
+    }
+
+    .dette-remaining strong {
+      font-weight: 700;
+      color: var(--slate-700);
+    }
+
+    /* ====== FAB EXPANDABLE ====== */
+
+    .fab-container {
+      position: fixed;
+      bottom: max(72px, calc(56px + env(safe-area-inset-bottom)));
+      right: 20px;
+      z-index: 40;
+    }
+
+    .fab {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--teal-700);
+      color: var(--white);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-lg);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      z-index: 2;
+    }
+
+    .fab:hover {
+      background: var(--teal-800);
+      transform: scale(1.05);
+    }
+
+    .fab svg {
+      width: 24px;
+      height: 24px;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .fab.expanded svg {
+      transform: rotate(45deg);
+    }
+
+    .fab.expanded {
+      background: var(--teal-800);
+    }
+
+    /* FAB menu */
+    .fab-menu {
+      position: absolute;
+      bottom: 64px;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px) scale(0.95);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .fab-menu.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    .fab-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+      transition: all 0.2s ease;
+    }
+
+    .fab-menu-item:hover {
+      border-color: rgba(15, 118, 110, 0.2);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-1px);
+    }
+
+    .fab-menu-item:active {
+      transform: translateY(0);
+    }
+
+    .fab-menu-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .fab-menu-icon.savings {
+      background: var(--teal-50);
+      color: var(--teal-700);
+    }
+
+    .fab-menu-icon.debt {
+      background: var(--error-light);
+      color: var(--error);
+    }
+
+    .fab-menu-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* FAB backdrop */
+    .fab-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.3);
+      backdrop-filter: blur(2px);
+      z-index: 39;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .fab-backdrop.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* ====== BOTTOM NAV ====== */
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 8px 0;
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
+      background: var(--white);
+      border-top: 1px solid var(--slate-200);
+      z-index: 50;
+    }
+
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 4px 12px;
+      text-decoration: none;
+    }
+
+    .bottom-nav-item svg {
+      width: 22px;
+      height: 22px;
+      color: var(--slate-400);
+      transition: color 0.2s;
+    }
+
+    .bottom-nav-item span {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--slate-400);
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+
+    .bottom-nav-item.active svg {
+      color: var(--teal-700);
+    }
+
+    .bottom-nav-item.active span {
+      color: var(--teal-700);
+    }
+
+    /* ====== RESPONSIVE — TABLET ====== */
+
+    @media (min-width: 768px) {
+      .totals-bar {
+        max-width: 560px;
+        margin: 0 auto;
+      }
+
+      .epargne-section,
+      .dettes-section {
+        max-width: 560px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    /* ====== RESPONSIVE — DESKTOP ====== */
+
+    @media (min-width: 1024px) {
+      .mobile-header {
+        display: none;
+      }
+
+      .bottom-nav {
+        display: none;
+      }
+
+      .fab-container {
+        display: none;
+      }
+
+      .fab-backdrop {
+        display: none;
+      }
+
+      body {
+        display: flex;
+      }
+
+      /* ====== FIXED SIDEBAR ====== */
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 260px;
+        height: 100vh;
+        height: 100dvh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+        background: var(--white);
+        border-right: 1px solid var(--slate-200);
+        padding: 24px 0;
+        flex-shrink: 0;
+        z-index: 60;
+      }
+
+      .sidebar-top {
+        padding: 0 24px;
+      }
+
+      .sidebar-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+
+      .sidebar-logo svg {
+        width: 32px;
+        height: 32px;
+      }
+
+      .sidebar-wordmark {
+        font-size: 17px;
+        letter-spacing: -0.02em;
+      }
+
+      .sidebar-wordmark b {
+        font-weight: 800;
+        color: var(--slate-900);
+      }
+
+      .sidebar-wordmark span {
+        font-weight: 600;
+        color: var(--teal-700);
+      }
+
+      .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 0 12px;
+        margin-top: 32px;
+      }
+
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: var(--radius-sm);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--slate-500);
+        transition: all 0.15s ease;
+        letter-spacing: -0.01em;
+        position: relative;
+      }
+
+      .sidebar-link:hover {
+        background: var(--slate-100);
+        color: var(--slate-900);
+      }
+
+      .sidebar-link.active {
+        background: var(--teal-50);
+        color: var(--teal-700);
+        font-weight: 600;
+      }
+
+      .sidebar-link.active::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 8px;
+        bottom: 8px;
+        width: 3px;
+        background: var(--amber-500);
+        border-radius: 0 2px 2px 0;
+      }
+
+      .sidebar-link svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+      }
+
+      .sidebar-bottom {
+        padding: 16px 12px;
+        border-top: 1px solid var(--slate-100);
+      }
+
+      .sidebar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        border-radius: var(--radius-sm);
+      }
+
+      .sidebar-user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--teal-700);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--white);
+      }
+
+      .sidebar-user-info {
+        flex: 1;
+      }
+
+      .sidebar-user-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--slate-900);
+      }
+
+      .sidebar-user-email {
+        font-size: 11px;
+        font-weight: 400;
+        color: var(--slate-400);
+      }
+
+      /* Main content desktop */
+      .main {
+        flex: 1;
+        padding: 0 0 80px;
+        max-width: 100%;
+        overflow-x: hidden;
+        margin-left: 260px;
+      }
+
+      .monument {
+        padding: 40px 40px 28px;
+      }
+
+      .monument-amount {
+        font-size: 5rem;
+      }
+
+      /* Desktop 2-col layout */
+      .desktop-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      .totals-bar {
+        grid-column: 1 / -1;
+        max-width: 100%;
+        margin: 0;
+      }
+
+      .epargne-section,
+      .dettes-section {
+        margin: 0;
+        max-width: 100%;
+      }
+
+      /* Desktop add buttons inside section headers */
+      .desktop-add-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 7px 14px;
+        background: var(--teal-700);
+        color: var(--white);
+        border: none;
+        border-radius: var(--radius-sm);
+        font-family: var(--font);
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        letter-spacing: -0.01em;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+      }
+
+      .desktop-add-btn:hover {
+        background: var(--teal-800);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .desktop-add-btn:active {
+        transform: translateY(0);
+      }
+
+      .desktop-add-btn svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      .desktop-add-btn.debt-btn {
+        background: var(--white);
+        color: var(--error);
+        border: 1.5px solid var(--error);
+      }
+
+      .desktop-add-btn.debt-btn:hover {
+        background: var(--error-light);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+      }
+    }
+
+    /* Hide desktop-only elements on mobile */
+    @media (max-width: 1023px) {
+      .desktop-add-btn {
+        display: none;
+      }
+    }
+
+    @media (min-width: 1280px) {
+      .monument-amount {
+        font-size: 5.5rem;
+      }
+    }
+
+    /* ====== ANIMATIONS ====== */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .monument { animation: fadeIn 0.6s ease both; }
+    .totals-bar { animation: fadeIn 0.6s ease 0.12s both; }
+    .epargne-section { animation: fadeIn 0.6s ease 0.2s both; }
+    .dettes-section { animation: fadeIn 0.6s ease 0.28s both; }
+
+    .pot-card, .dette-card {
+      animation: fadeIn 0.5s ease both;
+    }
+
+    .pot-card:nth-child(1) { animation-delay: 0.25s; }
+    .pot-card:nth-child(2) { animation-delay: 0.32s; }
+    .pot-card:nth-child(3) { animation-delay: 0.39s; }
+
+    .dette-card:nth-child(1) { animation-delay: 0.33s; }
+    .dette-card:nth-child(2) { animation-delay: 0.4s; }
+  </style>
+</head>
+<body>
+
+  <!-- ====== MOBILE HEADER ====== -->
+  <header class="mobile-header">
+    <a href="dashboard.html" class="mobile-header-logo">
+      <svg viewBox="-50 -50 100 100" fill="none">
+        <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+        <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+      </svg>
+      <span class="mobile-header-wordmark">
+        <b>Mes</b><span> Finances</span>
+      </span>
+    </a>
+    <div class="mobile-header-avatar">AF</div>
+  </header>
+
+  <!-- ====== DESKTOP SIDEBAR ====== -->
+  <aside class="sidebar">
+    <div>
+      <div class="sidebar-top">
+        <a href="dashboard.html" class="sidebar-logo">
+          <svg viewBox="-50 -50 100 100" fill="none">
+            <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+            <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+          </svg>
+          <span class="sidebar-wordmark">
+            <b>Mes</b><span> Finances</span>
+          </span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Tableau de bord
+        </a>
+        <a href="depenses.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          Depenses
+        </a>
+        <a href="#" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          Revenus
+        </a>
+        <a href="#" class="sidebar-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 010-4h14v4"/><path d="M3 5v14a2 2 0 002 2h16v-5"/><path d="M18 12a2 2 0 000 4h4v-4h-4z"/></svg>
+          Patrimoine
+        </a>
+        <a href="#" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          Parametres
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar">AF</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Amara Fofana</div>
+          <div class="sidebar-user-email">amara@email.com</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ====== MAIN ====== -->
+  <main class="main">
+
+    <!-- THE MONUMENT: Net Worth -->
+    <section class="monument">
+      <p class="monument-label-top">Valeur nette</p>
+      <div class="monument-amount positive">
+        <span class="sign">+</span>12 430<span class="dollar">$</span>
+      </div>
+      <p class="monument-sub">Epargne totale moins dettes</p>
+      <div class="monument-status positive">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        En croissance
+      </div>
+    </section>
+
+    <div class="desktop-grid">
+
+      <!-- TOTALS: Epargne / Dettes -->
+      <div class="totals-bar">
+        <div class="totals-item">
+          <div class="totals-label">Epargne totale</div>
+          <div class="totals-value savings">
+            18 430<span class="dollar-sm">$</span>
+          </div>
+          <div class="totals-count">3 pots</div>
+        </div>
+        <div class="totals-item">
+          <div class="totals-label">Dettes totales</div>
+          <div class="totals-value debts">
+            6 000<span class="dollar-sm">$</span>
+          </div>
+          <div class="totals-count">2 dettes</div>
+        </div>
+      </div>
+
+      <!-- ====== EPARGNE ====== -->
+      <div class="epargne-section">
+        <div class="section-header">
+          <h2 class="section-title teal">Epargne</h2>
+          <button class="desktop-add-btn" onclick="openNewProject()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Nouveau projet
+          </button>
+        </div>
+
+        <div class="pot-list">
+
+          <!-- Pot 1: Epargne libre (non-deletable) -->
+          <div class="pot-card libre">
+            <div class="pot-card-top">
+              <div class="pot-info">
+                <div class="pot-name">
+                  Epargne libre
+                  <span class="pot-libre-badge">Permanent</span>
+                </div>
+                <div class="pot-meta">
+                  <span class="pot-type-label">General</span>
+                  <span class="pot-meta-dot"></span>
+                  <span class="pot-target-label">Sans objectif</span>
+                </div>
+              </div>
+              <div class="pot-amount">
+                8 430<span class="dollar-sm">$</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pot 2: Vacances (with target) -->
+          <div class="pot-card">
+            <div class="pot-card-top">
+              <div class="pot-info">
+                <div class="pot-name">Vacances Japon</div>
+                <div class="pot-meta">
+                  <span class="pot-type-label">Projet</span>
+                  <span class="pot-meta-dot"></span>
+                  <span class="pot-target-label">Objectif : 6 000 $</span>
+                </div>
+              </div>
+              <div class="pot-amount">
+                4 200<span class="dollar-sm">$</span>
+              </div>
+            </div>
+
+            <div class="pot-progress">
+              <div class="pot-progress-header">
+                <span class="pot-progress-label"><strong>4 200 $</strong> sur 6 000 $</span>
+                <span class="pot-progress-percent">70%</span>
+              </div>
+              <div class="pot-bar">
+                <div class="pot-bar-fill" style="width: 70%"></div>
+              </div>
+            </div>
+
+            <div class="pot-suggestion">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              ~300 $ / mois pour atteindre ton objectif d'ici dec. 2026
+            </div>
+          </div>
+
+          <!-- Pot 3: Fonds urgence (with target) -->
+          <div class="pot-card">
+            <div class="pot-card-top">
+              <div class="pot-info">
+                <div class="pot-name">Fonds d'urgence</div>
+                <div class="pot-meta">
+                  <span class="pot-type-label">Projet</span>
+                  <span class="pot-meta-dot"></span>
+                  <span class="pot-target-label">Objectif : 10 000 $</span>
+                </div>
+              </div>
+              <div class="pot-amount">
+                5 800<span class="dollar-sm">$</span>
+              </div>
+            </div>
+
+            <div class="pot-progress">
+              <div class="pot-progress-header">
+                <span class="pot-progress-label"><strong>5 800 $</strong> sur 10 000 $</span>
+                <span class="pot-progress-percent">58%</span>
+              </div>
+              <div class="pot-bar">
+                <div class="pot-bar-fill" style="width: 58%"></div>
+              </div>
+            </div>
+
+            <div class="pot-suggestion">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              ~350 $ / mois pour atteindre ton objectif d'ici mars 2027
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ====== DETTES ====== -->
+      <div class="dettes-section">
+        <div class="section-header">
+          <h2 class="section-title red">Dettes</h2>
+          <button class="desktop-add-btn debt-btn" onclick="openNewDebt()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Nouvelle dette
+          </button>
+        </div>
+
+        <div class="dette-list">
+
+          <!-- Debt 1: Pret auto -->
+          <div class="dette-card">
+            <div class="dette-card-top">
+              <div class="dette-info">
+                <div class="dette-name">Pret automobile</div>
+                <div class="dette-meta">
+                  <span class="dette-type-label">Pret</span>
+                  <span class="dette-meta-dot"></span>
+                  <span class="dette-rate">4,5 % / an</span>
+                </div>
+              </div>
+              <div class="dette-amount">
+                4 200<span class="dollar-sm">$</span>
+              </div>
+            </div>
+
+            <div class="dette-details">
+              <div class="dette-payment">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Mensualite : <strong>350 $ / mois</strong>
+              </div>
+              <div class="dette-remaining">
+                <strong>12</strong> mois restants
+              </div>
+            </div>
+          </div>
+
+          <!-- Debt 2: Carte de credit -->
+          <div class="dette-card">
+            <div class="dette-card-top">
+              <div class="dette-info">
+                <div class="dette-name">Carte de credit Visa</div>
+                <div class="dette-meta">
+                  <span class="dette-type-label">Credit</span>
+                  <span class="dette-meta-dot"></span>
+                  <span class="dette-rate">19,9 % / an</span>
+                </div>
+              </div>
+              <div class="dette-amount">
+                1 800<span class="dollar-sm">$</span>
+              </div>
+            </div>
+
+            <div class="dette-details">
+              <div class="dette-payment">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Mensualite : <strong>150 $ / mois</strong>
+              </div>
+              <div class="dette-remaining">
+                <strong>~14</strong> mois restants
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /desktop-grid -->
+  </main>
+
+  <!-- ====== FAB BACKDROP ====== -->
+  <div class="fab-backdrop" id="fabBackdrop" onclick="toggleFab()"></div>
+
+  <!-- ====== FAB EXPANDABLE (Mobile) ====== -->
+  <div class="fab-container">
+    <div class="fab-menu" id="fabMenu">
+      <button class="fab-menu-item" onclick="openNewProject()">
+        <div class="fab-menu-icon savings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2"/><path d="M2 9v1c0 1.1.9 2 2 2h1"/><circle cx="16" cy="11" r="1"/></svg>
+        </div>
+        Nouveau projet d'epargne
+      </button>
+      <button class="fab-menu-item" onclick="openNewDebt()">
+        <div class="fab-menu-icon debt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        </div>
+        Nouvelle dette
+      </button>
+    </div>
+
+    <button class="fab" id="fabButton" onclick="toggleFab()" aria-label="Ajouter">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- ====== BOTTOM NAV ====== -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <span>Accueil</span>
+    </a>
+    <a href="depenses.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      <span>Depenses</span>
+    </a>
+    <a href="#" class="bottom-nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 010-4h14v4"/><path d="M3 5v14a2 2 0 002 2h16v-5"/><path d="M18 12a2 2 0 000 4h4v-4h-4z"/></svg>
+      <span>Patrimoine</span>
+    </a>
+    <a href="#" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span>Reglages</span>
+    </a>
+  </nav>
+
+  <script>
+    // FAB toggle
+    let fabOpen = false;
+
+    function toggleFab() {
+      fabOpen = !fabOpen;
+      const btn = document.getElementById('fabButton');
+      const menu = document.getElementById('fabMenu');
+      const backdrop = document.getElementById('fabBackdrop');
+
+      if (fabOpen) {
+        btn.classList.add('expanded');
+        menu.classList.add('visible');
+        backdrop.classList.add('visible');
+      } else {
+        btn.classList.remove('expanded');
+        menu.classList.remove('visible');
+        backdrop.classList.remove('visible');
+      }
+    }
+
+    function openNewProject() {
+      toggleFab();
+      // Would open "Nouveau projet" bottom sheet
+      console.log('Open: Nouveau projet d\'epargne');
+    }
+
+    function openNewDebt() {
+      toggleFab();
+      // Would open "Nouvelle dette" bottom sheet
+      console.log('Open: Nouvelle dette');
+    }
+  </script>
+
+</body>
+</html>

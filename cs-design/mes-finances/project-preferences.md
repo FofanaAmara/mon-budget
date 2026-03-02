@@ -569,6 +569,117 @@ Segments: `height: 4px`, `border-radius: 2px`, `gap: 4px`.
 
 Radio indicator: 22px circle, `border: 2px solid var(--slate-300)`, inner dot 8px white circle when selected on teal background.
 
+### Tab Bar (Dashboard)
+
+```css
+.tabs {
+  display: flex;
+  border-bottom: 2px solid var(--slate-100);
+  margin: 24px 20px 0;
+}
+
+.tab {
+  flex: 1;
+  padding: 12px 4px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate-400);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tab.active {
+  color: var(--teal-700);
+  border-bottom-color: var(--teal-700);
+  font-weight: 700;
+}
+```
+
+### Month Navigator
+
+```css
+.month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.month-nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--slate-200);
+  background: var(--white);
+}
+
+.month-nav-btn:hover {
+  border-color: var(--teal-700);
+  color: var(--teal-700);
+  background: var(--teal-50);
+}
+
+.month-nav-label {
+  font-size: 15px;
+  font-weight: 700;
+  min-width: 120px;
+}
+```
+
+### Health Score Ring (Sante financiere)
+
+SVG circular progress: 180px (mobile) / 200px (desktop), `stroke-width: 10`, `stroke-linecap: round`.
+Score number centered via absolute positioning: `clamp(2.5rem, 8vw, 3.5rem)` / 800 weight.
+Color coding: green (success) >80, amber 50-80, red (error) <50.
+Animation: `stroke-dashoffset` transition 1.2s ease with 0.4s delay, score number scales in with 0.5s cubic-bezier.
+
+### Alert Cards (Sante financiere)
+
+```css
+.alert-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+}
+
+/* Severity variants */
+.alert-item.critical { border-color: rgba(220, 38, 38, 0.15); background: var(--error-light); }
+.alert-item.warning  { border-color: rgba(245, 158, 11, 0.15); background: var(--warning-light); }
+.alert-item.good     { border-color: rgba(5, 150, 105, 0.1);  background: var(--success-light); }
+
+/* Severity badge */
+.alert-severity { font-size: 10px; font-weight: 700; uppercase; padding: 2px 8px; border-radius: 4px; color: white; }
+.alert-severity.critical { background: var(--error); }
+.alert-severity.warning  { background: var(--amber-500); }
+.alert-severity.good     { background: var(--success); }
+```
+
+### Summary Cards (Dashboard 2x2 grid)
+
+```css
+.summary-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  padding: 20px 16px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.summary-card:hover {
+  border-color: rgba(15, 118, 110, 0.2);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+```
+
+Card icon: 40px, radius-sm, colored bg per type. Card amount: `clamp(1.5rem, 5vw, 2rem)` / 800 / tabular-nums. Arrow indicator top-right transitions on hover.
+
 ---
 
 ## Page Inventory
@@ -581,13 +692,41 @@ Radio indicator: 22px circle, `border: 2px solid var(--slate-300)`, inner dot 8p
 **Key decision:** The hero has no image, no illustration. The tagline at 9rem IS the visual. The 847$ figure below it IS the proof. Pure typography.
 **CTA pattern:** Amber for primary conversion ("Commencer gratuitement"), teal outline for secondary ("Se connecter").
 
-### 2. Dashboard (`dashboard.html`)
+### 2. Dashboard (`dashboard.html`) -- REDESIGNED as Feature 7
 
-**Purpose:** Main app view after login. Overview of financial health.
-**Stance application:** Available balance as THE monument (6rem on desktop). Everything else orbits this number.
-**Sections:** Monument (greeting + month + balance + status) > Flow bar (income/spent/saved) > Budget progress (5 categories with bars) > Recent transactions (5 items) > Savings goal (progress card) > Monthly insight
-**Key decision:** The balance is centered, massive, and the first thing you see. No competing visual elements. The flow bar uses the tri-split pattern (3 equal columns, 2px gap, rounded container).
-**Desktop grid:** Budget progress + recent transactions side by side, savings goal + insight below.
+**Purpose:** Monthly synthesis hub. The user sees their complete financial situation at a glance.
+**Stance application:** Available balance as THE monument (`clamp(3.5rem, 14vw, 6rem)` / 800). This is the LARGEST monument in the entire app -- the daily entry point.
+
+**Structure:** Monument (greeting + month navigator + balance + status) > 3 Tabs (Tableau de bord / Timeline / Sante financiere) > Tab content
+
+**Tab 1 -- Tableau de bord** (`dashboard-main.html`):
+- 4 clickable summary cards in 2x2 grid: Revenus (received/expected), Depenses (paid/planned), Epargne (total + progress bar), Dettes (balance + monthly payment, amount in red)
+- Valeur nette card at bottom: teal-50 background, layers icon, "+12 430$" in teal-700
+- Cards have hover state (translateY(-2px), teal border, shadow-md) and arrow indicator
+- Card icon containers: 40px, radius-sm, colored per category (teal-50, orange-50, success-light, error-light)
+
+**Tab 2 -- Timeline** (`dashboard-timeline.html`):
+- Chronological event list grouped by date
+- Date headers: 12px/700/uppercase/0.08em tracking, slate-400, bottom border
+- Event icons: 40px, radius-sm, color-coded (success-light for received, teal-50 for paid, slate-100 for upcoming, error-light for late)
+- Status badges: 10px/700/uppercase, pill shape (4px radius), colored backgrounds
+- "En retard" group header in red
+- Amounts: 15px/800/tabular-nums, signed with +/- prefix, color-coded (green positive, red late, slate-400 upcoming)
+
+**Tab 3 -- Sante financiere** (`dashboard-sante.html`):
+- Health score ring: SVG circular progress (180px mobile, 200px desktop), stroke-width 10, score number as secondary monument (clamp 2.5rem-3.5rem, 800 weight)
+- Score color: green >80, amber 50-80, red <50
+- Alert cards: colored backgrounds (error-light/warning-light/success-light), severity dot left, severity badge right (CRITIQUE/ATTENTION/BIEN)
+- Secondary metrics: 2x2 grid + full-width valeur nette card, centered values (clamp 1.5rem-2rem, 800 weight), mini progress bars (4px)
+- Desktop: alerts + metrics side by side in 2-column grid
+
+**Key decisions:**
+- READ-ONLY page -- no FAB, no direct actions
+- Cards are clickable (navigate to corresponding feature)
+- Month navigator in monument zone (36px buttons, radius-sm, border slate-200, hover teal)
+- Tabs: underline style, 2px border-bottom, teal-700 active, slate-400 inactive
+- Monument amount color: teal-700 for positive, error (red) for negative
+- Stagger animation on cards: scaleIn with 0.05s incremental delays
 
 ### 3. Depenses (`depenses.html`)
 
@@ -800,6 +939,107 @@ Used on all financial amounts in the depenses page to ensure aligned columns.
 
 ---
 
+## Patrimoine Page Patterns
+
+### 7. Patrimoine (`patrimoine-main.html`)
+
+**Purpose:** Net worth snapshot showing savings (epargne) and debts (passifs).
+**Stance application:** Net worth as THE monument (`clamp(3rem, 12vw, 5rem)` / 800). Color-coded: `var(--accent)` teal if positive, `var(--negative)` red if negative.
+**Sections:** Monument (net worth + sign + status) > Totals bar (epargne / dettes, 2-col) > Epargne section (libre + projects with progress bars) > Dettes section (list with solde, taux, mensualite)
+**Key decisions:**
+- Totals bar uses 2-column layout (not 3 like flow bar) since only 2 figures.
+- Savings cards have `border-left: 4px solid var(--teal-700)`. Debt cards have `border-left: 4px solid var(--error)`.
+- Progress bars on savings projects: 8px height, teal gradient fill with amber dot indicator at tip.
+- "Monthly suggestion" chip on each project: `background: var(--teal-50)`, `border: 1px solid rgba(15, 118, 110, 0.1)`, pill shape, 11px font.
+- Epargne libre has a "Permanent" badge (`pot-libre-badge`): non-deletable.
+- FAB is expandable with 2 options on mobile (not single-action). Backdrop blur on expand.
+- Desktop: "Nouveau projet" and "Nouvelle dette" buttons appear inline in section headers. FAB hidden.
+- Debt "Nouvelle dette" desktop button uses outline style with red border/text.
+- Desktop grid: epargne left column, dettes right column.
+
+### Patrimoine Bottom Sheets / Modals
+
+**5 action sheets:**
+
+1. **Ajouter contribution** -- pot selector + amount input (monumental 24px/800) + summary (after balance, progression %)
+2. **Transferer epargne** -- source pot + directional arrow + destination pot + amount + summary (both balances after)
+3. **Payer dette** -- debt selector + radio group (Regulier/Supplementaire) + amount + summary (remaining balance, months)
+4. **Nouveau projet** -- name input + objective amount + date picker + auto-calculated suggestion
+5. **Nouvelle dette** -- name + balance + interest rate (% suffix) + monthly payment + auto-calculated duration and interest cost
+
+**Sheet patterns:**
+- Mobile: bottom sheet with handle bar, slides up from bottom
+- Desktop (>= 768px): centered modal, scale(0.95) -> scale(1) animation
+- Amount inputs: 24px / 800 weight / -0.03em / tabular-nums (monumental feel in inputs)
+- Currency indicator ($) positioned absolute right, teal-700
+- Percentage indicator (%) positioned absolute right, slate-400
+- Radio groups: 2-column, teal border/background when selected
+- Summary rows: teal-50 background, key-value pairs
+- Submit buttons: teal for savings actions, red (`var(--error)`) for debt actions
+- Transfer arrow: centered SVG divider between source and destination selects
+
+### Expandable FAB Pattern
+
+```css
+/* FAB container with menu */
+.fab-container { position: fixed; bottom: max(72px, calc(56px + env(safe-area-inset-bottom))); right: 20px; }
+
+/* Menu slides up from FAB position */
+.fab-menu { bottom: 64px; right: 0; flex-direction: column; gap: 10px; }
+
+/* Menu items: white card with icon + label */
+.fab-menu-item { padding: 10px 16px; border: 1px solid var(--slate-200); border-radius: var(--radius-md); }
+
+/* Icon containers: teal-50 for savings, error-light for debt */
+/* + icon rotates 45deg to become X when expanded */
+/* Backdrop: rgba(15, 23, 42, 0.3) with blur(2px) */
+```
+
+### Navigation Update
+
+Bottom nav now includes "Patrimoine" item (wallet icon) replacing one of the navigation slots:
+- Accueil | Depenses | Patrimoine | Reglages
+- Sidebar includes "Patrimoine" link with wallet icon between Revenus and Parametres
+
+---
+
+### 8. Income Tracking — Revenus Tab (`features/income-tracking/mockups/revenus-tab.html`)
+
+**Purpose:** Confirm received incomes and track expected vs actual for the month.
+**Stance application:** Monument is the received/expected scoreboard fraction: "5 000$ / 5 000$". The slash creates visual tension — two numbers confronting each other. The expected amount is lighter weight/color (600 weight, slate-400) creating hierarchy within the monument itself.
+
+**Key design decisions:**
+- **Scoreboard monument:** `received` (clamp 3rem-5rem, 800 weight, slate-900) + slash (300 weight, slate-300, lighter) + `expected` (clamp 1.8rem-3rem, 600 weight, slate-400). This fraction pattern is unique to the income page.
+- **Progress bar below monument:** 6px, full-width (max 240px), teal fill when complete.
+- **Status badge:** success-light background, success text, pill shape. Variants: partial (warning), over (success, surplus positive).
+- **Month navigator:** Centered, left/right arrow buttons (36px, border slate-200, hover teal), month label (15px, 700 weight).
+- **Tabs:** Underline style (not pill toggle). Active tab: teal-700 text + 2px bottom border teal-700. Inactive: slate-400. Border-bottom 2px slate-100 on container.
+- **Income rows:** Status icon left (38px, border-radius-sm), colored background per status (success-light for received, slate-100 for expected, warning-light for partial, error-light for missed). Name + frequency + status badge. Amount right with sub-label "sur X $ attendu".
+- **Status badges:** 10px uppercase, pill shape (4px radius), colored backgrounds matching status icons.
+- **Adhoc incomes:** Separate section below expected incomes with own label "Revenus ponctuels".
+- **FAB:** Standard teal 56px, label tooltip "Revenu ponctuel" appears on hover to the left.
+- **Desktop:** FAB replaced by inline "Revenu ponctuel" button in section header.
+
+### 9. Income Tracking — Allocation Tab (`features/income-tracking/mockups/allocation-tab.html`)
+
+**Purpose:** Visualize how expected income is distributed across budget envelopes.
+**Stance application:** Same monument as revenus tab (consistency across tabs). The allocation detail is subordinate to the monument.
+
+**Key design decisions:**
+- **Summary card:** 2-column grid with divider (same pattern as patrimoine totals). "Total alloue" (slate-900) | "Dispo. attendu" (success green or error red depending on over-allocation).
+- **Surallocation alert:** error-light background, error border, triangle warning icon + "Surallocation de X $" text. Non-blocking (informational, not modal).
+- **Envelope rows:** Color dot (10px circle) left + name + progress bar + amounts. Edit button (28px, slate-100 background, slate-400 icon, hover teal-50/teal-700).
+- **Progress bars on envelopes:** 6px height. Color coding: ok (teal-700) under 80%, warn (amber-500) 80-100%, over (error) 100%+.
+- **Savings envelope variant:** 8px bar, gradient teal fill, amber dot indicator at tip (same as dashboard savings goal pattern).
+- **Inline badges:** "Depasse" (error-light/error) and "Epargne" (teal-50/teal-700) — 10px uppercase pill.
+- **"Reste libre" card:** teal-50 background, teal border, teal icon container (40px, radius-sm), amount in teal-700 at clamp(1.5rem-2rem)/800 weight. This is THE anchor of the allocation view — what's left after all envelopes.
+- **Over-allocated variant of "Reste libre":** error-light background, error icon, error amount.
+- **Bottom sheet (adhoc allocation):** Standard bottom sheet pattern. Select dropdown for section/project + monumental amount input (24px/800) + description text input + cancel/confirm actions.
+- **Desktop:** Sheet becomes centered modal (460px max-width, radius-lg all corners). Sheet handle hidden. FAB replaced by inline button.
+- **FAB label changes per tab:** "Revenu ponctuel" on revenus tab, "Allocation ponctuelle" on allocation tab.
+
+---
+
 ## Design Files
 
 ```
@@ -811,6 +1051,32 @@ cs-design/mes-finances/
     login.html          -- Authentication
     signup.html         -- Account creation
     onboarding.html     -- 3-step setup wizard
+  features/
+    dashboard/
+      mockups/
+        dashboard-main.html      -- Tab "Tableau de bord" (4 cards + valeur nette)
+        dashboard-timeline.html  -- Tab "Timeline" (chronological events)
+        dashboard-sante.html     -- Tab "Sante financiere" (score + alerts + metrics)
+    patrimoine/
+      mockups/
+        patrimoine-main.html     -- Net worth + savings + debts snapshot
+        patrimoine-actions.html  -- All bottom sheets for patrimoine interactions
+    income-tracking/
+      mockups/
+        revenus-tab.html         -- Monthly income confirmation (tab Revenus)
+        allocation-tab.html      -- Monthly allocation view (tab Allocation) + adhoc sheet
+    income-templates/
+      mockups/
+        revenus-list.html        -- Recurring income sources
+        revenu-modal.html        -- Add/edit income source modal
+    expense-templates/
+      mockups/
+        charges-list.html        -- Recurring charges
+        charge-modal.html        -- Add/edit charge modal
+    reference-data/
+      mockups/
+        sections.html            -- Reference data sections
+        cartes.html              -- Reference data cards
   project-preferences.md  -- This document
   proposals/
     direction-3/        -- Source proposal files

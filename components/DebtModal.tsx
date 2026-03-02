@@ -34,6 +34,25 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Auto-calculate duration and interest cost
+  const remaining = parseFloat(remainingBalance) || parseFloat(originalAmount) || 0;
+  const rate = parseFloat(interestRate) || 0;
+  const payment = parseFloat(paymentAmount) || 0;
+  let estimatedMonths: number | null = null;
+  let totalInterest: number | null = null;
+  if (payment > 0 && remaining > 0) {
+    if (rate === 0) {
+      estimatedMonths = Math.ceil(remaining / payment);
+      totalInterest = 0;
+    } else {
+      const monthlyRate = rate / 100 / 12;
+      estimatedMonths = Math.ceil(-Math.log(1 - (monthlyRate * remaining) / payment) / Math.log(1 + monthlyRate));
+      if (isFinite(estimatedMonths) && estimatedMonths > 0) {
+        totalInterest = payment * estimatedMonths - remaining;
+      }
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim()) { setError('Nom requis'); return; }
@@ -67,75 +86,162 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
       }
       onClose();
     } catch {
-      setError(isEdit ? 'Erreur lors de la modification' : 'Erreur lors de la creation');
+      setError(isEdit ? 'Erreur lors de la modification' : 'Erreur lors de la création');
       setLoading(false);
     }
   }
+
+  const labelStyle = {
+    display: 'block' as const, fontSize: '11px', fontWeight: 700,
+    letterSpacing: '0.08em', textTransform: 'uppercase' as const,
+    color: 'var(--slate-400)', marginBottom: '7px',
+  };
 
   return (
     <div className="sheet-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="sheet" onClick={(e) => e.stopPropagation()}>
         <div className="sheet-handle" />
-        <div style={{ padding: '8px 24px 40px', maxHeight: '80vh', overflowY: 'auto' }}>
-          <h2 style={{
-            fontSize: 'var(--text-lg)', fontWeight: 700,
-            color: 'var(--text-primary)', marginBottom: '20px',
-            letterSpacing: 'var(--tracking-tight)',
-          }}>
-            {isEdit ? 'Modifier la dette' : 'Nouvelle dette'}
-          </h2>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div>
-              <label className="field-label">Nom</label>
+        {/* Sheet header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px 0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{
+              width: '40px', height: '40px', borderRadius: 'var(--radius-sm)',
+              background: 'var(--error-light)', color: 'var(--error)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+            }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
+              </svg>
+            </div>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--slate-900)', letterSpacing: '-0.02em' }}>
+              {isEdit ? 'Modifier la dette' : 'Nouvelle dette'}
+            </h3>
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              width: '36px', height: '36px', border: 'none',
+              background: 'var(--slate-100)', borderRadius: 'var(--radius-sm)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', color: 'var(--slate-500)', flexShrink: 0,
+            }}
+            aria-label="Fermer"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Sheet body */}
+        <div style={{ padding: '20px 24px 24px', maxHeight: '70vh', overflowY: 'auto' }}>
+          <form id="debt-form" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+
+            {/* Nom */}
+            <div style={{ marginBottom: '18px' }}>
+              <label style={labelStyle}>Nom de la dette</label>
               <input
-                type="text" placeholder="Ex: Pret auto, Carte Visa..."
+                type="text" placeholder="ex: Prêt auto, Carte Visa..."
                 value={name} onChange={(e) => setName(e.target.value)}
                 className="input-field"
               />
             </div>
 
-            <div className="flex" style={{ gap: '12px' }}>
-              <div style={{ flex: 1 }}>
-                <label className="field-label">Montant initial ($)</label>
+            {/* Solde restant */}
+            <div style={{ marginBottom: '18px' }}>
+              <label style={labelStyle}>Solde restant</label>
+              <div style={{ position: 'relative' }}>
                 <input
-                  type="number" min="0" step="0.01" placeholder="15000.00"
-                  value={originalAmount} onChange={(e) => setOriginalAmount(e.target.value)}
-                  className="input-field" style={{ fontVariantNumeric: 'tabular-nums' }}
-                />
-              </div>
-              <div style={{ flex: 1 }}>
-                <label className="field-label">Solde restant ($)</label>
-                <input
-                  type="number" min="0" step="0.01" placeholder="12000.00"
+                  type="number" min="0" step="0.01" placeholder="0"
                   value={remainingBalance} onChange={(e) => setRemainingBalance(e.target.value)}
-                  className="input-field" style={{ fontVariantNumeric: 'tabular-nums' }}
+                  style={{
+                    width: '100%', padding: '14px', paddingRight: '36px',
+                    border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-sm)',
+                    fontFamily: 'var(--font)', fontSize: '24px', fontWeight: 800,
+                    letterSpacing: '-0.03em', color: 'var(--slate-900)',
+                    background: 'var(--white, #fff)', fontVariantNumeric: 'tabular-nums',
+                    outline: 'none',
+                  }}
                 />
+                <span style={{
+                  position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)',
+                  fontSize: '16px', fontWeight: 700, color: 'var(--teal-700)', pointerEvents: 'none',
+                }}>$</span>
               </div>
             </div>
 
-            <div className="flex" style={{ gap: '12px' }}>
-              <div style={{ flex: 1 }}>
-                <label className="field-label">Versement ($)</label>
+            {/* Taux d'intérêt */}
+            <div style={{ marginBottom: '18px' }}>
+              <label style={labelStyle}>Taux d&apos;intérêt annuel</label>
+              <div style={{ position: 'relative' }}>
                 <input
-                  type="number" min="0" step="0.01" placeholder="400.00"
-                  value={paymentAmount} onChange={(e) => setPaymentAmount(e.target.value)}
-                  className="input-field" style={{ fontVariantNumeric: 'tabular-nums' }}
-                />
-              </div>
-              <div style={{ flex: 1 }}>
-                <label className="field-label">Taux d&apos;interet (%)</label>
-                <input
-                  type="number" min="0" step="0.01" placeholder="4.5"
+                  type="number" min="0" step="0.01" placeholder="0"
                   value={interestRate} onChange={(e) => setInterestRate(e.target.value)}
-                  className="input-field" style={{ fontVariantNumeric: 'tabular-nums' }}
+                  style={{
+                    width: '100%', padding: '12px 36px 12px 14px',
+                    border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-sm)',
+                    fontFamily: 'var(--font)', fontSize: '15px', fontWeight: 500,
+                    color: 'var(--slate-900)', background: 'var(--white, #fff)',
+                    outline: 'none',
+                  }}
                 />
+                <span style={{
+                  position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)',
+                  fontSize: '14px', fontWeight: 700, color: 'var(--slate-400)', pointerEvents: 'none',
+                }}>%</span>
               </div>
             </div>
 
-            <div className="flex" style={{ gap: '12px' }}>
+            {/* Paiement mensuel */}
+            <div style={{ marginBottom: '18px' }}>
+              <label style={labelStyle}>Paiement mensuel</label>
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="number" min="0" step="0.01" placeholder="0"
+                  value={paymentAmount} onChange={(e) => setPaymentAmount(e.target.value)}
+                  style={{
+                    width: '100%', padding: '14px', paddingRight: '36px',
+                    border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-sm)',
+                    fontFamily: 'var(--font)', fontSize: '24px', fontWeight: 800,
+                    letterSpacing: '-0.03em', color: 'var(--slate-900)',
+                    background: 'var(--white, #fff)', fontVariantNumeric: 'tabular-nums',
+                    outline: 'none',
+                  }}
+                />
+                <span style={{
+                  position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)',
+                  fontSize: '16px', fontWeight: 700, color: 'var(--teal-700)', pointerEvents: 'none',
+                }}>$</span>
+              </div>
+            </div>
+
+            {/* Montant initial (for tracking %) */}
+            <div style={{ marginBottom: '18px' }}>
+              <label style={labelStyle}>Montant original (pour suivi)</label>
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="number" min="0" step="0.01" placeholder="0"
+                  value={originalAmount} onChange={(e) => setOriginalAmount(e.target.value)}
+                  style={{
+                    width: '100%', padding: '12px', paddingRight: '36px',
+                    border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-sm)',
+                    fontFamily: 'var(--font)', fontSize: '15px', fontWeight: 500,
+                    color: 'var(--slate-900)', background: 'var(--white, #fff)',
+                    outline: 'none',
+                  }}
+                />
+                <span style={{
+                  position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)',
+                  fontSize: '14px', fontWeight: 700, color: 'var(--teal-700)', pointerEvents: 'none',
+                }}>$</span>
+              </div>
+            </div>
+
+            {/* Frequency + Payment day */}
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '18px' }}>
               <div style={{ flex: 1 }}>
-                <label className="field-label">Frequence</label>
+                <label style={labelStyle}>Fréquence</label>
                 <select
                   value={paymentFrequency}
                   onChange={(e) => setPaymentFrequency(e.target.value as DebtFrequency)}
@@ -147,7 +253,7 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
                 </select>
               </div>
               <div style={{ flex: 1 }}>
-                <label className="field-label">Jour de paiement</label>
+                <label style={labelStyle}>Jour de paiement</label>
                 <input
                   type="number" min="1" max="31" placeholder="15"
                   value={paymentDay} onChange={(e) => setPaymentDay(e.target.value)}
@@ -156,23 +262,25 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
               </div>
             </div>
 
-            <div className="flex items-center" style={{ gap: '10px' }}>
+            {/* Auto-debit */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
               <input
                 type="checkbox" id="auto-debit"
                 checked={autoDebit}
                 onChange={(e) => setAutoDebit(e.target.checked)}
-                style={{ width: '18px', height: '18px', accentColor: 'var(--accent)' }}
+                style={{ width: '18px', height: '18px', accentColor: 'var(--teal-700)' }}
               />
               <label htmlFor="auto-debit" style={{
                 fontSize: 'var(--text-sm)', fontWeight: 500, color: 'var(--text-secondary)',
               }}>
-                Prelevement automatique
+                Prélèvement automatique
               </label>
             </div>
 
+            {/* Card */}
             {cards.length > 0 && (
-              <div>
-                <label className="field-label">Carte (optionnel)</label>
+              <div style={{ marginBottom: '18px' }}>
+                <label style={labelStyle}>Carte (optionnel)</label>
                 <select value={cardId} onChange={(e) => setCardId(e.target.value)} className="input-field">
                   <option value="">Aucune</option>
                   {cards.map((c) => (
@@ -184,9 +292,10 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
               </div>
             )}
 
+            {/* Section */}
             {sections.length > 0 && (
-              <div>
-                <label className="field-label">Section (optionnel)</label>
+              <div style={{ marginBottom: '18px' }}>
+                <label style={labelStyle}>Section (optionnel)</label>
                 <select value={sectionId} onChange={(e) => setSectionId(e.target.value)} className="input-field">
                   <option value="">Aucune</option>
                   {sections.map((s) => (
@@ -196,10 +305,11 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
               </div>
             )}
 
-            <div>
-              <label className="field-label">Notes (optionnel)</label>
+            {/* Notes */}
+            <div style={{ marginBottom: '18px' }}>
+              <label style={labelStyle}>Notes (optionnel)</label>
               <textarea
-                placeholder="Informations supplementaires..."
+                placeholder="Informations supplémentaires..."
                 value={notes} onChange={(e) => setNotes(e.target.value)}
                 className="input-field"
                 rows={2}
@@ -207,26 +317,74 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
               />
             </div>
 
+            {/* Summary */}
+            {estimatedMonths !== null && estimatedMonths > 0 && isFinite(estimatedMonths) && (
+              <div style={{
+                marginBottom: '18px',
+                padding: '14px',
+                background: 'var(--teal-50)',
+                borderRadius: 'var(--radius-sm)',
+                border: '1px solid rgba(15, 118, 110, 0.08)',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '3px 0' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--slate-500)' }}>Durée estimée</span>
+                  <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--slate-900)', letterSpacing: '-0.02em' }}>
+                    ~{estimatedMonths} mois
+                  </span>
+                </div>
+                {totalInterest !== null && totalInterest > 0 && (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '3px 0' }}>
+                    <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--slate-500)' }}>Coût total en intérêts</span>
+                    <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--error)', letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums' }}>
+                      ~{Math.round(totalInterest).toLocaleString('fr-CA')} $
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+
             {error && (
               <p style={{
                 fontSize: 'var(--text-sm)', color: 'var(--negative)',
                 background: 'var(--negative-subtle)', padding: '8px 12px',
-                borderRadius: 'var(--radius-sm)',
+                borderRadius: 'var(--radius-sm)', marginBottom: '18px',
               }}>
                 {error}
               </p>
             )}
-
-            <button
-              type="submit" disabled={loading}
-              className="btn-primary"
-              style={{ width: '100%', padding: '16px', fontSize: 'var(--text-base)', opacity: loading ? 0.5 : 1 }}
-            >
-              {loading
-                ? (isEdit ? 'Modification...' : 'Creation...')
-                : (isEdit ? 'Modifier' : 'Creer la dette')}
-            </button>
           </form>
+        </div>
+
+        {/* Sheet actions */}
+        <div style={{ display: 'flex', gap: '10px', padding: '0 24px 24px' }}>
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              flex: 1, padding: '14px 20px', border: '1px solid var(--slate-200)',
+              borderRadius: 'var(--radius-md)', background: 'var(--white, #fff)',
+              fontFamily: 'var(--font)', fontSize: '15px', fontWeight: 600,
+              color: 'var(--slate-700)', cursor: 'pointer',
+            }}
+          >
+            Annuler
+          </button>
+          <button
+            type="submit"
+            form="debt-form"
+            disabled={loading}
+            style={{
+              flex: 1.4, padding: '14px 20px', border: 'none',
+              borderRadius: 'var(--radius-md)', background: 'var(--error)',
+              fontFamily: 'var(--font)', fontSize: '15px', fontWeight: 700,
+              color: 'var(--white, #fff)', cursor: loading ? 'not-allowed' : 'pointer',
+              opacity: loading ? 0.5 : 1, transition: 'all 0.2s ease',
+            }}
+          >
+            {loading
+              ? (isEdit ? 'Modification...' : 'Création...')
+              : (isEdit ? 'Modifier' : 'Ajouter la dette')}
+          </button>
         </div>
       </div>
     </div>

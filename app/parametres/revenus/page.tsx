@@ -26,53 +26,86 @@ export default async function RevenusRecurrentsPage() {
   );
   const count = activeIncomes.length;
 
-  const displayAmount = totalMonthly >= 1000
-    ? `${(totalMonthly / 1000).toLocaleString('fr-CA', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}k`
-    : totalMonthly.toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  const displayAmount = totalMonthly.toLocaleString('fr-CA', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
 
-  const monthlyLabel = totalMonthly.toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  const monthlyLabel = totalMonthly.toLocaleString('fr-CA', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
 
   return (
-    <div style={{ padding: '0 0 96px', minHeight: '100vh' }}>
-      {/* Monument hero — Revenus attendus */}
-      <div style={{ padding: '24px 20px 16px', textAlign: 'center' }}>
+    <div style={{ padding: '0 0 120px', minHeight: '100vh' }}>
+      {/* Breadcrumb */}
+      <nav style={{ padding: '14px 20px 0' }}>
         <Breadcrumb items={[
           { label: 'Reglages', href: '/parametres' },
           { label: 'Mes revenus recurrents' },
         ]} />
+      </nav>
+
+      {/* Monument hero — Revenus attendus */}
+      <section style={{ padding: '28px 20px 20px', textAlign: 'center' }}>
         <p style={{
-          fontSize: '12px', fontWeight: 700, letterSpacing: '0.1em',
-          textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '8px',
-          marginTop: '16px',
+          fontSize: '12px',
+          fontWeight: 700,
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase',
+          color: 'var(--teal-700)',
+          marginBottom: '10px',
         }}>
           Revenus attendus
         </p>
         <p style={{
-          fontSize: 'clamp(2.5rem, 10vw, 4rem)',
-          fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1,
-          color: 'var(--text-primary)',
+          fontSize: 'clamp(2.5rem, 12vw, 4rem)',
+          fontWeight: 800,
+          letterSpacing: '-0.04em',
+          lineHeight: 1,
+          color: 'var(--slate-900)',
+          fontVariantNumeric: 'tabular-nums',
         }}>
-          <span style={{ fontSize: '0.4em', fontWeight: 600, color: 'var(--accent)', verticalAlign: 'super' }}>$</span>
-          {displayAmount}
+          {displayAmount}<span style={{ fontSize: '0.4em', fontWeight: 600, color: 'var(--teal-700)', verticalAlign: 'super', marginLeft: '2px' }}>$</span>
         </p>
-        <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-tertiary)', marginTop: '6px' }}>
-          {count} source{count !== 1 ? 's' : ''} · <strong style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>{monthlyLabel} $</strong> / mois
+        <p style={{
+          fontSize: '14px',
+          fontWeight: 500,
+          color: 'var(--slate-400)',
+          marginTop: '8px',
+          letterSpacing: '-0.01em',
+        }}>
+          <strong style={{ fontWeight: 700, color: 'var(--slate-700)' }}>{count}</strong> source{count !== 1 ? 's' : ''}&nbsp;&middot;&nbsp;{monthlyLabel}&nbsp;$&nbsp;/&nbsp;mois
         </p>
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px' }}>
           <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: '4px',
-            padding: '4px 10px', borderRadius: '100px',
-            background: 'var(--positive-subtle)', color: 'var(--accent)',
-            fontSize: '13px', fontWeight: 600,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '5px',
+            padding: '5px 14px',
+            background: 'var(--teal-50)',
+            border: '1px solid rgba(15, 118, 110, 0.1)',
+            borderRadius: '100px',
+            fontSize: '12px',
+            fontWeight: 700,
+            color: 'var(--teal-700)',
+            letterSpacing: '0.02em',
           }}>
+            <span style={{
+              width: '6px',
+              height: '6px',
+              borderRadius: '50%',
+              background: 'var(--teal-700)',
+              flexShrink: 0,
+              display: 'inline-block',
+            }} />
             Sources actives
           </span>
         </div>
-      </div>
+      </section>
 
-      <div style={{ padding: '0 20px' }}>
-        <IncomeTemplateManager incomes={incomes} />
-      </div>
+      {/* Income list manager */}
+      <IncomeTemplateManager incomes={incomes} />
     </div>
   );
 }

@@ -1,16 +1,66 @@
 # Integration Report — Mes Finances
 
+## Feature 1: Données de Référence (Sections & Cartes)
+
+**Date**: 2026-03-02
+**Branch**: `design-integration/reference-data-2026-03-02`
+**Scope**: SectionsClient, CartesClient, CarteDetailClient + cartes/[id]/page.tsx + globals.css
+**Stack**: Next.js App Router · TypeScript · Tailwind CSS v4 · CSS variables (globals.css)
+**TypeScript errors**: 0
+
+---
+
+### Brand Tokens Applied
+
+| Token | Value | Applied in |
+|-------|-------|------------|
+| `--accent` (#0F766E) | Teal 700 | Monument label, add buttons, FAB, sheet icon |
+| `--accent-hover` (#115E59) | Teal 800 | Button hover states |
+| `--accent-subtle` (#F0FDFA) | Teal 50 | Empty state icon bg, selected emoji bg |
+| `--text-primary` (#0F172A) | Slate 900 | Monument number, section names |
+| `--text-tertiary` (#64748B) | Slate 500 | Sub-labels, page header labels |
+| `--border-default` (#E2E8F0) | Slate 200 | Section item borders |
+| `--radius-md` (12px) | — | Section items, buttons |
+| `--radius-lg` (18px) | — | Bank card visuals, sheet |
+| clamp(3.5rem, 14vw, 6rem) / 800 | Monument scale | Count monument |
+| `--shadow-sm`, `--shadow-md` | Teal-tinted | Card hover states |
+
+### Changes
+
+- **SectionsClient**: Monument count header · 7-col emoji grid (36 emojis) · 8-col color swatches · colored emoji containers · desktop add button · mobile FAB pill · improved bottom sheet
+- **CartesClient**: Monument count header · visual gradient bank cards (min-height 130px) · live card preview in sheet · 8 gradient color themes · BankCardVisual sub-component
+- **CarteDetailClient**: Gradient map for bank card · Monument-aligned stat numbers · updated empty state
+- **cartes/[id]/page.tsx**: Removed outer h1 header — CarteDetailClient owns its layout
+- **globals.css**: Added `.fab-mobile-only` and `.btn-desktop-only` utilities
+
+### New CSS Utilities
+
+```css
+.fab-mobile-only  — hides FAB at >= 768px
+.btn-desktop-only — shows add button only at >= 768px
+```
+
+### Known Gaps
+
+- Both demo cards share the same emerald (#059669) color (data issue, not code issue)
+- Old color hex values from pre-redesign data fall back to raw gradient (graceful, no crash)
+- Mobile tactile drag-and-drop requires dnd-kit (HTML5 drag API works on desktop, out of scope)
+
+---
+
 ## Overview
 
 - **Date de completion**: 2026-03-02
 - **Maquettes utilisées**: `landing.html`, `dashboard.html`, `depenses.html`, `login.html`, `signup.html`, `onboarding.html` (6 fichiers)
 - **Stack**: Next.js 16.1.6 (App Router, TypeScript) + React 19.2.3 + Tailwind CSS v4 (CSS-first, pas de tailwind.config.ts) + Neon Auth
-- **Scope**: 9 composants/pages intégrés + setup global
+- **Scope**: 9 composants/pages intégrés + Feature 6 Patrimoine (5 fichiers) + setup global
 - **Mode**: Existing App (migration identité Indigo → Teal/Amber)
 
 ### Résumé exécutif
 
 L'identité visuelle complète de l'application "Mes Finances" a été migrée du système Indigo/Stone vers le système Teal/Amber de Direction 3 (stance Typography Monument). Les tokens CSS ont été remplacés à la racine dans `globals.css`, la police Geist a été remplacée par Plus Jakarta Sans, et 9 composants/pages ont été mis à jour pour correspondre aux maquettes validées. L'intégration couvre l'ensemble du parcours utilisateur : landing → auth → onboarding → dashboard → dépenses → revenus → patrimoine.
+
+**Feature 6 — Patrimoine (ajout post-initial)**: La page Patrimoine a été entièrement refaite avec des maquettes dédiées (`patrimoine-main.html` + `patrimoine-actions.html`). Les onglets Actifs/Passifs ont été remplacés par une vue unifiée (épargne + dettes simultanément), 5 composants réécrits (ProjetsEpargneClient, ProjectModal, DebtModal, AddSavingsModal, TransferSavingsModal), et 8 screenshots de validation Playwright produits.
 
 ---
 
@@ -285,17 +335,92 @@ Toutes les ombres sont teal-tintées (`rgba(15, 118, 110, x)`), jamais grises. R
 
 ---
 
-### Page 8: Patrimoine / Épargne (dérivé)
+### Page 8: Patrimoine — Épargne & Dettes (Feature 6)
 
-**Fichiers modifiés**: `components/ProjetsEpargneClient.tsx`
-**Type de travail**: Skin (dérivé — non couvert par les maquettes)
+**Fichiers modifiés**:
+- `components/ProjetsEpargneClient.tsx` — Refonte complète (~870 lignes)
+- `components/ProjectModal.tsx` — Refonte complète
+- `components/DebtModal.tsx` — Refonte complète
+- `components/AddSavingsModal.tsx` — Refonte complète
+- `components/TransferSavingsModal.tsx` — Refonte complète
+
+**Maquettes utilisées**: `patrimoine-main.html`, `patrimoine-actions.html`
+**Branch**: `design-integration/patrimoine-2026-03-02`
+**Type de travail**: Experience Design (maquettes dédiées)
+**TypeScript**: 0 erreurs
 **Statut**: ✅
 
-**Dérivation**: Cards avec barre de progression gradient teal-700 → teal-800 + amber dot indicator à la pointe.
+**Avant**:
+- Onglets "Actifs" / "Passifs" séparant épargne et dettes (montrait une section à la fois)
+- Cards plates sans accent couleur border-left
+- FAB avec emoji dans les boutons du menu
+- Modals sans header structuré (pas d'icône, pas de pattern sheet)
+- Pas de chip "contribution suggérée"
+- Pas de badge PERMANENT sur l'épargne libre
 
-**Comportement vérifié**:
-- [x] Projets d'épargne affichés
-- [x] Progression de chaque projet visible
+**Après**:
+
+1. **Monument patrimoine** (`clamp(3rem, 12vw, 5rem)` / 800):
+   - Signe +/- en prefixe (`0.65em` / 700)
+   - Symbole `$` en superscript (`0.4em` / 600 / `verticalAlign: super`)
+   - Couleur teal-700 si positif, `var(--error)` si négatif
+   - Badge "En croissance" (teal-50 + teal-700) ou "En déficit" (error-light + error)
+   - Label architectural "PATRIMOINE" 11px/700/uppercase teal-700
+
+2. **Barre totaux** (2 colonnes côte à côte):
+   - Colonne gauche: total épargne en teal-700
+   - Colonne droite: total dettes en `var(--error)`
+   - Bordure `1px solid var(--slate-200)`, `borderRadius: var(--radius-md)`
+
+3. **Section Épargne** (ex: onglet Actifs → section permanente):
+   - Header label teal-700 uppercase + bouton "Nouveau projet" desktop (`btn-desktop-only`)
+   - Épargne libre: `border-left: 4px solid var(--teal-700)`, badge PERMANENT teal-50
+   - Projets: `border-left: 4px solid var(--teal-700)`, barre 8px gradient teal + amber dot, chip "~/mois suggéré"
+   - Chip contribution: horloge icon + `~X$/mois`, fond teal-50, texte teal-700
+
+4. **Section Dettes** (ex: onglet Passifs → section permanente):
+   - Header label `var(--error)` uppercase + bouton "Nouvelle dette" rouge outline desktop
+   - Cartes: `border-left: 4px solid var(--error)`, montant restant en rouge
+   - Rangée de détails: solde initial · taux · durée · paiement mensuel (4 colonnes)
+   - Bouton "Rembourser" icon-btn-danger
+
+5. **FAB expandable** (`className="fab-mobile-only"`):
+   - 3 items dans le menu: blanc, `border-radius: var(--radius-md)`, icône dans conteneur coloré (teal-50 / teal-50 / error-light)
+   - Backdrop `className="fab-mobile-only"` pour éviter collision desktop
+
+6. **Modals (tous 4 refaits)** — Pattern sheet uniforme:
+   - `ProjectModal`: icône piggy-bank teal-50 + "Nouveau projet", contribution suggérée auto-calculée
+   - `AddSavingsModal`: icône flèche-haut teal-50 + "Ajouter au pot", résumé progression %
+   - `TransferSavingsModal`: icône swap amber-100 + "Transférer", layout Depuis → flèche → Vers
+   - `DebtModal`: icône carte-credit error-light + "Nouvelle dette", résumé durée + intérêts totaux
+   - Tous: inputs montant monumentaux (24px/800/tabular-nums), footer [Annuler | Action] via `form="id"` HTML5
+
+**Décisions documentées**:
+- Suppression complète des onglets actifs/passifs: les deux sections sont toujours visibles, l'utilisateur voit son patrimoine global d'un coup d'oeil
+- L'amber dot à la pointe de la barre de progression est un `<span>` inline (les pseudo-éléments CSS ne sont pas accessibles via inline styles React)
+- Le FAB est masqué sur desktop via `className="fab-mobile-only"` — les boutons "desktop only" (section headers) servent d'alternative
+- Form id association (`id="project-form"` + `form="project-form"` sur submit button en dehors du form) permet de placer les boutons dans le footer de la sheet sans casser la sémantique HTML
+
+**Comportement vérifié** (Playwright):
+- [x] Monument affiche valeur nette positive/négative avec bonne couleur
+- [x] Section Épargne + Section Dettes visibles simultanément (plus d'onglets)
+- [x] FAB expandable: clic ouvre le menu, clic backdrop ferme
+- [x] Modal "Ajouter au pot" ouvre, calcule le résumé, ferme correctement
+- [x] Modal "Transférer" ouvre, dropdown destinations, "Tout transférer" remplit le montant
+- [x] Modal "Rembourser une dette" ouvre, radio Régulier/Supplémentaire fonctionne
+- [x] Modal "Nouveau projet" (desktop, btn-desktop-only) s'ouvre et soumet
+- [x] Modal "Nouvelle dette" (desktop) s'ouvre et soumet
+- [x] TypeScript: 0 erreurs
+
+**Screenshots**:
+- `screenshots/after/patrimoine-mobile-after.png` — Vue mobile complète (375px)
+- `screenshots/after/patrimoine-desktop-after.png` — Vue desktop complète (1280px)
+- `screenshots/after/patrimoine-fab-open.png` — FAB menu expandé
+- `screenshots/after/patrimoine-savings-modal.png` — Modal "Ajouter au pot"
+- `screenshots/after/patrimoine-transfer-modal.png` — Modal "Transférer"
+- `screenshots/after/patrimoine-pay-modal.png` — Modal "Rembourser"
+- `screenshots/after/patrimoine-project-modal-desktop.png` — Modal "Nouveau projet" desktop
+- `screenshots/after/patrimoine-debt-modal-desktop.png` — Modal "Nouvelle dette" desktop
 
 ---
 
@@ -322,10 +447,7 @@ Toutes les ombres sont teal-tintées (`rgba(15, 118, 110, x)`), jamais grises. R
 
 ### ProjetsEpargneClient
 
-**Pourquoi**: Page épargne non couverte par les 6 maquettes.
-**Dérivation**: Savings goal card pattern de `dashboard.html` — barre gradient teal + amber dot.
-**Décisions**: Barre `height: 8px`, gradient `linear-gradient(90deg, var(--teal-700), var(--teal-800))`, amber dot `::after` 12px.
-**Ajouté à project-preferences**: Pattern savings bar déjà documenté dans project-preferences.md.
+**Note**: Ce composant est désormais couvert par des maquettes dédiées (`patrimoine-main.html`, `patrimoine-actions.html`). Voir **Page 8: Patrimoine — Épargne & Dettes (Feature 6)** ci-dessus pour le détail complet. La section dérivée initiale (barre gradient teal + amber dot) a été remplacée par une implémentation complète conforme aux maquettes validées.
 
 ### ParametresClient (hors scope final mais tokens appliqués)
 
@@ -421,8 +543,12 @@ Aucune nouvelle dépendance npm. La migration est purement CSS + JSX.
 ### Revenus
 - `components/RevenusTrackingClient.tsx` — Monument total revenus, tokens teal appliqués
 
-### Patrimoine
-- `components/ProjetsEpargneClient.tsx` — Barre gradient teal + amber dot, tokens token-based
+### Patrimoine — Feature 6 (maquettes dédiées)
+- `components/ProjetsEpargneClient.tsx` — Refonte complète: monument +/- patrimoine, totals bar 2col, section épargne (pot libre + projets), section dettes, FAB expandable, modals inline paiement/charge
+- `components/ProjectModal.tsx` — Refonte: sheet header piggy-bank teal, inputs monumentaux, contribution suggérée auto-calculée
+- `components/DebtModal.tsx` — Refonte: sheet header carte-crédit rouge, inputs monumentaux, résumé durée + intérêts
+- `components/AddSavingsModal.tsx` — Refonte: sheet header flèche-haut teal, affichage progression %
+- `components/TransferSavingsModal.tsx` — Refonte: sheet header swap amber, layout Depuis → Vers, bouton "Tout transférer"
 
 ---
 
@@ -523,6 +649,102 @@ Variante inversée (sur fond teal): `rect fill="rgba(255,255,255,0.12)"`.
     borderRadius: '0 2px 2px 0',
   }} />
 )}
+```
+
+### Pattern Card avec accent border-left (Patrimoine)
+
+```tsx
+// Épargne: bordure teal
+<div style={{
+  background: 'var(--white, #fff)',
+  border: '1px solid var(--slate-200)',
+  borderLeft: '4px solid var(--teal-700)',
+  borderRadius: 'var(--radius-lg)',
+  padding: '18px 18px 16px',
+}}>
+
+// Dette: bordure rouge
+<div style={{
+  border: '1px solid var(--slate-200)',
+  borderLeft: '4px solid var(--error)',
+  borderRadius: 'var(--radius-lg)',
+}}>
+```
+
+### Pattern Barre de progression 8px + amber dot tip
+
+```tsx
+<div style={{ height: '8px', background: 'var(--slate-100)', borderRadius: '4px',
+              overflow: 'visible', position: 'relative' }}>
+  <div style={{
+    height: '100%', borderRadius: '4px',
+    background: 'linear-gradient(90deg, var(--teal-700), var(--teal-800))',
+    width: `${Math.max(progress, 2)}%`,
+    position: 'relative', transition: 'width 0.8s ease',
+  }}>
+    <span style={{
+      position: 'absolute', right: '-1px', top: '50%', transform: 'translateY(-50%)',
+      width: '12px', height: '12px', background: 'var(--amber-500)',
+      borderRadius: '50%', border: '2px solid white',
+      boxShadow: '0 1px 4px rgba(0,0,0,0.15)', display: 'block',
+    }} />
+  </div>
+</div>
+```
+
+Le dot amber est un `<span>` inline — les pseudo-éléments CSS (`::after`) ne fonctionnent pas avec les styles inline React.
+
+### Pattern Sheet Header avec icône
+
+```tsx
+<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '16px 24px 0' }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+    <div style={{
+      width: '40px', height: '40px', borderRadius: 'var(--radius-sm)',
+      background: 'var(--teal-50)', color: 'var(--teal-700)',   // ou error-light/error pour dettes
+      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+    }}>
+      {/* SVG icon 20×20 */}
+    </div>
+    <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--slate-900)',
+                letterSpacing: '-0.02em' }}>Titre</h3>
+  </div>
+  {/* Bouton X fermer */}
+</div>
+```
+
+### Pattern Form ID association (submit button hors form)
+
+```tsx
+// Form avec id
+<form id="project-form" onSubmit={handleSubmit}>
+  {/* champs */}
+</form>
+
+// Submit button dans le footer sheet (hors du form dans le DOM)
+<button type="submit" form="project-form" disabled={loading}>
+  Soumettre
+</button>
+```
+
+Permet de séparer le footer des boutons du corps du sheet sans `onClick` hacky.
+
+### Pattern Monument +/- (valeur nette)
+
+```tsx
+<p style={{
+  fontSize: 'clamp(3rem, 12vw, 5rem)',
+  fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1,
+  color: isPositive ? 'var(--teal-700)' : 'var(--error)',
+}}>
+  <span style={{ fontSize: '0.65em', fontWeight: 700, verticalAlign: 'baseline' }}>
+    {isPositive ? '+' : '-'}
+  </span>
+  <span style={{ fontSize: '0.4em', fontWeight: 600, verticalAlign: 'super',
+                color: 'inherit' }}>$</span>
+  {Math.abs(valeurNette).toLocaleString('fr-CA', { minimumFractionDigits: 0 })}
+</p>
 ```
 
 ---

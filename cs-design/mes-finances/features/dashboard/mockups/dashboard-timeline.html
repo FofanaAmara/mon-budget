@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Finances — Timeline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       FEATURE 7 — TABLEAU DE BORD MENSUEL
+       Tab: Timeline
+
+       Chronological event feed of the month.
+       Same monument hero at top for continuity.
+       Events grouped by date, each with status
+       icon, label, amount, and state.
+    ======================================== */
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --teal-700: #0F766E;
+      --teal-800: #115E59;
+      --teal-600: #0D9488;
+      --teal-50: #F0FDFA;
+      --amber-500: #F59E0B;
+      --amber-600: #D97706;
+      --amber-100: #FEF3C7;
+      --slate-900: #0F172A;
+      --slate-700: #334155;
+      --slate-500: #64748B;
+      --slate-400: #94A3B8;
+      --slate-300: #CBD5E1;
+      --slate-200: #E2E8F0;
+      --slate-100: #F1F5F9;
+      --slate-50: #FAFBFC;
+      --white: #FFFFFF;
+      --success: #059669;
+      --success-light: #ECFDF5;
+      --warning: #F59E0B;
+      --warning-light: #FEF3C7;
+      --error: #DC2626;
+      --error-light: #FEF2F2;
+      --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --shadow-sm: 0 1px 2px rgba(15, 118, 110, 0.05);
+      --shadow-md: 0 4px 12px rgba(15, 118, 110, 0.08);
+      --shadow-lg: 0 8px 24px rgba(15, 118, 110, 0.12);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font);
+      color: var(--slate-900);
+      background: var(--slate-50);
+      line-height: 1.5;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    ::selection {
+      background: rgba(15, 118, 110, 0.15);
+      color: var(--slate-900);
+    }
+
+    /* ====== MOBILE HEADER ====== */
+
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .mobile-header-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .mobile-header-logo svg { width: 32px; height: 32px; }
+
+    .mobile-header-wordmark {
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .mobile-header-wordmark b { font-weight: 800; color: var(--slate-900); }
+    .mobile-header-wordmark span { font-weight: 600; color: var(--teal-700); }
+
+    .mobile-header-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--teal-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
+
+    /* ====== DESKTOP SIDEBAR ====== */
+    .sidebar { display: none; }
+
+    /* ====== MAIN ====== */
+    .main { padding: 0 0 100px; }
+
+    /* ====== MONUMENT ====== */
+
+    .monument {
+      padding: 28px 20px 0;
+      text-align: center;
+    }
+
+    .monument-greeting {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--slate-500);
+      margin-bottom: 4px;
+    }
+
+    .month-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .month-nav-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--slate-200);
+      background: var(--white);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate-500);
+      transition: all 0.2s ease;
+    }
+
+    .month-nav-btn:hover {
+      border-color: var(--teal-700);
+      color: var(--teal-700);
+      background: var(--teal-50);
+    }
+
+    .month-nav-btn svg { width: 18px; height: 18px; }
+
+    .month-nav-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+      min-width: 120px;
+    }
+
+    .monument-amount {
+      font-size: clamp(3.5rem, 14vw, 6rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--teal-700);
+    }
+
+    .monument-amount .dollar {
+      font-size: 0.4em;
+      font-weight: 600;
+      color: inherit;
+      vertical-align: super;
+      margin-left: 2px;
+    }
+
+    .monument-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate-500);
+      margin-top: 8px;
+    }
+
+    .monument-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 5px 14px;
+      background: var(--success-light);
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    .monument-status svg { width: 14px; height: 14px; }
+
+    /* ====== TABS ====== */
+
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid var(--slate-100);
+      margin: 24px 20px 0;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 12px 4px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-400);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      font-family: var(--font);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+    }
+
+    .tab:hover { color: var(--slate-700); }
+
+    .tab.active {
+      color: var(--teal-700);
+      border-bottom-color: var(--teal-700);
+      font-weight: 700;
+    }
+
+    /* ====== TIMELINE ====== */
+
+    .timeline {
+      padding: 20px 20px 0;
+    }
+
+    /* Date group header */
+    .timeline-date {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate-400);
+      padding: 16px 0 10px;
+      border-bottom: 1px solid var(--slate-100);
+      margin-bottom: 0;
+    }
+
+    .timeline-date:first-child {
+      padding-top: 4px;
+    }
+
+    /* Timeline event item */
+    .tl-event {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--slate-100);
+    }
+
+    .tl-event:last-child {
+      border-bottom: none;
+    }
+
+    .tl-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .tl-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Icon color variants */
+    .tl-icon.income-received {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .tl-icon.expense-paid {
+      background: var(--teal-50);
+      color: var(--teal-700);
+    }
+
+    .tl-icon.charge-upcoming {
+      background: var(--slate-100);
+      color: var(--slate-400);
+    }
+
+    .tl-icon.expense-late {
+      background: var(--error-light);
+      color: var(--error);
+    }
+
+    .tl-icon.savings {
+      background: #ECFDF5;
+      color: var(--success);
+    }
+
+    .tl-icon.debt-payment {
+      background: var(--warning-light);
+      color: var(--amber-600);
+    }
+
+    .tl-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tl-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tl-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .tl-type {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate-400);
+    }
+
+    .tl-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .tl-badge.received {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .tl-badge.paid {
+      background: var(--teal-50);
+      color: var(--teal-700);
+    }
+
+    .tl-badge.upcoming {
+      background: var(--slate-100);
+      color: var(--slate-500);
+    }
+
+    .tl-badge.late {
+      background: var(--error-light);
+      color: var(--error);
+    }
+
+    .tl-badge.partial {
+      background: var(--warning-light);
+      color: var(--amber-600);
+    }
+
+    .tl-right {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .tl-amount {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+      color: var(--slate-900);
+    }
+
+    .tl-amount.positive {
+      color: var(--success);
+    }
+
+    .tl-amount.positive::before {
+      content: '+';
+    }
+
+    .tl-amount.negative::before {
+      content: '-';
+    }
+
+    .tl-time {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--slate-400);
+      margin-top: 2px;
+    }
+
+    /* Vertical connector line between events (subtle) */
+    .timeline-group {
+      position: relative;
+    }
+
+    /* ====== BOTTOM NAV ====== */
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 8px 0;
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
+      background: var(--white);
+      border-top: 1px solid var(--slate-200);
+      z-index: 50;
+    }
+
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 4px 12px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .bottom-nav-item svg {
+      width: 22px;
+      height: 22px;
+      color: var(--slate-400);
+      transition: color 0.2s;
+    }
+
+    .bottom-nav-item span {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--slate-400);
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+
+    .bottom-nav-item.active svg { color: var(--teal-700); }
+    .bottom-nav-item.active span { color: var(--teal-700); }
+
+    /* ====== ANIMATIONS ====== */
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .monument { animation: fadeIn 0.6s ease both; }
+    .tabs { animation: fadeIn 0.6s ease 0.1s both; }
+    .timeline { animation: fadeIn 0.6s ease 0.2s both; }
+
+    .tl-event {
+      animation: fadeIn 0.4s ease both;
+    }
+
+    .timeline-group:nth-child(1) .tl-event:nth-child(2) { animation-delay: 0.15s; }
+    .timeline-group:nth-child(1) .tl-event:nth-child(3) { animation-delay: 0.2s; }
+    .timeline-group:nth-child(1) .tl-event:nth-child(4) { animation-delay: 0.25s; }
+    .timeline-group:nth-child(2) .tl-event { animation-delay: 0.3s; }
+    .timeline-group:nth-child(3) .tl-event { animation-delay: 0.35s; }
+    .timeline-group:nth-child(4) .tl-event { animation-delay: 0.4s; }
+
+    /* ====== RESPONSIVE — TABLET ====== */
+
+    @media (min-width: 768px) {
+      .tabs, .timeline {
+        max-width: 560px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    /* ====== RESPONSIVE — DESKTOP ====== */
+
+    @media (min-width: 1024px) {
+      .mobile-header { display: none; }
+      .bottom-nav { display: none; }
+      body { display: flex; }
+
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 260px;
+        height: 100vh;
+        height: 100dvh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+        background: var(--white);
+        border-right: 1px solid var(--slate-200);
+        padding: 24px 0;
+        flex-shrink: 0;
+        z-index: 60;
+      }
+
+      .sidebar-top { padding: 0 24px; }
+
+      .sidebar-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+
+      .sidebar-logo svg { width: 32px; height: 32px; }
+      .sidebar-wordmark { font-size: 17px; letter-spacing: -0.02em; }
+      .sidebar-wordmark b { font-weight: 800; color: var(--slate-900); }
+      .sidebar-wordmark span { font-weight: 600; color: var(--teal-700); }
+
+      .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 0 12px;
+        margin-top: 32px;
+      }
+
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: var(--radius-sm);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--slate-500);
+        transition: all 0.15s ease;
+        position: relative;
+      }
+
+      .sidebar-link:hover { background: var(--slate-100); color: var(--slate-900); }
+      .sidebar-link.active { background: var(--teal-50); color: var(--teal-700); font-weight: 600; }
+      .sidebar-link.active::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 8px; bottom: 8px;
+        width: 3px;
+        background: var(--amber-500);
+        border-radius: 0 2px 2px 0;
+      }
+      .sidebar-link svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+      .sidebar-bottom { padding: 16px 12px; border-top: 1px solid var(--slate-100); }
+      .sidebar-user { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: var(--radius-sm); }
+      .sidebar-user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--teal-700); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--white); }
+      .sidebar-user-info { flex: 1; }
+      .sidebar-user-name { font-size: 13px; font-weight: 600; color: var(--slate-900); }
+      .sidebar-user-email { font-size: 11px; font-weight: 400; color: var(--slate-400); }
+
+      .main {
+        flex: 1;
+        padding: 0 0 60px;
+        margin-left: 260px;
+      }
+
+      .monument { padding: 40px 40px 0; }
+      .monument-amount { font-size: 5rem; }
+
+      .tabs {
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+
+      .timeline {
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+    }
+
+    @media (min-width: 1280px) {
+      .monument-amount { font-size: 6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== MOBILE HEADER ====== -->
+  <header class="mobile-header">
+    <a href="#" class="mobile-header-logo">
+      <svg viewBox="-50 -50 100 100" fill="none">
+        <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+        <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+      </svg>
+      <span class="mobile-header-wordmark">
+        <b>Mes</b><span> Finances</span>
+      </span>
+    </a>
+    <div class="mobile-header-avatar">AF</div>
+  </header>
+
+  <!-- ====== DESKTOP SIDEBAR ====== -->
+  <aside class="sidebar">
+    <div>
+      <div class="sidebar-top">
+        <a href="#" class="sidebar-logo">
+          <svg viewBox="-50 -50 100 100" fill="none">
+            <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+            <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+          </svg>
+          <span class="sidebar-wordmark">
+            <b>Mes</b><span> Finances</span>
+          </span>
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="sidebar-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Tableau de bord
+        </a>
+        <a href="#" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          Depenses
+        </a>
+        <a href="#" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          Revenus
+        </a>
+        <a href="#" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 010-4h14v4"/><path d="M3 5v14a2 2 0 002 2h16v-5"/><path d="M18 12a2 2 0 000 4h4v-4h-4z"/></svg>
+          Patrimoine
+        </a>
+        <a href="#" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          Parametres
+        </a>
+      </nav>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar">AF</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Amara Fofana</div>
+          <div class="sidebar-user-email">amara@email.com</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ====== MAIN ====== -->
+  <main class="main">
+
+    <!-- THE MONUMENT -->
+    <section class="monument">
+      <p class="monument-greeting">Bonjour Amara</p>
+      <div class="month-nav">
+        <button class="month-nav-btn" aria-label="Mois precedent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <span class="month-nav-label">Mars 2026</span>
+        <button class="month-nav-btn" aria-label="Mois suivant">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+      <div class="monument-amount">
+        847<span class="dollar">$</span>
+      </div>
+      <p class="monument-label">Disponible ce mois-ci</p>
+      <div class="monument-status">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Ton mois est sous controle
+      </div>
+    </section>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <a href="dashboard-main.html" class="tab">Tableau de bord</a>
+      <a href="dashboard-timeline.html" class="tab active">Timeline</a>
+      <a href="dashboard-sante.html" class="tab">Sante financiere</a>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="timeline">
+
+      <!-- Today -->
+      <div class="timeline-group">
+        <div class="timeline-date">Aujourd'hui — 2 mars</div>
+
+        <div class="tl-event">
+          <div class="tl-icon expense-paid">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="tl-info">
+            <div class="tl-name">IGA Marche</div>
+            <div class="tl-meta">
+              <span class="tl-type">Epicerie</span>
+              <span class="tl-badge paid">Paye</span>
+            </div>
+          </div>
+          <div class="tl-right">
+            <div class="tl-amount negative">67,42 $</div>
+            <div class="tl-time">10:23</div>
+          </div>
+        </div>
+
+        <div class="tl-event">
+          <div class="tl-icon income-received">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <div class="tl-info">
+            <div class="tl-name">Salaire — Entreprise ABC</div>
+            <div class="tl-meta">
+              <span class="tl-type">Revenu</span>
+              <span class="tl-badge received">Recu</span>
+            </div>
+          </div>
+          <div class="tl-right">
+            <div class="tl-amount positive">2 500,00 $</div>
+            <div class="tl-time">06:00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Yesterday -->
+      <div class="timeline-group">
+        <div class="timeline-date">Hier — 1er mars</div>
+
+        <div class="tl-event">
+          <div class="tl-icon expense-paid">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="tl-info">
+            <div class="tl-name">Loyer — Mars</div>
+            <div class="tl-meta">
+              <span class="tl-type">Logement</span>
+              <span class="tl-badge paid">Paye</span>
+            </div>
+          </div>
+          <div class="tl-right">
+            <div class="tl-amount negative">1 350,00 $</div>
+            <div class="tl-time">00:01</div>
+          </div>
+        </div>
+
+        <div class="tl-event">
+          <div class="tl-icon expense-paid">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="tl-info">
+            <div class="tl-name">Hydro-Quebec</div>
+            <div class="tl-meta">
+              <span class="tl-type">Factures</span>
+              <span class="tl-badge paid">Paye</span>
+            </div>
+          </div>
+          <div class="tl-right">
+            <div class="tl-amount negative">89,00 $</div>
+            <div class="tl-time">00:01</div>
+          </div>
+        </div>
+
+        <div class="tl-event">
+          <div class="tl-icon savings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+          </div>
+          <div class="tl-info">
+            <div class="tl-name">Virement epargne auto</div>
+            <div class="tl-meta">
+              <span class="tl-type">Epargne</span>
+              <span class="tl-badge received">Transfere</span>
+            </div>
+          </div>
+          <div class="tl-right">
+            <div class="tl-amount negative">200,00 $</div>
+            <div class="tl-time">00:01</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upcoming -->
+      <div class="timeline-group">
+        <div class="timeline-date">A venir — 5 mars</div>
+
+        <div class="tl-event">
+          <div class="tl-icon charge-upcoming">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="tl-info">
+            <div class="tl-name">Internet — Videotron</div>
+            <div class="tl-meta">
+              <span class="tl-type">Factures</span>
+              <span class="tl-badge upcoming">Prevu</span>
+            </div>
+          </div>
+          <div class="tl-right">
+            <div class="tl-amount" style="color:var(--slate-400);">75,00 $</div>
+            <div class="tl-time">Automatique</div>
+          </div>
+        </div>
+
+        <div class="tl-event">
+          <div class="tl-icon debt-payment">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div class="tl-info">
+            <div class="tl-name">Paiement carte Visa</div>
+            <div class="tl-meta">
+              <span class="tl-type">Dettes</span>
+              <span class="tl-badge upcoming">Prevu</span>
+            </div>
+          </div>
+          <div class="tl-right">
+            <div class="tl-amount" style="color:var(--slate-400);">350,00 $</div>
+            <div class="tl-time">Automatique</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Late -->
+      <div class="timeline-group">
+        <div class="timeline-date" style="color: var(--error);">En retard</div>
+
+        <div class="tl-event">
+          <div class="tl-icon expense-late">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="tl-info">
+            <div class="tl-name">Assurance auto — Desjardins</div>
+            <div class="tl-meta">
+              <span class="tl-type">Factures</span>
+              <span class="tl-badge late">En retard</span>
+            </div>
+          </div>
+          <div class="tl-right">
+            <div class="tl-amount" style="color: var(--error);">125,00 $</div>
+            <div class="tl-time">Du 28 fev</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15 mars -->
+      <div class="timeline-group">
+        <div class="timeline-date">15 mars</div>
+
+        <div class="tl-event">
+          <div class="tl-icon income-received" style="background: var(--teal-50); color: var(--teal-600);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <div class="tl-info">
+            <div class="tl-name">Salaire — Entreprise ABC</div>
+            <div class="tl-meta">
+              <span class="tl-type">Revenu</span>
+              <span class="tl-badge upcoming">Attendu</span>
+            </div>
+          </div>
+          <div class="tl-right">
+            <div class="tl-amount" style="color:var(--slate-400);">2 500,00 $</div>
+            <div class="tl-time">Bimensuel</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ====== BOTTOM NAV ====== -->
+  <nav class="bottom-nav">
+    <a href="#" class="bottom-nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <span>Accueil</span>
+    </a>
+    <a href="#" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      <span>Depenses</span>
+    </a>
+    <a href="#" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 010-4h14v4"/><path d="M3 5v14a2 2 0 002 2h16v-5"/><path d="M18 12a2 2 0 000 4h4v-4h-4z"/></svg>
+      <span>Patrimoine</span>
+    </a>
+    <a href="#" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span>Reglages</span>
+    </a>
+  </nav>
+
+</body>
+</html>

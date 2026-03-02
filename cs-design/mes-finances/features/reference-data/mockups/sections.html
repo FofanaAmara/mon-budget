@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Finances — Sections</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       DIRECTION 3 — TYPOGRAPHY MONUMENT
+       Sections (Reference Data) — Mes Finances
+
+       The section count is the monument.
+       Each section is a tactile row with emoji,
+       color dot, name, and drag handle.
+       Bottom sheet for create/edit.
+    ======================================== */
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --teal-700: #0F766E;
+      --teal-800: #115E59;
+      --teal-600: #0D9488;
+      --teal-50: #F0FDFA;
+      --amber-500: #F59E0B;
+      --amber-600: #D97706;
+      --amber-100: #FEF3C7;
+      --slate-900: #0F172A;
+      --slate-700: #334155;
+      --slate-500: #64748B;
+      --slate-400: #94A3B8;
+      --slate-300: #CBD5E1;
+      --slate-200: #E2E8F0;
+      --slate-100: #F1F5F9;
+      --slate-50: #FAFBFC;
+      --white: #FFFFFF;
+      --success: #059669;
+      --success-light: #ECFDF5;
+      --warning: #F59E0B;
+      --warning-light: #FEF3C7;
+      --error: #DC2626;
+      --error-light: #FEF2F2;
+      --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --shadow-sm: 0 1px 2px rgba(15, 118, 110, 0.05);
+      --shadow-md: 0 4px 12px rgba(15, 118, 110, 0.08);
+      --shadow-lg: 0 8px 24px rgba(15, 118, 110, 0.12);
+      --shadow-xl: 0 16px 48px rgba(15, 23, 42, 0.12);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font);
+      color: var(--slate-900);
+      background: var(--slate-50);
+      line-height: 1.5;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    ::selection {
+      background: rgba(15, 118, 110, 0.15);
+      color: var(--slate-900);
+    }
+
+    /* ====== MOBILE HEADER ====== */
+
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .mobile-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mobile-header-back {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: var(--slate-100);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--slate-500);
+      transition: all 0.15s;
+    }
+
+    .mobile-header-back:hover {
+      background: var(--slate-200);
+      color: var(--slate-900);
+    }
+
+    .mobile-header-back svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .mobile-header-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .mobile-header-logo svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .mobile-header-wordmark {
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .mobile-header-wordmark b {
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .mobile-header-wordmark span {
+      font-weight: 600;
+      color: var(--teal-700);
+    }
+
+    .mobile-header-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--teal-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    /* ====== SIDEBAR (DESKTOP) ====== */
+
+    .sidebar {
+      display: none;
+    }
+
+    /* ====== MAIN ====== */
+
+    .main {
+      padding: 0 0 120px;
+    }
+
+    /* ====== MONUMENT: SECTION COUNT ====== */
+
+    .monument {
+      padding: 28px 20px 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .monument-label-top {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal-700);
+      margin-bottom: 8px;
+    }
+
+    .monument-count {
+      font-size: clamp(3.5rem, 14vw, 6rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--slate-900);
+    }
+
+    .monument-count-label {
+      font-size: clamp(1.2rem, 4vw, 1.5rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--slate-400);
+      margin-left: 4px;
+    }
+
+    .monument-sub {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate-400);
+      margin-top: 6px;
+    }
+
+    /* ====== PAGE HEADER WITH CTA ====== */
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      margin-top: 8px;
+    }
+
+    .page-header-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate-400);
+    }
+
+    .add-section-btn {
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .add-section-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 18px;
+        background: var(--teal-700);
+        color: var(--white);
+        border: none;
+        border-radius: var(--radius-md);
+        font-family: var(--font);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        letter-spacing: -0.01em;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+      }
+
+      .add-section-btn:hover {
+        background: var(--teal-800);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .add-section-btn:active {
+        transform: translateY(0);
+      }
+
+      .add-section-btn svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    /* ====== SECTION LIST ====== */
+
+    .section-list {
+      margin: 20px 20px 0;
+    }
+
+    .section-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      margin-bottom: 8px;
+      transition: all 0.2s ease;
+      cursor: grab;
+      position: relative;
+    }
+
+    .section-item:hover {
+      border-color: rgba(15, 118, 110, 0.2);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+
+    .section-item:active {
+      cursor: grabbing;
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+      z-index: 5;
+    }
+
+    .section-drag-handle {
+      color: var(--slate-300);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      touch-action: none;
+      cursor: grab;
+    }
+
+    .section-drag-handle:active {
+      cursor: grabbing;
+    }
+
+    .section-drag-handle svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .section-emoji {
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .section-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .section-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .section-meta {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate-400);
+      margin-top: 1px;
+    }
+
+    .section-color-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .section-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .section-action-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--slate-400);
+      transition: all 0.15s;
+    }
+
+    .section-action-btn:hover {
+      background: var(--slate-100);
+      color: var(--slate-700);
+    }
+
+    .section-action-btn.delete:hover {
+      background: var(--error-light);
+      color: var(--error);
+    }
+
+    .section-action-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ====== EMPTY STATE ====== */
+
+    .empty-state {
+      display: none;
+      text-align: center;
+      padding: 60px 32px;
+      margin: 20px 20px 0;
+    }
+
+    .empty-state-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--teal-50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 32px;
+    }
+
+    .empty-state-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .empty-state-desc {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--slate-500);
+      line-height: 1.6;
+      max-width: 280px;
+      margin: 0 auto 24px;
+    }
+
+    .empty-state-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: var(--teal-700);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .empty-state-btn:hover {
+      background: var(--teal-800);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .empty-state-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ====== BOTTOM SHEET (MOBILE) / MODAL (DESKTOP) ====== */
+
+    .sheet-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 200;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    .sheet-backdrop.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .sheet {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 210;
+      background: var(--white);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      box-shadow: 0 -8px 32px rgba(15, 23, 42, 0.15);
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+      max-height: 90vh;
+      max-height: 90dvh;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .sheet.active {
+      transform: translateY(0);
+    }
+
+    .sheet-handle {
+      width: 36px;
+      height: 4px;
+      background: var(--slate-300);
+      border-radius: 2px;
+      margin: 12px auto 0;
+    }
+
+    .sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px 0;
+    }
+
+    .sheet-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sheet-title svg {
+      width: 22px;
+      height: 22px;
+      color: var(--teal-700);
+    }
+
+    .sheet-title h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.02em;
+    }
+
+    .sheet-close {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: var(--slate-100);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--slate-500);
+      transition: all 0.15s;
+    }
+
+    .sheet-close:hover {
+      background: var(--slate-200);
+      color: var(--slate-900);
+    }
+
+    .sheet-close svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .sheet-body {
+      padding: 24px;
+      padding-bottom: max(24px, calc(16px + env(safe-area-inset-bottom)));
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate-500);
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--slate-900);
+      background: var(--white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      letter-spacing: -0.01em;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--teal-700);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.08);
+    }
+
+    .form-input::placeholder {
+      color: var(--slate-300);
+      font-weight: 400;
+    }
+
+    /* ====== EMOJI PICKER ====== */
+
+    .emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .emoji-option {
+      width: 100%;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      border: 2px solid transparent;
+      border-radius: var(--radius-sm);
+      background: var(--slate-50);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .emoji-option:hover {
+      background: var(--slate-100);
+      transform: scale(1.08);
+    }
+
+    .emoji-option.selected {
+      border-color: var(--teal-700);
+      background: var(--teal-50);
+      transform: scale(1.1);
+    }
+
+    /* ====== COLOR PICKER ====== */
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 8px;
+    }
+
+    .color-option {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+    }
+
+    .color-option:hover {
+      transform: scale(1.15);
+    }
+
+    .color-option.selected {
+      border-color: var(--slate-900);
+      transform: scale(1.15);
+    }
+
+    .color-option.selected::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--white);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    }
+
+    /* ====== SHEET ACTIONS ====== */
+
+    .sheet-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .btn-cancel {
+      flex: 1;
+      padding: 13px;
+      background: var(--white);
+      color: var(--slate-700);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: -0.01em;
+      transition: all 0.15s;
+    }
+
+    .btn-cancel:hover {
+      background: var(--slate-50);
+      border-color: var(--slate-300);
+    }
+
+    .btn-submit {
+      flex: 1.4;
+      padding: 13px;
+      background: var(--teal-700);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: -0.01em;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-submit:hover {
+      background: var(--teal-800);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-submit svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ====== FAB ====== */
+
+    .fab {
+      position: fixed;
+      bottom: max(72px, calc(56px + env(safe-area-inset-bottom)));
+      right: 20px;
+      height: 52px;
+      padding: 0 20px;
+      border-radius: 100px;
+      background: var(--teal-700);
+      color: var(--white);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: var(--shadow-lg);
+      transition: all 0.2s ease;
+      z-index: 40;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .fab:hover {
+      background: var(--teal-800);
+      transform: scale(1.03);
+    }
+
+    .fab svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ====== BOTTOM NAV (MOBILE) ====== */
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 8px 0;
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
+      background: var(--white);
+      border-top: 1px solid var(--slate-200);
+      z-index: 50;
+    }
+
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 4px 12px;
+      text-decoration: none;
+    }
+
+    .bottom-nav-item svg {
+      width: 22px;
+      height: 22px;
+      color: var(--slate-400);
+    }
+
+    .bottom-nav-item span {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--slate-400);
+    }
+
+    .bottom-nav-item.active svg {
+      color: var(--teal-700);
+    }
+
+    .bottom-nav-item.active span {
+      color: var(--teal-700);
+    }
+
+    /* ====== RESPONSIVE DESKTOP ====== */
+
+    @media (min-width: 768px) {
+      .section-list {
+        max-width: 640px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .monument {
+        padding: 32px 20px 24px;
+      }
+
+      .page-header {
+        max-width: 640px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .fab {
+        display: none;
+      }
+
+      /* Desktop: convert sheet to centered modal */
+      .sheet {
+        position: fixed;
+        bottom: auto;
+        left: 50%;
+        top: 50%;
+        right: auto;
+        transform: translate(-50%, -50%) scale(0.95);
+        border-radius: var(--radius-lg);
+        width: calc(100% - 32px);
+        max-width: 480px;
+        max-height: calc(100dvh - 48px);
+        box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18), 0 8px 16px rgba(15, 118, 110, 0.06);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+      }
+
+      .sheet.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      .sheet-handle {
+        display: none;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .mobile-header {
+        display: none;
+      }
+
+      .bottom-nav {
+        display: none;
+      }
+
+      body {
+        display: flex;
+      }
+
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 260px;
+        height: 100vh;
+        height: 100dvh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+        background: var(--white);
+        border-right: 1px solid var(--slate-200);
+        padding: 24px 0;
+        flex-shrink: 0;
+        z-index: 60;
+      }
+
+      .sidebar-top {
+        padding: 0 24px;
+      }
+
+      .sidebar-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+
+      .sidebar-logo svg {
+        width: 32px;
+        height: 32px;
+      }
+
+      .sidebar-wordmark {
+        font-size: 17px;
+        letter-spacing: -0.02em;
+      }
+
+      .sidebar-wordmark b {
+        font-weight: 800;
+        color: var(--slate-900);
+      }
+
+      .sidebar-wordmark span {
+        font-weight: 600;
+        color: var(--teal-700);
+      }
+
+      .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 0 12px;
+        margin-top: 32px;
+      }
+
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: var(--radius-sm);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--slate-500);
+        transition: all 0.15s ease;
+        letter-spacing: -0.01em;
+        position: relative;
+      }
+
+      .sidebar-link:hover {
+        background: var(--slate-100);
+        color: var(--slate-900);
+      }
+
+      .sidebar-link.active {
+        background: var(--teal-50);
+        color: var(--teal-700);
+        font-weight: 600;
+      }
+
+      .sidebar-link.active::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 8px;
+        bottom: 8px;
+        width: 3px;
+        background: var(--amber-500);
+        border-radius: 0 2px 2px 0;
+      }
+
+      .sidebar-link svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+      }
+
+      .sidebar-bottom {
+        padding: 16px 12px;
+        border-top: 1px solid var(--slate-100);
+      }
+
+      .sidebar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        border-radius: var(--radius-sm);
+      }
+
+      .sidebar-user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--teal-700);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--white);
+      }
+
+      .sidebar-user-info {
+        flex: 1;
+      }
+
+      .sidebar-user-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--slate-900);
+      }
+
+      .sidebar-user-email {
+        font-size: 11px;
+        font-weight: 400;
+        color: var(--slate-400);
+      }
+
+      /* Main content with sidebar offset */
+      .main {
+        flex: 1;
+        padding: 0 0 80px;
+        max-width: 100%;
+        overflow-x: hidden;
+        margin-left: 260px;
+      }
+
+      .monument {
+        padding: 40px 40px 24px;
+      }
+
+      .monument-count {
+        font-size: 5rem;
+      }
+
+      .section-list,
+      .page-header {
+        max-width: 640px;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+
+      .section-list {
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+
+      .page-header {
+        margin-top: 0;
+        margin-bottom: 20px;
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+
+      .add-section-btn {
+        padding: 10px 22px;
+        font-size: 14px;
+      }
+    }
+
+    /* ====== ANIMATIONS ====== */
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .monument { animation: fadeIn 0.6s ease both; }
+    .page-header { animation: fadeIn 0.5s ease 0.1s both; }
+    .section-list { animation: fadeIn 0.5s ease 0.15s both; }
+
+    @keyframes staggerItem {
+      from { opacity: 0; transform: translateX(-8px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .section-item:nth-child(1) { animation: staggerItem 0.4s ease 0.2s both; }
+    .section-item:nth-child(2) { animation: staggerItem 0.4s ease 0.25s both; }
+    .section-item:nth-child(3) { animation: staggerItem 0.4s ease 0.3s both; }
+    .section-item:nth-child(4) { animation: staggerItem 0.4s ease 0.35s both; }
+    .section-item:nth-child(5) { animation: staggerItem 0.4s ease 0.4s both; }
+    .section-item:nth-child(6) { animation: staggerItem 0.4s ease 0.45s both; }
+    .section-item:nth-child(7) { animation: staggerItem 0.4s ease 0.5s both; }
+    .section-item:nth-child(8) { animation: staggerItem 0.4s ease 0.55s both; }
+  </style>
+</head>
+<body>
+
+  <!-- ====== MOBILE HEADER ====== -->
+  <header class="mobile-header">
+    <div class="mobile-header-left">
+      <button class="mobile-header-back" aria-label="Retour">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <a href="dashboard.html" class="mobile-header-logo">
+        <svg viewBox="-50 -50 100 100" fill="none">
+          <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+          <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+        </svg>
+        <span class="mobile-header-wordmark">
+          <b>Mes</b><span> Finances</span>
+        </span>
+      </a>
+    </div>
+    <div class="mobile-header-avatar">AF</div>
+  </header>
+
+  <!-- ====== DESKTOP SIDEBAR ====== -->
+  <aside class="sidebar">
+    <div>
+      <div class="sidebar-top">
+        <a href="dashboard.html" class="sidebar-logo">
+          <svg viewBox="-50 -50 100 100" fill="none">
+            <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+            <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+          </svg>
+          <span class="sidebar-wordmark">
+            <b>Mes</b><span> Finances</span>
+          </span>
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Tableau de bord
+        </a>
+        <a href="depenses.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          Depenses
+        </a>
+        <a href="#" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          Revenus
+        </a>
+        <a href="#" class="sidebar-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          Parametres
+        </a>
+      </nav>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar">AF</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Amara Fofana</div>
+          <div class="sidebar-user-email">amara@example.com</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ====== MAIN CONTENT ====== -->
+  <main class="main">
+
+    <!-- Monument -->
+    <div class="monument">
+      <div class="monument-label-top">Sections</div>
+      <div class="monument-count">8<span class="monument-count-label">sections</span></div>
+      <div class="monument-sub">Tes categories pour classer tes depenses</div>
+    </div>
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="page-header-title">Liste des sections</div>
+      <button class="add-section-btn" onclick="openSheet()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Ajouter une section
+      </button>
+    </div>
+
+    <!-- Section List (Filled State) -->
+    <div class="section-list">
+
+      <div class="section-item">
+        <div class="section-drag-handle">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+        </div>
+        <div class="section-emoji" style="background: #ECFDF5;">
+          <span>🛒</span>
+        </div>
+        <div class="section-info">
+          <div class="section-name">Epicerie</div>
+          <div class="section-meta">Budget mensuel</div>
+        </div>
+        <div class="section-color-dot" style="background: #059669;"></div>
+        <div class="section-actions">
+          <button class="section-action-btn" aria-label="Modifier" onclick="openSheet()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="section-action-btn delete" aria-label="Supprimer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="section-item">
+        <div class="section-drag-handle">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+        </div>
+        <div class="section-emoji" style="background: #FEF3C7;">
+          <span>🍽️</span>
+        </div>
+        <div class="section-info">
+          <div class="section-name">Restaurants</div>
+          <div class="section-meta">Budget mensuel</div>
+        </div>
+        <div class="section-color-dot" style="background: #F59E0B;"></div>
+        <div class="section-actions">
+          <button class="section-action-btn" aria-label="Modifier" onclick="openSheet()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="section-action-btn delete" aria-label="Supprimer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="section-item">
+        <div class="section-drag-handle">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+        </div>
+        <div class="section-emoji" style="background: #EFF6FF;">
+          <span>🚌</span>
+        </div>
+        <div class="section-info">
+          <div class="section-name">Transport</div>
+          <div class="section-meta">Budget mensuel</div>
+        </div>
+        <div class="section-color-dot" style="background: #3B82F6;"></div>
+        <div class="section-actions">
+          <button class="section-action-btn" aria-label="Modifier" onclick="openSheet()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="section-action-btn delete" aria-label="Supprimer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="section-item">
+        <div class="section-drag-handle">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+        </div>
+        <div class="section-emoji" style="background: #F0FDFA;">
+          <span>🏠</span>
+        </div>
+        <div class="section-info">
+          <div class="section-name">Logement</div>
+          <div class="section-meta">Budget mensuel</div>
+        </div>
+        <div class="section-color-dot" style="background: #0F766E;"></div>
+        <div class="section-actions">
+          <button class="section-action-btn" aria-label="Modifier" onclick="openSheet()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="section-action-btn delete" aria-label="Supprimer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="section-item">
+        <div class="section-drag-handle">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+        </div>
+        <div class="section-emoji" style="background: #FDF2F8;">
+          <span>🎬</span>
+        </div>
+        <div class="section-info">
+          <div class="section-name">Divertissement</div>
+          <div class="section-meta">Budget mensuel</div>
+        </div>
+        <div class="section-color-dot" style="background: #EC4899;"></div>
+        <div class="section-actions">
+          <button class="section-action-btn" aria-label="Modifier" onclick="openSheet()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="section-action-btn delete" aria-label="Supprimer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="section-item">
+        <div class="section-drag-handle">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+        </div>
+        <div class="section-emoji" style="background: #F0F9FF;">
+          <span>💊</span>
+        </div>
+        <div class="section-info">
+          <div class="section-name">Sante</div>
+          <div class="section-meta">Budget mensuel</div>
+        </div>
+        <div class="section-color-dot" style="background: #0EA5E9;"></div>
+        <div class="section-actions">
+          <button class="section-action-btn" aria-label="Modifier" onclick="openSheet()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="section-action-btn delete" aria-label="Supprimer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="section-item">
+        <div class="section-drag-handle">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+        </div>
+        <div class="section-emoji" style="background: #F5F3FF;">
+          <span>👤</span>
+        </div>
+        <div class="section-info">
+          <div class="section-name">Personnel</div>
+          <div class="section-meta">Budget mensuel</div>
+        </div>
+        <div class="section-color-dot" style="background: #8B5CF6;"></div>
+        <div class="section-actions">
+          <button class="section-action-btn" aria-label="Modifier" onclick="openSheet()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="section-action-btn delete" aria-label="Supprimer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="section-item">
+        <div class="section-drag-handle">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+        </div>
+        <div class="section-emoji" style="background: #FFF7ED;">
+          <span>📄</span>
+        </div>
+        <div class="section-info">
+          <div class="section-name">Factures</div>
+          <div class="section-meta">Budget mensuel</div>
+        </div>
+        <div class="section-color-dot" style="background: #F97316;"></div>
+        <div class="section-actions">
+          <button class="section-action-btn" aria-label="Modifier" onclick="openSheet()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="section-action-btn delete" aria-label="Supprimer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Empty State (hidden when sections exist) -->
+    <div class="empty-state">
+      <div class="empty-state-icon">📂</div>
+      <div class="empty-state-title">Aucune section</div>
+      <div class="empty-state-desc">Cree ta premiere section pour commencer a organiser tes depenses par categorie.</div>
+      <button class="empty-state-btn" onclick="openSheet()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Creer une section
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ====== FAB (mobile only) ====== -->
+  <button class="fab" onclick="openSheet()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Ajouter
+  </button>
+
+  <!-- ====== BOTTOM NAV (MOBILE) ====== -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <span>Accueil</span>
+    </a>
+    <a href="depenses.html" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      <span>Depenses</span>
+    </a>
+    <a href="#" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      <span>Revenus</span>
+    </a>
+    <a href="#" class="bottom-nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span>Reglages</span>
+    </a>
+  </nav>
+
+  <!-- ====== BOTTOM SHEET / MODAL: CREATE/EDIT SECTION ====== -->
+  <div class="sheet-backdrop" id="sheetBackdrop" onclick="closeSheet()"></div>
+  <div class="sheet" id="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div class="sheet-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <h3>Nouvelle section</h3>
+      </div>
+      <button class="sheet-close" onclick="closeSheet()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-body">
+
+      <!-- Name -->
+      <div class="form-group">
+        <label class="form-label">Nom de la section</label>
+        <input type="text" class="form-input" placeholder="ex. Epicerie, Transport..." value="Epicerie">
+      </div>
+
+      <!-- Emoji Picker -->
+      <div class="form-group">
+        <label class="form-label">Icone</label>
+        <div class="emoji-grid">
+          <button class="emoji-option selected">🛒</button>
+          <button class="emoji-option">🍽️</button>
+          <button class="emoji-option">🚌</button>
+          <button class="emoji-option">🏠</button>
+          <button class="emoji-option">🎬</button>
+          <button class="emoji-option">💊</button>
+          <button class="emoji-option">👤</button>
+          <button class="emoji-option">📄</button>
+          <button class="emoji-option">🎓</button>
+          <button class="emoji-option">✈️</button>
+          <button class="emoji-option">🐕</button>
+          <button class="emoji-option">👶</button>
+          <button class="emoji-option">💪</button>
+          <button class="emoji-option">🎁</button>
+        </div>
+      </div>
+
+      <!-- Color Picker -->
+      <div class="form-group">
+        <label class="form-label">Couleur</label>
+        <div class="color-grid">
+          <button class="color-option selected" style="background: #0F766E;" aria-label="Teal"></button>
+          <button class="color-option" style="background: #F59E0B;" aria-label="Amber"></button>
+          <button class="color-option" style="background: #DC2626;" aria-label="Rouge"></button>
+          <button class="color-option" style="background: #3B82F6;" aria-label="Bleu"></button>
+          <button class="color-option" style="background: #059669;" aria-label="Vert"></button>
+          <button class="color-option" style="background: #8B5CF6;" aria-label="Violet"></button>
+          <button class="color-option" style="background: #F97316;" aria-label="Orange"></button>
+          <button class="color-option" style="background: #64748B;" aria-label="Gris"></button>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="sheet-actions">
+        <button class="btn-cancel" onclick="closeSheet()">Annuler</button>
+        <button class="btn-submit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Enregistrer
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Sheet open/close
+    function openSheet() {
+      document.getElementById('sheetBackdrop').classList.add('active');
+      document.getElementById('sheet').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSheet() {
+      document.getElementById('sheetBackdrop').classList.remove('active');
+      document.getElementById('sheet').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Emoji picker selection
+    document.querySelectorAll('.emoji-option').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.emoji-option').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
+
+    // Color picker selection
+    document.querySelectorAll('.color-option').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.color-option').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
+  </script>
+
+</body>
+</html>

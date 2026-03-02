@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Finances — Suivi des depenses</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       TYPOGRAPHY MONUMENT — Expense Tracking
+
+       The spent/planned ratio is the monument.
+       Status groups use left-edge color coding.
+       Each expense row is dense, tappable, with
+       inline status toggle. Bottom sheets for
+       detailed actions. FAB for adhoc expenses.
+    ======================================== */
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --teal-700: #0F766E;
+      --teal-800: #115E59;
+      --teal-600: #0D9488;
+      --teal-50: #F0FDFA;
+      --amber-500: #F59E0B;
+      --amber-600: #D97706;
+      --amber-100: #FEF3C7;
+      --slate-900: #0F172A;
+      --slate-700: #334155;
+      --slate-500: #64748B;
+      --slate-400: #94A3B8;
+      --slate-300: #CBD5E1;
+      --slate-200: #E2E8F0;
+      --slate-100: #F1F5F9;
+      --slate-50: #FAFBFC;
+      --white: #FFFFFF;
+      --success: #059669;
+      --success-light: #ECFDF5;
+      --warning: #F59E0B;
+      --warning-light: #FEF3C7;
+      --error: #DC2626;
+      --error-light: #FEF2F2;
+      --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --shadow-sm: 0 1px 2px rgba(15, 118, 110, 0.05);
+      --shadow-md: 0 4px 12px rgba(15, 118, 110, 0.08);
+      --shadow-lg: 0 8px 24px rgba(15, 118, 110, 0.12);
+      --shadow-xl: 0 16px 48px rgba(15, 23, 42, 0.12);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font);
+      color: var(--slate-900);
+      background: var(--slate-50);
+      line-height: 1.5;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    ::selection {
+      background: rgba(15, 118, 110, 0.15);
+      color: var(--slate-900);
+    }
+
+    /* ====== ANIMATIONS ====== */
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    @keyframes progressFill {
+      from { width: 0; }
+    }
+
+    @keyframes countUp {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ====== MOBILE HEADER ====== */
+
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .mobile-header-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .mobile-header-logo svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .mobile-header-wordmark {
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .mobile-header-wordmark b {
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .mobile-header-wordmark span {
+      font-weight: 600;
+      color: var(--teal-700);
+    }
+
+    .mobile-header-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--teal-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
+
+    /* ====== DESKTOP SIDEBAR ====== */
+
+    .sidebar {
+      display: none;
+    }
+
+    /* ====== MAIN ====== */
+
+    .main {
+      padding: 0 0 120px;
+    }
+
+    /* ====== MONTH NAVIGATOR ====== */
+
+    .month-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px 8px;
+      animation: fadeIn 0.5s ease both;
+    }
+
+    .month-nav-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--slate-200);
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--slate-500);
+      transition: all 0.2s ease;
+    }
+
+    .month-nav-btn:hover {
+      border-color: var(--teal-700);
+      color: var(--teal-700);
+      background: var(--teal-50);
+    }
+
+    .month-nav-btn:active {
+      transform: scale(0.95);
+    }
+
+    .month-nav-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .month-nav-center {
+      text-align: center;
+    }
+
+    .month-nav-month {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.02em;
+    }
+
+    .month-nav-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+      padding: 3px 10px;
+      background: var(--teal-50);
+      border: 1px solid rgba(15, 118, 110, 0.1);
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--teal-700);
+      letter-spacing: -0.01em;
+    }
+
+    .month-nav-badge-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--teal-700);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* ====== MONUMENT: SPENT / PLANNED ====== */
+
+    .monument {
+      padding: 20px 20px 24px;
+      text-align: center;
+      position: relative;
+      animation: fadeIn 0.6s ease both;
+    }
+
+    .monument-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal-700);
+      margin-bottom: 10px;
+    }
+
+    .monument-amount-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 6px;
+      line-height: 1;
+    }
+
+    .monument-spent {
+      font-size: clamp(3rem, 12vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--slate-900);
+      animation: countUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .monument-spent .dollar {
+      font-size: 0.4em;
+      font-weight: 600;
+      color: var(--teal-700);
+      vertical-align: super;
+      margin-left: 2px;
+    }
+
+    .monument-separator {
+      font-size: clamp(1.5rem, 5vw, 2.5rem);
+      font-weight: 300;
+      color: var(--slate-300);
+      margin: 0 2px;
+    }
+
+    .monument-planned {
+      font-size: clamp(1.2rem, 4vw, 1.8rem);
+      font-weight: 600;
+      color: var(--slate-400);
+      letter-spacing: -0.02em;
+    }
+
+    .monument-planned .dollar {
+      font-size: 0.6em;
+      font-weight: 500;
+      color: var(--slate-300);
+      vertical-align: super;
+    }
+
+    /* ====== PROGRESS BAR ====== */
+
+    .progress-container {
+      margin: 16px 20px 0;
+      position: relative;
+    }
+
+    .progress-track {
+      height: 6px;
+      background: var(--slate-100);
+      border-radius: 3px;
+      overflow: visible;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--teal-700);
+      width: 76.6%;
+      transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: progressFill 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.3s;
+      position: relative;
+    }
+
+    .progress-fill.warning {
+      background: var(--warning);
+    }
+
+    .progress-fill.over {
+      background: var(--error);
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--slate-400);
+      letter-spacing: -0.01em;
+    }
+
+    /* ====== STATUS BADGES ====== */
+
+    .status-badges {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 0 20px;
+      flex-wrap: wrap;
+      animation: fadeIn 0.6s ease 0.15s both;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .status-badge.remaining {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .status-badge.overdue {
+      background: var(--error-light);
+      color: var(--error);
+    }
+
+    .status-badge.overflow {
+      background: var(--error-light);
+      color: var(--error);
+    }
+
+    .status-badge.deferred {
+      background: var(--warning-light);
+      color: var(--amber-600);
+    }
+
+    .status-badge svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    /* ====== TYPE FILTER TABS ====== */
+
+    .type-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--slate-100);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      margin: 20px 20px 0;
+      animation: fadeIn 0.6s ease 0.2s both;
+    }
+
+    .type-tab {
+      flex: 1;
+      padding: 9px 12px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 650;
+      cursor: pointer;
+      background: transparent;
+      color: var(--slate-500);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .type-tab:first-child {
+      flex: 0 0 auto;
+    }
+
+    .type-tab.active {
+      background: var(--white);
+      color: var(--slate-900);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .type-tab:not(.active):hover {
+      color: var(--slate-700);
+    }
+
+    /* ====== SECTION FILTER PILLS ====== */
+
+    .section-pills {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 14px 20px 4px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      animation: fadeIn 0.6s ease 0.25s both;
+    }
+
+    .section-pills::-webkit-scrollbar {
+      display: none;
+    }
+
+    .section-pill {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: 100px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-500);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .section-pill:hover {
+      border-color: var(--teal-700);
+      color: var(--teal-700);
+    }
+
+    .section-pill.active {
+      background: var(--teal-700);
+      color: var(--white);
+      border-color: var(--teal-700);
+    }
+
+    .section-pill-emoji {
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    /* ====== STATUS GROUP ====== */
+
+    .status-groups {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 20px 20px 0;
+    }
+
+    .status-group {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--slate-200);
+      overflow: hidden;
+      transition: box-shadow 0.25s ease;
+      position: relative;
+    }
+
+    .status-group:hover {
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Left accent bar per status */
+    .status-group::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      border-radius: 18px 0 0 18px;
+    }
+
+    .status-group.upcoming::before {
+      background: var(--teal-700);
+    }
+
+    .status-group.paid::before {
+      background: var(--success);
+    }
+
+    .status-group.overdue::before {
+      background: var(--error);
+    }
+
+    .status-group.deferred::before {
+      background: var(--amber-500);
+    }
+
+    .status-group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 12px 18px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+
+    .status-group-header:hover {
+      background: var(--slate-50);
+    }
+
+    .status-group-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-group-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .status-group.upcoming .status-group-icon {
+      background: var(--teal-50);
+      color: var(--teal-700);
+    }
+
+    .status-group.paid .status-group-icon {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .status-group.overdue .status-group-icon {
+      background: var(--error-light);
+      color: var(--error);
+    }
+
+    .status-group.deferred .status-group-icon {
+      background: var(--warning-light);
+      color: var(--amber-600);
+    }
+
+    .status-group-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .status-group-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+    }
+
+    .status-group-count {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--slate-400);
+      margin-left: 4px;
+    }
+
+    .status-group-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-group-total {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--slate-900);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .status-group-total .dollar {
+      font-size: 0.65em;
+      font-weight: 600;
+      color: var(--teal-700);
+    }
+
+    .status-group-chevron {
+      width: 20px;
+      height: 20px;
+      color: var(--slate-300);
+      transition: transform 0.25s ease;
+    }
+
+    .status-group.expanded .status-group-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* ====== EXPENSE ITEM ====== */
+
+    .expense-list {
+      border-top: 1px solid var(--slate-100);
+    }
+
+    .expense-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px 12px 18px;
+      gap: 12px;
+      border-bottom: 1px solid var(--slate-100);
+      transition: background 0.15s ease;
+      cursor: pointer;
+    }
+
+    .expense-item:last-child {
+      border-bottom: none;
+    }
+
+    .expense-item:hover {
+      background: var(--slate-50);
+    }
+
+    .expense-item:active {
+      background: rgba(15, 118, 110, 0.04);
+    }
+
+    .expense-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .expense-icon.housing { background: #F0FDFA; }
+    .expense-icon.transport { background: #EFF6FF; }
+    .expense-icon.food { background: #FEF3C7; }
+    .expense-icon.entertainment { background: #FDF2F8; }
+    .expense-icon.health { background: #F0F9FF; }
+    .expense-icon.utilities { background: #FFF7ED; }
+    .expense-icon.personal { background: #F5F3FF; }
+    .expense-icon.adhoc { background: #F1F5F9; }
+
+    .expense-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .expense-name-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .expense-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .expense-badge-adhoc {
+      display: inline-flex;
+      padding: 1px 7px;
+      background: var(--amber-100);
+      border-radius: 100px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--amber-600);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .expense-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--slate-400);
+      letter-spacing: 0.02em;
+    }
+
+    .expense-meta-section {
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+    }
+
+    .expense-meta-sep {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--slate-300);
+    }
+
+    .expense-meta-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .expense-meta-card svg {
+      width: 11px;
+      height: 11px;
+    }
+
+    .expense-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .expense-amount {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--slate-900);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .expense-amount .dollar {
+      font-size: 0.7em;
+      font-weight: 600;
+      color: var(--teal-700);
+    }
+
+    /* Status toggle button on each row */
+    .expense-status-toggle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--slate-200);
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .expense-status-toggle:hover {
+      border-color: var(--teal-700);
+      background: var(--teal-50);
+    }
+
+    .expense-status-toggle svg {
+      width: 14px;
+      height: 14px;
+      color: transparent;
+      transition: color 0.2s;
+    }
+
+    .expense-status-toggle:hover svg {
+      color: var(--teal-700);
+    }
+
+    .expense-status-toggle.checked {
+      border-color: var(--success);
+      background: var(--success);
+    }
+
+    .expense-status-toggle.checked svg {
+      color: var(--white);
+    }
+
+    /* Chevron for actions */
+    .expense-chevron {
+      width: 18px;
+      height: 18px;
+      color: var(--slate-300);
+      flex-shrink: 0;
+    }
+
+    /* Show more button */
+    .show-more-btn {
+      width: 100%;
+      padding: 11px 18px;
+      border: none;
+      background: var(--slate-50);
+      border-top: 1px solid var(--slate-100);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--teal-700);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .show-more-btn:hover {
+      background: var(--teal-50);
+      color: var(--teal-800);
+    }
+
+    /* ====== SUMMARY STATS ====== */
+
+    .summary-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 20px 20px 0;
+      animation: fadeIn 0.6s ease 0.35s both;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      transition: all 0.25s ease;
+    }
+
+    .stat-card:hover {
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate-400);
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--slate-900);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .stat-value .dollar {
+      font-size: 0.55em;
+      font-weight: 600;
+      color: var(--teal-700);
+      vertical-align: super;
+    }
+
+    .stat-value.green { color: var(--success); }
+    .stat-value.green .dollar { color: var(--success); }
+    .stat-value.red { color: var(--error); }
+    .stat-value.red .dollar { color: var(--error); }
+
+    .stat-sub {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--slate-400);
+      margin-top: 4px;
+    }
+
+    /* ====== INSIGHT CARD ====== */
+
+    .insight-card {
+      margin: 20px 20px 0;
+      padding: 18px;
+      background: var(--teal-50);
+      border: 1px solid rgba(15, 118, 110, 0.08);
+      border-radius: var(--radius-lg);
+      animation: fadeIn 0.6s ease 0.4s both;
+    }
+
+    .insight-icon-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .insight-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .insight-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--teal-700);
+      letter-spacing: -0.01em;
+    }
+
+    .insight-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate-700);
+      line-height: 1.5;
+      letter-spacing: -0.01em;
+    }
+
+    /* ====== FAB (MOBILE) ====== */
+
+    .fab {
+      position: fixed;
+      bottom: max(80px, calc(64px + env(safe-area-inset-bottom)));
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--teal-700);
+      color: var(--white);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-lg), 0 0 0 0 rgba(15, 118, 110, 0.3);
+      transition: all 0.2s ease;
+      z-index: 40;
+      animation: fadeIn 0.5s ease 0.5s both;
+    }
+
+    .fab:hover {
+      background: var(--teal-800);
+      transform: scale(1.08);
+      box-shadow: var(--shadow-lg), 0 0 0 8px rgba(15, 118, 110, 0.08);
+    }
+
+    .fab:active {
+      transform: scale(0.95);
+    }
+
+    .fab svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    /* ====== BOTTOM NAVIGATION (MOBILE) ====== */
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-top: 1px solid var(--slate-200);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0;
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
+      z-index: 100;
+    }
+
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      text-decoration: none;
+      cursor: pointer;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      transition: all 0.15s;
+      background: none;
+      border: none;
+      font-family: var(--font);
+    }
+
+    .bottom-nav-item svg {
+      width: 22px;
+      height: 22px;
+      color: var(--slate-400);
+      transition: color 0.15s;
+    }
+
+    .bottom-nav-item span {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--slate-400);
+      letter-spacing: 0.02em;
+      transition: color 0.15s;
+    }
+
+    .bottom-nav-item.active svg {
+      color: var(--teal-700);
+    }
+
+    .bottom-nav-item.active span {
+      color: var(--teal-700);
+    }
+
+    /* ====== DESKTOP LAYOUT ====== */
+
+    @media (min-width: 1024px) {
+      .mobile-header { display: none; }
+      .bottom-nav { display: none; }
+      .fab { display: none; }
+
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 260px;
+        background: var(--white);
+        border-right: 1px solid var(--slate-200);
+        z-index: 60;
+      }
+
+      .sidebar-top {
+        padding: 24px 24px 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sidebar-top svg {
+        width: 36px;
+        height: 36px;
+      }
+
+      .sidebar-wordmark {
+        font-size: 18px;
+        letter-spacing: -0.02em;
+      }
+
+      .sidebar-wordmark b {
+        font-weight: 800;
+        color: var(--slate-900);
+      }
+
+      .sidebar-wordmark span {
+        font-weight: 600;
+        color: var(--teal-700);
+      }
+
+      .sidebar-nav {
+        flex: 1;
+        padding: 0 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: var(--radius-sm);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--slate-500);
+        text-decoration: none;
+        transition: all 0.15s;
+        position: relative;
+      }
+
+      .sidebar-link:hover {
+        background: var(--slate-100);
+        color: var(--slate-900);
+      }
+
+      .sidebar-link.active {
+        background: var(--teal-50);
+        color: var(--teal-700);
+        font-weight: 600;
+      }
+
+      .sidebar-link.active::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 8px;
+        bottom: 8px;
+        width: 3px;
+        background: var(--amber-500);
+        border-radius: 0 2px 2px 0;
+      }
+
+      .sidebar-link svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .sidebar-bottom {
+        padding: 16px 16px;
+        border-top: 1px solid var(--slate-100);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sidebar-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--teal-700);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .sidebar-user {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .sidebar-user-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--slate-900);
+        letter-spacing: -0.01em;
+      }
+
+      .sidebar-user-email {
+        font-size: 12px;
+        color: var(--slate-400);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .main {
+        margin-left: 260px;
+        padding: 0 40px 80px;
+        max-width: 1160px;
+      }
+
+      .month-nav {
+        padding: 28px 0 8px;
+      }
+
+      .monument {
+        padding: 16px 0 24px;
+      }
+
+      .progress-container {
+        margin: 16px 0 0;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .status-badges {
+        padding: 0;
+      }
+
+      .type-tabs {
+        margin: 20px 0 0;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .section-pills {
+        padding: 14px 0 4px;
+        justify-content: center;
+      }
+
+      .status-groups {
+        padding: 20px 0 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .status-group.full-width {
+        grid-column: 1 / -1;
+      }
+
+      .summary-stats {
+        padding: 20px 0 0;
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .insight-card {
+        margin: 20px 0 0;
+      }
+
+      /* Desktop header action button */
+      .desktop-add-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 18px;
+        background: var(--teal-700);
+        color: var(--white);
+        border: none;
+        border-radius: var(--radius-md);
+        font-family: var(--font);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        letter-spacing: -0.01em;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+      }
+
+      .desktop-add-btn:hover {
+        background: var(--teal-800);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .desktop-add-btn:active {
+        transform: translateY(0);
+      }
+
+      .desktop-add-btn svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    @media (max-width: 1023px) {
+      .desktop-add-btn {
+        display: none;
+      }
+    }
+
+    /* ====== STAGGER ANIMATIONS ====== */
+
+    .stagger-1 { animation: fadeIn 0.5s ease 0.1s both; }
+    .stagger-2 { animation: fadeIn 0.5s ease 0.18s both; }
+    .stagger-3 { animation: fadeIn 0.5s ease 0.26s both; }
+    .stagger-4 { animation: fadeIn 0.5s ease 0.34s both; }
+    .stagger-5 { animation: fadeIn 0.5s ease 0.42s both; }
+
+    /* ====== READ-ONLY OVERLAY ====== */
+
+    .read-only-banner {
+      display: none;
+      margin: 12px 20px 0;
+      padding: 10px 16px;
+      background: var(--slate-100);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-500);
+      text-align: center;
+      letter-spacing: -0.01em;
+    }
+
+    .read-only-banner svg {
+      width: 15px;
+      height: 15px;
+      vertical-align: -2px;
+      margin-right: 6px;
+    }
+
+    /* When page is past month */
+    .page-past .fab { display: none !important; }
+    .page-past .desktop-add-btn { display: none !important; }
+    .page-past .expense-status-toggle { pointer-events: none; opacity: 0.4; }
+    .page-past .read-only-banner { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- ====== MOBILE HEADER ====== -->
+  <header class="mobile-header">
+    <a href="#" class="mobile-header-logo">
+      <svg viewBox="-50 -50 100 100" fill="none">
+        <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+        <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+      </svg>
+      <div class="mobile-header-wordmark">
+        <b>Mes</b><span> Finances</span>
+      </div>
+    </a>
+    <div class="mobile-header-avatar">AF</div>
+  </header>
+
+  <!-- ====== DESKTOP SIDEBAR ====== -->
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <svg viewBox="-50 -50 100 100" fill="none">
+        <rect x="-36" y="-36" width="72" height="72" rx="18" fill="#0F766E"/>
+        <path d="M-18 22 C-10 18, -4 8, 0 0 S10 -8, 14 -4 S22 -14, 24 -22" stroke="#FAFBFC" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="24" cy="-22" r="3.5" fill="#F59E0B"/>
+      </svg>
+      <div class="sidebar-wordmark">
+        <b>Mes</b><span> Finances</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Accueil
+      </a>
+      <a href="#" class="sidebar-link active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Depenses
+      </a>
+      <a href="#" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Revenus
+      </a>
+      <a href="#" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Reglages
+      </a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-avatar">AF</div>
+      <div class="sidebar-user">
+        <div class="sidebar-user-name">Amara Fofana</div>
+        <div class="sidebar-user-email">amara.test@monbudget.dev</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ====== MAIN CONTENT ====== -->
+  <main class="main">
+
+    <!-- Month Navigator -->
+    <div class="month-nav">
+      <button class="month-nav-btn" aria-label="Mois precedent">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="month-nav-center">
+        <div class="month-nav-month">Mars 2026</div>
+        <div class="month-nav-badge">
+          <span class="month-nav-badge-dot"></span>
+          Mois en cours
+        </div>
+      </div>
+      <button class="month-nav-btn" aria-label="Mois suivant">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+
+    <!-- Monument: Spent / Planned -->
+    <div class="monument">
+      <div class="monument-label">Depenses du mois</div>
+      <div class="monument-amount-row">
+        <div class="monument-spent">
+          1 842<span class="dollar">$</span>
+        </div>
+        <div class="monument-separator">/</div>
+        <div class="monument-planned">
+          2 404<span class="dollar">$</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-container">
+      <div class="progress-track">
+        <div class="progress-fill" style="width: 76.6%"></div>
+      </div>
+      <div class="progress-labels">
+        <span>76% paye</span>
+        <span>562$ restant</span>
+      </div>
+    </div>
+
+    <!-- Status badges -->
+    <div class="status-badges">
+      <span class="status-badge remaining">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        562$ restant
+      </span>
+      <span class="status-badge overdue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        2 en retard
+      </span>
+    </div>
+
+    <!-- Read-only banner (hidden on current month) -->
+    <div class="read-only-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Mois passe — consultation uniquement
+    </div>
+
+    <!-- Type tabs -->
+    <div class="type-tabs">
+      <button class="type-tab active">Tout</button>
+      <button class="type-tab">Charges fixes (12)</button>
+      <button class="type-tab">Imprevus (3)</button>
+    </div>
+
+    <!-- Section filter pills -->
+    <div class="section-pills">
+      <button class="section-pill active">Tout</button>
+      <button class="section-pill"><span class="section-pill-emoji">🏠</span> Logement</button>
+      <button class="section-pill"><span class="section-pill-emoji">🚗</span> Transport</button>
+      <button class="section-pill"><span class="section-pill-emoji">🍽</span> Alimentation</button>
+      <button class="section-pill"><span class="section-pill-emoji">🎭</span> Loisirs</button>
+      <button class="section-pill"><span class="section-pill-emoji">🩺</span> Sante</button>
+    </div>
+
+    <!-- Desktop: add button inline -->
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 0 0;">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate-400);">15 depenses ce mois</div>
+      <button class="desktop-add-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Ajouter une depense
+      </button>
+    </div>
+
+    <!-- Status Groups -->
+    <div class="status-groups">
+
+      <!-- A VENIR -->
+      <div class="status-group upcoming expanded stagger-1">
+        <div class="status-group-header" onclick="this.parentElement.classList.toggle('expanded')">
+          <div class="status-group-left">
+            <div class="status-group-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>
+              <span class="status-group-title">A venir</span>
+              <span class="status-group-count">(4)</span>
+            </div>
+          </div>
+          <div class="status-group-right">
+            <span class="status-group-total">562<span class="dollar">$</span></span>
+            <svg class="status-group-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div class="expense-list">
+          <div class="expense-item" onclick="openActionSheet(this)">
+            <div class="expense-icon housing">🏠</div>
+            <div class="expense-info">
+              <div class="expense-name-row">
+                <span class="expense-name">Hydro-Quebec</span>
+              </div>
+              <div class="expense-meta">
+                <span class="expense-meta-section">Logement</span>
+                <span class="expense-meta-sep"></span>
+                <span class="expense-meta-card">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                  Visa ****1234
+                </span>
+              </div>
+            </div>
+            <div class="expense-right">
+              <span class="expense-amount">142<span class="dollar">$</span></span>
+              <button class="expense-status-toggle" title="Marquer payee">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="expense-item" onclick="openActionSheet(this)">
+            <div class="expense-icon transport">🚗</div>
+            <div class="expense-info">
+              <div class="expense-name-row">
+                <span class="expense-name">Assurance auto</span>
+              </div>
+              <div class="expense-meta">
+                <span class="expense-meta-section">Transport</span>
+                <span class="expense-meta-sep"></span>
+                <span class="expense-meta-card">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                  Desjardins
+                </span>
+              </div>
+            </div>
+            <div class="expense-right">
+              <span class="expense-amount">189<span class="dollar">$</span></span>
+              <button class="expense-status-toggle" title="Marquer payee">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="expense-item" onclick="openActionSheet(this)">
+            <div class="expense-icon food">🍽</div>
+            <div class="expense-info">
+              <div class="expense-name-row">
+                <span class="expense-name">Epicerie Maxi</span>
+                <span class="expense-badge-adhoc">Imprevu</span>
+              </div>
+              <div class="expense-meta">
+                <span class="expense-meta-section">Alimentation</span>
+              </div>
+            </div>
+            <div class="expense-right">
+              <span class="expense-amount">87<span class="dollar">$</span></span>
+              <button class="expense-status-toggle" title="Marquer payee">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="expense-item" onclick="openActionSheet(this)">
+            <div class="expense-icon health">🩺</div>
+            <div class="expense-info">
+              <div class="expense-name-row">
+                <span class="expense-name">Pharmacie Jean Coutu</span>
+              </div>
+              <div class="expense-meta">
+                <span class="expense-meta-section">Sante</span>
+                <span class="expense-meta-sep"></span>
+                <span>15 mars</span>
+              </div>
+            </div>
+            <div class="expense-right">
+              <span class="expense-amount">144<span class="dollar">$</span></span>
+              <button class="expense-status-toggle" title="Marquer payee">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAYEES -->
+      <div class="status-group paid expanded stagger-2">
+        <div class="status-group-header" onclick="this.parentElement.classList.toggle('expanded')">
+          <div class="status-group-left">
+            <div class="status-group-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div>
+              <span class="status-group-title">Payees</span>
+              <span class="status-group-count">(8)</span>
+            </div>
+          </div>
+          <div class="status-group-right">
+            <span class="status-group-total">1 242<span class="dollar">$</span></span>
+            <svg class="status-group-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div class="expense-list">
+          <div class="expense-item" onclick="openActionSheet(this)">
+            <div class="expense-icon housing">🏠</div>
+            <div class="expense-info">
+              <div class="expense-name-row">
+                <span class="expense-name">Loyer</span>
+              </div>
+              <div class="expense-meta">
+                <span class="expense-meta-section">Logement</span>
+                <span class="expense-meta-sep"></span>
+                <span>1 mars</span>
+              </div>
+            </div>
+            <div class="expense-right">
+              <span class="expense-amount">650<span class="dollar">$</span></span>
+              <button class="expense-status-toggle checked" title="Payee">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="expense-item" onclick="openActionSheet(this)">
+            <div class="expense-icon utilities">📱</div>
+            <div class="expense-info">
+              <div class="expense-name-row">
+                <span class="expense-name">Fizz Mobile</span>
+              </div>
+              <div class="expense-meta">
+                <span class="expense-meta-section">Services</span>
+                <span class="expense-meta-sep"></span>
+                <span>1 mars</span>
+              </div>
+            </div>
+            <div class="expense-right">
+              <span class="expense-amount">42<span class="dollar">$</span></span>
+              <button class="expense-status-toggle checked" title="Payee">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="expense-item" onclick="openActionSheet(this)">
+            <div class="expense-icon entertainment">🎭</div>
+            <div class="expense-info">
+              <div class="expense-name-row">
+                <span class="expense-name">Netflix</span>
+              </div>
+              <div class="expense-meta">
+                <span class="expense-meta-section">Loisirs</span>
+                <span class="expense-meta-sep"></span>
+                <span>3 mars</span>
+              </div>
+            </div>
+            <div class="expense-right">
+              <span class="expense-amount">23<span class="dollar">$</span></span>
+              <button class="expense-status-toggle checked" title="Payee">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </button>
+            </div>
+          </div>
+          <button class="show-more-btn">Voir tout (8)</button>
+        </div>
+      </div>
+
+      <!-- EN RETARD -->
+      <div class="status-group overdue expanded stagger-3">
+        <div class="status-group-header" onclick="this.parentElement.classList.toggle('expanded')">
+          <div class="status-group-left">
+            <div class="status-group-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div>
+              <span class="status-group-title">En retard</span>
+              <span class="status-group-count">(2)</span>
+            </div>
+          </div>
+          <div class="status-group-right">
+            <span class="status-group-total" style="color: var(--error)">350<span class="dollar" style="color: var(--error)">$</span></span>
+            <svg class="status-group-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div class="expense-list">
+          <div class="expense-item" onclick="openActionSheet(this)" style="background: rgba(220, 38, 38, 0.02);">
+            <div class="expense-icon housing">🏠</div>
+            <div class="expense-info">
+              <div class="expense-name-row">
+                <span class="expense-name">Internet Bell</span>
+              </div>
+              <div class="expense-meta">
+                <span class="expense-meta-section">Logement</span>
+                <span class="expense-meta-sep"></span>
+                <span style="color: var(--error); font-weight: 700;">Du 28 fev</span>
+              </div>
+            </div>
+            <div class="expense-right">
+              <span class="expense-amount" style="color: var(--error);">95<span class="dollar" style="color: var(--error);">$</span></span>
+              <button class="expense-status-toggle" title="Marquer payee">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="expense-item" onclick="openActionSheet(this)" style="background: rgba(220, 38, 38, 0.02);">
+            <div class="expense-icon personal">💇</div>
+            <div class="expense-info">
+              <div class="expense-name-row">
+                <span class="expense-name">Gym Econofitness</span>
+              </div>
+              <div class="expense-meta">
+                <span class="expense-meta-section">Personnel</span>
+                <span class="expense-meta-sep"></span>
+                <span style="color: var(--error); font-weight: 700;">Du 1 mars</span>
+              </div>
+            </div>
+            <div class="expense-right">
+              <span class="expense-amount" style="color: var(--error);">255<span class="dollar" style="color: var(--error);">$</span></span>
+              <button class="expense-status-toggle" title="Marquer payee">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REPORTEES -->
+      <div class="status-group deferred stagger-4">
+        <div class="status-group-header" onclick="this.parentElement.classList.toggle('expanded')">
+          <div class="status-group-left">
+            <div class="status-group-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+            </div>
+            <div>
+              <span class="status-group-title">Reportees</span>
+              <span class="status-group-count">(1)</span>
+            </div>
+          </div>
+          <div class="status-group-right">
+            <span class="status-group-total" style="color: var(--amber-600);">250<span class="dollar" style="color: var(--amber-600);">$</span></span>
+            <svg class="status-group-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div class="expense-list" style="display: none;">
+          <div class="expense-item" onclick="openActionSheet(this)">
+            <div class="expense-icon personal">🎁</div>
+            <div class="expense-info">
+              <div class="expense-name-row">
+                <span class="expense-name">Achat meuble IKEA</span>
+                <span class="expense-badge-adhoc">Imprevu</span>
+              </div>
+              <div class="expense-meta">
+                <span class="expense-meta-section">Personnel</span>
+                <span class="expense-meta-sep"></span>
+                <span style="color: var(--amber-600); font-weight: 700;">→ Avril 2026</span>
+              </div>
+            </div>
+            <div class="expense-right">
+              <span class="expense-amount" style="color: var(--amber-600);">250<span class="dollar" style="color: var(--amber-600);">$</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="summary-stats">
+      <div class="stat-card">
+        <div class="stat-label">Paye</div>
+        <div class="stat-value green">1 242<span class="dollar">$</span></div>
+        <div class="stat-sub">8 depenses</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Restant</div>
+        <div class="stat-value">562<span class="dollar">$</span></div>
+        <div class="stat-sub">4 a venir</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">En retard</div>
+        <div class="stat-value red">350<span class="dollar">$</span></div>
+        <div class="stat-sub">2 depenses</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Imprevus</div>
+        <div class="stat-value">337<span class="dollar">$</span></div>
+        <div class="stat-sub">3 ajoutees</div>
+      </div>
+    </div>
+
+    <!-- Insight card -->
+    <div class="insight-card">
+      <div class="insight-icon-row">
+        <span class="insight-icon">💡</span>
+        <span class="insight-title">Apercu du mois</span>
+      </div>
+      <p class="insight-text">T'as 2 depenses en retard pour un total de 350$. Regle-les ou reporte-les pour garder ton mois sous controle.</p>
+    </div>
+
+  </main>
+
+  <!-- FAB (mobile only, current month only) -->
+  <button class="fab" aria-label="Ajouter une depense imprevue">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
+
+  <!-- Bottom Navigation (mobile) -->
+  <nav class="bottom-nav">
+    <a href="#" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Accueil</span>
+    </a>
+    <a href="#" class="bottom-nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      <span>Depenses</span>
+    </a>
+    <a href="#" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      <span>Revenus</span>
+    </a>
+    <a href="#" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span>Reglages</span>
+    </a>
+  </nav>
+
+  <script>
+    // Toggle status group expand/collapse
+    document.querySelectorAll('.status-group-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const group = header.parentElement;
+        const list = group.querySelector('.expense-list');
+        if (group.classList.contains('expanded')) {
+          list.style.display = 'block';
+        } else {
+          list.style.display = 'none';
+        }
+      });
+    });
+
+    // Initialize: hide collapsed groups
+    document.querySelectorAll('.status-group:not(.expanded) .expense-list').forEach(list => {
+      list.style.display = 'none';
+    });
+
+    // Toggle status checkbox
+    document.querySelectorAll('.expense-status-toggle').forEach(toggle => {
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggle.classList.toggle('checked');
+      });
+    });
+
+    // Type tabs
+    document.querySelectorAll('.type-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    // Section pills
+    document.querySelectorAll('.section-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.section-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+      });
+    });
+
+    // Placeholder for action sheet
+    function openActionSheet(item) {
+      // In production, this opens the bottom sheet from depense-actions.html
+      console.log('Open action sheet for:', item.querySelector('.expense-name').textContent);
+    }
+  </script>
+
+</body>
+</html>

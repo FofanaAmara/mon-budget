@@ -1,0 +1,68 @@
+product: mes-finances
+mode: auto
+last_updated: 2026-03-02
+
+discovery:
+  status: done
+  total_pages: 15
+  total_features: 7
+
+features:
+  - slug: reference-data
+    title: Données de référence (Sections & Cartes)
+    order: 1
+    depends_on: []
+    brief: done
+    design: done
+    integration: done
+
+  - slug: expense-templates
+    title: Configuration des charges fixes
+    order: 2
+    depends_on: [reference-data]
+    brief: done
+    design: done
+    integration: done
+
+  - slug: income-templates
+    title: Configuration des revenus récurrents
+    order: 3
+    depends_on: []
+    brief: done
+    design: done
+    integration: done
+
+  - slug: expense-tracking
+    title: Suivi des dépenses mensuelles
+    order: 4
+    depends_on: [expense-templates, reference-data]
+    brief: done
+    design: done
+    integration: done
+
+  - slug: income-tracking
+    title: Suivi des revenus & allocation mensuelle
+    order: 5
+    depends_on: [income-templates, expense-templates]
+    brief: done
+    design: done
+    integration: done
+
+  - slug: patrimoine
+    title: Patrimoine — Épargne & Dettes
+    order: 6
+    depends_on: [reference-data]
+    brief: done
+    design: done
+    integration: done
+
+  - slug: dashboard
+    title: Tableau de bord mensuel
+    order: 7
+    depends_on: [expense-tracking, income-tracking, patrimoine]
+    brief: done
+    design: done
+    integration: done
+
+status: completed
+completed_at: 2026-03-02

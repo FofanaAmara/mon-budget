@@ -19,60 +19,99 @@ export default function MonthNavigator({ month, basePath }: Props) {
   }
 
   return (
-    <div className="flex items-center justify-between" style={{ marginBottom: '24px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', marginBottom: '0' }}>
       <button
         onClick={() => navigateMonth(prevMonth(month))}
         style={{
-          padding: '8px', color: 'var(--text-tertiary)',
-          borderRadius: 'var(--radius-md)',
-          transition: `all var(--duration-fast) var(--ease-out)`,
-          background: 'none', border: 'none', cursor: 'pointer',
+          width: '36px', height: '36px',
+          borderRadius: 'var(--radius-sm)',
+          border: '1px solid var(--slate-200)',
+          background: 'white',
+          cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: 'var(--slate-500)',
+          transition: 'all 0.2s ease',
+          flexShrink: 0,
         }}
         aria-label="Mois précédent"
+        onMouseEnter={(e) => {
+          const el = e.currentTarget;
+          el.style.borderColor = 'var(--teal-700)';
+          el.style.color = 'var(--teal-700)';
+          el.style.background = 'var(--teal-50)';
+        }}
+        onMouseLeave={(e) => {
+          const el = e.currentTarget;
+          el.style.borderColor = 'var(--slate-200)';
+          el.style.color = 'var(--slate-500)';
+          el.style.background = 'white';
+        }}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M15 18l-6-6 6-6" />
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="15 18 9 12 15 6" />
         </svg>
       </button>
 
-      <div className="text-center">
-        <h1 style={{
-          fontSize: 'var(--text-lg)', fontWeight: 750,
-          color: 'var(--text-primary)',
-          textTransform: 'capitalize' as const,
-          letterSpacing: 'var(--tracking-tight)',
+      <div style={{ textAlign: 'center', minWidth: '120px' }}>
+        <span style={{
+          fontSize: '15px', fontWeight: 700,
+          color: 'var(--slate-900)',
+          letterSpacing: '-0.01em',
+          textTransform: 'capitalize',
         }}>
           {monthLabel(month)}
-        </h1>
+        </span>
         {!isCurrentMonth && (
-          <button
-            onClick={() => navigateMonth(today)}
-            style={{
-              fontSize: 'var(--text-xs)', color: 'var(--accent)',
-              marginTop: '4px', background: 'none', border: 'none',
-              cursor: 'pointer', fontWeight: 600,
-            }}
-          >
-            Retour au mois actuel
-          </button>
+          <div>
+            <button
+              onClick={() => navigateMonth(today)}
+              style={{
+                fontSize: '11px', color: 'var(--teal-700)',
+                marginTop: '2px', background: 'none', border: 'none',
+                cursor: 'pointer', fontWeight: 600,
+              }}
+            >
+              Mois actuel
+            </button>
+          </div>
         )}
       </div>
 
       <button
         onClick={() => navigateMonth(nextMonth(month))}
         style={{
-          padding: '8px',
-          color: month >= today ? 'var(--border-default)' : 'var(--text-tertiary)',
-          borderRadius: 'var(--radius-md)',
-          transition: `all var(--duration-fast) var(--ease-out)`,
-          background: 'none', border: 'none',
+          width: '36px', height: '36px',
+          borderRadius: 'var(--radius-sm)',
+          border: '1px solid var(--slate-200)',
+          background: 'white',
           cursor: month >= today ? 'default' : 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: month >= today ? 'var(--slate-200)' : 'var(--slate-500)',
+          transition: 'all 0.2s ease',
+          flexShrink: 0,
+          opacity: month >= today ? 0.4 : 1,
         }}
         aria-label="Mois suivant"
         disabled={month >= today}
+        onMouseEnter={(e) => {
+          if (month < today) {
+            const el = e.currentTarget;
+            el.style.borderColor = 'var(--teal-700)';
+            el.style.color = 'var(--teal-700)';
+            el.style.background = 'var(--teal-50)';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (month < today) {
+            const el = e.currentTarget;
+            el.style.borderColor = 'var(--slate-200)';
+            el.style.color = 'var(--slate-500)';
+            el.style.background = 'white';
+          }
+        }}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M9 18l6-6-6-6" />
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="9 18 15 12 9 6" />
         </svg>
       </button>
     </div>

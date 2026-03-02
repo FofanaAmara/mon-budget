@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Finances — Actions depense</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       TYPOGRAPHY MONUMENT — Expense Actions
+
+       Bottom sheets for expense actions on mobile.
+       Desktop uses centered modal pattern.
+       Four action flows:
+       1. Action menu (mark paid/defer/edit/delete)
+       2. Defer to month selector
+       3. Edit amount form
+       4. Add adhoc expense form
+
+       Each sheet slides up from bottom on mobile,
+       centered modal on desktop.
+    ======================================== */
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --teal-700: #0F766E;
+      --teal-800: #115E59;
+      --teal-600: #0D9488;
+      --teal-50: #F0FDFA;
+      --amber-500: #F59E0B;
+      --amber-600: #D97706;
+      --amber-100: #FEF3C7;
+      --slate-900: #0F172A;
+      --slate-700: #334155;
+      --slate-500: #64748B;
+      --slate-400: #94A3B8;
+      --slate-300: #CBD5E1;
+      --slate-200: #E2E8F0;
+      --slate-100: #F1F5F9;
+      --slate-50: #FAFBFC;
+      --white: #FFFFFF;
+      --success: #059669;
+      --success-light: #ECFDF5;
+      --warning: #F59E0B;
+      --warning-light: #FEF3C7;
+      --error: #DC2626;
+      --error-light: #FEF2F2;
+      --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --shadow-sm: 0 1px 2px rgba(15, 118, 110, 0.05);
+      --shadow-md: 0 4px 12px rgba(15, 118, 110, 0.08);
+      --shadow-lg: 0 8px 24px rgba(15, 118, 110, 0.12);
+      --shadow-xl: 0 16px 48px rgba(15, 23, 42, 0.12);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font);
+      color: var(--slate-900);
+      background: var(--slate-50);
+      line-height: 1.5;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    ::selection {
+      background: rgba(15, 118, 110, 0.15);
+      color: var(--slate-900);
+    }
+
+    /* ====== ANIMATIONS ====== */
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(0); }
+      to { transform: translateY(100%); }
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-4px); }
+      40% { transform: translateX(4px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(2px); }
+    }
+
+    /* ====== DEMO CONTROLS ====== */
+
+    .demo-controls {
+      position: sticky;
+      top: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      padding: 16px 20px;
+      z-index: 10;
+    }
+
+    .demo-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+
+    .demo-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .demo-btn {
+      padding: 9px 16px;
+      border: 1.5px solid var(--slate-200);
+      background: var(--white);
+      border-radius: var(--radius-md);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-700);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: -0.01em;
+    }
+
+    .demo-btn:hover {
+      border-color: var(--teal-700);
+      color: var(--teal-700);
+      background: var(--teal-50);
+      transform: translateY(-1px);
+    }
+
+    .demo-btn:active {
+      transform: translateY(0);
+    }
+
+    .demo-btn.active {
+      border-color: var(--teal-700);
+      background: var(--teal-700);
+      color: var(--white);
+    }
+
+    .demo-note {
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate-400);
+      letter-spacing: -0.01em;
+    }
+
+    /* ====== BACKDROP ====== */
+
+    .sheet-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 200;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    .sheet-backdrop.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ====== BOTTOM SHEET (MOBILE) ====== */
+
+    .bottom-sheet {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      z-index: 210;
+      max-height: 85vh;
+      max-height: 85dvh;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+      box-shadow: 0 -8px 32px rgba(15, 23, 42, 0.15);
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+
+    .bottom-sheet.active {
+      transform: translateY(0);
+    }
+
+    .sheet-handle {
+      display: flex;
+      justify-content: center;
+      padding: 12px 0 4px;
+    }
+
+    .sheet-handle-bar {
+      width: 36px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--slate-300);
+    }
+
+    /* ====== SHEET HEADER ====== */
+
+    .sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 20px 16px;
+    }
+
+    .sheet-expense-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sheet-expense-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      line-height: 1;
+      flex-shrink: 0;
+      background: #F0FDFA;
+    }
+
+    .sheet-expense-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sheet-expense-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sheet-expense-meta {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate-400);
+      margin-top: 2px;
+    }
+
+    .sheet-expense-amount {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--slate-900);
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+    }
+
+    .sheet-expense-amount .dollar {
+      font-size: 0.55em;
+      font-weight: 600;
+      color: var(--teal-700);
+      vertical-align: super;
+    }
+
+    /* ====== ACTION LIST ====== */
+
+    .action-list {
+      padding: 0 12px 8px;
+    }
+
+    .action-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 12px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-family: var(--font);
+    }
+
+    .action-item:hover {
+      background: var(--slate-50);
+    }
+
+    .action-item:active {
+      background: rgba(15, 118, 110, 0.04);
+    }
+
+    .action-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .action-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .action-icon.green {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .action-icon.amber {
+      background: var(--warning-light);
+      color: var(--amber-600);
+    }
+
+    .action-icon.teal {
+      background: var(--teal-50);
+      color: var(--teal-700);
+    }
+
+    .action-icon.red {
+      background: var(--error-light);
+      color: var(--error);
+    }
+
+    .action-icon.blue {
+      background: #EFF6FF;
+      color: #2563EB;
+    }
+
+    .action-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .action-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+    }
+
+    .action-desc {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate-400);
+      margin-top: 1px;
+    }
+
+    .action-chevron {
+      width: 18px;
+      height: 18px;
+      color: var(--slate-300);
+      flex-shrink: 0;
+    }
+
+    .action-sep {
+      height: 1px;
+      background: var(--slate-100);
+      margin: 4px 12px;
+    }
+
+    .action-item.destructive .action-title {
+      color: var(--error);
+    }
+
+    /* ====== FORM LAYOUT ====== */
+
+    .sheet-form {
+      padding: 0 20px 8px;
+    }
+
+    .sheet-form-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+      padding: 0 0 12px;
+      border-bottom: 1px solid var(--slate-100);
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--slate-400);
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--slate-900);
+      background: var(--white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--teal-700);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.08);
+    }
+
+    .form-input::placeholder {
+      color: var(--slate-300);
+      font-weight: 400;
+    }
+
+    .form-input-amount {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+      padding: 16px;
+    }
+
+    .form-input-amount:focus {
+      border-color: var(--teal-700);
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 12px 40px 12px 14px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--slate-900);
+      background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") right 14px center no-repeat;
+      -webkit-appearance: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-select:focus {
+      outline: none;
+      border-color: var(--teal-700);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.08);
+    }
+
+    .form-hint {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate-400);
+      margin-top: 6px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* ====== MONTH SELECTOR (Defer) ====== */
+
+    .month-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .month-option {
+      padding: 14px 12px;
+      border: 1.5px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      background: var(--white);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: var(--font);
+    }
+
+    .month-option:hover {
+      border-color: var(--teal-700);
+      background: var(--teal-50);
+    }
+
+    .month-option.selected {
+      border-color: var(--teal-700);
+      background: var(--teal-50);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.06);
+    }
+
+    .month-option-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+    }
+
+    .month-option-year {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--slate-400);
+      margin-top: 2px;
+    }
+
+    .month-option.selected .month-option-name {
+      color: var(--teal-700);
+    }
+
+    /* ====== BUTTON GROUP ====== */
+
+    .sheet-actions {
+      display: flex;
+      gap: 10px;
+      padding: 16px 20px 4px;
+    }
+
+    .btn-cancel {
+      flex: 1;
+      padding: 14px 20px;
+      border: 1px solid var(--slate-200);
+      background: var(--white);
+      border-radius: var(--radius-md);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--slate-700);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: -0.01em;
+    }
+
+    .btn-cancel:hover {
+      background: var(--slate-50);
+      border-color: var(--slate-300);
+    }
+
+    .btn-cancel:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      flex: 1.4;
+      padding: 14px 24px;
+      border: none;
+      background: var(--teal-700);
+      border-radius: var(--radius-md);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: -0.01em;
+    }
+
+    .btn-primary:hover {
+      background: var(--teal-800);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-danger {
+      flex: 1.4;
+      padding: 14px 24px;
+      border: none;
+      background: var(--error);
+      border-radius: var(--radius-md);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: -0.01em;
+    }
+
+    .btn-danger:hover {
+      background: #B91C1C;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+
+    .btn-danger:active {
+      transform: translateY(0);
+    }
+
+    /* ====== DELETE CONFIRM ====== */
+
+    .delete-confirm {
+      text-align: center;
+      padding: 8px 20px 0;
+    }
+
+    .delete-confirm-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--error-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+    }
+
+    .delete-confirm-icon svg {
+      width: 28px;
+      height: 28px;
+      color: var(--error);
+    }
+
+    .delete-confirm-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .delete-confirm-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate-500);
+      line-height: 1.5;
+    }
+
+    .delete-confirm-text strong {
+      font-weight: 700;
+      color: var(--slate-700);
+    }
+
+    /* ====== DESKTOP: MODAL VARIANT ====== */
+
+    @media (min-width: 1024px) {
+      .bottom-sheet {
+        position: fixed;
+        bottom: auto;
+        top: 50%;
+        left: 50%;
+        right: auto;
+        width: calc(100% - 48px);
+        max-width: 480px;
+        border-radius: var(--radius-lg);
+        transform: translate(-50%, -50%) scale(0.95);
+        transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+        box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18), 0 8px 16px rgba(15, 118, 110, 0.06);
+        max-height: calc(100vh - 64px);
+        max-height: calc(100dvh - 64px);
+        padding-bottom: 16px;
+      }
+
+      .bottom-sheet.active {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .sheet-handle {
+        display: none;
+      }
+
+      .sheet-header {
+        padding: 20px 24px 16px;
+      }
+
+      .action-list {
+        padding: 0 16px 8px;
+      }
+
+      .sheet-form {
+        padding: 0 24px 8px;
+      }
+
+      .sheet-actions {
+        padding: 16px 24px 4px;
+      }
+
+      .delete-confirm {
+        padding: 8px 24px 0;
+      }
+    }
+
+    /* ====== DEMO PAGE LAYOUT ====== */
+
+    .demo-section {
+      padding: 32px 20px;
+      border-bottom: 1px solid var(--slate-200);
+    }
+
+    .demo-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal-700);
+      margin-bottom: 6px;
+    }
+
+    .demo-section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .demo-section-desc {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate-500);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .inline-preview {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      max-width: 420px;
+    }
+
+    /* Success toast preview */
+    .toast-preview {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 18px;
+      background: var(--slate-900);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .toast-preview svg {
+      width: 18px;
+      height: 18px;
+      color: var(--success);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== DEMO CONTROLS ====== -->
+  <div class="demo-controls">
+    <div class="demo-title">Mockup: Actions sur une depense</div>
+    <div class="demo-buttons">
+      <button class="demo-btn" onclick="showSheet('actions')">Menu actions</button>
+      <button class="demo-btn" onclick="showSheet('defer')">Reporter</button>
+      <button class="demo-btn" onclick="showSheet('edit-amount')">Modifier montant</button>
+      <button class="demo-btn" onclick="showSheet('delete')">Supprimer</button>
+      <button class="demo-btn" onclick="showSheet('adhoc')">Ajouter imprevu</button>
+    </div>
+    <div class="demo-note">Cliquez sur un bouton pour voir la bottom sheet correspondante. Mobile: slide-up. Desktop: modal centre.</div>
+  </div>
+
+  <!-- ====== INLINE PREVIEWS ====== -->
+
+  <!-- 1. ACTION MENU -->
+  <div class="demo-section">
+    <div class="demo-section-label">Sheet 1</div>
+    <div class="demo-section-title">Menu d'actions</div>
+    <div class="demo-section-desc">L'utilisateur tape sur une depense dans la liste. La bottom sheet apparait avec les actions disponibles selon le statut de la depense.</div>
+
+    <div class="inline-preview">
+      <div class="sheet-handle"><div class="sheet-handle-bar"></div></div>
+      <div class="sheet-header">
+        <div class="sheet-expense-info">
+          <div class="sheet-expense-icon" style="background: #F0FDFA;">🏠</div>
+          <div class="sheet-expense-details">
+            <div class="sheet-expense-name">Hydro-Quebec</div>
+            <div class="sheet-expense-meta">Logement &middot; Visa ****1234</div>
+          </div>
+        </div>
+        <div class="sheet-expense-amount">142<span class="dollar">$</span></div>
+      </div>
+      <div class="action-list">
+        <button class="action-item">
+          <div class="action-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="action-text">
+            <div class="action-title">Marquer payee</div>
+            <div class="action-desc">Cette depense est reglee</div>
+          </div>
+          <svg class="action-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <button class="action-item">
+          <div class="action-icon amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+          </div>
+          <div class="action-text">
+            <div class="action-title">Reporter a un autre mois</div>
+            <div class="action-desc">Deplacer vers un mois futur</div>
+          </div>
+          <svg class="action-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <button class="action-item">
+          <div class="action-icon teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </div>
+          <div class="action-text">
+            <div class="action-title">Modifier le montant</div>
+            <div class="action-desc">Ajuster pour ce mois uniquement</div>
+          </div>
+          <svg class="action-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="action-sep"></div>
+        <button class="action-item destructive">
+          <div class="action-icon red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          </div>
+          <div class="action-text">
+            <div class="action-title">Supprimer</div>
+            <div class="action-desc">Retirer cette depense du mois</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. DEFER FORM -->
+  <div class="demo-section">
+    <div class="demo-section-label">Sheet 2</div>
+    <div class="demo-section-title">Reporter une depense</div>
+    <div class="demo-section-desc">Selection du mois cible via des cartes-mois cliquables. Le mois suivant est pre-selectionne par defaut.</div>
+
+    <div class="inline-preview">
+      <div class="sheet-handle"><div class="sheet-handle-bar"></div></div>
+      <div class="sheet-form">
+        <div class="sheet-form-title">Reporter "Hydro-Quebec"</div>
+
+        <div class="sheet-header" style="padding: 0 0 16px;">
+          <div class="sheet-expense-info">
+            <div class="sheet-expense-icon" style="background: #F0FDFA;">🏠</div>
+            <div class="sheet-expense-details">
+              <div class="sheet-expense-name" style="font-size: 14px;">Hydro-Quebec</div>
+              <div class="sheet-expense-meta">142$ &middot; Logement</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Reporter vers</label>
+          <div class="month-options">
+            <div class="month-option selected">
+              <div class="month-option-name">Avril</div>
+              <div class="month-option-year">2026</div>
+            </div>
+            <div class="month-option">
+              <div class="month-option-name">Mai</div>
+              <div class="month-option-year">2026</div>
+            </div>
+            <div class="month-option">
+              <div class="month-option-name">Juin</div>
+              <div class="month-option-year">2026</div>
+            </div>
+            <div class="month-option">
+              <div class="month-option-name">Juillet</div>
+              <div class="month-option-year">2026</div>
+            </div>
+            <div class="month-option">
+              <div class="month-option-name">Aout</div>
+              <div class="month-option-year">2026</div>
+            </div>
+            <div class="month-option">
+              <div class="month-option-name">Septembre</div>
+              <div class="month-option-year">2026</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-hint" style="margin-top: -10px;">
+          <svg style="width: 13px; height: 13px; vertical-align: -2px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          La depense disparaitra de ce mois et apparaitra dans le mois choisi.
+        </div>
+      </div>
+      <div class="sheet-actions">
+        <button class="btn-cancel">Annuler</button>
+        <button class="btn-primary">Reporter vers avril</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. EDIT AMOUNT -->
+  <div class="demo-section">
+    <div class="demo-section-label">Sheet 3</div>
+    <div class="demo-section-title">Modifier le montant</div>
+    <div class="demo-section-desc">Le montant actuel est pre-rempli. La modification s'applique uniquement pour ce mois. Le gabarit original reste inchange.</div>
+
+    <div class="inline-preview">
+      <div class="sheet-handle"><div class="sheet-handle-bar"></div></div>
+      <div class="sheet-form">
+        <div class="sheet-form-title">Modifier le montant</div>
+
+        <div class="sheet-header" style="padding: 0 0 16px;">
+          <div class="sheet-expense-info">
+            <div class="sheet-expense-icon" style="background: #F0FDFA;">🏠</div>
+            <div class="sheet-expense-details">
+              <div class="sheet-expense-name" style="font-size: 14px;">Hydro-Quebec</div>
+              <div class="sheet-expense-meta">Logement &middot; Montant actuel: 142$</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nouveau montant</label>
+          <input type="text" class="form-input form-input-amount" value="142" placeholder="0">
+          <div class="form-hint">
+            Modification pour mars 2026 uniquement. Le gabarit restera a 142$.
+          </div>
+        </div>
+      </div>
+      <div class="sheet-actions">
+        <button class="btn-cancel">Annuler</button>
+        <button class="btn-primary">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. DELETE CONFIRM -->
+  <div class="demo-section">
+    <div class="demo-section-label">Sheet 4</div>
+    <div class="demo-section-title">Supprimer une depense</div>
+    <div class="demo-section-desc">Confirmation avant suppression. Disponible uniquement pour les depenses adhoc (imprevues). Les charges fixes ne peuvent pas etre supprimees ici.</div>
+
+    <div class="inline-preview">
+      <div class="sheet-handle"><div class="sheet-handle-bar"></div></div>
+      <div class="delete-confirm">
+        <div class="delete-confirm-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+        </div>
+        <div class="delete-confirm-title">Supprimer cette depense?</div>
+        <div class="delete-confirm-text">
+          <strong>Epicerie Maxi — 87$</strong> sera retire de tes depenses de mars 2026. Cette action est irreversible.
+        </div>
+      </div>
+      <div class="sheet-actions" style="padding-top: 20px;">
+        <button class="btn-cancel">Annuler</button>
+        <button class="btn-danger">Supprimer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. ADD ADHOC EXPENSE -->
+  <div class="demo-section">
+    <div class="demo-section-label">Sheet 5</div>
+    <div class="demo-section-title">Ajouter une depense imprevue</div>
+    <div class="demo-section-desc">Formulaire pour ajouter un achat non planifie au mois en cours. Accessible depuis le FAB (+) en mobile ou le bouton "Ajouter" en desktop.</div>
+
+    <div class="inline-preview">
+      <div class="sheet-handle"><div class="sheet-handle-bar"></div></div>
+      <div class="sheet-form">
+        <div class="sheet-form-title">Nouvelle depense</div>
+
+        <div class="form-group">
+          <label class="form-label">Nom de la depense</label>
+          <input type="text" class="form-input" placeholder="Ex: Epicerie, reparation auto...">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Montant</label>
+          <input type="text" class="form-input form-input-amount" placeholder="0" style="font-size: 24px;">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Section</label>
+            <select class="form-select">
+              <option value="">Choisir...</option>
+              <option value="logement">🏠 Logement</option>
+              <option value="transport">🚗 Transport</option>
+              <option value="alimentation">🍽 Alimentation</option>
+              <option value="loisirs">🎭 Loisirs</option>
+              <option value="sante">🩺 Sante</option>
+              <option value="personnel">💇 Personnel</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Carte</label>
+            <select class="form-select">
+              <option value="">Choisir...</option>
+              <option value="visa">Visa ****1234</option>
+              <option value="desjardins">Desjardins</option>
+              <option value="cash">Comptant</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Statut</label>
+          <div style="display: flex; gap: 8px;">
+            <button class="status-choice active" style="
+              flex: 1;
+              padding: 10px;
+              border: 1.5px solid var(--teal-700);
+              background: var(--teal-50);
+              border-radius: var(--radius-sm);
+              font-family: var(--font);
+              font-size: 13px;
+              font-weight: 600;
+              color: var(--teal-700);
+              cursor: pointer;
+              text-align: center;
+            ">A venir</button>
+            <button class="status-choice" style="
+              flex: 1;
+              padding: 10px;
+              border: 1.5px solid var(--slate-200);
+              background: var(--white);
+              border-radius: var(--radius-sm);
+              font-family: var(--font);
+              font-size: 13px;
+              font-weight: 600;
+              color: var(--slate-500);
+              cursor: pointer;
+              text-align: center;
+            ">Deja payee</button>
+          </div>
+        </div>
+      </div>
+      <div class="sheet-actions">
+        <button class="btn-cancel">Annuler</button>
+        <button class="btn-primary">Ajouter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. SUCCESS TOAST -->
+  <div class="demo-section">
+    <div class="demo-section-label">Feedback</div>
+    <div class="demo-section-title">Toast de confirmation</div>
+    <div class="demo-section-desc">Apres chaque action, un toast confirme le resultat. Apparait en bas de l'ecran pendant 3 secondes.</div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div class="toast-preview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Hydro-Quebec marquee payee
+      </div>
+      <div class="toast-preview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/></svg>
+        Reportee vers avril 2026
+      </div>
+      <div class="toast-preview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Depense ajoutee
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== OVERLAY SHEETS (activated by demo buttons) ====== -->
+
+  <!-- Backdrop -->
+  <div class="sheet-backdrop" id="sheetBackdrop" onclick="closeAllSheets()"></div>
+
+  <!-- Sheet: Actions -->
+  <div class="bottom-sheet" id="sheetActions">
+    <div class="sheet-handle"><div class="sheet-handle-bar"></div></div>
+    <div class="sheet-header">
+      <div class="sheet-expense-info">
+        <div class="sheet-expense-icon" style="background: #F0FDFA;">🏠</div>
+        <div class="sheet-expense-details">
+          <div class="sheet-expense-name">Hydro-Quebec</div>
+          <div class="sheet-expense-meta">Logement &middot; Visa ****1234</div>
+        </div>
+      </div>
+      <div class="sheet-expense-amount">142<span class="dollar">$</span></div>
+    </div>
+    <div class="action-list">
+      <button class="action-item" onclick="closeAllSheets(); setTimeout(() => showSheet('paid-confirm'), 200)">
+        <div class="action-icon green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="action-text">
+          <div class="action-title">Marquer payee</div>
+          <div class="action-desc">Cette depense est reglee</div>
+        </div>
+        <svg class="action-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <button class="action-item" onclick="closeAllSheets(); setTimeout(() => showSheet('defer'), 200)">
+        <div class="action-icon amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+        </div>
+        <div class="action-text">
+          <div class="action-title">Reporter a un autre mois</div>
+          <div class="action-desc">Deplacer vers un mois futur</div>
+        </div>
+        <svg class="action-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <button class="action-item" onclick="closeAllSheets(); setTimeout(() => showSheet('edit-amount'), 200)">
+        <div class="action-icon teal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </div>
+        <div class="action-text">
+          <div class="action-title">Modifier le montant</div>
+          <div class="action-desc">Ajuster pour ce mois uniquement</div>
+        </div>
+        <svg class="action-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <div class="action-sep"></div>
+      <button class="action-item destructive" onclick="closeAllSheets(); setTimeout(() => showSheet('delete'), 200)">
+        <div class="action-icon red">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+        </div>
+        <div class="action-text">
+          <div class="action-title">Supprimer</div>
+          <div class="action-desc">Retirer cette depense du mois</div>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Sheet: Defer -->
+  <div class="bottom-sheet" id="sheetDefer">
+    <div class="sheet-handle"><div class="sheet-handle-bar"></div></div>
+    <div class="sheet-form">
+      <div class="sheet-form-title">Reporter "Hydro-Quebec"</div>
+      <div class="sheet-header" style="padding: 0 0 16px;">
+        <div class="sheet-expense-info">
+          <div class="sheet-expense-icon" style="background: #F0FDFA;">🏠</div>
+          <div class="sheet-expense-details">
+            <div class="sheet-expense-name" style="font-size: 14px;">Hydro-Quebec</div>
+            <div class="sheet-expense-meta">142$ &middot; Logement</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Reporter vers</label>
+        <div class="month-options" id="monthOptions">
+          <div class="month-option selected" onclick="selectMonth(this)">
+            <div class="month-option-name">Avril</div>
+            <div class="month-option-year">2026</div>
+          </div>
+          <div class="month-option" onclick="selectMonth(this)">
+            <div class="month-option-name">Mai</div>
+            <div class="month-option-year">2026</div>
+          </div>
+          <div class="month-option" onclick="selectMonth(this)">
+            <div class="month-option-name">Juin</div>
+            <div class="month-option-year">2026</div>
+          </div>
+          <div class="month-option" onclick="selectMonth(this)">
+            <div class="month-option-name">Juillet</div>
+            <div class="month-option-year">2026</div>
+          </div>
+          <div class="month-option" onclick="selectMonth(this)">
+            <div class="month-option-name">Aout</div>
+            <div class="month-option-year">2026</div>
+          </div>
+          <div class="month-option" onclick="selectMonth(this)">
+            <div class="month-option-name">Septembre</div>
+            <div class="month-option-year">2026</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-hint" style="margin-top: -10px;">
+        <svg style="width: 13px; height: 13px; vertical-align: -2px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        La depense disparaitra de ce mois et apparaitra dans le mois choisi.
+      </div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn-cancel" onclick="closeAllSheets()">Annuler</button>
+      <button class="btn-primary" onclick="closeAllSheets()">Reporter vers avril</button>
+    </div>
+  </div>
+
+  <!-- Sheet: Edit Amount -->
+  <div class="bottom-sheet" id="sheetEditAmount">
+    <div class="sheet-handle"><div class="sheet-handle-bar"></div></div>
+    <div class="sheet-form">
+      <div class="sheet-form-title">Modifier le montant</div>
+      <div class="sheet-header" style="padding: 0 0 16px;">
+        <div class="sheet-expense-info">
+          <div class="sheet-expense-icon" style="background: #F0FDFA;">🏠</div>
+          <div class="sheet-expense-details">
+            <div class="sheet-expense-name" style="font-size: 14px;">Hydro-Quebec</div>
+            <div class="sheet-expense-meta">Logement &middot; Montant actuel: 142$</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nouveau montant</label>
+        <input type="text" class="form-input form-input-amount" value="142" placeholder="0">
+        <div class="form-hint">Modification pour mars 2026 uniquement. Le gabarit restera a 142$.</div>
+      </div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn-cancel" onclick="closeAllSheets()">Annuler</button>
+      <button class="btn-primary" onclick="closeAllSheets()">Enregistrer</button>
+    </div>
+  </div>
+
+  <!-- Sheet: Delete -->
+  <div class="bottom-sheet" id="sheetDelete">
+    <div class="sheet-handle"><div class="sheet-handle-bar"></div></div>
+    <div class="delete-confirm">
+      <div class="delete-confirm-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+      </div>
+      <div class="delete-confirm-title">Supprimer cette depense?</div>
+      <div class="delete-confirm-text">
+        <strong>Epicerie Maxi — 87$</strong> sera retire de tes depenses de mars 2026. Cette action est irreversible.
+      </div>
+    </div>
+    <div class="sheet-actions" style="padding-top: 20px;">
+      <button class="btn-cancel" onclick="closeAllSheets()">Annuler</button>
+      <button class="btn-danger" onclick="closeAllSheets()">Supprimer</button>
+    </div>
+  </div>
+
+  <!-- Sheet: Add Adhoc -->
+  <div class="bottom-sheet" id="sheetAdhoc">
+    <div class="sheet-handle"><div class="sheet-handle-bar"></div></div>
+    <div class="sheet-form">
+      <div class="sheet-form-title">Nouvelle depense</div>
+
+      <div class="form-group">
+        <label class="form-label">Nom de la depense</label>
+        <input type="text" class="form-input" placeholder="Ex: Epicerie, reparation auto...">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Montant</label>
+        <input type="text" class="form-input form-input-amount" placeholder="0" style="font-size: 24px;">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Section</label>
+          <select class="form-select">
+            <option value="">Choisir...</option>
+            <option value="logement">🏠 Logement</option>
+            <option value="transport">🚗 Transport</option>
+            <option value="alimentation">🍽 Alimentation</option>
+            <option value="loisirs">🎭 Loisirs</option>
+            <option value="sante">🩺 Sante</option>
+            <option value="personnel">💇 Personnel</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Carte</label>
+          <select class="form-select">
+            <option value="">Choisir...</option>
+            <option value="visa">Visa ****1234</option>
+            <option value="desjardins">Desjardins</option>
+            <option value="cash">Comptant</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Statut</label>
+        <div style="display: flex; gap: 8px;" id="statusChoices">
+          <button class="status-choice" onclick="selectStatus(this, 'upcoming')" style="
+            flex: 1;
+            padding: 10px;
+            border: 1.5px solid var(--teal-700);
+            background: var(--teal-50);
+            border-radius: var(--radius-sm);
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--teal-700);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s;
+          ">A venir</button>
+          <button class="status-choice" onclick="selectStatus(this, 'paid')" style="
+            flex: 1;
+            padding: 10px;
+            border: 1.5px solid var(--slate-200);
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--slate-500);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s;
+          ">Deja payee</button>
+        </div>
+      </div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn-cancel" onclick="closeAllSheets()">Annuler</button>
+      <button class="btn-primary" onclick="closeAllSheets()">Ajouter</button>
+    </div>
+  </div>
+
+  <script>
+    // Sheet management
+    function showSheet(id) {
+      const backdrop = document.getElementById('sheetBackdrop');
+      const sheetMap = {
+        'actions': 'sheetActions',
+        'defer': 'sheetDefer',
+        'edit-amount': 'sheetEditAmount',
+        'delete': 'sheetDelete',
+        'adhoc': 'sheetAdhoc',
+      };
+
+      closeAllSheets();
+
+      const sheetEl = document.getElementById(sheetMap[id]);
+      if (sheetEl) {
+        backdrop.classList.add('active');
+        // Small delay for animation
+        requestAnimationFrame(() => {
+          sheetEl.classList.add('active');
+        });
+      }
+
+      // Highlight demo button
+      document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+      event && event.target && event.target.classList.add('active');
+    }
+
+    function closeAllSheets() {
+      document.getElementById('sheetBackdrop').classList.remove('active');
+      document.querySelectorAll('.bottom-sheet').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+    }
+
+    // Month option selection
+    function selectMonth(el) {
+      document.querySelectorAll('#monthOptions .month-option').forEach(m => m.classList.remove('selected'));
+      el.classList.add('selected');
+      // Update button text
+      const monthName = el.querySelector('.month-option-name').textContent.toLowerCase();
+      const btn = el.closest('.bottom-sheet').querySelector('.btn-primary');
+      if (btn) btn.textContent = 'Reporter vers ' + monthName;
+    }
+
+    // Status choice for adhoc form
+    function selectStatus(el, status) {
+      const container = el.parentElement;
+      container.querySelectorAll('.status-choice').forEach(btn => {
+        btn.style.borderColor = 'var(--slate-200)';
+        btn.style.background = 'var(--white)';
+        btn.style.color = 'var(--slate-500)';
+      });
+      el.style.borderColor = 'var(--teal-700)';
+      el.style.background = 'var(--teal-50)';
+      el.style.color = 'var(--teal-700)';
+    }
+
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAllSheets();
+    });
+  </script>
+
+</body>
+</html>

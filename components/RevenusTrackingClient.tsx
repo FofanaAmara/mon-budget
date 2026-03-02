@@ -64,6 +64,7 @@ export default function RevenusTrackingClient({
   const progressPct = incomeSummary.expectedTotal > 0
     ? (incomeSummary.actualTotal / incomeSummary.expectedTotal) * 100
     : 0;
+  const isComplete = progressPct >= 100 && incomeSummary.expectedTotal > 0;
   const isOverIncome = incomeSummary.actualTotal > incomeSummary.expectedTotal && incomeSummary.expectedTotal > 0;
   const surplus = incomeSummary.actualTotal - incomeSummary.expectedTotal;
 
@@ -158,441 +159,860 @@ export default function RevenusTrackingClient({
     });
   }
 
+  // ── Monument status badge helpers ─────────────────────────────────────────
+  function getMonumentStatus() {
+    if (incomeSummary.expectedTotal === 0) return null;
+    if (isOverIncome) return {
+      type: 'over' as const,
+      label: `+${formatCAD(surplus)} au-dessus des attentes`,
+    };
+    if (isComplete) return { type: 'complete' as const, label: 'Tous les revenus reçus' };
+    if (progressPct >= 50) return { type: 'partial' as const, label: `${Math.round(progressPct)}% reçu` };
+    return { type: 'expected' as const, label: `${Math.round(progressPct)}% reçu` };
+  }
+  const monumentStatus = getMonumentStatus();
+
+  // ── Progress fill color ───────────────────────────────────────────────────
+  function getProgressFillColor() {
+    if (isComplete || isOverIncome) return 'var(--teal-700, #0F766E)';
+    if (progressPct >= 80) return 'var(--amber-500, #F59E0B)';
+    return 'var(--teal-700, #0F766E)';
+  }
+
   return (
-    <div style={{ padding: '0 0 96px', minHeight: '100vh' }}>
-      {/* Monument — revenus du mois */}
-      <div style={{ padding: '24px 20px 16px', textAlign: 'center' }}>
+    <div style={{ paddingBottom: '96px', minHeight: '100vh' }}>
+
+      {/* ── MONUMENT: THE SCOREBOARD ─────────────────────────────────────── */}
+      <div style={{
+        padding: '28px 20px 20px',
+        textAlign: 'center',
+      }}>
         <p style={{
-          fontSize: '13px', fontWeight: 600, letterSpacing: '0.08em',
-          textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '4px',
+          fontSize: '13px',
+          fontWeight: 700,
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase' as const,
+          color: 'var(--teal-700, #0F766E)',
+          marginBottom: '12px',
         }}>
           Revenus
         </p>
-        <p style={{
-          fontSize: 'clamp(3rem, 12vw, 5rem)', fontWeight: 800,
-          letterSpacing: '-0.03em', lineHeight: 1, margin: '8px 0 12px',
-          color: 'var(--text-primary)',
-        }}>
-          <span style={{ fontSize: '0.4em', color: 'var(--accent)', verticalAlign: 'super' }}>$</span>
-          {incomeSummary.actualTotal.toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-        </p>
-        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: '16px' }}>
-          sur <strong style={{ color: 'var(--text-primary)' }}>{formatCAD(incomeSummary.expectedTotal)}</strong> attendus ce mois-ci
-        </p>
-        {/* Progress bar */}
+
+        {/* Scoreboard fraction: received / expected */}
         <div style={{
-          height: '6px', borderRadius: '3px', overflow: 'hidden',
-          background: 'var(--surface-sunken)', marginBottom: '8px',
-          position: 'relative',
+          display: 'flex',
+          alignItems: 'baseline',
+          justifyContent: 'center',
+          lineHeight: 1,
         }}>
-          {isOverIncome ? (
-            <>
-              <div style={{
-                position: 'absolute', left: 0, top: 0, bottom: 0,
-                width: `${(incomeSummary.expectedTotal / incomeSummary.actualTotal) * 100}%`,
-                background: 'var(--accent)',
-              }} />
-              <div style={{
-                position: 'absolute',
-                left: `${(incomeSummary.expectedTotal / incomeSummary.actualTotal) * 100}%`,
-                top: 0, bottom: 0,
-                width: `${(surplus / incomeSummary.actualTotal) * 100}%`,
-                background: 'var(--amber)',
-              }} />
-            </>
-          ) : (
+          {/* Received — dominant, 800 weight */}
+          <span style={{
+            fontSize: 'clamp(3rem, 12vw, 5rem)',
+            fontWeight: 800,
+            letterSpacing: '-0.04em',
+            color: 'var(--slate-900, #0F172A)',
+            fontVariantNumeric: 'tabular-nums',
+          }}>
+            {incomeSummary.actualTotal.toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+            <span style={{
+              fontSize: '0.4em',
+              fontWeight: 600,
+              color: 'var(--teal-700, #0F766E)',
+              verticalAlign: 'super',
+              marginLeft: '2px',
+            }}>$</span>
+          </span>
+
+          {/* Slash — lightweight separator */}
+          <span style={{
+            fontSize: 'clamp(2rem, 8vw, 3.5rem)',
+            fontWeight: 300,
+            color: 'var(--slate-300, #CBD5E1)',
+            margin: '0 clamp(4px, 1.5vw, 10px)',
+            position: 'relative' as const,
+            top: '-0.05em',
+          }}>
+            /
+          </span>
+
+          {/* Expected — subordinate, 600 weight, muted */}
+          <span style={{
+            fontSize: 'clamp(1.8rem, 7vw, 3rem)',
+            fontWeight: 600,
+            letterSpacing: '-0.03em',
+            color: 'var(--slate-400, #94A3B8)',
+            fontVariantNumeric: 'tabular-nums',
+          }}>
+            {incomeSummary.expectedTotal.toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+            <span style={{
+              fontSize: '0.4em',
+              fontWeight: 600,
+              color: 'var(--teal-700, #0F766E)',
+              verticalAlign: 'super',
+              marginLeft: '2px',
+            }}>$</span>
+          </span>
+        </div>
+
+        <p style={{
+          fontSize: '14px',
+          fontWeight: 500,
+          color: 'var(--slate-500, #64748B)',
+          marginTop: '8px',
+          letterSpacing: '0.01em',
+        }}>
+          reçu sur attendu ce mois-ci
+        </p>
+
+        {/* Progress bar */}
+        {incomeSummary.expectedTotal > 0 && (
+          <div style={{ margin: '16px auto 0', maxWidth: '240px' }}>
             <div style={{
-              height: '100%',
-              background: progressPct >= 80 ? 'var(--accent)' : progressPct >= 40 ? 'var(--amber)' : 'var(--surface-border)',
-              width: `${Math.min(progressPct, 100)}%`,
-              transition: 'width 0.3s ease',
-            }} />
-          )}
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
-          {isOverIncome ? (
-            <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: '4px',
-              padding: '4px 10px', borderRadius: '999px',
-              background: 'var(--positive-subtle)', color: 'var(--accent)',
-              fontSize: 'var(--text-xs)', fontWeight: 600,
+              height: '6px',
+              background: 'var(--slate-100, #F1F5F9)',
+              borderRadius: '3px',
+              overflow: 'hidden',
             }}>
-              ✦ +{formatCAD(surplus)} au-dessus des attentes
-            </span>
-          ) : (
-            <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: '4px',
-              padding: '4px 10px', borderRadius: '999px',
-              background: progressPct >= 80 ? 'var(--positive-subtle)' : 'var(--surface-inset)',
-              color: progressPct >= 80 ? 'var(--accent)' : 'var(--text-secondary)',
-              fontSize: 'var(--text-xs)', fontWeight: 600,
-            }}>
-              {progressPct >= 80 ? '✓ Objectif presque atteint' : `${Math.round(progressPct)}% reçu`}
-            </span>
-          )}
-        </div>
+              <div style={{
+                height: '100%',
+                borderRadius: '3px',
+                width: `${Math.min(progressPct, 100)}%`,
+                background: getProgressFillColor(),
+                transition: 'width 0.8s ease',
+              }} />
+            </div>
+
+            {/* Status badge */}
+            {monumentStatus && (
+              <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
+                <span style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '4px 12px',
+                  borderRadius: '100px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  background: monumentStatus.type === 'partial' || monumentStatus.type === 'expected'
+                    ? 'var(--warning-light, #FEF3C7)'
+                    : 'var(--success-light, #ECFDF5)',
+                  color: monumentStatus.type === 'partial' || monumentStatus.type === 'expected'
+                    ? 'var(--amber-600, #D97706)'
+                    : 'var(--success, #059669)',
+                }}>
+                  {(monumentStatus.type === 'complete' || monumentStatus.type === 'over') && (
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  )}
+                  {monumentStatus.label}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
+      {/* ── MONTH NAVIGATOR ─────────────────────────────────────────────── */}
       <div style={{ padding: '0 20px' }}>
-      <MonthNavigator month={month} basePath="/revenus" />
+        <MonthNavigator month={month} basePath="/revenus" />
       </div>
 
-      <div style={{ padding: '0 20px' }}>
-      {/* Tab strip — Patrimoine style, below hero card */}
-      <div className="flex" style={{
-        gap: '6px', marginBottom: '20px', marginTop: '16px',
-        background: 'var(--surface-inset)',
-        borderRadius: 'var(--radius-md)',
-        padding: '4px',
+      {/* ── TABS — underline style ───────────────────────────────────────── */}
+      <div style={{
+        display: 'flex',
+        margin: '0 20px',
+        borderBottom: '2px solid var(--slate-100, #F1F5F9)',
+        marginBottom: '20px',
       }}>
         {(['revenus', 'allocation'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             style={{
-              flex: 1, padding: '10px 12px',
-              borderRadius: 'var(--radius-sm)',
-              fontSize: 'var(--text-sm)', fontWeight: 650,
+              flex: 1,
+              padding: '12px 16px',
+              textAlign: 'center' as const,
+              fontSize: '14px',
+              fontWeight: 600,
+              color: activeTab === tab ? 'var(--teal-700, #0F766E)' : 'var(--slate-400, #94A3B8)',
               cursor: 'pointer',
-              background: activeTab === tab ? 'var(--surface-raised)' : 'transparent',
-              color: activeTab === tab ? 'var(--text-primary)' : 'var(--text-tertiary)',
               border: 'none',
-              boxShadow: activeTab === tab ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-              transition: 'all 0.15s ease',
+              background: 'none',
+              position: 'relative' as const,
+              transition: 'color 0.2s ease',
+              letterSpacing: '-0.01em',
             }}
           >
             {tab === 'revenus' ? 'Revenus' : 'Allocation'}
+            {activeTab === tab && (
+              <span style={{
+                position: 'absolute' as const,
+                bottom: '-2px',
+                left: '16px',
+                right: '16px',
+                height: '2px',
+                background: 'var(--teal-700, #0F766E)',
+                borderRadius: '1px 1px 0 0',
+                display: 'block',
+              }} />
+            )}
           </button>
         ))}
       </div>
 
-      {/* ── TAB: REVENUS ──────────────────────────────────────────────────── */}
-      {activeTab === 'revenus' && (
-        <>
-          {/* Incomes list */}
-          {(() => {
-            const expectedIncomes = monthlyIncomes.filter(mi => Number(mi.expected_amount ?? 0) > 0);
-            const adhocIncomes = monthlyIncomes.filter(mi => Number(mi.expected_amount ?? 0) === 0);
-            const totalCount = monthlyIncomes.length + unregisteredVariables.length;
+      {/* ── TAB CONTENT wrapper ──────────────────────────────────────────── */}
+      <div style={{ padding: '0 20px' }}>
 
-            if (totalCount === 0) return (
-              <div className="flex flex-col items-center justify-center text-center" style={{ padding: '80px 0' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '16px', opacity: 0.6 }}>💰</div>
-                <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)', marginBottom: '8px', fontWeight: 500 }}>
-                  Aucun revenu ce mois
-                </p>
-                <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-xs)', opacity: 0.7 }}>
-                  Les revenus recurrents apparaissent automatiquement
-                </p>
-              </div>
-            );
+        {/* ── TAB: REVENUS ─────────────────────────────────────────────── */}
+        {activeTab === 'revenus' && (
+          <>
+            {(() => {
+              const expectedIncomes = monthlyIncomes.filter(mi => Number(mi.expected_amount ?? 0) > 0);
+              const adhocIncomes = monthlyIncomes.filter(mi => Number(mi.expected_amount ?? 0) === 0);
+              const totalCount = monthlyIncomes.length + unregisteredVariables.length;
 
-            return (
-              <>
-                {(expectedIncomes.length > 0 || unregisteredVariables.length > 0) && (
-                  <div style={{ marginBottom: '20px' }}>
-                    <h2 className="section-label" style={{ marginBottom: '12px', paddingLeft: '4px' }}>
-                      Revenus attendus ({expectedIncomes.length + unregisteredVariables.length})
-                    </h2>
-                    <div className="card" style={{ overflow: 'hidden' }}>
-                      {expectedIncomes.map((mi, i) => (
-                        <IncomeInstanceRow
-                          key={mi.id}
-                          mi={mi}
-                          index={i}
-                          isCurrentMonth={isCurrentMonth}
-                          onMarkReceived={() => openReceiveFixed(mi)}
-                          onMarkExpected={() => handleMarkExpected(mi.id)}
-                          onUpdateAmount={() => openUpdateAmount(mi)}
-                        />
-                      ))}
-                      {unregisteredVariables.map((inc, i) => (
-                        <VariableIncomeRow
-                          key={inc.id}
-                          inc={inc}
-                          index={expectedIncomes.length + i}
-                          isCurrentMonth={isCurrentMonth}
-                          onMarkReceived={() => openReceiveVariable(inc)}
-                        />
-                      ))}
-                    </div>
+              if (totalCount === 0) return (
+                <div style={{ display: 'flex', flexDirection: 'column' as const, alignItems: 'center', justifyContent: 'center', textAlign: 'center' as const, padding: '80px 0' }}>
+                  <div style={{ fontSize: '2.5rem', marginBottom: '12px', opacity: 0.5 }}>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--slate-300, #CBD5E1)' }}>
+                      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                      <polyline points="17 6 23 6 23 12" />
+                    </svg>
                   </div>
-                )}
+                  <p style={{ color: 'var(--slate-400, #94A3B8)', fontSize: '14px', fontWeight: 500, marginBottom: '4px' }}>
+                    Aucun revenu ce mois
+                  </p>
+                  <p style={{ color: 'var(--slate-300, #CBD5E1)', fontSize: '12px' }}>
+                    Les revenus récurrents apparaissent automatiquement
+                  </p>
+                </div>
+              );
 
-                {adhocIncomes.length > 0 && (
-                  <div>
-                    <h2 className="section-label" style={{ marginBottom: '12px', paddingLeft: '4px' }}>
-                      Revenus ponctuels ({adhocIncomes.length})
-                    </h2>
-                    <div className="card" style={{ overflow: 'hidden' }}>
-                      {adhocIncomes.map((mi, i) => (
-                        <IncomeInstanceRow
-                          key={mi.id}
-                          mi={mi}
-                          index={i}
-                          isCurrentMonth={isCurrentMonth}
-                          onMarkReceived={() => openReceiveFixed(mi)}
-                          onMarkExpected={() => handleMarkExpected(mi.id)}
-                          onDelete={() => handleDelete(mi)}
-                        />
-                      ))}
+              return (
+                <>
+                  {/* Expected incomes section */}
+                  {(expectedIncomes.length > 0 || unregisteredVariables.length > 0) && (
+                    <div style={{ marginBottom: '20px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <h2 style={{
+                          fontSize: '11px',
+                          fontWeight: 700,
+                          letterSpacing: '0.08em',
+                          textTransform: 'uppercase' as const,
+                          color: 'var(--slate-400, #94A3B8)',
+                          paddingLeft: '4px',
+                        }}>
+                          Revenus attendus ({expectedIncomes.length + unregisteredVariables.length})
+                        </h2>
+                        {/* Desktop: inline add button */}
+                        {isCurrentMonth && (
+                          <button
+                            onClick={() => setAdhocModal(true)}
+                            style={{
+                              display: 'none', // shown via CSS in desktop context via globals
+                              alignItems: 'center',
+                              gap: '8px',
+                              padding: '8px 16px',
+                              background: 'var(--teal-700, #0F766E)',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: 'var(--radius-md, 12px)',
+                              fontSize: '13px',
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              letterSpacing: '-0.01em',
+                            }}
+                            className="desktop-add-income-btn"
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                              <line x1="12" y1="5" x2="12" y2="19" />
+                              <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            Revenu ponctuel
+                          </button>
+                        )}
+                      </div>
+                      <div style={{
+                        background: 'white',
+                        border: '1px solid var(--slate-200, #E2E8F0)',
+                        borderRadius: 'var(--radius-lg, 18px)',
+                        overflow: 'hidden',
+                      }}>
+                        {expectedIncomes.map((mi, i) => (
+                          <IncomeInstanceRow
+                            key={mi.id}
+                            mi={mi}
+                            index={i}
+                            isCurrentMonth={isCurrentMonth}
+                            onMarkReceived={() => openReceiveFixed(mi)}
+                            onMarkExpected={() => handleMarkExpected(mi.id)}
+                            onUpdateAmount={() => openUpdateAmount(mi)}
+                          />
+                        ))}
+                        {unregisteredVariables.map((inc, i) => (
+                          <VariableIncomeRow
+                            key={inc.id}
+                            inc={inc}
+                            index={expectedIncomes.length + i}
+                            isCurrentMonth={isCurrentMonth}
+                            onMarkReceived={() => openReceiveVariable(inc)}
+                          />
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </>
-            );
-          })()}
+                  )}
 
-          {/* Adhoc FAB */}
-          {isCurrentMonth && (
-            <button
-              onClick={() => setAdhocModal(true)}
-              className="fab"
-              aria-label="Ajouter un revenu ponctuel"
-              style={{ bottom: 'calc(var(--nav-height) + var(--safe-bottom) + 16px)' }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </button>
-          )}
-        </>
-      )}
+                  {/* Adhoc / ponctuel incomes section */}
+                  {adhocIncomes.length > 0 && (
+                    <div style={{ marginBottom: '20px' }}>
+                      <h2 style={{
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase' as const,
+                        color: 'var(--slate-400, #94A3B8)',
+                        marginBottom: '10px',
+                        paddingLeft: '4px',
+                      }}>
+                        Revenus ponctuels ({adhocIncomes.length})
+                      </h2>
+                      <div style={{
+                        background: 'white',
+                        border: '1px solid var(--slate-200, #E2E8F0)',
+                        borderRadius: 'var(--radius-lg, 18px)',
+                        overflow: 'hidden',
+                      }}>
+                        {adhocIncomes.map((mi, i) => (
+                          <IncomeInstanceRow
+                            key={mi.id}
+                            mi={mi}
+                            index={i}
+                            isCurrentMonth={isCurrentMonth}
+                            onMarkReceived={() => openReceiveFixed(mi)}
+                            onMarkExpected={() => handleMarkExpected(mi.id)}
+                            onDelete={() => handleDelete(mi)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
 
-      {/* ── TAB: ALLOCATION ───────────────────────────────────────────────── */}
-      {activeTab === 'allocation' && (
-        <>
-          {/* Hero card */}
-          <div className="card" style={{ padding: '20px', marginBottom: '16px' }}>
-            <div className="flex" style={{ gap: '0', justifyContent: 'space-between', marginBottom: '12px' }}>
-              <div style={{ textAlign: 'center', flex: 1 }}>
-                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', fontWeight: 500, marginBottom: '4px' }}>
-                  Total alloué
-                </p>
-                <p className="amount" style={{ fontSize: 'var(--text-lg)', fontWeight: 750 }}>
-                  {formatCAD(totalAllocated)}
-                </p>
-              </div>
-              <div style={{ width: '1px', background: 'var(--border)', margin: '0 12px' }} />
-              <div style={{ textAlign: 'center', flex: 1 }}>
-                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', fontWeight: 500, marginBottom: '4px' }}>
-                  Dispo. attendu
-                </p>
-                <p className="amount" style={{
-                  fontSize: 'var(--text-lg)', fontWeight: 750,
-                  color: isOverAllocated ? 'var(--warning-text)' : 'var(--positive)',
-                }}>
-                  {formatCAD(disponibleAttendu)}
-                </p>
+            {/* Adhoc FAB — mobile, current month only */}
+            {isCurrentMonth && (
+              <button
+                onClick={() => setAdhocModal(true)}
+                className="fab"
+                aria-label="Ajouter un revenu ponctuel"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </button>
+            )}
+          </>
+        )}
+
+        {/* ── TAB: ALLOCATION ──────────────────────────────────────────── */}
+        {activeTab === 'allocation' && (
+          <>
+            {/* Summary card: Total alloué / Dispo. attendu */}
+            <div style={{
+              background: 'white',
+              border: '1px solid var(--slate-200, #E2E8F0)',
+              borderRadius: 'var(--radius-lg, 18px)',
+              padding: '20px',
+              marginBottom: '0',
+            }}>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1px 1fr',
+                alignItems: 'center',
+              }}>
+                {/* Total alloué */}
+                <div style={{ textAlign: 'center' as const }}>
+                  <p style={{
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase' as const,
+                    color: 'var(--slate-400, #94A3B8)',
+                    marginBottom: '4px',
+                  }}>
+                    Total alloué
+                  </p>
+                  <p style={{
+                    fontSize: 'clamp(1.3rem, 4vw, 1.6rem)',
+                    fontWeight: 800,
+                    letterSpacing: '-0.03em',
+                    color: 'var(--slate-900, #0F172A)',
+                    fontVariantNumeric: 'tabular-nums',
+                  }}>
+                    {formatCAD(totalAllocated)}
+                  </p>
+                </div>
+
+                {/* Divider */}
+                <div style={{ width: '1px', height: '40px', background: 'var(--slate-200, #E2E8F0)', margin: '0 auto' }} />
+
+                {/* Dispo. attendu */}
+                <div style={{ textAlign: 'center' as const }}>
+                  <p style={{
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase' as const,
+                    color: 'var(--slate-400, #94A3B8)',
+                    marginBottom: '4px',
+                  }}>
+                    Dispo. attendu
+                  </p>
+                  <p style={{
+                    fontSize: 'clamp(1.3rem, 4vw, 1.6rem)',
+                    fontWeight: 800,
+                    letterSpacing: '-0.03em',
+                    color: isOverAllocated ? 'var(--error, #DC2626)' : 'var(--success, #059669)',
+                    fontVariantNumeric: 'tabular-nums',
+                  }}>
+                    {formatCAD(disponibleAttendu)}
+                  </p>
+                </div>
               </div>
             </div>
+
+            {/* Surallocation alert — standalone banner */}
             {isOverAllocated && (
               <div style={{
-                padding: '8px 12px',
-                borderRadius: 'var(--radius-md)',
-                background: 'var(--warning-subtle)',
-                fontSize: 'var(--text-xs)',
-                color: 'var(--warning-text)',
-                fontWeight: 600,
+                margin: '12px 0 0',
+                padding: '12px 16px',
+                background: 'var(--error-light, #FEF2F2)',
+                border: '1px solid rgba(220, 38, 38, 0.12)',
+                borderRadius: 'var(--radius-md, 12px)',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '10px',
               }}>
-                ⚠ Surallocation de {formatCAD(Math.abs(disponibleAttendu))} — le total alloué dépasse le revenu attendu
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--error, #DC2626)', flexShrink: 0, marginTop: '1px' }}>
+                  <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                  <line x1="12" y1="9" x2="12" y2="13" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                <div>
+                  <p style={{
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    color: 'var(--error, #DC2626)',
+                    lineHeight: 1.45,
+                  }}>
+                    Surallocation de {formatCAD(Math.abs(disponibleAttendu))}
+                  </p>
+                  <p style={{
+                    fontSize: '12px',
+                    fontWeight: 500,
+                    color: 'rgba(220, 38, 38, 0.7)',
+                    marginTop: '2px',
+                  }}>
+                    Le total alloué dépasse le revenu attendu
+                  </p>
+                </div>
               </div>
             )}
-          </div>
 
-          {/* Envelopes list */}
-          {monthlyAllocations.length === 0 ? (
-            <div className="flex flex-col items-center justify-center text-center" style={{ padding: '60px 0' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '12px', opacity: 0.5 }}>🗂️</div>
-              <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)', fontWeight: 500, marginBottom: '6px' }}>
-                Aucune enveloppe configurée
-              </p>
-              <a
-                href="/parametres/allocation"
-                style={{
-                  fontSize: 'var(--text-xs)',
-                  color: 'var(--accent)',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                }}
-              >
-                → Configurer dans les Réglages
-              </a>
-            </div>
-          ) : (
-            <div className="card" style={{ overflow: 'hidden' }}>
-              {monthlyAllocations.map((alloc, i) => {
-                const hasSectionLink = !!alloc.section_id;
-                const hasProjectLink = !!alloc.project_id;
-                const actualSpent = hasSectionLink ? (sectionActualsMap.get(alloc.section_id!) ?? 0) : null;
-                const isGoalReached = hasProjectLink
-                  && alloc.project_target_amount !== null && alloc.project_target_amount !== undefined
-                  && Number(alloc.project_saved_amount ?? 0) >= Number(alloc.project_target_amount);
+            {/* Envelopes list */}
+            {monthlyAllocations.length === 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column' as const, alignItems: 'center', justifyContent: 'center', textAlign: 'center' as const, padding: '60px 0' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: '12px', opacity: 0.5 }}>
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--slate-300, #CBD5E1)' }}>
+                    <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+                  </svg>
+                </div>
+                <p style={{ color: 'var(--slate-400, #94A3B8)', fontSize: '14px', fontWeight: 500, marginBottom: '6px' }}>
+                  Aucune enveloppe configurée
+                </p>
+                <a
+                  href="/parametres/allocation"
+                  style={{
+                    fontSize: '13px',
+                    color: 'var(--teal-700, #0F766E)',
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                  }}
+                >
+                  → Configurer dans les Réglages
+                </a>
+              </div>
+            ) : (
+              <div style={{
+                background: 'white',
+                border: '1px solid var(--slate-200, #E2E8F0)',
+                borderRadius: 'var(--radius-lg, 18px)',
+                overflow: 'hidden',
+                marginTop: '20px',
+              }}>
+                {monthlyAllocations.map((alloc, i) => {
+                  const hasSectionLink = !!alloc.section_id;
+                  const hasProjectLink = !!alloc.project_id;
+                  const actualSpent = hasSectionLink ? (sectionActualsMap.get(alloc.section_id!) ?? 0) : null;
+                  const isGoalReached = hasProjectLink
+                    && alloc.project_target_amount !== null && alloc.project_target_amount !== undefined
+                    && Number(alloc.project_saved_amount ?? 0) >= Number(alloc.project_target_amount);
 
-                // Under-allocation warning: allocated < actual spent for this section
-                const isUnderAllocated = actualSpent !== null && actualSpent > Number(alloc.allocated_amount);
+                  const isUnderAllocated = actualSpent !== null && actualSpent > Number(alloc.allocated_amount);
 
-                const pct = hasSectionLink && actualSpent !== null && Number(alloc.allocated_amount) > 0
-                  ? Math.min((actualSpent / Number(alloc.allocated_amount)) * 100, 110)
-                  : hasProjectLink && alloc.project_target_amount
-                    ? Math.min((Number(alloc.project_saved_amount ?? 0) / Number(alloc.project_target_amount)) * 100, 100)
-                    : null;
+                  const pct = hasSectionLink && actualSpent !== null && Number(alloc.allocated_amount) > 0
+                    ? Math.min((actualSpent / Number(alloc.allocated_amount)) * 100, 110)
+                    : hasProjectLink && alloc.project_target_amount
+                      ? Math.min((Number(alloc.project_saved_amount ?? 0) / Number(alloc.project_target_amount)) * 100, 100)
+                      : null;
 
-                return (
-                  <div
-                    key={alloc.id}
-                    style={{
-                      padding: '14px 20px',
-                      borderBottom: i < monthlyAllocations.length - 1 ? '1px solid var(--border)' : 'none',
-                    }}
-                  >
-                    <div className="flex items-center" style={{ gap: '10px' }}>
+                  // Progress bar color: ok < 80%, warn 80-100%, over > 100%
+                  const barColor = hasSectionLink
+                    ? (isUnderAllocated ? 'var(--error, #DC2626)'
+                      : (pct !== null && pct >= 80) ? 'var(--warning, #F59E0B)'
+                      : 'var(--teal-700, #0F766E)')
+                    : 'var(--teal-700, #0F766E)';
+
+                  const barPctClass = isUnderAllocated ? 'over'
+                    : (pct !== null && pct >= 80) ? 'warn'
+                    : 'ok';
+
+                  return (
+                    <div
+                      key={alloc.id}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        padding: '14px 16px',
+                        gap: '12px',
+                        borderBottom: i < monthlyAllocations.length - 1 ? '1px solid var(--slate-100, #F1F5F9)' : 'none',
+                      }}
+                    >
+                      {/* Color dot */}
                       <div style={{
-                        width: '10px', height: '10px', borderRadius: '50%',
-                        background: alloc.color, flexShrink: 0,
+                        width: '10px',
+                        height: '10px',
+                        borderRadius: '50%',
+                        background: alloc.color,
+                        flexShrink: 0,
+                        marginTop: '5px',
                       }} />
 
+                      {/* Envelope info + progress bar */}
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div className="flex items-center" style={{ gap: '6px', flexWrap: 'wrap' }}>
-                          <span style={{ fontWeight: 600, fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' as const }}>
+                          <span style={{
+                            fontSize: '14px',
+                            fontWeight: 600,
+                            color: 'var(--slate-900, #0F172A)',
+                            letterSpacing: '-0.01em',
+                          }}>
                             {alloc.label}
                           </span>
+                          {/* Badges */}
                           {isGoalReached && (
-                            <span className="badge" style={{ background: 'var(--positive-subtle)', color: 'var(--positive)', fontSize: '10px' }}>
-                              ✓ Objectif atteint
+                            <span style={{
+                              fontSize: '10px',
+                              fontWeight: 700,
+                              letterSpacing: '0.04em',
+                              textTransform: 'uppercase' as const,
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              background: 'var(--teal-50, #F0FDFA)',
+                              color: 'var(--teal-700, #0F766E)',
+                            }}>
+                              Épargne
                             </span>
                           )}
                           {isUnderAllocated && (
-                            <span className="badge" style={{ background: 'var(--warning-subtle)', color: 'var(--warning-text)', fontSize: '10px' }}>
-                              ⚠ Sous-alloué
+                            <span style={{
+                              fontSize: '10px',
+                              fontWeight: 700,
+                              letterSpacing: '0.04em',
+                              textTransform: 'uppercase' as const,
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              background: 'var(--error-light, #FEF2F2)',
+                              color: 'var(--error, #DC2626)',
+                            }}>
+                              Dépassé
                             </span>
                           )}
                         </div>
 
-                        {/* Charges: progress vs spent */}
+                        {/* Progress bar — sections */}
                         {hasSectionLink && actualSpent !== null && (
-                          <div style={{ marginTop: '6px' }}>
-                            <div style={{ height: '4px', borderRadius: '2px', background: 'var(--border)', overflow: 'hidden' }}>
+                          <div style={{ marginTop: '8px' }}>
+                            <div style={{
+                              height: '6px',
+                              background: 'var(--slate-100, #F1F5F9)',
+                              borderRadius: '3px',
+                              overflow: 'hidden',
+                            }}>
                               <div style={{
                                 height: '100%',
                                 width: `${Math.min(pct ?? 0, 100)}%`,
-                                background: isUnderAllocated ? 'var(--warning-text)' : alloc.color,
-                                borderRadius: '2px',
-                                transition: 'width 0.3s ease',
+                                background: barColor,
+                                borderRadius: '3px',
+                                transition: 'width 0.8s ease',
                               }} />
                             </div>
-                            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '3px' }}>
-                              {formatCAD(actualSpent)} dépensé / {formatCAD(Number(alloc.allocated_amount))} alloué
+                            <div style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              marginTop: '4px',
+                            }}>
+                              <span style={{ fontSize: '11px', fontWeight: 500, color: 'var(--slate-400, #94A3B8)' }}>
+                                {formatCAD(actualSpent)} dépensé
+                              </span>
+                              <span style={{
+                                fontSize: '11px',
+                                fontWeight: 700,
+                                letterSpacing: '-0.01em',
+                                color: barPctClass === 'ok' ? 'var(--teal-700, #0F766E)'
+                                  : barPctClass === 'warn' ? 'var(--amber-600, #D97706)'
+                                  : 'var(--error, #DC2626)',
+                              }}>
+                                {(pct ?? 0).toFixed(0)}%
+                              </span>
                             </div>
                           </div>
                         )}
 
-                        {/* Savings: project progress */}
+                        {/* Progress bar — savings project (special: thicker, gradient, amber dot) */}
                         {hasProjectLink && !hasSectionLink && alloc.project_target_amount && !isGoalReached && (
-                          <div style={{ marginTop: '6px' }}>
-                            <div style={{ height: '4px', borderRadius: '2px', background: 'var(--border)', overflow: 'hidden' }}>
+                          <div style={{ marginTop: '8px' }}>
+                            <div style={{
+                              height: '8px',
+                              background: 'var(--slate-100, #F1F5F9)',
+                              borderRadius: '4px',
+                              overflow: 'visible',
+                              position: 'relative' as const,
+                            }}>
                               <div style={{
                                 height: '100%',
                                 width: `${pct ?? 0}%`,
-                                background: alloc.color,
-                                borderRadius: '2px',
-                              }} />
+                                background: 'linear-gradient(90deg, var(--teal-700, #0F766E), var(--teal-800, #115E59))',
+                                borderRadius: '4px',
+                                position: 'relative' as const,
+                              }}>
+                                {/* Amber dot at tip */}
+                                <div style={{
+                                  position: 'absolute' as const,
+                                  right: '-6px',
+                                  top: '50%',
+                                  transform: 'translateY(-50%)',
+                                  width: '12px',
+                                  height: '12px',
+                                  background: 'var(--amber-500, #F59E0B)',
+                                  borderRadius: '50%',
+                                  border: '2px solid white',
+                                  boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+                                }} />
+                              </div>
                             </div>
-                            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '3px' }}>
-                              {formatCAD(Number(alloc.project_saved_amount ?? 0))} / {formatCAD(Number(alloc.project_target_amount))} · {(pct ?? 0).toFixed(0)}%
-                              {' · '}{formatCAD(Number(alloc.allocated_amount))}/mois
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Free: no tracking */}
-                        {!hasSectionLink && !hasProjectLink && (
-                          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '3px' }}>
-                            {formatCAD(Number(alloc.allocated_amount))}/mois · sans suivi
+                            <p style={{ fontSize: '11px', fontWeight: 500, color: 'var(--slate-400, #94A3B8)', marginTop: '4px' }}>
+                              {formatCAD(Number(alloc.project_saved_amount ?? 0))} / {formatCAD(Number(alloc.project_target_amount))} · {(pct ?? 0).toFixed(0)}% · {formatCAD(Number(alloc.allocated_amount))}/mois
+                            </p>
                           </div>
                         )}
 
                         {/* Savings without target */}
                         {hasProjectLink && !alloc.project_target_amount && (
-                          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '3px' }}>
+                          <p style={{ fontSize: '11px', color: 'var(--slate-400, #94A3B8)', marginTop: '4px' }}>
                             {formatCAD(Number(alloc.allocated_amount))}/mois · {formatCAD(Number(alloc.project_saved_amount ?? 0))} accumulé
-                          </div>
+                          </p>
+                        )}
+
+                        {/* Goal reached meta */}
+                        {isGoalReached && (
+                          <p style={{ fontSize: '11px', fontWeight: 500, color: 'var(--teal-700, #0F766E)', marginTop: '4px' }}>
+                            Objectif atteint · {formatCAD(Number(alloc.allocated_amount))}/mois
+                          </p>
+                        )}
+
+                        {/* Free: no tracking */}
+                        {!hasSectionLink && !hasProjectLink && (
+                          <p style={{ fontSize: '11px', color: 'var(--slate-400, #94A3B8)', marginTop: '4px' }}>
+                            {formatCAD(Number(alloc.allocated_amount))}/mois · sans suivi
+                          </p>
                         )}
 
                         {/* Override note */}
                         {alloc.notes && (
-                          <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '2px', fontStyle: 'italic' }}>
+                          <p style={{ fontSize: '10px', color: 'var(--slate-400, #94A3B8)', marginTop: '2px', fontStyle: 'italic' }}>
                             Note : {alloc.notes}
-                          </div>
+                          </p>
                         )}
                       </div>
 
-                      {/* Amount + override button */}
-                      <div className="flex items-center" style={{ gap: '8px', flexShrink: 0 }}>
-                        <span className="amount" style={{ fontSize: 'var(--text-sm)' }}>
+                      {/* Amounts column + edit button */}
+                      <div style={{ textAlign: 'right' as const, flexShrink: 0 }}>
+                        <span style={{
+                          fontSize: '15px',
+                          fontWeight: 700,
+                          letterSpacing: '-0.02em',
+                          color: 'var(--slate-900, #0F172A)',
+                          fontVariantNumeric: 'tabular-nums',
+                        }}>
                           {formatCAD(Number(alloc.allocated_amount))}
                         </span>
                         {isCurrentMonth && (
-                          <button
-                            onClick={() => openOverride(alloc)}
-                            style={{
-                              padding: '6px',
-                              color: 'var(--text-tertiary)',
-                              background: 'none',
-                              border: 'none',
-                              cursor: 'pointer',
-                              borderRadius: 'var(--radius-sm)',
-                            }}
-                            aria-label="Modifier pour ce mois"
-                          >
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                            </svg>
-                          </button>
+                          <div style={{ marginTop: '4px', display: 'flex', justifyContent: 'flex-end' }}>
+                            <button
+                              onClick={() => openOverride(alloc)}
+                              style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '28px',
+                                height: '28px',
+                                borderRadius: '6px',
+                                border: 'none',
+                                background: 'var(--slate-100, #F1F5F9)',
+                                color: 'var(--slate-400, #94A3B8)',
+                                cursor: 'pointer',
+                                transition: 'all 0.15s ease',
+                              }}
+                              onMouseEnter={(e) => {
+                                (e.currentTarget as HTMLButtonElement).style.background = 'var(--teal-50, #F0FDFA)';
+                                (e.currentTarget as HTMLButtonElement).style.color = 'var(--teal-700, #0F766E)';
+                              }}
+                              onMouseLeave={(e) => {
+                                (e.currentTarget as HTMLButtonElement).style.background = 'var(--slate-100, #F1F5F9)';
+                                (e.currentTarget as HTMLButtonElement).style.color = 'var(--slate-400, #94A3B8)';
+                              }}
+                              aria-label="Modifier pour ce mois"
+                            >
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                              </svg>
+                            </button>
+                          </div>
                         )}
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Reste libre card — the anchor of allocation view */}
+            <div style={{
+              margin: '20px 0 0',
+              background: isOverAllocated ? 'var(--error-light, #FEF2F2)' : 'var(--teal-50, #F0FDFA)',
+              border: isOverAllocated
+                ? '1px solid rgba(220, 38, 38, 0.1)'
+                : '1px solid rgba(15, 118, 110, 0.1)',
+              borderRadius: 'var(--radius-lg, 18px)',
+              padding: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                {/* Icon container */}
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  background: isOverAllocated ? 'var(--error, #DC2626)' : 'var(--teal-700, #0F766E)',
+                  borderRadius: 'var(--radius-sm, 8px)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'white',
+                  flexShrink: 0,
+                }}>
+                  {isOverAllocated ? (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                      <line x1="12" y1="9" x2="12" y2="13" />
+                      <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                  ) : (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                      <line x1="1" y1="10" x2="23" y2="10" />
+                    </svg>
+                  )}
+                </div>
+                <div>
+                  <p style={{
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    color: 'var(--slate-900, #0F172A)',
+                    letterSpacing: '-0.01em',
+                  }}>
+                    Reste libre
+                  </p>
+                  <p style={{
+                    fontSize: '12px',
+                    fontWeight: 500,
+                    color: 'var(--slate-500, #64748B)',
+                    marginTop: '1px',
+                  }}>
+                    {isOverAllocated ? 'Enveloppes en excès' : 'Non encore alloué'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Amount */}
+              <p style={{
+                fontSize: 'clamp(1.5rem, 5vw, 2rem)',
+                fontWeight: 800,
+                letterSpacing: '-0.03em',
+                color: isOverAllocated ? 'var(--error, #DC2626)' : 'var(--teal-700, #0F766E)',
+                fontVariantNumeric: 'tabular-nums',
+              }}>
+                {Math.abs(disponibleAttendu).toLocaleString('fr-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                <span style={{
+                  fontSize: '0.5em',
+                  fontWeight: 600,
+                  verticalAlign: 'super',
+                  marginLeft: '1px',
+                }}>$</span>
+              </p>
             </div>
-          )}
 
-          {/* Link to settings */}
-          <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            <a
-              href="/parametres/allocation"
-              style={{
-                fontSize: 'var(--text-xs)',
-                color: 'var(--text-tertiary)',
-                textDecoration: 'none',
-                fontWeight: 500,
-              }}
-            >
-              Gérer les enveloppes dans les Réglages →
-            </a>
-          </div>
+            {/* Link to settings */}
+            <div style={{ textAlign: 'center' as const, marginTop: '24px' }}>
+              <a
+                href="/parametres/allocation"
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  color: 'var(--slate-400, #94A3B8)',
+                  textDecoration: 'none',
+                }}
+              >
+                Gérer les enveloppes dans les Réglages →
+              </a>
+            </div>
 
-          {/* Adhoc allocation FAB — current month only */}
-          {isCurrentMonth && (
-            <button
-              onClick={() => setAdhocAllocModal(true)}
-              className="fab"
-              aria-label="Ajouter une allocation ponctuelle"
-              style={{ bottom: 'calc(var(--nav-height) + var(--safe-bottom) + 16px)' }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </button>
-          )}
-        </>
-      )}
+            {/* Adhoc allocation FAB — current month only */}
+            {isCurrentMonth && (
+              <button
+                onClick={() => setAdhocAllocModal(true)}
+                className="fab"
+                aria-label="Ajouter une allocation ponctuelle"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </button>
+            )}
+          </>
+        )}
 
-      </div>{/* /padding wrapper */}
+      </div>{/* /tab content wrapper */}
+
+      {/* ── Modals ────────────────────────────────────────────────────────── */}
 
       {/* Adhoc allocation modal */}
       {adhocAllocModal && (
@@ -604,22 +1024,20 @@ export default function RevenusTrackingClient({
         />
       )}
 
-      {/* ── Modals ────────────────────────────────────────────────────────── */}
-
       {/* Mark received modal */}
       {receiveModal && (
         <div className="sheet-backdrop" onClick={(e) => e.target === e.currentTarget && setReceiveModal(null)}>
           <div className="sheet" onClick={(e) => e.stopPropagation()}>
             <div className="sheet-handle" />
             <div style={{ padding: '8px 24px 32px' }}>
-              <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '20px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--slate-900, #0F172A)', letterSpacing: '-0.02em', marginBottom: '20px' }}>
                 Marquer reçu
               </h2>
               <div style={{ marginBottom: '20px' }}>
-                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: '4px' }}>
+                <p style={{ fontSize: '14px', color: 'var(--slate-500, #64748B)', marginBottom: '4px' }}>
                   {receiveModal.income?.income_name ?? receiveModal.variableIncome?.name}
                 </p>
-                <label className="field-label" style={{ marginTop: '16px' }}>Montant réellement reçu ($)</label>
+                <label className="field-label" style={{ marginTop: '16px', display: 'block' }}>Montant réellement reçu ($)</label>
                 <input
                   type="number" min="0" step="0.01"
                   value={receiveAmount}
@@ -632,7 +1050,7 @@ export default function RevenusTrackingClient({
               <button
                 onClick={handleMarkReceived}
                 className="btn-primary"
-                style={{ width: '100%', padding: '16px', fontSize: 'var(--text-base)' }}
+                style={{ width: '100%', padding: '16px', fontSize: '15px' }}
               >
                 Confirmer la réception
               </button>
@@ -655,23 +1073,27 @@ export default function RevenusTrackingClient({
           <div className="sheet" onClick={(e) => e.stopPropagation()}>
             <div className="sheet-handle" />
             <div style={{ padding: '8px 24px 32px' }}>
-              <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--slate-900, #0F172A)', letterSpacing: '-0.02em', marginBottom: '8px' }}>
                 Supprimer ce revenu ?
               </h2>
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)', marginBottom: '24px' }}>
+              <p style={{ fontSize: '14px', color: 'var(--slate-400, #94A3B8)', marginBottom: '24px' }}>
                 {deleteModal.income_name} sera retiré de ce mois. Cette action est irréversible.
               </p>
-              <div className="flex" style={{ gap: '12px' }}>
-                <button onClick={() => setDeleteModal(null)} className="btn-secondary" style={{ flex: 1, padding: '14px' }}>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button
+                  onClick={() => setDeleteModal(null)}
+                  className="btn-secondary"
+                  style={{ flex: 1, padding: '14px' }}
+                >
                   Annuler
                 </button>
                 <button
                   onClick={confirmDelete}
                   style={{
                     flex: 1, padding: '14px',
-                    background: 'var(--negative)', color: 'white',
-                    border: 'none', borderRadius: 'var(--radius-md)',
-                    fontSize: 'var(--text-base)', fontWeight: 650, cursor: 'pointer',
+                    background: 'var(--error, #DC2626)', color: 'white',
+                    border: 'none', borderRadius: 'var(--radius-md, 12px)',
+                    fontSize: '15px', fontWeight: 650, cursor: 'pointer',
                   }}
                 >
                   Supprimer
@@ -688,17 +1110,17 @@ export default function RevenusTrackingClient({
           <div className="sheet" onClick={(e) => e.stopPropagation()}>
             <div className="sheet-handle" />
             <div style={{ padding: '8px 24px 32px' }}>
-              <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--slate-900, #0F172A)', letterSpacing: '-0.02em', marginBottom: '4px' }}>
                 Modifier le montant attendu
               </h2>
-              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginBottom: '20px' }}>
+              <p style={{ fontSize: '12px', color: 'var(--slate-400, #94A3B8)', marginBottom: '20px' }}>
                 Ce mois uniquement — le gabarit dans les réglages reste inchangé.
               </p>
               <div style={{ marginBottom: '20px' }}>
-                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: '4px' }}>
+                <p style={{ fontSize: '14px', color: 'var(--slate-500, #64748B)', marginBottom: '4px' }}>
                   {updateAmountModal.income_name}
                 </p>
-                <label className="field-label" style={{ marginTop: '16px' }}>Nouveau montant attendu ($)</label>
+                <label className="field-label" style={{ marginTop: '16px', display: 'block' }}>Nouveau montant attendu ($)</label>
                 <input
                   type="number" min="0" step="0.01"
                   value={updateAmount}
@@ -711,7 +1133,7 @@ export default function RevenusTrackingClient({
               <button
                 onClick={confirmUpdateAmount}
                 className="btn-primary"
-                style={{ width: '100%', padding: '16px', fontSize: 'var(--text-base)' }}
+                style={{ width: '100%', padding: '16px', fontSize: '15px' }}
               >
                 Confirmer
               </button>
@@ -726,14 +1148,14 @@ export default function RevenusTrackingClient({
           <div className="sheet" onClick={(e) => e.stopPropagation()}>
             <div className="sheet-handle" />
             <div style={{ padding: '8px 24px 32px' }}>
-              <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--slate-900, #0F172A)', letterSpacing: '-0.02em', marginBottom: '4px' }}>
                 Modifier pour ce mois
               </h2>
-              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginBottom: '20px' }}>
+              <p style={{ fontSize: '12px', color: 'var(--slate-400, #94A3B8)', marginBottom: '20px' }}>
                 Ce mois uniquement — le gabarit dans les Réglages reste inchangé.
               </p>
               <div style={{ marginBottom: '16px' }}>
-                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', fontWeight: 600, marginBottom: '12px' }}>
+                <p style={{ fontSize: '14px', color: 'var(--slate-500, #64748B)', fontWeight: 600, marginBottom: '12px' }}>
                   {overrideModal.label}
                 </p>
                 <label className="field-label">Montant alloué ce mois ($)</label>
@@ -759,7 +1181,7 @@ export default function RevenusTrackingClient({
               <button
                 onClick={confirmOverride}
                 className="btn-primary"
-                style={{ width: '100%', padding: '16px', fontSize: 'var(--text-base)' }}
+                style={{ width: '100%', padding: '16px', fontSize: '15px' }}
               >
                 Confirmer
               </button>

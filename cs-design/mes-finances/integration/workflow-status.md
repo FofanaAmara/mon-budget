@@ -35,7 +35,7 @@ L'intégration du design system Typography Monument (Direction 3) dans l'app Nex
 | 5 | Dashboard (`AccueilClient.tsx` + `TabTableauDeBord.tsx`) | Experience Design partielle | ✅ |
 | 6 | Dépenses (`DepensesTrackingClient.tsx`) | Skin | ✅ |
 | 7 | Revenus (`RevenusTrackingClient.tsx`) | Skin (dérivé) | ✅ |
-| 8 | Patrimoine (`ProjetsEpargneClient.tsx`) | Skin (dérivé) | ✅ |
+| 8 | Patrimoine Feature 6 — Épargne & Dettes (5 fichiers) | Experience Design (maquettes dédiées) | ✅ |
 | 9 | Card Patrimoine Accueil (hotfix) | Hotfix gradients | ✅ |
 
 ## Fichiers de référence

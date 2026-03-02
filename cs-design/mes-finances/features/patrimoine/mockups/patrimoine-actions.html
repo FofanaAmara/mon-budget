@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Finances — Patrimoine Actions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       DIRECTION 3 — TYPOGRAPHY MONUMENT
+       Patrimoine Actions — Mes Finances
+
+       All bottom sheet / modal interactions for
+       the patrimoine feature. Five sheets:
+       1. Ajouter contribution (to a savings pot)
+       2. Transferer epargne (pot to pot)
+       3. Payer dette (regular or supplementary)
+       4. Nouveau projet (savings goal)
+       5. Nouvelle dette
+    ======================================== */
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --teal-700: #0F766E;
+      --teal-800: #115E59;
+      --teal-600: #0D9488;
+      --teal-50: #F0FDFA;
+      --amber-500: #F59E0B;
+      --amber-600: #D97706;
+      --amber-100: #FEF3C7;
+      --slate-900: #0F172A;
+      --slate-700: #334155;
+      --slate-500: #64748B;
+      --slate-400: #94A3B8;
+      --slate-300: #CBD5E1;
+      --slate-200: #E2E8F0;
+      --slate-100: #F1F5F9;
+      --slate-50: #FAFBFC;
+      --white: #FFFFFF;
+      --success: #059669;
+      --success-light: #ECFDF5;
+      --warning: #F59E0B;
+      --warning-light: #FEF3C7;
+      --error: #DC2626;
+      --error-light: #FEF2F2;
+      --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --shadow-sm: 0 1px 2px rgba(15, 118, 110, 0.05);
+      --shadow-md: 0 4px 12px rgba(15, 118, 110, 0.08);
+      --shadow-lg: 0 8px 24px rgba(15, 118, 110, 0.12);
+      --shadow-xl: 0 16px 48px rgba(15, 23, 42, 0.12);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font);
+      color: var(--slate-900);
+      background: var(--slate-50);
+      line-height: 1.5;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 20px;
+    }
+
+    ::selection {
+      background: rgba(15, 118, 110, 0.15);
+      color: var(--slate-900);
+    }
+
+    /* ====== PAGE HEADER (demo navigation) ====== */
+
+    .demo-header {
+      text-align: center;
+      padding: 20px 0 32px;
+    }
+
+    .demo-header h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--slate-900);
+      margin-bottom: 6px;
+    }
+
+    .demo-header p {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate-500);
+      margin-bottom: 20px;
+    }
+
+    .demo-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .demo-btn {
+      padding: 8px 16px;
+      border: 1.5px solid var(--slate-200);
+      border-radius: 100px;
+      background: var(--white);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-700);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: -0.01em;
+    }
+
+    .demo-btn:hover {
+      border-color: var(--teal-700);
+      color: var(--teal-700);
+      background: var(--teal-50);
+    }
+
+    .demo-btn.active {
+      border-color: var(--teal-700);
+      background: var(--teal-700);
+      color: var(--white);
+    }
+
+    /* ====== BOTTOM SHEET ====== */
+
+    .sheet-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .sheet-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sheet {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      max-height: calc(100dvh - 40px);
+      overflow-y: auto;
+      z-index: 101;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 -8px 32px rgba(15, 23, 42, 0.15);
+    }
+
+    .sheet.active {
+      transform: translateY(0);
+    }
+
+    /* On desktop, center as modal */
+    @media (min-width: 768px) {
+      .sheet {
+        position: fixed;
+        bottom: auto;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) scale(0.95);
+        opacity: 0;
+        width: calc(100% - 32px);
+        max-width: 460px;
+        max-height: calc(100dvh - 48px);
+        border-radius: var(--radius-lg);
+        box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18), 0 8px 16px rgba(15, 118, 110, 0.06);
+      }
+
+      .sheet.active {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Sheet handle (mobile) */
+    .sheet-handle {
+      display: flex;
+      justify-content: center;
+      padding: 12px 0 4px;
+    }
+
+    .sheet-handle-bar {
+      width: 36px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--slate-300);
+    }
+
+    @media (min-width: 768px) {
+      .sheet-handle {
+        display: none;
+      }
+    }
+
+    /* Sheet header */
+    .sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px 0;
+    }
+
+    .sheet-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sheet-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .sheet-icon.teal {
+      background: var(--teal-50);
+      color: var(--teal-700);
+    }
+
+    .sheet-icon.red {
+      background: var(--error-light);
+      color: var(--error);
+    }
+
+    .sheet-icon.amber {
+      background: var(--amber-100);
+      color: var(--amber-600);
+    }
+
+    .sheet-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .sheet-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.02em;
+    }
+
+    .sheet-close {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: var(--slate-100);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--slate-500);
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .sheet-close:hover {
+      background: var(--slate-200);
+      color: var(--slate-900);
+    }
+
+    .sheet-close svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Sheet body */
+    .sheet-body {
+      padding: 20px 24px 24px;
+    }
+
+    /* Form fields */
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--slate-400);
+      margin-bottom: 7px;
+    }
+
+    .field-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--slate-900);
+      background: var(--white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+
+    .field-input:focus {
+      outline: none;
+      border-color: var(--teal-700);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.08);
+    }
+
+    .field-input::placeholder {
+      color: var(--slate-300);
+      font-weight: 400;
+    }
+
+    /* Amount input — monumental */
+    .field-amount {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--slate-900);
+      background: var(--white);
+      font-variant-numeric: tabular-nums;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+
+    .field-amount:focus {
+      outline: none;
+      border-color: var(--teal-700);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.08);
+    }
+
+    .field-amount::placeholder {
+      color: var(--slate-300);
+      font-weight: 400;
+      font-size: 18px;
+    }
+
+    /* Amount wrapper with currency indicator */
+    .amount-wrapper {
+      position: relative;
+    }
+
+    .amount-wrapper .dollar-indicator {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--teal-700);
+      pointer-events: none;
+    }
+
+    .amount-wrapper .field-amount {
+      padding-right: 36px;
+    }
+
+    /* Select */
+    .field-select {
+      width: 100%;
+      padding: 12px 40px 12px 14px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--slate-900);
+      background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") right 14px center no-repeat;
+      -webkit-appearance: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field-select:focus {
+      outline: none;
+      border-color: var(--teal-700);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.08);
+    }
+
+    /* Date input */
+    .field-date {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--slate-900);
+      background: var(--white);
+      -webkit-appearance: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field-date:focus {
+      outline: none;
+      border-color: var(--teal-700);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.08);
+    }
+
+    /* Percentage input */
+    .percent-wrapper {
+      position: relative;
+    }
+
+    .percent-wrapper .field-input {
+      padding-right: 36px;
+    }
+
+    .percent-wrapper .percent-indicator {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate-400);
+      pointer-events: none;
+    }
+
+    /* Radio group (for payment type) */
+    .radio-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .radio-option {
+      flex: 1;
+      position: relative;
+    }
+
+    .radio-option input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .radio-option label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 14px 12px;
+      border: 1.5px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .radio-option label:hover {
+      border-color: var(--teal-600);
+    }
+
+    .radio-option input:checked + label {
+      border-color: var(--teal-700);
+      background: var(--teal-50);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.06);
+    }
+
+    .radio-label-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.01em;
+    }
+
+    .radio-label-desc {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--slate-500);
+      line-height: 1.3;
+    }
+
+    .radio-option input:checked + label .radio-label-title {
+      color: var(--teal-700);
+    }
+
+    /* Transfer arrow indicator */
+    .transfer-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 0;
+      color: var(--slate-300);
+    }
+
+    .transfer-arrow svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Balance hint */
+    .field-hint {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate-400);
+      margin-top: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .field-hint strong {
+      font-weight: 700;
+      color: var(--slate-700);
+    }
+
+    /* Summary row (inside sheets) */
+    .sheet-summary {
+      margin-top: 16px;
+      padding: 14px;
+      background: var(--teal-50);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(15, 118, 110, 0.08);
+    }
+
+    .sheet-summary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 3px 0;
+    }
+
+    .sheet-summary-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--slate-500);
+    }
+
+    .sheet-summary-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .sheet-summary-value.teal {
+      color: var(--teal-700);
+    }
+
+    /* Sheet actions */
+    .sheet-actions {
+      display: flex;
+      gap: 10px;
+      padding: 0 24px 24px;
+    }
+
+    .btn-cancel {
+      flex: 1;
+      padding: 14px 20px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      background: var(--white);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--slate-700);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: -0.01em;
+    }
+
+    .btn-cancel:hover {
+      background: var(--slate-50);
+      border-color: var(--slate-300);
+    }
+
+    .btn-submit {
+      flex: 1.4;
+      padding: 14px 20px;
+      border: none;
+      border-radius: var(--radius-md);
+      background: var(--teal-700);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: -0.01em;
+    }
+
+    .btn-submit:hover {
+      background: var(--teal-800);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-submit.debt {
+      background: var(--error);
+    }
+
+    .btn-submit.debt:hover {
+      background: #B91C1C;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+    }
+
+    /* ====== DEMO LAYOUT — show all sheets ====== */
+
+    .sheets-gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      max-width: 460px;
+      margin: 0 auto;
+    }
+
+    .gallery-item {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.25s ease;
+    }
+
+    .gallery-item:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .gallery-label {
+      padding: 10px 24px;
+      background: var(--slate-100);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--slate-500);
+      border-bottom: 1px solid var(--slate-200);
+    }
+
+    /* ====== ANIMATIONS ====== */
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .demo-header { animation: fadeIn 0.5s ease both; }
+
+    .gallery-item {
+      animation: fadeIn 0.5s ease both;
+    }
+
+    .gallery-item:nth-child(1) { animation-delay: 0.1s; }
+    .gallery-item:nth-child(2) { animation-delay: 0.18s; }
+    .gallery-item:nth-child(3) { animation-delay: 0.26s; }
+    .gallery-item:nth-child(4) { animation-delay: 0.34s; }
+    .gallery-item:nth-child(5) { animation-delay: 0.42s; }
+  </style>
+</head>
+<body>
+
+  <!-- Demo navigation -->
+  <div class="demo-header">
+    <h1>Patrimoine — Actions</h1>
+    <p>Bottom sheets pour les interactions epargne et dettes</p>
+    <div class="demo-nav">
+      <button class="demo-btn active" onclick="showAll()">Tout voir</button>
+      <button class="demo-btn" onclick="showSheet('contribution')">Contribution</button>
+      <button class="demo-btn" onclick="showSheet('transfer')">Transfert</button>
+      <button class="demo-btn" onclick="showSheet('payment')">Paiement</button>
+      <button class="demo-btn" onclick="showSheet('project')">Projet</button>
+      <button class="demo-btn" onclick="showSheet('debt')">Dette</button>
+    </div>
+  </div>
+
+  <div class="sheets-gallery">
+
+    <!-- ====== SHEET 1: Ajouter contribution ====== -->
+    <div class="gallery-item" data-sheet="contribution">
+      <div class="gallery-label">Ajouter une contribution</div>
+
+      <div class="sheet-handle">
+        <div class="sheet-handle-bar"></div>
+      </div>
+
+      <div class="sheet-header">
+        <div class="sheet-header-left">
+          <div class="sheet-icon teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="5 12 12 5 19 12"/></svg>
+          </div>
+          <h3 class="sheet-title">Ajouter au pot</h3>
+        </div>
+        <button class="sheet-close" aria-label="Fermer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="sheet-body">
+        <div class="field">
+          <label class="field-label">Pot de destination</label>
+          <select class="field-select">
+            <option>Epargne libre (8 430 $)</option>
+            <option selected>Vacances Japon (4 200 $ / 6 000 $)</option>
+            <option>Fonds d'urgence (5 800 $ / 10 000 $)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Montant</label>
+          <div class="amount-wrapper">
+            <input type="text" class="field-amount" placeholder="0" value="300">
+            <span class="dollar-indicator">$</span>
+          </div>
+          <div class="field-hint">Solde actuel du pot : <strong>4 200 $</strong></div>
+        </div>
+
+        <div class="sheet-summary">
+          <div class="sheet-summary-row">
+            <span class="sheet-summary-label">Apres contribution</span>
+            <span class="sheet-summary-value teal">4 500 $</span>
+          </div>
+          <div class="sheet-summary-row">
+            <span class="sheet-summary-label">Progression</span>
+            <span class="sheet-summary-value">70% &rarr; 75%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sheet-actions">
+        <button class="btn-cancel">Annuler</button>
+        <button class="btn-submit">Ajouter 300 $</button>
+      </div>
+    </div>
+
+    <!-- ====== SHEET 2: Transferer epargne ====== -->
+    <div class="gallery-item" data-sheet="transfer">
+      <div class="gallery-label">Transferer entre pots</div>
+
+      <div class="sheet-handle">
+        <div class="sheet-handle-bar"></div>
+      </div>
+
+      <div class="sheet-header">
+        <div class="sheet-header-left">
+          <div class="sheet-icon amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+          </div>
+          <h3 class="sheet-title">Transferer</h3>
+        </div>
+        <button class="sheet-close" aria-label="Fermer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="sheet-body">
+        <div class="field">
+          <label class="field-label">Depuis</label>
+          <select class="field-select">
+            <option selected>Epargne libre (8 430 $)</option>
+            <option>Vacances Japon (4 200 $)</option>
+            <option>Fonds d'urgence (5 800 $)</option>
+          </select>
+        </div>
+
+        <div class="transfer-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Vers</label>
+          <select class="field-select">
+            <option>Epargne libre (8 430 $)</option>
+            <option selected>Vacances Japon (4 200 $)</option>
+            <option>Fonds d'urgence (5 800 $)</option>
+          </select>
+        </div>
+
+        <div class="field" style="margin-top: 18px;">
+          <label class="field-label">Montant a transferer</label>
+          <div class="amount-wrapper">
+            <input type="text" class="field-amount" placeholder="0" value="500">
+            <span class="dollar-indicator">$</span>
+          </div>
+          <div class="field-hint">Disponible dans Epargne libre : <strong>8 430 $</strong></div>
+        </div>
+
+        <div class="sheet-summary">
+          <div class="sheet-summary-row">
+            <span class="sheet-summary-label">Epargne libre apres</span>
+            <span class="sheet-summary-value">7 930 $</span>
+          </div>
+          <div class="sheet-summary-row">
+            <span class="sheet-summary-label">Vacances Japon apres</span>
+            <span class="sheet-summary-value teal">4 700 $</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sheet-actions">
+        <button class="btn-cancel">Annuler</button>
+        <button class="btn-submit">Transferer 500 $</button>
+      </div>
+    </div>
+
+    <!-- ====== SHEET 3: Payer dette ====== -->
+    <div class="gallery-item" data-sheet="payment">
+      <div class="gallery-label">Payer une dette</div>
+
+      <div class="sheet-handle">
+        <div class="sheet-handle-bar"></div>
+      </div>
+
+      <div class="sheet-header">
+        <div class="sheet-header-left">
+          <div class="sheet-icon red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <h3 class="sheet-title">Payer une dette</h3>
+        </div>
+        <button class="sheet-close" aria-label="Fermer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="sheet-body">
+        <div class="field">
+          <label class="field-label">Dette</label>
+          <select class="field-select">
+            <option selected>Pret automobile (4 200 $ restants)</option>
+            <option>Carte de credit Visa (1 800 $ restants)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Type de paiement</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="payment-regular" name="payment-type" checked>
+              <label for="payment-regular">
+                <span class="radio-label-title">Regulier</span>
+                <span class="radio-label-desc">Mensualite prevue</span>
+              </label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="payment-extra" name="payment-type">
+              <label for="payment-extra">
+                <span class="radio-label-title">Supplementaire</span>
+                <span class="radio-label-desc">Paiement en plus</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Montant</label>
+          <div class="amount-wrapper">
+            <input type="text" class="field-amount" placeholder="0" value="350">
+            <span class="dollar-indicator">$</span>
+          </div>
+          <div class="field-hint">Mensualite prevue : <strong>350 $ / mois</strong></div>
+        </div>
+
+        <div class="sheet-summary">
+          <div class="sheet-summary-row">
+            <span class="sheet-summary-label">Solde apres paiement</span>
+            <span class="sheet-summary-value">3 850 $</span>
+          </div>
+          <div class="sheet-summary-row">
+            <span class="sheet-summary-label">Mois restants</span>
+            <span class="sheet-summary-value">~11 mois</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sheet-actions">
+        <button class="btn-cancel">Annuler</button>
+        <button class="btn-submit debt">Payer 350 $</button>
+      </div>
+    </div>
+
+    <!-- ====== SHEET 4: Nouveau projet ====== -->
+    <div class="gallery-item" data-sheet="project">
+      <div class="gallery-label">Nouveau projet d'epargne</div>
+
+      <div class="sheet-handle">
+        <div class="sheet-handle-bar"></div>
+      </div>
+
+      <div class="sheet-header">
+        <div class="sheet-header-left">
+          <div class="sheet-icon teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2"/><path d="M2 9v1c0 1.1.9 2 2 2h1"/><circle cx="16" cy="11" r="1"/></svg>
+          </div>
+          <h3 class="sheet-title">Nouveau projet</h3>
+        </div>
+        <button class="sheet-close" aria-label="Fermer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="sheet-body">
+        <div class="field">
+          <label class="field-label">Nom du projet</label>
+          <input type="text" class="field-input" placeholder="ex: Vacances, Voiture, Urgences..." value="Nouveau laptop">
+        </div>
+
+        <div class="field">
+          <label class="field-label">Objectif</label>
+          <div class="amount-wrapper">
+            <input type="text" class="field-amount" placeholder="0" value="2 500">
+            <span class="dollar-indicator">$</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Date cible</label>
+          <input type="date" class="field-date" value="2026-09-01">
+        </div>
+
+        <div class="sheet-summary">
+          <div class="sheet-summary-row">
+            <span class="sheet-summary-label">Contribution suggeree</span>
+            <span class="sheet-summary-value teal">~417 $ / mois</span>
+          </div>
+          <div class="sheet-summary-row">
+            <span class="sheet-summary-label">Temps restant</span>
+            <span class="sheet-summary-value">6 mois</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sheet-actions">
+        <button class="btn-cancel">Annuler</button>
+        <button class="btn-submit">Creer le projet</button>
+      </div>
+    </div>
+
+    <!-- ====== SHEET 5: Nouvelle dette ====== -->
+    <div class="gallery-item" data-sheet="debt">
+      <div class="gallery-label">Nouvelle dette</div>
+
+      <div class="sheet-handle">
+        <div class="sheet-handle-bar"></div>
+      </div>
+
+      <div class="sheet-header">
+        <div class="sheet-header-left">
+          <div class="sheet-icon red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <h3 class="sheet-title">Nouvelle dette</h3>
+        </div>
+        <button class="sheet-close" aria-label="Fermer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="sheet-body">
+        <div class="field">
+          <label class="field-label">Nom de la dette</label>
+          <input type="text" class="field-input" placeholder="ex: Pret etudiant, Carte de credit..." value="Pret etudiant">
+        </div>
+
+        <div class="field">
+          <label class="field-label">Solde restant</label>
+          <div class="amount-wrapper">
+            <input type="text" class="field-amount" placeholder="0" value="12 000">
+            <span class="dollar-indicator">$</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Taux d'interet annuel</label>
+          <div class="percent-wrapper">
+            <input type="text" class="field-input" placeholder="0" value="5,2">
+            <span class="percent-indicator">%</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Paiement mensuel</label>
+          <div class="amount-wrapper">
+            <input type="text" class="field-amount" placeholder="0" value="450">
+            <span class="dollar-indicator">$</span>
+          </div>
+        </div>
+
+        <div class="sheet-summary">
+          <div class="sheet-summary-row">
+            <span class="sheet-summary-label">Duree estimee</span>
+            <span class="sheet-summary-value">~28 mois</span>
+          </div>
+          <div class="sheet-summary-row">
+            <span class="sheet-summary-label">Cout total en interets</span>
+            <span class="sheet-summary-value" style="color: var(--error);">~780 $</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sheet-actions">
+        <button class="btn-cancel">Annuler</button>
+        <button class="btn-submit debt">Ajouter la dette</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Demo navigation
+    function showAll() {
+      document.querySelectorAll('.gallery-item').forEach(el => {
+        el.style.display = '';
+      });
+      updateDemoButtons(null);
+    }
+
+    function showSheet(name) {
+      document.querySelectorAll('.gallery-item').forEach(el => {
+        if (el.dataset.sheet === name) {
+          el.style.display = '';
+        } else {
+          el.style.display = 'none';
+        }
+      });
+      updateDemoButtons(name);
+    }
+
+    function updateDemoButtons(activeSheet) {
+      document.querySelectorAll('.demo-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      if (!activeSheet) {
+        document.querySelector('.demo-btn').classList.add('active');
+      } else {
+        const btnText = {
+          contribution: 'Contribution',
+          transfer: 'Transfert',
+          payment: 'Paiement',
+          project: 'Projet',
+          debt: 'Dette'
+        };
+        document.querySelectorAll('.demo-btn').forEach(btn => {
+          if (btn.textContent.trim() === btnText[activeSheet]) {
+            btn.classList.add('active');
+          }
+        });
+      }
+    }
+  </script>
+
+</body>
+</html>
