@@ -394,6 +394,27 @@ export async function getMonthlySavingsSummary(month: string): Promise<MonthlySa
   };
 }
 
+// Returns the total amount paid per section for a given month.
+// Used by the allocation tab to compare allocated vs actually spent.
+export async function getMonthlyExpenseActualsBySection(
+  month: string,
+): Promise<{ section_id: string; total: number }[]> {
+  const userId = await requireAuth();
+  const rows = await sql`
+    SELECT section_id, SUM(amount) AS total
+    FROM monthly_expenses
+    WHERE month = ${month}
+      AND status = 'PAID'
+      AND section_id IS NOT NULL
+      AND user_id = ${userId}
+    GROUP BY section_id
+  `;
+  return (rows as { section_id: string; total: string }[]).map(r => ({
+    section_id: r.section_id,
+    total: Number(r.total),
+  }));
+}
+
 // Creates an adhoc (imprevu) expense directly in monthly_expenses.
 // No template is created in `expenses` — adhoc items are standalone transactions.
 export async function createAdhocExpense(

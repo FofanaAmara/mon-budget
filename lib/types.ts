@@ -199,3 +199,52 @@ export type MonthlyDebtSummary = {
   paymentCount: number;
   chargeCount: number;
 };
+
+export type AllocationLinkType = 'charges' | 'savings' | 'free';
+
+export type IncomeAllocation = {
+  id: string;
+  user_id: string;
+  label: string;
+  amount: number;
+  section_id: string | null;
+  project_id: string | null;
+  end_month: string | null;    // "YYYY-MM" — null = permanent
+  color: string;
+  position: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  // Joined
+  section_name?: string | null;
+  section_icon?: string | null;
+  section_color?: string | null;
+  project_name?: string | null;
+  project_target_amount?: number | null;
+  project_saved_amount?: number | null;
+  project_target_date?: string | null;
+};
+
+export type MonthlyAllocation = {
+  id: string;
+  user_id: string;
+  allocation_id: string;
+  month: string;
+  allocated_amount: number;
+  notes: string | null;
+  created_at: string;
+  // Joined from income_allocations
+  label: string;
+  color: string;
+  position: number;
+  section_id: string | null;
+  project_id: string | null;
+  end_month: string | null;
+  section_name?: string | null;
+  section_icon?: string | null;
+  section_color?: string | null;
+  project_name?: string | null;
+  project_target_amount?: number | null;
+  project_saved_amount?: number | null;
+  project_target_date?: string | null;
+};

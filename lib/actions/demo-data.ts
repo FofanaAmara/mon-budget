@@ -69,10 +69,11 @@ export async function loadDemoData(): Promise<{ success: boolean; error?: string
     `;
 
     // 5. INCOMES (2)
+    //    Salaire: auto_deposit=true (depot auto le 26)
     const incomes = await sql`
-      INSERT INTO incomes (user_id, name, source, amount, estimated_amount, frequency, notes) VALUES
-        (${userId}, 'Salaire — Employeur', 'EMPLOYMENT', 4200, NULL,  'MONTHLY',  'Net apres impots, recu le 26'),
-        (${userId}, 'Freelance web',       'BUSINESS',   0,    800,   'VARIABLE', 'Contrats ponctuels Upwork/direct')
+      INSERT INTO incomes (user_id, name, source, amount, estimated_amount, frequency, auto_deposit, notes) VALUES
+        (${userId}, 'Salaire — Employeur', 'EMPLOYMENT', 4200, NULL,  'MONTHLY',  true,  'Net apres impots, depot auto le 26'),
+        (${userId}, 'Freelance web',       'BUSINESS',   0,    800,   'VARIABLE', false, 'Contrats ponctuels Upwork/direct')
       RETURNING id, name
     `;
     const inc: Record<string, string> = {};
@@ -272,25 +273,87 @@ export async function loadDemoData(): Promise<{ success: boolean; error?: string
     }
 
     // 13. MONTHLY INCOMES — February 2026
+    //     Salaire: is_auto_deposited=true
+    //     Freelance: manuel
+    //     Prime Q4: revenu ponctuel adhoc (expected=0)
     await sql`
-      INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, actual_amount, status, received_at, notes)
-      VALUES (${userId}, ${inc['Salaire — Employeur']}, '2026-02', 4200, 4200, 'RECEIVED', '2026-02-26'::date, NULL)
+      INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, actual_amount, status, received_at, is_auto_deposited, notes)
+      VALUES (${userId}, ${inc['Salaire — Employeur']}, '2026-02', 4200, 4200, 'RECEIVED', '2026-02-26'::date, true, NULL)
     `;
 
     await sql`
-      INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, actual_amount, status, received_at, notes)
-      VALUES (${userId}, ${inc['Freelance web']}, '2026-02', 800, 650, 'RECEIVED', '2026-02-15'::date, 'Contrat refonte site restaurant')
+      INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, actual_amount, status, received_at, is_auto_deposited, notes)
+      VALUES (${userId}, ${inc['Freelance web']}, '2026-02', 800, 650, 'RECEIVED', '2026-02-15'::date, false, 'Contrat refonte site restaurant')
+    `;
+
+    await sql`
+      INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, actual_amount, status, received_at, is_auto_deposited, notes)
+      VALUES (${userId}, NULL, '2026-02', 0, 800, 'RECEIVED', '2026-02-28'::date, false, 'Prime de performance Q4')
     `;
 
     // 14. MONTHLY INCOMES — January 2026 (for comparison)
     await sql`
-      INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, actual_amount, status, received_at, notes)
-      VALUES (${userId}, ${inc['Salaire — Employeur']}, '2026-01', 4200, 4200, 'RECEIVED', '2026-01-26'::date, NULL)
+      INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, actual_amount, status, received_at, is_auto_deposited, notes)
+      VALUES (${userId}, ${inc['Salaire — Employeur']}, '2026-01', 4200, 4200, 'RECEIVED', '2026-01-26'::date, true, NULL)
     `;
 
     await sql`
-      INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, actual_amount, status, received_at, notes)
-      VALUES (${userId}, ${inc['Freelance web']}, '2026-01', 800, 1100, 'RECEIVED', '2026-01-20'::date, 'Gros contrat refactoring API')
+      INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, actual_amount, status, received_at, is_auto_deposited, notes)
+      VALUES (${userId}, ${inc['Freelance web']}, '2026-01', 800, 1100, 'RECEIVED', '2026-01-20'::date, false, 'Gros contrat refactoring API')
+    `;
+
+    // 15. INCOME ALLOCATIONS (gabarits d'enveloppes permanentes)
+    //
+    //     Revenu attendu : ~5 000$ (4200 + 800)
+    //     Total alloué  :  4 302$ permanents + 800$ ponctuel = 5 102$
+    //     Dispo. attendu:   698$ (sur base permanente)
+    const allocRows = await sql`
+      INSERT INTO income_allocations (user_id, label, amount, section_id, project_id, end_month, color, position) VALUES
+        (${userId}, 'Loyer & charges maison',    1655, ${sec['Maison']},    NULL,                          NULL, '#3D3BF3', 0),
+        (${userId}, 'Perso & abonnements',        103, ${sec['Perso']},     NULL,                          NULL, '#8B5CF6', 1),
+        (${userId}, 'Epicerie & famille',          400, ${sec['Famille']},   NULL,                          NULL, '#EC4899', 2),
+        (${userId}, 'Transport (STM + assurance)', 219, ${sec['Transport']}, NULL,                          NULL, '#F59E0B', 3),
+        (${userId}, 'Business & outils',           28,  ${sec['Business']},  NULL,                          NULL, '#10B981', 4),
+        (${userId}, 'Voyage Japon 2027',           700, NULL,                ${planned['Voyage Japon 2027']}, NULL, '#1A7F5A', 5),
+        (${userId}, 'Fonds d''urgence',            500, NULL,                ${planned["Fonds d'urgence"]},   NULL, '#3D3BF3', 6),
+        (${userId}, 'MacBook Pro M4',              300, NULL,                ${planned['MacBook Pro M4']},    NULL, '#10B981', 7),
+        (${userId}, 'Remboursement Visa',          150, NULL,                NULL,                          NULL, '#6B6966', 8),
+        (${userId}, 'Divers & imprevus',           247, NULL,                NULL,                          NULL, '#C27815', 9)
+      RETURNING id, label
+    `;
+
+    // Enveloppe ponctuelle — allocation de la prime Q4 (expiration fin février)
+    const adhocAllocRows = await sql`
+      INSERT INTO income_allocations (user_id, label, amount, section_id, project_id, end_month, color, position)
+      VALUES (${userId}, 'Epargne extra (prime Q4)', 800, NULL, ${planned["Fonds d'urgence"]}, '2026-02', '#E53E3E', 10)
+      RETURNING id
+    `;
+    const adhocAllocId = adhocAllocRows[0].id;
+
+    // 16. MONTHLY ALLOCATIONS — Janvier & Février 2026
+    const amounts = [1655, 103, 400, 219, 28, 700, 500, 300, 150, 247];
+
+    // Janvier 2026 — enveloppes permanentes
+    for (let i = 0; i < allocRows.length; i++) {
+      await sql`
+        INSERT INTO monthly_allocations (user_id, allocation_id, month, allocated_amount)
+        VALUES (${userId}, ${allocRows[i].id}, '2026-01', ${amounts[i]})
+        ON CONFLICT (allocation_id, month) DO NOTHING
+      `;
+    }
+
+    // Février 2026 — enveloppes permanentes + ponctuelle
+    for (let i = 0; i < allocRows.length; i++) {
+      await sql`
+        INSERT INTO monthly_allocations (user_id, allocation_id, month, allocated_amount)
+        VALUES (${userId}, ${allocRows[i].id}, '2026-02', ${amounts[i]})
+        ON CONFLICT (allocation_id, month) DO NOTHING
+      `;
+    }
+    await sql`
+      INSERT INTO monthly_allocations (user_id, allocation_id, month, allocated_amount)
+      VALUES (${userId}, ${adhocAllocId}, '2026-02', 800)
+      ON CONFLICT (allocation_id, month) DO NOTHING
     `;
 
     // Revalidate all routes
@@ -318,8 +381,10 @@ export async function clearAllUserData(): Promise<{ success: boolean; error?: st
     // Delete in FK-safe order (children first)
     await sql`DELETE FROM debt_transactions WHERE user_id = ${userId}`;
     await sql`DELETE FROM savings_contributions WHERE user_id = ${userId}`;
+    await sql`DELETE FROM monthly_allocations WHERE user_id = ${userId}`;
     await sql`DELETE FROM monthly_incomes WHERE user_id = ${userId}`;
     await sql`DELETE FROM monthly_expenses WHERE user_id = ${userId}`;
+    await sql`DELETE FROM income_allocations WHERE user_id = ${userId}`;
     await sql`DELETE FROM notification_log WHERE user_id = ${userId}`;
     await sql`DELETE FROM push_subscriptions WHERE user_id = ${userId}`;
     await sql`DELETE FROM expenses WHERE user_id = ${userId}`;
