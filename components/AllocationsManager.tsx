@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import SheetCloseButton from '@/components/SheetCloseButton';
 import { deleteAllocation, reorderAllocations } from '@/lib/actions/allocations';
 import { formatCAD } from '@/lib/utils';
 import type { IncomeAllocation, Section, Expense } from '@/lib/types';
@@ -348,6 +349,7 @@ export default function AllocationsManager({ allocations, sections, projects, ex
         <div className="sheet-backdrop" onClick={(e) => e.target === e.currentTarget && setDeleteTarget(null)}>
           <div className="sheet" onClick={(e) => e.stopPropagation()}>
             <div className="sheet-handle" />
+            <SheetCloseButton onClose={() => setDeleteTarget(null)} />
             <div style={{ padding: '8px 24px 32px' }}>
               <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>
                 Supprimer cette enveloppe ?

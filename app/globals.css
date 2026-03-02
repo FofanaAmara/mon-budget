@@ -369,6 +369,7 @@ body {
 }
 
 .sheet {
+  position: relative;
   background: var(--surface-raised);
   border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
   box-shadow: var(--shadow-xl);

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import SheetCloseButton from '@/components/SheetCloseButton';
 import { createAdhocMonthlyAllocation } from '@/lib/actions/allocations';
 import { formatCAD } from '@/lib/utils';
 import type { Section, Expense } from '@/lib/types';
@@ -51,6 +52,7 @@ export default function AdhocAllocationModal({ month, sections, projects, onClos
     <div className="sheet-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="sheet" onClick={(e) => e.stopPropagation()}>
         <div className="sheet-handle" />
+        <SheetCloseButton onClose={onClose} />
         <div style={{ padding: '8px 24px 40px', overflowY: 'auto', maxHeight: '85vh' }}>
           <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>
             Allocation ponctuelle

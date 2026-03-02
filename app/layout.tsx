@@ -4,7 +4,6 @@ import './globals.css';
 import { AuthProviders } from './providers';
 import LayoutShell from '@/components/LayoutShell';
 import ServiceWorkerInit from '@/components/ServiceWorkerInit';
-import SheetSwipeProvider from '@/components/SheetSwipeProvider';
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -56,7 +55,7 @@ export default function RootLayout({
           <LayoutShell>{children}</LayoutShell>
         </AuthProviders>
         <ServiceWorkerInit />
-        <SheetSwipeProvider />
+
       </body>
     </html>
   );

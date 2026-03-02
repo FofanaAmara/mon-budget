@@ -2,6 +2,7 @@
 
 import { useState, useTransition, useSyncExternalStore } from 'react';
 import { useRouter } from 'next/navigation';
+import SheetCloseButton from '@/components/SheetCloseButton';
 import { deleteExpense } from '@/lib/actions/expenses';
 import { formatCAD, formatShortDate, daysUntil, calcMonthlyCost } from '@/lib/utils';
 import ExpenseModal from '@/components/ExpenseModal';
@@ -545,6 +546,7 @@ export default function ExpenseTemplateManager({ expenses, sections, cards }: Pr
         >
           <div className="sheet">
             <div className="sheet-handle" />
+            <SheetCloseButton onClose={() => setSectionModal(null)} />
             <div style={{ padding: '8px 20px 32px' }}>
               <div style={{
                 display: 'flex',

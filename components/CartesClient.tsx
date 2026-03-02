@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import SheetCloseButton from '@/components/SheetCloseButton';
 import { createCard, updateCard, deleteCard } from '@/lib/actions/cards';
 import type { Card } from '@/lib/types';
 import Link from 'next/link';
@@ -578,6 +579,7 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
           <div className="sheet" style={{ maxHeight: '90dvh', overflowY: 'auto' }}>
             {/* Handle */}
             <div className="sheet-handle" />
+            <SheetCloseButton onClose={() => setModal({ mode: 'closed' })} />
 
             {/* Sheet header */}
             <div style={{

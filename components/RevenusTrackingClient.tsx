@@ -10,6 +10,7 @@ import MonthNavigator from '@/components/MonthNavigator';
 import { IncomeInstanceRow, VariableIncomeRow } from '@/components/IncomeTrackingRow';
 import AdhocIncomeModal from '@/components/AdhocIncomeModal';
 import AdhocAllocationModal from '@/components/AdhocAllocationModal';
+import SheetCloseButton from '@/components/SheetCloseButton';
 import type { MonthlyIncome, Income, MonthlyAllocation, Section, Expense } from '@/lib/types';
 
 type Props = {
@@ -1029,6 +1030,7 @@ export default function RevenusTrackingClient({
         <div className="sheet-backdrop" onClick={(e) => e.target === e.currentTarget && setReceiveModal(null)}>
           <div className="sheet" onClick={(e) => e.stopPropagation()}>
             <div className="sheet-handle" />
+            <SheetCloseButton onClose={() => setReceiveModal(null)} />
             <div style={{ padding: '8px 24px 32px' }}>
               <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--slate-900, #0F172A)', letterSpacing: '-0.02em', marginBottom: '20px' }}>
                 Marquer reçu
@@ -1071,6 +1073,7 @@ export default function RevenusTrackingClient({
         <div className="sheet-backdrop" onClick={(e) => e.target === e.currentTarget && setDeleteModal(null)}>
           <div className="sheet" onClick={(e) => e.stopPropagation()}>
             <div className="sheet-handle" />
+            <SheetCloseButton onClose={() => setDeleteModal(null)} />
             <div style={{ padding: '8px 24px 32px' }}>
               <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--slate-900, #0F172A)', letterSpacing: '-0.02em', marginBottom: '8px' }}>
                 Supprimer ce revenu ?
@@ -1108,6 +1111,7 @@ export default function RevenusTrackingClient({
         <div className="sheet-backdrop" onClick={(e) => e.target === e.currentTarget && setUpdateAmountModal(null)}>
           <div className="sheet" onClick={(e) => e.stopPropagation()}>
             <div className="sheet-handle" />
+            <SheetCloseButton onClose={() => setUpdateAmountModal(null)} />
             <div style={{ padding: '8px 24px 32px' }}>
               <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--slate-900, #0F172A)', letterSpacing: '-0.02em', marginBottom: '4px' }}>
                 Modifier le montant attendu
@@ -1145,6 +1149,7 @@ export default function RevenusTrackingClient({
         <div className="sheet-backdrop" onClick={(e) => e.target === e.currentTarget && setOverrideModal(null)}>
           <div className="sheet" onClick={(e) => e.stopPropagation()}>
             <div className="sheet-handle" />
+            <SheetCloseButton onClose={() => setOverrideModal(null)} />
             <div style={{ padding: '8px 24px 32px' }}>
               <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--slate-900, #0F172A)', letterSpacing: '-0.02em', marginBottom: '4px' }}>
                 Modifier pour ce mois

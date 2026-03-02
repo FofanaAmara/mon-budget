@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import SheetCloseButton from '@/components/SheetCloseButton';
 import type { Section, Card, Debt, DebtFrequency } from '@/lib/types';
 
 const FREQUENCIES: { value: DebtFrequency; label: string }[] = [
@@ -101,6 +102,7 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
     <div className="sheet-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="sheet" onClick={(e) => e.stopPropagation()}>
         <div className="sheet-handle" />
+        <SheetCloseButton onClose={onClose} />
 
         {/* Sheet header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px 0' }}>

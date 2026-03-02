@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import SheetCloseButton from '@/components/SheetCloseButton';
 import type { IncomeSource } from '@/lib/types';
 
 type Props = {
@@ -41,6 +42,7 @@ export default function AdhocIncomeModal({ month, onClose }: Props) {
     <div className="sheet-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="sheet" onClick={(e) => e.stopPropagation()}>
         <div className="sheet-handle" />
+        <SheetCloseButton onClose={onClose} />
         <div style={{ padding: '8px 24px 40px' }}>
           <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '20px', letterSpacing: 'var(--tracking-tight)' }}>
             Revenu ponctuel

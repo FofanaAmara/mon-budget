@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import SheetCloseButton from '@/components/SheetCloseButton';
 import { createExpense, updateExpense } from '@/lib/actions/expenses';
 import type { Expense, ExpenseType, RecurrenceFrequency, Section, Card } from '@/lib/types';
 
@@ -428,6 +429,7 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
             background: 'var(--border-default)',
           }} />
         </div>
+        <SheetCloseButton onClose={onClose} />
 
         {/* Header */}
         <div className="em-modal-header" style={{

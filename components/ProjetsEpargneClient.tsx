@@ -11,6 +11,7 @@ import DebtModal from '@/components/DebtModal';
 import AddSavingsModal from '@/components/AddSavingsModal';
 import SavingsHistoryModal from '@/components/SavingsHistoryModal';
 import TransferSavingsModal from '@/components/TransferSavingsModal';
+import SheetCloseButton from '@/components/SheetCloseButton';
 import type { Expense, Section, Card, Debt } from '@/lib/types';
 
 const FREQ_LABELS: Record<string, string> = {
@@ -954,6 +955,7 @@ export default function ProjetsEpargneClient({ projets, sections, cards, freeSav
         <div className="sheet-backdrop" onClick={(e) => e.target === e.currentTarget && setExtraPayDebt(null)}>
           <div className="sheet" onClick={(e) => e.stopPropagation()}>
             <div className="sheet-handle" />
+            <SheetCloseButton onClose={() => setExtraPayDebt(null)} />
             {/* Sheet header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px 0' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -1130,6 +1132,7 @@ export default function ProjetsEpargneClient({ projets, sections, cards, freeSav
         <div className="sheet-backdrop" onClick={(e) => e.target === e.currentTarget && setChargeDebt(null)}>
           <div className="sheet" onClick={(e) => e.stopPropagation()}>
             <div className="sheet-handle" />
+            <SheetCloseButton onClose={() => setChargeDebt(null)} />
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px 0' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <div style={{

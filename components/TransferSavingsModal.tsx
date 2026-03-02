@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import SheetCloseButton from '@/components/SheetCloseButton';
 import { formatCAD } from '@/lib/utils';
 import type { Expense } from '@/lib/types';
 
@@ -42,6 +43,7 @@ export default function TransferSavingsModal({ source, allPots, onDone, onClose 
     <div className="sheet-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="sheet" onClick={(e) => e.stopPropagation()}>
         <div className="sheet-handle" />
+        <SheetCloseButton onClose={onClose} />
 
         {/* Sheet header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px 0' }}>

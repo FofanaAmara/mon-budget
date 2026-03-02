@@ -2,6 +2,7 @@
 
 import { useState, useTransition, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import SheetCloseButton from '@/components/SheetCloseButton';
 import {
   createSection,
   updateSection,
@@ -452,6 +453,7 @@ export default function SectionsClient({ sections: initial }: { sections: Sectio
           <div className="sheet" style={{ maxHeight: '90dvh', overflowY: 'auto' }}>
             {/* Handle */}
             <div className="sheet-handle" />
+            <SheetCloseButton onClose={closeModal} />
 
             {/* Sheet header */}
             <div style={{

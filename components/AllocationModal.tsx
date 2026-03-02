@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import SheetCloseButton from '@/components/SheetCloseButton';
 import { createAllocation, updateAllocation } from '@/lib/actions/allocations';
 import { formatCAD } from '@/lib/utils';
 import type { IncomeAllocation, Section, Expense } from '@/lib/types';
@@ -90,6 +91,7 @@ export default function AllocationModal({
     <div className="sheet-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="sheet" onClick={(e) => e.stopPropagation()}>
         <div className="sheet-handle" />
+        <SheetCloseButton onClose={onClose} />
         <div style={{ padding: '8px 24px 40px', overflowY: 'auto', maxHeight: '85vh' }}>
           <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '24px' }}>
             {isEdit ? 'Modifier l\'enveloppe' : 'Nouvelle enveloppe'}
