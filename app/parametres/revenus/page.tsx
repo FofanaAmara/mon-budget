@@ -1,27 +1,20 @@
 export const dynamic = 'force-dynamic';
 
 import { getIncomes } from '@/lib/actions/incomes';
+import { calcMonthlyIncome } from '@/lib/utils';
 import Breadcrumb from '@/components/Breadcrumb';
 import IncomeTemplateManager from '@/components/IncomeTemplateManager';
-import type { IncomeFrequency } from '@/lib/types';
-
-function normalizeIncomeToMonthly(amount: number | null, estimatedAmount: number | null, frequency: IncomeFrequency): number {
-  if (frequency === 'VARIABLE') return Number(estimatedAmount ?? 0);
-  const base = Number(amount ?? 0);
-  switch (frequency) {
-    case 'MONTHLY':   return base;
-    case 'BIWEEKLY':  return (base * 26) / 12;
-    case 'YEARLY':    return base / 12;
-    default:          return base;
-  }
-}
 
 export default async function RevenusRecurrentsPage() {
   const incomes = await getIncomes();
 
   const activeIncomes = incomes.filter(i => i.is_active);
   const totalMonthly = activeIncomes.reduce(
-    (sum, i) => sum + normalizeIncomeToMonthly(i.amount, i.estimated_amount, i.frequency),
+    (sum, i) => sum + calcMonthlyIncome(
+      i.amount != null ? Number(i.amount) : null,
+      i.frequency,
+      i.estimated_amount != null ? Number(i.estimated_amount) : null,
+    ),
     0
   );
   const count = activeIncomes.length;

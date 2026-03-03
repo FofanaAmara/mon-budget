@@ -132,7 +132,7 @@ export function calcMonthlyIncome(
   if (amount === null) return 0;
   switch (frequency) {
     case 'MONTHLY': return amount;
-    case 'BIWEEKLY': return (amount * 26) / 12;
+    case 'BIWEEKLY': return amount * 2;
     case 'YEARLY': return amount / 12;
     default: return amount;
   }

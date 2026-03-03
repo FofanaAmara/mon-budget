@@ -27,7 +27,7 @@ export async function generateMonthlyIncomes(month: string): Promise<void> {
     } else {
       expectedAmount =
         inc.frequency === 'MONTHLY'  ? Number(inc.amount) :
-        inc.frequency === 'BIWEEKLY' ? (Number(inc.amount) * 26 / 12) :
+        inc.frequency === 'BIWEEKLY' ? (Number(inc.amount) * 2) :
         inc.frequency === 'YEARLY'   ? (Number(inc.amount) / 12) :
         Number(inc.amount);
     }
