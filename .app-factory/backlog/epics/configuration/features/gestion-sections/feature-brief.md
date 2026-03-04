@@ -18,9 +18,22 @@ Page `/sections`. CRUD de sections avec nom, emoji/icone, couleur, position. Les
 3. **Reordonner** : Changer la position (si implemente).
 
 ### Criteres d'acceptation (niveau feature)
-- AC-1 : CRUD fonctionnel pour les sections
-- AC-2 : Chaque section a un nom, une icone (emoji), une couleur
-- AC-3 : Les sections par defaut sont creees pour les nouveaux utilisateurs (via ensureDefaultSections)
+
+**AC-1 : CRUD fonctionnel**
+- Given l'utilisateur veut gerer ses categories
+- When il cree/modifie/supprime une section
+- Then la page se rafraichit
+- **Edge case** : supprimer une section utilisee par des charges/allocations — pas de cascade protection visible
+
+**AC-2 : Proprietes de section**
+- Given une section est creee
+- Then elle a un nom, une icone (emoji), une couleur
+- And elle est referencee par position pour l'ordre d'affichage
+
+**AC-3 : Sections par defaut**
+- Given un nouvel utilisateur arrive
+- When ensureDefaultSections est appele
+- Then des sections par defaut sont creees si l'utilisateur n'en a aucune
 
 ### Stories (squelette)
 1. Liste des sections

@@ -19,14 +19,75 @@ Page d'accueil de l'app. Affiche un "monument" central avec le montant disponibl
 4. **Acceder aux details** : Depuis le tableau de bord, cliquer sur une carte (Revenus, Depenses, Epargne, Dettes) pour naviguer vers la page correspondante.
 
 ### Criteres d'acceptation (niveau feature)
-- AC-1 : Le montant disponible = revenus recus (actual_total) - depenses payees (paid_total)
-- AC-2 : La grille 4 cartes affiche Revenus (recu/attendu), Depenses (paye/prevu), Epargne (total + % objectif), Dettes (balance totale + mensualites)
-- AC-3 : La valeur nette = epargne totale - dettes totales
-- AC-4 : La timeline affiche tous les evenements du mois (depenses + revenus) tries chronologiquement, avec les en-retard en premier
-- AC-5 : Le score de sante est un blend : couverture depenses 60% + taux epargne 20% + bonus sans retard 20%
-- AC-6 : Les alertes prioritaires affichent : charges en retard (critique), gros paiements a venir (warning), depassement budget (warning), controle (good), taux epargne (good)
-- AC-7 : La generation des instances mensuelles (expenses + incomes) est idempotente
-- AC-8 : L'auto-mark overdue et auto-mark paid (auto-debit) ne s'executent que pour le mois courant
+
+**AC-1 : Monument balance disponible**
+- Given des revenus et depenses existent pour le mois
+- When l'utilisateur arrive sur la page d'accueil
+- Then le montant disponible s'affiche en grand (revenus recus - depenses payees)
+- And si positif : badge vert "Ton mois est sous controle"
+- And si negatif : badge rouge "Budget depasse"
+- **Edge case** : si aucun revenu n'est marque RECEIVED, actualTotal=0 → balance negative (a discuter : utiliser expectedTotal ?)
+
+**AC-2 : Grille 4 cartes**
+- Given les donnees du mois sont chargees
+- When l'onglet "Tableau de bord" est actif
+- Then 4 cartes s'affichent : Revenus (recu/attendu), Depenses (paye/prevu), Epargne (total + % objectif), Dettes (balance totale + mensualites)
+- And chaque carte est cliquable et navigue vers la page correspondante
+
+**AC-3 : Valeur nette**
+- Given des projets d'epargne et/ou des dettes existent
+- When la valeur nette est calculee
+- Then valeur nette = epargne totale (sum saved_amount) - dettes totales (sum remaining_balance)
+- And affichee en teal si positive, rouge si negative
+
+**AC-4 : Timeline unifiee**
+- Given des depenses et revenus existent pour le mois
+- When l'onglet "Timeline" est actif
+- Then tous les evenements sont affiches groupes par date, tries chronologiquement (plus recent en premier)
+- And les evenements OVERDUE sont dans un groupe separe en tete
+- And chaque evenement montre : icone, nom, montant, badge statut (Paye/Recu/Prevu/En retard/Attendu)
+- **Edge case** : aucun evenement → message "Aucun evenement ce mois"
+
+**AC-5 : Score de sante financiere**
+- Given les donnees du mois sont chargees
+- When l'onglet "Sante financiere" est actif
+- Then le score = couverture_actual * 0.6 + savings_rate * 0.2 + overdueBonus (0 ou 20 si aucun overdue)
+- And score >= 80 → vert "Bonne sante", >= 50 → jaune "Points a surveiller", < 50 → rouge "Situation critique"
+- And le score est affiche dans un ring anime circulaire
+
+**AC-6 : Alertes prioritaires dynamiques**
+- Given les donnees du mois sont chargees
+- When des charges sont en retard → alerte critique "X charges en retard"
+- When des depenses >= 500$ sont a venir → alerte warning "X gros paiements a venir"
+- When paid_total > planned_total → alerte warning "Depenses au-dessus du prevu"
+- When aucun overdue ET balance positive → alerte good "Ton mois est sous controle"
+- When taux d'epargne >= 10% → alerte good "Taux d'epargne a X%"
+
+**AC-7 : Generation mensuelle idempotente**
+- Given c'est la premiere visite du mois
+- When la page d'accueil se charge
+- Then les instances monthly_expenses et monthly_incomes sont generees depuis les templates
+- And appeler la generation plusieurs fois ne cree pas de doublons (ON CONFLICT DO NOTHING)
+
+**AC-8 : Auto-mark mois courant uniquement**
+- Given des depenses/revenus UPCOMING existent
+- When la page se charge pour le mois courant
+- Then autoMarkOverdue marque OVERDUE les depenses non-auto-debit dont due_date < today
+- And autoMarkPaidForAutoDebit marque PAID les auto-debit dont due_date <= today
+- And autoMarkReceivedForAutoDeposit marque RECEIVED les auto-deposit
+- Given le mois affiche n'est PAS le mois courant
+- Then aucun auto-mark ne s'execute
+
+**AC-9 : Navigation mensuelle**
+- Given l'utilisateur est sur la page d'accueil
+- When il navigue vers un mois passe ou futur
+- Then les donnees de ce mois sont chargees (avec generation si necessaire)
+- And les 3 onglets refletent les donnees du mois selectionne
+
+**AC-10 : Metriques secondaires**
+- Given les donnees du mois sont chargees
+- When l'onglet "Sante financiere" est actif
+- Then les metriques affichent : taux d'epargne, couverture depenses, jours restants ($/jour), coussin de securite (mois couverts par l'epargne, bar a 100% pour 3 mois), valeur nette
 
 ### Stories (squelette)
 1. Affichage du monument "balance disponible"

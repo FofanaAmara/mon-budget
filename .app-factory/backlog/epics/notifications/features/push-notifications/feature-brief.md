@@ -19,10 +19,25 @@ Systeme de notifications push web via Service Worker. Composant NotificationPerm
 4. **Configuration** : Chaque charge a des reminder_offsets (ex: [3, 1, 0] = 3 jours, 1 jour, jour J).
 
 ### Criteres d'acceptation (niveau feature)
-- AC-1 : La demande de permission push s'affiche au premier chargement
-- AC-2 : L'abonnement est stocke en DB (push_subscriptions)
-- AC-3 : Les rappels sont envoyes selon les reminder_offsets de chaque charge
-- AC-4 : Les notifications envoyees sont loguees (notification_log)
+
+**AC-1 : Demande de permission**
+- Given l'utilisateur arrive sur la page d'accueil
+- When NotificationPermission se charge
+- Then le navigateur demande la permission push (si pas encore accordee)
+
+**AC-2 : Stockage abonnement**
+- Given l'utilisateur accepte les notifications
+- When le SW s'enregistre
+- Then la subscription est envoyee a /api/push/subscribe et stockee en DB (push_subscriptions)
+
+**AC-3 : Envoi rappels**
+- Given une charge a des reminder_offsets (ex: [3, 1, 0])
+- When un processus appelle /api/push/send
+- Then les rappels sont envoyes X jours avant l'echeance
+
+**AC-4 : Log des notifications**
+- Given une notification est envoyee
+- Then elle est logee dans notification_log pour eviter les doublons
 
 ### Stories (squelette)
 1. Permission push + abonnement

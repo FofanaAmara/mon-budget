@@ -18,10 +18,25 @@ Configuration PWA avec manifest.json, Service Worker, icones. L'app peut etre in
 3. **Icone** : L'icone de l'app apparait sur l'ecran d'accueil.
 
 ### Criteres d'acceptation (niveau feature)
-- AC-1 : Le manifest.json est correctement configure (name, icons, theme_color, display: standalone)
-- AC-2 : Le Service Worker est enregistre
-- AC-3 : L'app est installable depuis Chrome/Safari
-- AC-4 : Le favicon et les icones sont corrects
+
+**AC-1 : Manifest correct**
+- Given le fichier manifest.json existe
+- Then il contient : name, short_name, icons (multiples tailles), theme_color, background_color, display: standalone, start_url
+
+**AC-2 : Service Worker enregistre**
+- Given l'app est chargee
+- When le navigateur supporte les SW
+- Then sw.js est enregistre
+
+**AC-3 : Installabilite**
+- Given manifest + SW sont correctement configures
+- When l'utilisateur visite l'app sur Chrome/Safari
+- Then le navigateur propose l'installation (A2HS)
+
+**AC-4 : Favicon et icones**
+- Given les fichiers favicon.ico et icon-*.png existent
+- Then ils sont correctement references dans le HTML
+- **Edge case** : cache PWA peut afficher un ancien favicon meme apres mise a jour (BUG connu)
 
 ### Stories (squelette)
 1. Manifest + icones

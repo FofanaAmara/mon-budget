@@ -19,10 +19,27 @@ Authentification via Neon Auth (Better Auth). Pages `/auth/sign-in` et `/auth/si
 4. **Protection des routes** : requireAuth() dans chaque server action verifie la session.
 
 ### Criteres d'acceptation (niveau feature)
-- AC-1 : Inscription fonctionnelle avec email/mot de passe
-- AC-2 : Connexion fonctionnelle
-- AC-3 : Deconnexion efface la session et redirige
-- AC-4 : Les pages protegees redirigent vers /auth/sign-in si pas authentifie
+
+**AC-1 : Inscription**
+- Given un visiteur non authentifie
+- When il remplit le formulaire d'inscription sur /auth/sign-up
+- Then un compte est cree et l'utilisateur est redirige vers /
+
+**AC-2 : Connexion**
+- Given un utilisateur a un compte
+- When il se connecte via /auth/sign-in
+- Then une session est creee et il est redirige vers /
+
+**AC-3 : Deconnexion**
+- Given l'utilisateur est connecte
+- When il se deconnecte
+- Then la session est invalidee et il est redirige vers /auth/sign-in
+
+**AC-4 : Protection des routes**
+- Given l'utilisateur n'est pas authentifie
+- When il tente d'acceder a une page protegee
+- Then il est redirige vers /auth/sign-in
+- And requireAuth() dans chaque server action verifie la session
 
 ### Stories (squelette)
 1. Inscription

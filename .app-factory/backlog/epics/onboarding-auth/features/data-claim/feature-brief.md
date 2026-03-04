@@ -18,9 +18,21 @@ Banniere ClaimBanner affichee sur la page d'accueil si des donnees orphelines so
 3. **Reclamation** : L'utilisateur clique pour associer les donnees a son compte.
 
 ### Criteres d'acceptation (niveau feature)
-- AC-1 : La banniere s'affiche seulement si des donnees orphelines existent
-- AC-2 : La reclamation associe les donnees au compte courant
-- AC-3 : La banniere disparait apres la reclamation
+
+**AC-1 : Detection des donnees orphelines**
+- Given l'utilisateur est connecte
+- When hasOrphanedData() detecte des donnees sans user_id valide
+- Then la banniere ClaimBanner s'affiche en haut de la page d'accueil
+
+**AC-2 : Reclamation des donnees**
+- Given la banniere est affichee
+- When l'utilisateur clique pour reclamer
+- Then claimOrphanedData() associe les donnees au compte courant
+
+**AC-3 : Disparition de la banniere**
+- Given les donnees ont ete reclamees
+- When la page se recharge
+- Then la banniere ne s'affiche plus (hasOrphanedData retourne false)
 
 ### Stories (squelette)
 1. Detection donnees orphelines

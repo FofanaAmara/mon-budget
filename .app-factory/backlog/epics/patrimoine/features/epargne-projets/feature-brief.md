@@ -21,11 +21,48 @@ Page `/projets` avec deux onglets : Epargne (projets + epargne libre) et Dettes.
 6. **Epargne libre** : Un pseudo-projet "Epargne libre" sans objectif, avec contributions.
 
 ### Criteres d'acceptation (niveau feature)
-- AC-1 : Chaque projet affiche : nom, saved_amount, target_amount, progress %, suggestion mensuelle
-- AC-2 : La suggestion mensuelle = (target - saved) / mois restants
-- AC-3 : Les contributions incrementent saved_amount sur l'expense et logent un savings_contribution
-- AC-4 : L'epargne libre est un expense de type PLANNED sans target_amount
-- AC-5 : Le transfert deplace des fonds entre deux projets (decremente source, incremente destination)
+
+**AC-1 : Liste des projets avec progression**
+- Given des projets d'epargne existent (type=PLANNED)
+- When l'utilisateur consulte /projets onglet Epargne
+- Then chaque projet affiche : nom, saved_amount, target_amount, progress %, suggestion mensuelle
+- And la suggestion = (target - saved) / mois restants jusqu'a target_date
+
+**AC-2 : Contribution a un projet**
+- Given un projet d'epargne existe
+- When l'utilisateur ajoute une contribution via AddSavingsModal
+- Then saved_amount est incremente du montant
+- And un savings_contribution est loge (montant + note)
+- And la page se rafraichit avec les nouveaux totaux
+
+**AC-3 : Historique des contributions**
+- Given un projet a des contributions
+- When l'utilisateur consulte l'historique via SavingsHistoryModal
+- Then toutes les contributions sont listees (montant, note, date) triees par date desc
+
+**AC-4 : Epargne libre**
+- Given l'utilisateur n'a pas de projet specifique
+- When il utilise l'epargne libre
+- Then c'est un expense PLANNED sans target_amount (nommee "Epargne libre")
+- And il peut y ajouter des contributions comme un projet normal
+
+**AC-5 : Transfert entre projets**
+- Given deux projets d'epargne existent
+- When l'utilisateur transfere un montant de A vers B
+- Then saved_amount de A est decremente
+- And saved_amount de B est incremente
+- And deux savings_contributions sont logees (negative pour source, positive pour destination)
+
+**AC-6 : CRUD projet**
+- Given l'utilisateur veut gerer ses projets
+- When il cree/modifie/supprime via ProjectModal
+- Then la page se rafraichit
+- And la suppression est un soft-delete (is_active=false)
+
+**AC-7 : Etat vide**
+- Given aucun projet n'existe
+- When l'utilisateur consulte la page
+- Then un message invite a creer son premier projet
 
 ### Stories (squelette)
 1. Liste des projets avec progression

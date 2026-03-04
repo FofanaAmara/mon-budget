@@ -19,10 +19,31 @@ Page `/parametres` : hub de navigation vers tous les reglages. Organise en group
 4. **Se deconnecter** : Bouton -> authClient.signOut() -> redirect vers /auth/sign-in.
 
 ### Criteres d'acceptation (niveau feature)
-- AC-1 : Tous les liens de navigation fonctionnent et menent aux bonnes pages
-- AC-2 : Le chargement de demo est desactive si des donnees existent deja
-- AC-3 : La suppression affiche une confirmation et est irreversible
-- AC-4 : La deconnexion redirige vers la page de connexion
+
+**AC-1 : Navigation hub**
+- Given l'utilisateur est sur /parametres
+- When il clique sur un item
+- Then il est redirige vers la bonne sous-page (allocation, charges, revenus, cartes, sections, devise, rappels, notifications, compte)
+
+**AC-2 : Chargement donnees demo**
+- Given le compte est vide (aucune donnee)
+- When l'utilisateur clique "Charger donnees demo"
+- Then loadDemoData est appele et la page se recharge
+- Given le compte a deja des donnees
+- Then le bouton est desactive ou masque
+
+**AC-3 : Suppression donnees**
+- Given l'utilisateur veut vider son compte
+- When il clique "Vider toutes les donnees"
+- Then une confirmation modale s'affiche
+- And apres confirmation, clearAllUserData supprime toutes les donnees
+- And l'utilisateur est redirige vers /
+
+**AC-4 : Deconnexion**
+- Given l'utilisateur est connecte
+- When il clique "Se deconnecter"
+- Then authClient.signOut() est appele
+- And l'utilisateur est redirige vers /auth/sign-in
 
 ### Stories (squelette)
 1. Hub de navigation

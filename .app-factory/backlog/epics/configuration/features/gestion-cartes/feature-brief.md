@@ -20,11 +20,36 @@ Page `/cartes` : liste de cartes bancaires visuelles (style carte de credit avec
 5. **Voir le detail** : Clic sur la carte -> `/cartes/[id]` -> stats + depenses liees.
 
 ### Criteres d'acceptation (niveau feature)
-- AC-1 : Les cartes s'affichent avec un design visuel (gradient, chip, derniers chiffres)
-- AC-2 : L'apercu live dans la modale reflete les modifications en temps reel
-- AC-3 : 8 couleurs disponibles pour le gradient
-- AC-4 : La page detail affiche : total mensuel, nombre de prelevements auto, depenses liees
-- AC-5 : Les depenses liees sont separees : auto-prelevements vs autres
+
+**AC-1 : Design visuel des cartes**
+- Given des cartes existent
+- When l'utilisateur consulte /cartes
+- Then chaque carte s'affiche avec un design visuel (gradient de couleur, chip, 4 derniers chiffres, banque)
+
+**AC-2 : Apercu live dans la modale**
+- Given l'utilisateur cree/modifie une carte
+- When il change les champs (nom, couleur, chiffres)
+- Then l'apercu de la carte se met a jour en temps reel
+
+**AC-3 : 8 couleurs de gradient**
+- Given l'utilisateur cree/modifie une carte
+- When il choisit une couleur
+- Then 8 couleurs predefinies sont disponibles
+
+**AC-4 : Page detail carte**
+- Given l'utilisateur clique sur une carte
+- When la page /cartes/[id] se charge
+- Then elle affiche : total mensuel, nombre de prelevements auto, liste des depenses liees
+
+**AC-5 : Separation prelevements auto vs autres**
+- Given des depenses sont liees a la carte
+- When la page detail est affichee
+- Then les depenses sont separees : auto-prelevements vs autres charges
+
+**AC-6 : CRUD complet**
+- Given l'utilisateur veut gerer ses cartes
+- When il cree/modifie/supprime via bottom sheet
+- Then la page se rafraichit
 
 ### Stories (squelette)
 1. Liste des cartes visuelles

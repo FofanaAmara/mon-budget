@@ -20,12 +20,48 @@ Page `/parametres/allocation` pour gerer les enveloppes de repartition du revenu
 5. **Reordonner** : Fleches haut/bas pour changer la position.
 
 ### Criteres d'acceptation (niveau feature)
-- AC-1 : Le sommaire affiche revenu mensuel, total alloue, disponible (et alerte si surallocation)
-- AC-2 : Les enveloppes sont groupees : Charges (liees a sections), Epargne (liees a projet), Autre (libre)
-- AC-3 : Chaque enveloppe peut etre liee a 0-N sections via junction table
-- AC-4 : Chaque enveloppe peut etre liee a un projet d'epargne (progress bar affichee)
-- AC-5 : Les enveloppes temporelles (end_month) expirent automatiquement
-- AC-6 : La generation mensuelle skip les allocations expirees et les projets ayant atteint leur objectif
+
+**AC-1 : Sommaire revenu/alloue/disponible**
+- Given des allocations existent
+- When l'utilisateur consulte /parametres/allocation
+- Then le sommaire affiche : revenu mensuel attendu, total alloue, disponible (revenu - alloue)
+- And si surallocation (disponible < 0) → alerte visuelle
+
+**AC-2 : Groupement par type**
+- Given des allocations de differents types existent
+- When la liste est affichee
+- Then les enveloppes sont groupees : Charges (liees a sections), Epargne (liees a projet), Autre (libre)
+
+**AC-3 : Liaison sections (junction table)**
+- Given une enveloppe est liee a des sections
+- When elle est creee/modifiee
+- Then la table allocation_sections est mise a jour
+- And 0 a N sections peuvent etre liees
+
+**AC-4 : Liaison projet epargne**
+- Given une enveloppe est liee a un projet d'epargne
+- When elle est affichee
+- Then une barre de progression saved_amount/target_amount est affichee
+
+**AC-5 : Allocations temporelles**
+- Given une allocation a un end_month
+- When le mois courant depasse end_month
+- Then l'allocation n'est plus generee dans les mois futurs
+
+**AC-6 : Generation mensuelle intelligente**
+- Given generateMonthlyAllocations est appele
+- When des allocations existent
+- Then une instance monthly_allocation est creee par allocation active
+- And les allocations expirees (month > end_month) sont skipees
+- And les allocations liees a un projet ayant atteint l'objectif sont skipees
+- And la generation est idempotente (ON CONFLICT DO NOTHING)
+
+**AC-7 : CRUD complet**
+- Given l'utilisateur veut gerer ses enveloppes
+- When il cree/modifie/supprime via AllocationModal
+- Then la page se rafraichit
+- And la suppression est un soft-delete (is_active=false)
+- And le reordonnancement par fleches met a jour les positions
 
 ### Stories (squelette)
 1. Sommaire revenu/alloue/disponible

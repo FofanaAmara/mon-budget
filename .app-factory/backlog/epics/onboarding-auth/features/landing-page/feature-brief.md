@@ -19,10 +19,28 @@ Page `/landing` : page marketing complete avec hero, proposition de valeur, fonc
 4. **Passer a l'action** : CTA final "Creer mon budget" -> /auth/sign-up.
 
 ### Criteres d'acceptation (niveau feature)
-- AC-1 : La page est accessible sans authentification
-- AC-2 : Les CTA menent vers /auth/sign-up (inscription) et /auth/sign-in (connexion)
-- AC-3 : La page est responsive (mobile + desktop)
-- AC-4 : Animations scroll reveal sur les sections
+
+**AC-1 : Accessibilite sans authentification**
+- Given un visiteur non connecte
+- When il accede a /landing
+- Then la page s'affiche sans redirection
+
+**AC-2 : CTA fonctionnels**
+- Given la page landing est chargee
+- When l'utilisateur clique "Commencer gratuitement" ou "Creer mon budget"
+- Then il est redirige vers /auth/sign-up
+- When il clique "Connexion"
+- Then il est redirige vers /auth/sign-in
+
+**AC-3 : Responsive design**
+- Given la page est chargee
+- When elle est consultee sur mobile (< 768px) et desktop (>= 1024px)
+- Then le layout s'adapte correctement (colonnes, tailles de police, espacement)
+
+**AC-4 : Animations scroll**
+- Given les sections marketing existent
+- When l'utilisateur scroll vers le bas
+- Then les sections apparaissent avec une animation de type scroll reveal
 
 ### Stories (squelette)
 1. Hero + navigation

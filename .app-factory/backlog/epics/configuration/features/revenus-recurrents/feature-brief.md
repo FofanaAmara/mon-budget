@@ -19,11 +19,34 @@ Page `/parametres/revenus`. Gestion des templates de revenus. Chaque source a : 
 4. **Supprimer une source** : Menu 3 points -> Supprimer -> confirm() natif.
 
 ### Criteres d'acceptation (niveau feature)
-- AC-1 : Les sources affichent le montant mensualise (BIWEEKLY * 2.17, YEARLY / 12)
-- AC-2 : Les sources BIWEEKLY avec date d'ancrage calculent les prochaines dates de paie
-- AC-3 : Les sources VARIABLE affichent un montant estime et le badge "Variable"
-- AC-4 : Les sources avec auto_deposit affichent le badge "Depot auto"
-- AC-5 : CRUD fonctionnel
+
+**AC-1 : Mensualisation des montants**
+- Given une source de revenu a une frequence non-mensuelle
+- When elle est affichee
+- Then le montant est mensualise : BIWEEKLY * 2.17, YEARLY / 12
+- **Edge case** : le multiplicateur BIWEEKLY 2.17 vs 26/12=2.1667 — incoherence potentielle avec la generation mensuelle qui utilise le vrai nombre de paies
+
+**AC-2 : Prochaines dates biweekly**
+- Given une source BIWEEKLY a une date d'ancrage (pay_anchor_date)
+- When elle est affichee
+- Then la prochaine date de paie est calculee en ajoutant 14 jours depuis l'ancrage
+
+**AC-3 : Sources variables**
+- Given une source est de type VARIABLE
+- When elle est affichee
+- Then un badge "Variable" est visible
+- And le montant estime est affiche (pas un montant fixe)
+
+**AC-4 : Badge auto-depot**
+- Given une source a auto_deposit = true
+- When elle est affichee
+- Then un badge "Depot auto" est visible
+
+**AC-5 : CRUD complet**
+- Given l'utilisateur veut gerer ses sources de revenus
+- When il cree/modifie/supprime via IncomeModal
+- Then la page se rafraichit
+- And la suppression utilise confirm() natif
 
 ### Stories (squelette)
 1. Liste des sources avec metriques

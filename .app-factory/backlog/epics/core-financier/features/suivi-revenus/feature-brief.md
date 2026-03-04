@@ -22,12 +22,61 @@ Page `/revenus` avec deux onglets : "Revenus" (suivi des instances de revenus du
 7. **Ajouter une allocation ponctuelle** : FAB -> modal AdhocAllocationModal.
 
 ### Criteres d'acceptation (niveau feature)
-- AC-1 : Le monument affiche recu/attendu avec barre de progression
-- AC-2 : Les revenus fixes affichent le montant attendu et permettent de marquer comme recu
-- AC-3 : Les revenus variables affichent "A saisir" et permettent la saisie manuelle
-- AC-4 : L'onglet allocation affiche les enveloppes avec prevision, depenses reelles par section, et ecart
-- AC-5 : Les allocations mensuelles sont modifiables pour le mois courant
-- AC-6 : Le FAB permet d'ajouter un revenu ponctuel ou une allocation ponctuelle selon l'onglet actif
+
+**AC-1 : Monument recu/attendu**
+- Given des revenus existent pour le mois
+- When l'utilisateur consulte /revenus
+- Then le monument affiche recu/attendu avec barre de progression
+- And si recu >= attendu → badge vert "Complet"
+- And si surplus → montant du surplus affiche
+
+**AC-2 : Revenus fixes — marquer comme recu**
+- Given un revenu fixe est en statut EXPECTED
+- When l'utilisateur le marque comme recu avec un montant reel
+- Then le statut passe a RECEIVED, actual_amount = montant saisi, received_at = today
+- And le monument et les totaux se mettent a jour
+
+**AC-3 : Revenus variables — saisie manuelle**
+- Given un revenu de type VARIABLE n'a pas encore d'instance monthly_income ce mois
+- When l'utilisateur saisit le montant recu
+- Then une instance monthly_income est creee avec status=RECEIVED
+- And expected_amount = actual_amount = montant saisi
+
+**AC-4 : Onglet allocation — comparaison prevision/reel**
+- Given des allocations et des depenses existent pour le mois
+- When l'onglet "Allocation" est actif
+- Then chaque enveloppe affiche : label, montant alloue, depenses reelles par section liee, ecart
+- And le sommaire affiche : revenu attendu, total alloue, disponible (attendu - alloue)
+- And si surallocation (disponible < 0) → alerte visuelle
+
+**AC-5 : Modification allocation mensuelle**
+- Given une allocation mensuelle existe
+- When l'utilisateur modifie le montant
+- Then seule l'instance monthly_allocation est modifiee (template inchange)
+
+**AC-6 : FAB contextuel**
+- Given le mois est le mois courant
+- When l'onglet "Revenus" est actif et l'utilisateur clique le FAB
+- Then la modale AdhocIncomeModal s'ouvre
+- When l'onglet "Allocation" est actif et l'utilisateur clique le FAB
+- Then la modale AdhocAllocationModal s'ouvre
+
+**AC-7 : Generation automatique des revenus**
+- Given des sources de revenus fixes existent
+- When le mois est visite pour la premiere fois
+- Then des instances monthly_income sont generees pour chaque source active
+- And les montants BIWEEKLY tiennent compte du nombre de paies dans le mois (2 ou 3)
+- And les sources VARIABLE ne sont PAS auto-generees
+
+**AC-8 : Auto-mark received (auto-deposit)**
+- Given des revenus sont marques auto_deposit
+- When la page se charge pour le mois courant
+- Then ces revenus sont automatiquement marques RECEIVED avec actual_amount = expected_amount
+
+**AC-9 : Etat vide**
+- Given aucun revenu n'existe pour le mois
+- When l'utilisateur consulte la page
+- Then le monument affiche 0/0 et un message d'encouragement
 
 ### Stories (squelette)
 1. Monument revenus recu/attendu

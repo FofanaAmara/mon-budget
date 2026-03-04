@@ -21,12 +21,48 @@ Overlay plein ecran en 3 etapes affiche pour les nouveaux utilisateurs (aucune d
 6. **Passer** : Lien "Passer la configuration" -> completeOnboarding() sans donnees -> redirect vers /.
 
 ### Criteres d'acceptation (niveau feature)
-- AC-1 : L'onboarding s'affiche pour les nouveaux utilisateurs uniquement
-- AC-2 : Les 3 etapes sont navigables (retour/suivant)
-- AC-3 : Le revenu est mensualise correctement (hebdo * 4.33, bi-hebdo * 2.17)
-- AC-4 : Les categories selectionnees sont creees comme sections
-- AC-5 : Le chargement de demo fonctionne comme alternative
-- AC-6 : L'onboarding peut etre passe
+
+**AC-1 : Detection nouvel utilisateur**
+- Given un utilisateur vient de s'inscrire (aucune donnee ET pas de localStorage flag)
+- When il arrive sur la page d'accueil
+- Then l'overlay onboarding s'affiche en plein ecran
+
+**AC-2 : Navigation 3 etapes**
+- Given l'onboarding est affiche
+- When l'utilisateur navigue entre les etapes
+- Then il peut aller en avant (Suivant) et en arriere (Retour)
+- And chaque etape est : 1. Revenu 2. Categories 3. Objectif
+
+**AC-3 : Mensualisation du revenu**
+- Given l'utilisateur saisit un revenu
+- When la frequence est "hebdo" → montant * 4.33
+- When la frequence est "bi-hebdo" → montant * 2.17
+- When la frequence est "mensuel" → montant * 1
+- Then l'apercu mensualise s'affiche en temps reel
+- **Edge case** : le multiplicateur 2.17 (onboarding) vs 26/12=2.1667 (generation mensuelle) — incoherence
+
+**AC-4 : Creation des sections**
+- Given l'utilisateur selectionne des categories
+- When il finalise l'onboarding
+- Then les categories selectionnees sont creees comme sections
+- And les sections par defaut (creees par ensureDefaultSections) sont supprimees et remplacees
+
+**AC-5 : Alternative demo**
+- Given l'onboarding est affiche
+- When l'utilisateur clique "explorer avec des donnees de test"
+- Then loadDemoData est appele et l'app se recharge
+
+**AC-6 : Passer la configuration**
+- Given l'onboarding est affiche
+- When l'utilisateur clique "Passer la configuration"
+- Then completeOnboarding est appele sans donnees significatives
+- And le localStorage flag est pose
+- And l'utilisateur est redirige vers /
+
+**AC-7 : Onboarding ne s'affiche qu'une fois**
+- Given l'onboarding a ete complete (localStorage flag = true)
+- When l'utilisateur revient sur la page d'accueil
+- Then l'onboarding ne s'affiche plus
 
 ### Stories (squelette)
 1. Detection nouvel utilisateur
