@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import SheetCloseButton from "@/components/SheetCloseButton";
+
 import { createExpense, updateExpense } from "@/lib/actions/expenses";
 import type {
   Expense,
@@ -449,7 +449,6 @@ export default function ExpenseModal({
             }}
           />
         </div>
-        <SheetCloseButton onClose={onClose} />
 
         {/* Header */}
         <div
