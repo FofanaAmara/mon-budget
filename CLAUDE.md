@@ -142,12 +142,19 @@ Demande hors scope → Acknowledge → Log discovery → Evaluer si blocker → 
 
 Priorite : Securite > Integrite donnees > Architecture > Performance > Clean code
 
-### Structure documentaire
+### Organisation des fichiers
 
-- docs_permanente/ — Architecture, ADRs, runbooks
-- implementation_log/ — Logs par feature/story
-- backlog/ — Epics, features, stories
-- implementation_discoveries/ — Discoveries pendant le build
-- .app-factory-state/ — State files pour les commandes implement-*
-- cs-brand/mes-finances/ — Brand identity
-- cs-design/mes-finances/ — Design system, mockups
+| Dossier | Contenu | Git |
+|---------|---------|-----|
+| `.claude/plans/` | Plans d'implementation, PRDs, specs | ignore |
+| `.claude/ralph/` | Prompts Ralph Loop | ignore |
+| `.tmp/` | Screenshots, brouillons, fichiers temporaires | ignore |
+| `docs_permanente/` | Architecture, ADRs, runbooks | track |
+| `implementation_log/` | Logs par feature/story | track |
+| `backlog/` | Epics, features, stories | track |
+| `implementation_discoveries/` | Discoveries pendant le build | track |
+| `.app-factory-state/` | State files pour les commandes implement-* | ignore |
+| `cs-brand/mes-finances/` | Brand identity | track |
+| `cs-design/mes-finances/` | Design system, mockups | track |
+
+**Regle** : Ne jamais laisser de plans, prompts ralph, screenshots ou fichiers temporaires a la racine. Les ranger dans le dossier appropriate.
