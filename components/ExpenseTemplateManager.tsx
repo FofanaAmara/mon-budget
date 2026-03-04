@@ -274,7 +274,7 @@ export default function ExpenseTemplateManager({
             flexShrink: 0,
           }}
         >
-          <div style={{ textAlign: "right", minWidth: "100px" }}>
+          <div style={{ textAlign: "right", width: "120px", flexShrink: 0 }}>
             {(() => {
               const isNonMonthly =
                 expense.type === "RECURRING" &&
