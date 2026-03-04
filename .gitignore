@@ -60,3 +60,6 @@ status-phase1.md
 .playwright-mcp/
 
 tsconfig.tsbuildinfo
+
+# Temp / screenshots
+.tmp/
