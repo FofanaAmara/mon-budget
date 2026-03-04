@@ -1,48 +1,57 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { sql } from '@/lib/db';
-import { requireAuth } from '@/lib/auth/helpers';
-import type { MonthlyExpense, MonthSummary } from '@/lib/types';
+import { revalidatePath } from "next/cache";
+import { sql } from "@/lib/db";
+import { requireAuth } from "@/lib/auth/helpers";
+import type { MonthlyExpense, MonthSummary } from "@/lib/types";
 
 // Calculates the due_date for a RECURRING expense in a given month
-function calcDueDateForMonth(expense: {
-  recurrence_frequency: string | null;
-  recurrence_day: number | null;
-  next_due_date: string | null;
-}, month: string): string | null {
-  const [year, monthNum] = month.split('-').map(Number);
+function calcDueDateForMonth(
+  expense: {
+    recurrence_frequency: string | null;
+    recurrence_day: number | null;
+    next_due_date: string | null;
+  },
+  month: string,
+): string | null {
+  const [year, monthNum] = month.split("-").map(Number);
 
   // If next_due_date falls in this month, use it directly
   if (expense.next_due_date) {
-    const nd = new Date(expense.next_due_date + 'T00:00:00');
+    const nd = new Date(expense.next_due_date + "T00:00:00");
     if (nd.getFullYear() === year && nd.getMonth() + 1 === monthNum) {
       return expense.next_due_date;
     }
   }
 
   // For BIMONTHLY: only generate if this month is an even number of months from the reference
-  if (expense.recurrence_frequency === 'BIMONTHLY' && expense.recurrence_day) {
+  if (expense.recurrence_frequency === "BIMONTHLY" && expense.recurrence_day) {
     if (expense.next_due_date) {
-      const ref = new Date(expense.next_due_date + 'T00:00:00');
-      const diffMonths = (year - ref.getFullYear()) * 12 + (monthNum - (ref.getMonth() + 1));
+      const ref = new Date(expense.next_due_date + "T00:00:00");
+      const diffMonths =
+        (year - ref.getFullYear()) * 12 + (monthNum - (ref.getMonth() + 1));
       if (diffMonths % 2 !== 0) return null; // skip odd-offset months
     }
     const daysInMonth = new Date(year, monthNum, 0).getDate();
     const day = Math.min(expense.recurrence_day, daysInMonth);
-    return `${year}-${String(monthNum).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    return `${year}-${String(monthNum).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
   }
 
   // For MONTHLY, QUARTERLY, YEARLY: use recurrence_day in this month
-  if (expense.recurrence_day && ['MONTHLY', 'QUARTERLY', 'YEARLY'].includes(expense.recurrence_frequency || '')) {
+  if (
+    expense.recurrence_day &&
+    ["MONTHLY", "QUARTERLY", "YEARLY"].includes(
+      expense.recurrence_frequency || "",
+    )
+  ) {
     const daysInMonth = new Date(year, monthNum, 0).getDate();
     const day = Math.min(expense.recurrence_day, daysInMonth);
-    return `${year}-${String(monthNum).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    return `${year}-${String(monthNum).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
   }
 
   // For WEEKLY / BIWEEKLY: use the 1st of the month as fallback
-  if (['WEEKLY', 'BIWEEKLY'].includes(expense.recurrence_frequency || '')) {
-    return `${year}-${String(monthNum).padStart(2, '0')}-01`;
+  if (["WEEKLY", "BIWEEKLY"].includes(expense.recurrence_frequency || "")) {
+    return `${year}-${String(monthNum).padStart(2, "0")}-01`;
   }
 
   return null;
@@ -51,10 +60,10 @@ function calcDueDateForMonth(expense: {
 // Generates monthly instances for a given month (idempotent — safe to call multiple times)
 export async function generateMonthlyExpenses(month: string): Promise<void> {
   const userId = await requireAuth();
-  const [year, monthNum] = month.split('-').map(Number);
-  const monthStart = `${year}-${String(monthNum).padStart(2, '0')}-01`;
+  const [year, monthNum] = month.split("-").map(Number);
+  const monthStart = `${year}-${String(monthNum).padStart(2, "0")}-01`;
   const daysInMonth = new Date(year, monthNum, 0).getDate();
-  const monthEnd = `${year}-${String(monthNum).padStart(2, '0')}-${String(daysInMonth).padStart(2, '0')}`;
+  const monthEnd = `${year}-${String(monthNum).padStart(2, "0")}-${String(daysInMonth).padStart(2, "0")}`;
 
   // Fetch active RECURRING expenses
   const recurringExpenses = await sql`
@@ -89,12 +98,24 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
   };
 
   // Insert RECURRING instances
-  for (const expense of recurringExpenses as { id: string; name: string; amount: number; section_id: string | null; card_id: string | null; auto_debit: boolean; recurrence_frequency: string | null; recurrence_day: number | null; next_due_date: string | null; notes: string | null }[]) {
+  for (const expense of recurringExpenses as {
+    id: string;
+    name: string;
+    amount: number;
+    section_id: string | null;
+    card_id: string | null;
+    auto_debit: boolean;
+    recurrence_frequency: string | null;
+    recurrence_day: number | null;
+    next_due_date: string | null;
+    notes: string | null;
+  }[]) {
     const dueDate = calcDueDateForMonth(expense, month);
     if (!dueDate) continue;
 
     // Store monthly equivalent for non-monthly charges
-    const multiplier = monthlyMultipliers[expense.recurrence_frequency ?? 'MONTHLY'] ?? 1;
+    const multiplier =
+      monthlyMultipliers[expense.recurrence_frequency ?? "MONTHLY"] ?? 1;
     const monthlyAmount = Math.round(expense.amount * multiplier * 100) / 100;
 
     await sql`
@@ -131,19 +152,32 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
       AND user_id = ${userId}
   `;
 
-  for (const debt of activeDebts as { id: string; name: string; payment_amount: number; payment_frequency: string; payment_day: number | null; auto_debit: boolean; card_id: string | null; section_id: string | null; notes: string | null }[]) {
-    const dueDate = calcDueDateForMonth({
-      recurrence_frequency: debt.payment_frequency,
-      recurrence_day: debt.payment_day,
-      next_due_date: null,
-    }, month);
+  for (const debt of activeDebts as {
+    id: string;
+    name: string;
+    payment_amount: number;
+    payment_frequency: string;
+    payment_day: number | null;
+    auto_debit: boolean;
+    card_id: string | null;
+    section_id: string | null;
+    notes: string | null;
+  }[]) {
+    const dueDate = calcDueDateForMonth(
+      {
+        recurrence_frequency: debt.payment_frequency,
+        recurrence_day: debt.payment_day,
+        next_due_date: null,
+      },
+      month,
+    );
     if (!dueDate) continue;
 
     await sql`
       INSERT INTO monthly_expenses
         (user_id, debt_id, month, name, amount, due_date, status, section_id, card_id, is_auto_charged, is_planned, notes)
       VALUES
-        (${userId}, ${debt.id}, ${month}, ${debt.name + ' (versement)'}, ${debt.payment_amount},
+        (${userId}, ${debt.id}, ${month}, ${debt.name + " (versement)"}, ${debt.payment_amount},
          ${dueDate}::date, 'UPCOMING', ${debt.section_id}, ${debt.card_id},
          ${debt.auto_debit}, true, ${debt.notes})
       ON CONFLICT (debt_id, month) WHERE debt_id IS NOT NULL DO NOTHING
@@ -156,7 +190,7 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
 // Fetch monthly expenses for a month, with optional section filter
 export async function getMonthlyExpenses(
   month: string,
-  sectionId?: string
+  sectionId?: string,
 ): Promise<MonthlyExpense[]> {
   const userId = await requireAuth();
   const rows = sectionId
@@ -234,7 +268,7 @@ export async function getMonthSummary(month: string): Promise<MonthSummary> {
 // Mark a monthly expense as PAID
 export async function markAsPaid(id: string): Promise<void> {
   const userId = await requireAuth();
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().split("T")[0];
   await sql`
     UPDATE monthly_expenses
     SET status = 'PAID', paid_at = ${today}::date
@@ -247,7 +281,11 @@ export async function markAsPaid(id: string): Promise<void> {
     WHERE id = ${id} AND user_id = ${userId} AND debt_id IS NOT NULL
   `;
   if (meRows.length > 0) {
-    const { debt_id, amount, month } = meRows[0] as { debt_id: string; amount: number; month: string };
+    const { debt_id, amount, month } = meRows[0] as {
+      debt_id: string;
+      amount: number;
+      month: string;
+    };
     await sql`
       UPDATE debts SET
         remaining_balance = GREATEST(remaining_balance - ${amount}, 0),
@@ -264,17 +302,20 @@ export async function markAsPaid(id: string): Promise<void> {
       INSERT INTO debt_transactions (user_id, debt_id, type, amount, month, note, source)
       VALUES (${userId}, ${debt_id}, 'PAYMENT', ${amount}, ${month}, 'Versement mensuel', 'MONTHLY_EXPENSE')
     `;
-    revalidatePath('/projets');
+    revalidatePath("/projets");
   }
 
-  revalidatePath('/depenses');
-  revalidatePath('/');
+  revalidatePath("/depenses");
+  revalidatePath("/");
 }
 
 // Defer a monthly expense to a future month.
 // Marks the current instance DEFERRED (kept for traceability),
 // and creates a new UPCOMING entry in the target month.
-export async function deferExpenseToMonth(id: string, targetMonth: string): Promise<void> {
+export async function deferExpenseToMonth(
+  id: string,
+  targetMonth: string,
+): Promise<void> {
   const userId = await requireAuth();
 
   // Fetch the current instance details
@@ -283,15 +324,26 @@ export async function deferExpenseToMonth(id: string, targetMonth: string): Prom
     WHERE id = ${id} AND user_id = ${userId}
   `;
   if (rows.length === 0) return;
-  const { name, amount, section_id, card_id, month: sourceMonth } = rows[0] as {
-    name: string; amount: number; section_id: string | null;
-    card_id: string | null; month: string;
+  const {
+    name,
+    amount,
+    section_id,
+    card_id,
+    month: sourceMonth,
+  } = rows[0] as {
+    name: string;
+    amount: number;
+    section_id: string | null;
+    card_id: string | null;
+    month: string;
   };
 
   // Format source month label for the note
-  const [sy, sm] = sourceMonth.split('-').map(Number);
-  const sourceLabel = new Intl.DateTimeFormat('fr-CA', { month: 'long', year: 'numeric' })
-    .format(new Date(sy, sm - 1, 1));
+  const [sy, sm] = sourceMonth.split("-").map(Number);
+  const sourceLabel = new Intl.DateTimeFormat("fr-CA", {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(sy, sm - 1, 1));
 
   // Mark current instance as DEFERRED
   await sql`
@@ -300,7 +352,7 @@ export async function deferExpenseToMonth(id: string, targetMonth: string): Prom
   `;
 
   // Create new entry in target month (expense_id = NULL so it coexists with template generation)
-  const [ty, tm] = targetMonth.split('-').map(Number);
+  const [ty, tm] = targetMonth.split("-").map(Number);
   const dueDate = `${targetMonth}-01`;
   await sql`
     INSERT INTO monthly_expenses
@@ -308,11 +360,11 @@ export async function deferExpenseToMonth(id: string, targetMonth: string): Prom
     VALUES
       (${userId}, NULL, ${targetMonth}, ${name}, ${amount},
        ${dueDate}::date, 'UPCOMING', ${section_id}, ${card_id}, true,
-       ${'Reporté depuis ' + sourceLabel})
+       ${"Reporté depuis " + sourceLabel})
   `;
 
-  revalidatePath('/depenses');
-  revalidatePath('/');
+  revalidatePath("/depenses");
+  revalidatePath("/");
 }
 
 // Revert a monthly expense back to UPCOMING
@@ -323,8 +375,8 @@ export async function markAsUpcoming(id: string): Promise<void> {
     SET status = 'UPCOMING', paid_at = NULL
     WHERE id = ${id} AND user_id = ${userId}
   `;
-  revalidatePath('/depenses');
-  revalidatePath('/');
+  revalidatePath("/depenses");
+  revalidatePath("/");
 }
 
 // Delete an adhoc/imprévue monthly expense (expense_id IS NULL — no template).
@@ -335,32 +387,36 @@ export async function deleteMonthlyExpense(id: string): Promise<void> {
     DELETE FROM monthly_expenses
     WHERE id = ${id} AND user_id = ${userId} AND expense_id IS NULL
   `;
-  revalidatePath('/depenses');
-  revalidatePath('/');
+  revalidatePath("/depenses");
+  revalidatePath("/");
 }
 
 // Update the amount for a monthly expense (this month only — template unchanged).
 // Use case: dépense prévue 100 $ mais a coûté 87 $, ou a été suspendue (→ 0 $).
-export async function updateMonthlyExpenseAmount(id: string, newAmount: number): Promise<void> {
+export async function updateMonthlyExpenseAmount(
+  id: string,
+  newAmount: number,
+): Promise<void> {
   const userId = await requireAuth();
   await sql`
     UPDATE monthly_expenses
     SET amount = ${newAmount}
     WHERE id = ${id} AND user_id = ${userId}
   `;
-  revalidatePath('/depenses');
-  revalidatePath('/');
+  revalidatePath("/depenses");
+  revalidatePath("/");
 }
 
 // Auto-mark OVERDUE: mark UPCOMING instances past their due_date as OVERDUE
 export async function autoMarkOverdue(month: string): Promise<void> {
   const userId = await requireAuth();
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().split("T")[0];
   await sql`
     UPDATE monthly_expenses
     SET status = 'OVERDUE'
     WHERE month = ${month}
       AND status = 'UPCOMING'
+      AND due_date IS NOT NULL
       AND due_date < ${today}::date
       AND is_auto_charged = false
       AND user_id = ${userId}
@@ -371,13 +427,14 @@ export async function autoMarkOverdue(month: string): Promise<void> {
 // Auto-mark PAID for auto-charged expenses past their due_date
 export async function autoMarkPaidForAutoDebit(month: string): Promise<void> {
   const userId = await requireAuth();
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().split("T")[0];
   await sql`
     UPDATE monthly_expenses
     SET status = 'PAID', paid_at = due_date
     WHERE month = ${month}
       AND status = 'UPCOMING'
       AND is_auto_charged = true
+      AND due_date IS NOT NULL
       AND due_date <= ${today}::date
       AND user_id = ${userId}
   `;

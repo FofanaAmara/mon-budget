@@ -1,9 +1,15 @@
-'use client';
+"use client";
 
-import { useState, useTransition } from 'react';
-import SheetCloseButton from '@/components/SheetCloseButton';
-import { createExpense, updateExpense } from '@/lib/actions/expenses';
-import type { Expense, ExpenseType, RecurrenceFrequency, Section, Card } from '@/lib/types';
+import { useState, useTransition } from "react";
+import SheetCloseButton from "@/components/SheetCloseButton";
+import { createExpense, updateExpense } from "@/lib/actions/expenses";
+import type {
+  Expense,
+  ExpenseType,
+  RecurrenceFrequency,
+  Section,
+  Card,
+} from "@/lib/types";
 
 type Props = {
   sections: Section[];
@@ -14,27 +20,35 @@ type Props = {
 };
 
 const FREQUENCIES: { value: RecurrenceFrequency; label: string }[] = [
-  { value: 'WEEKLY',     label: 'Hebdo' },
-  { value: 'BIWEEKLY',  label: 'Bi-hebdo' },
-  { value: 'MONTHLY',   label: 'Mensuel' },
-  { value: 'BIMONTHLY', label: 'Bi-mensuel' },
-  { value: 'QUARTERLY', label: 'Trimestriel' },
-  { value: 'YEARLY',    label: 'Annuel' },
+  { value: "WEEKLY", label: "Hebdo" },
+  { value: "BIWEEKLY", label: "Bi-hebdo" },
+  { value: "MONTHLY", label: "Mensuel" },
+  { value: "BIMONTHLY", label: "Bi-mensuel" },
+  { value: "QUARTERLY", label: "Trimestriel" },
+  { value: "YEARLY", label: "Annuel" },
 ];
 
-export default function ExpenseModal({ sections, cards, expense, onClose, onSuccess }: Props) {
+export default function ExpenseModal({
+  sections,
+  cards,
+  expense,
+  onClose,
+  onSuccess,
+}: Props) {
   const [isPending, startTransition] = useTransition();
 
-  const [name, setName]             = useState(expense?.name ?? '');
-  const [amount, setAmount]         = useState(expense?.amount?.toString() ?? '');
-  const [type, setType]             = useState<ExpenseType>(expense?.type ?? 'RECURRING');
-  const [frequency, setFrequency]   = useState<RecurrenceFrequency>(expense?.recurrence_frequency ?? 'MONTHLY');
-  const [day, setDay]               = useState(expense?.recurrence_day?.toString() ?? '1');
-  const [autoDebit, setAutoDebit]   = useState(expense?.auto_debit ?? false);
-  const [sectionId, setSectionId]   = useState(expense?.section_id ?? '');
-  const [cardId, setCardId]         = useState(expense?.card_id ?? '');
-  const [dueDate, setDueDate]       = useState(expense?.due_date ?? '');
-  const [notes, setNotes]           = useState(expense?.notes ?? '');
+  const [name, setName] = useState(expense?.name ?? "");
+  const [amount, setAmount] = useState(expense?.amount?.toString() ?? "");
+  const [type, setType] = useState<ExpenseType>(expense?.type ?? "RECURRING");
+  const [frequency, setFrequency] = useState<RecurrenceFrequency>(
+    expense?.recurrence_frequency ?? "MONTHLY",
+  );
+  const [day, setDay] = useState(expense?.recurrence_day?.toString() ?? "");
+  const [autoDebit, setAutoDebit] = useState(expense?.auto_debit ?? false);
+  const [sectionId, setSectionId] = useState(expense?.section_id ?? "");
+  const [cardId, setCardId] = useState(expense?.card_id ?? "");
+  const [dueDate, setDueDate] = useState(expense?.due_date ?? "");
+  const [notes, setNotes] = useState(expense?.notes ?? "");
 
   const isValid = name.trim() && amount && parseFloat(amount) > 0;
 
@@ -47,11 +61,11 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
         amount: parseFloat(amount),
         type,
         section_id: sectionId || undefined,
-        card_id: (autoDebit && cardId) ? cardId : undefined,
-        recurrence_frequency: type === 'RECURRING' ? frequency : undefined,
-        recurrence_day: type === 'RECURRING' ? parseInt(day) : undefined,
-        auto_debit: type === 'RECURRING' ? autoDebit : false,
-        due_date: type === 'ONE_TIME' ? dueDate || undefined : undefined,
+        card_id: autoDebit && cardId ? cardId : undefined,
+        recurrence_frequency: type === "RECURRING" ? frequency : undefined,
+        recurrence_day: type === "RECURRING" && day ? parseInt(day) : undefined,
+        auto_debit: type === "RECURRING" ? autoDebit : false,
+        due_date: type === "ONE_TIME" ? dueDate || undefined : undefined,
         notes: notes || undefined,
       };
 
@@ -387,13 +401,13 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
       {/* Backdrop */}
       <div
         style={{
-          position: 'fixed',
+          position: "fixed",
           inset: 0,
-          background: 'rgba(15, 23, 42, 0.5)',
-          backdropFilter: 'blur(4px)',
-          WebkitBackdropFilter: 'blur(4px)',
+          background: "rgba(15, 23, 42, 0.5)",
+          backdropFilter: "blur(4px)",
+          WebkitBackdropFilter: "blur(4px)",
           zIndex: 200,
-          animation: 'sheet-backdrop-in 0.25s ease both',
+          animation: "sheet-backdrop-in 0.25s ease both",
         }}
         onClick={onClose}
       />
@@ -402,93 +416,127 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
       <div
         className="em-modal-container"
         style={{
-          position: 'fixed',
+          position: "fixed",
           bottom: 0,
           left: 0,
           right: 0,
           zIndex: 210,
-          maxHeight: 'calc(100dvh - 40px)',
-          overflowY: 'auto',
-          background: 'var(--surface-raised)',
-          borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
-          boxShadow: '0 -8px 32px rgba(15, 23, 42, 0.18), 0 -4px 12px rgba(15, 118, 110, 0.06)',
-          animation: 'sheet-slide-up 0.35s cubic-bezier(0.32, 0.72, 0, 1) both',
+          maxHeight: "calc(100dvh - 40px)",
+          overflowY: "auto",
+          background: "var(--surface-raised)",
+          borderRadius: "var(--radius-lg) var(--radius-lg) 0 0",
+          boxShadow:
+            "0 -8px 32px rgba(15, 23, 42, 0.18), 0 -4px 12px rgba(15, 118, 110, 0.06)",
+          animation: "sheet-slide-up 0.35s cubic-bezier(0.32, 0.72, 0, 1) both",
         }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Drag handle (mobile) */}
-        <div className="em-modal-handle" style={{
-          display: 'flex',
-          justifyContent: 'center',
-          padding: '10px 0 2px',
-        }}>
-          <div style={{
-            width: '36px',
-            height: '4px',
-            borderRadius: '2px',
-            background: 'var(--border-default)',
-          }} />
+        <div
+          className="em-modal-handle"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "10px 0 2px",
+          }}
+        >
+          <div
+            style={{
+              width: "36px",
+              height: "4px",
+              borderRadius: "2px",
+              background: "var(--border-default)",
+            }}
+          />
         </div>
         <SheetCloseButton onClose={onClose} />
 
         {/* Header */}
-        <div className="em-modal-header" style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '16px 20px 0',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{
-              width: '36px',
-              height: '36px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 'var(--radius-sm)',
-              background: 'var(--accent-subtle)',
-              color: 'var(--accent)',
-            }}>
-              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+        <div
+          className="em-modal-header"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "16px 20px 0",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div
+              style={{
+                width: "36px",
+                height: "36px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "var(--radius-sm)",
+                background: "var(--accent-subtle)",
+                color: "var(--accent)",
+              }}
+            >
+              <svg
+                width="20"
+                height="20"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+                />
               </svg>
             </div>
-            <h3 style={{
-              fontSize: '18px',
-              fontWeight: 700,
-              color: 'var(--text-primary)',
-              letterSpacing: '-0.02em',
-            }}>
-              {isEditing ? 'Modifier la charge' : 'Nouvelle charge'}
+            <h3
+              style={{
+                fontSize: "18px",
+                fontWeight: 700,
+                color: "var(--text-primary)",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              {isEditing ? "Modifier la charge" : "Nouvelle charge"}
             </h3>
           </div>
           <button
             onClick={onClose}
             style={{
-              width: '36px',
-              height: '36px',
-              border: 'none',
-              background: 'var(--surface-sunken)',
-              borderRadius: 'var(--radius-sm)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: 'var(--text-tertiary)',
-              transition: 'all 0.15s',
+              width: "36px",
+              height: "36px",
+              border: "none",
+              background: "var(--surface-sunken)",
+              borderRadius: "var(--radius-sm)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              color: "var(--text-tertiary)",
+              transition: "all 0.15s",
             }}
           >
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            <svg
+              width="18"
+              height="18"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
 
         {/* Body */}
-        <div className="em-modal-body" style={{ padding: '20px 20px 0' }}>
-
+        <div className="em-modal-body" style={{ padding: "20px 20px 0" }}>
           {/* Section — en premier */}
-          <div style={{ marginBottom: '18px' }}>
+          <div style={{ marginBottom: "18px" }}>
             <label className="em-label">Section</label>
             <select
               value={sectionId}
@@ -505,7 +553,7 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
           </div>
 
           {/* Nom de la charge */}
-          <div style={{ marginBottom: '18px' }}>
+          <div style={{ marginBottom: "18px" }}>
             <label className="em-label">Nom de la charge</label>
             <input
               type="text"
@@ -517,37 +565,39 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
           </div>
 
           {/* Type toggle */}
-          <div style={{ marginBottom: '18px' }}>
+          <div style={{ marginBottom: "18px" }}>
             <label className="em-label">Type</label>
             <div className="em-type-toggle">
-              {(['RECURRING', 'ONE_TIME'] as ExpenseType[]).map((t) => (
+              {(["RECURRING", "ONE_TIME"] as ExpenseType[]).map((t) => (
                 <button
                   key={t}
                   type="button"
                   onClick={() => setType(t)}
                   className="em-type-btn"
-                  data-active={type === t ? 'true' : 'false'}
+                  data-active={type === t ? "true" : "false"}
                 >
-                  {t === 'RECURRING' ? 'Récurrente' : 'Ponctuelle'}
+                  {t === "RECURRING" ? "Récurrente" : "Ponctuelle"}
                 </button>
               ))}
             </div>
           </div>
 
           {/* Montant */}
-          <div style={{ marginBottom: '18px' }}>
+          <div style={{ marginBottom: "18px" }}>
             <label className="em-label">Montant</label>
-            <div style={{ position: 'relative' }}>
-              <span style={{
-                position: 'absolute',
-                left: '14px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                fontSize: '18px',
-                fontWeight: 700,
-                color: 'var(--accent)',
-                pointerEvents: 'none',
-              }}>
+            <div style={{ position: "relative" }}>
+              <span
+                style={{
+                  position: "absolute",
+                  left: "14px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  fontSize: "18px",
+                  fontWeight: 700,
+                  color: "var(--accent)",
+                  pointerEvents: "none",
+                }}
+              >
                 $
               </span>
               <input
@@ -563,10 +613,10 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
           </div>
 
           {/* RECURRING fields */}
-          {type === 'RECURRING' && (
+          {type === "RECURRING" && (
             <>
               {/* Frequence */}
-              <div style={{ marginBottom: '18px' }}>
+              <div style={{ marginBottom: "18px" }}>
                 <label className="em-label">Fréquence</label>
                 <div className="em-freq-chips">
                   {FREQUENCIES.map((f) => (
@@ -575,7 +625,7 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
                       type="button"
                       onClick={() => setFrequency(f.value)}
                       className="em-freq-chip"
-                      data-active={frequency === f.value ? 'true' : 'false'}
+                      data-active={frequency === f.value ? "true" : "false"}
                     >
                       {f.label}
                     </button>
@@ -584,31 +634,44 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
               </div>
 
               {/* Prelevement automatique toggle */}
-              <div style={{ marginBottom: '18px' }}>
+              <div style={{ marginBottom: "18px" }}>
                 <div className="em-toggle-row">
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                    <span style={{
-                      fontSize: '14px',
-                      fontWeight: 600,
-                      color: 'var(--text-primary)',
-                      letterSpacing: '-0.01em',
-                    }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "2px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        color: "var(--text-primary)",
+                        letterSpacing: "-0.01em",
+                      }}
+                    >
                       Prélèvement automatique
                     </span>
-                    <span style={{
-                      fontSize: '12px',
-                      fontWeight: 500,
-                      color: 'var(--text-tertiary)',
-                      letterSpacing: '-0.01em',
-                    }}>
+                    <span
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: 500,
+                        color: "var(--text-tertiary)",
+                        letterSpacing: "-0.01em",
+                      }}
+                    >
                       La charge sera marquée payée sans action
                     </span>
                   </div>
                   <button
                     type="button"
-                    onClick={() => { setAutoDebit(!autoDebit); if (autoDebit) setCardId(''); }}
+                    onClick={() => {
+                      setAutoDebit(!autoDebit);
+                      if (autoDebit) setCardId("");
+                    }}
                     className="em-toggle-switch"
-                    data-active={autoDebit ? 'true' : 'false'}
+                    data-active={autoDebit ? "true" : "false"}
                     aria-label="Prélèvement automatique"
                   >
                     <div className="em-toggle-knob" />
@@ -616,33 +679,46 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
                 </div>
               </div>
 
-              {/* Jour de prelevement — seulement si auto-debit */}
-              {autoDebit && (
-                <div style={{ marginBottom: '18px' }}>
-                  <label className="em-label">Jour de prélèvement</label>
-                  <input
-                    type="number"
-                    value={day}
-                    onChange={(e) => setDay(e.target.value)}
-                    min="1"
-                    max="31"
-                    className="expense-modal-day-input"
-                  />
-                  <p style={{
-                    fontSize: '11px',
+              {/* Jour du mois — optionnel pour toute charge récurrente */}
+              <div style={{ marginBottom: "18px" }}>
+                <label className="em-label">
+                  Jour du mois{" "}
+                  <span
+                    style={{
+                      fontWeight: 500,
+                      textTransform: "none",
+                      letterSpacing: 0,
+                      color: "var(--text-tertiary)",
+                    }}
+                  >
+                    (optionnel)
+                  </span>
+                </label>
+                <input
+                  type="number"
+                  value={day}
+                  onChange={(e) => setDay(e.target.value)}
+                  placeholder="ex: 15"
+                  min="1"
+                  max="31"
+                  className="expense-modal-day-input"
+                />
+                <p
+                  style={{
+                    fontSize: "11px",
                     fontWeight: 500,
-                    color: 'var(--text-tertiary)',
-                    marginTop: '4px',
-                    letterSpacing: '-0.01em',
-                  }}>
-                    Entre 1 et 31. Le prélèvement aura lieu le jour le plus proche si le mois est plus court.
-                  </p>
-                </div>
-              )}
+                    color: "var(--text-tertiary)",
+                    marginTop: "4px",
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  Laisse vide si pas de date fixe. Entre 1 et 31 sinon.
+                </p>
+              </div>
 
               {/* Carte bancaire — seulement si auto-debit */}
               {autoDebit && cards.length > 0 && (
-                <div style={{ marginBottom: '18px' }}>
+                <div style={{ marginBottom: "18px" }}>
                   <label className="em-label">Carte bancaire</label>
                   <select
                     value={cardId}
@@ -652,7 +728,8 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
                     <option value="">Choisir une carte...</option>
                     {cards.map((c) => (
                       <option key={c.id} value={c.id}>
-                        {c.name}{c.last_four ? ` ****${c.last_four}` : ''}
+                        {c.name}
+                        {c.last_four ? ` ****${c.last_four}` : ""}
                       </option>
                     ))}
                   </select>
@@ -662,8 +739,8 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
           )}
 
           {/* ONE_TIME date */}
-          {type === 'ONE_TIME' && (
-            <div style={{ marginBottom: '18px' }}>
+          {type === "ONE_TIME" && (
+            <div style={{ marginBottom: "18px" }}>
               <label className="em-label">Date exacte</label>
               <input
                 type="date"
@@ -675,15 +752,17 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
           )}
 
           {/* Notes */}
-          <div style={{ marginBottom: '4px' }}>
+          <div style={{ marginBottom: "4px" }}>
             <label className="em-label">
-              Notes{' '}
-              <span style={{
-                fontWeight: 500,
-                textTransform: 'none',
-                letterSpacing: 0,
-                color: 'var(--text-tertiary)',
-              }}>
+              Notes{" "}
+              <span
+                style={{
+                  fontWeight: 500,
+                  textTransform: "none",
+                  letterSpacing: 0,
+                  color: "var(--text-tertiary)",
+                }}
+              >
                 (optionnel)
               </span>
             </label>
@@ -694,16 +773,11 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
               className="expense-modal-textarea"
             />
           </div>
-
         </div>
 
         {/* Sticky footer actions */}
         <div className="em-actions">
-          <button
-            type="button"
-            onClick={onClose}
-            className="em-btn-cancel"
-          >
+          <button type="button" onClick={onClose} className="em-btn-cancel">
             Annuler
           </button>
           <button
@@ -713,14 +787,28 @@ export default function ExpenseModal({ sections, cards, expense, onClose, onSucc
             className="em-btn-submit"
           >
             {!isPending && (
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              <svg
+                width="18"
+                height="18"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4.5 12.75l6 6 9-13.5"
+                />
               </svg>
             )}
-            {isPending ? 'Enregistrement...' : isEditing ? 'Enregistrer' : 'Ajouter'}
+            {isPending
+              ? "Enregistrement..."
+              : isEditing
+                ? "Enregistrer"
+                : "Ajouter"}
           </button>
         </div>
-
       </div>
     </>
   );

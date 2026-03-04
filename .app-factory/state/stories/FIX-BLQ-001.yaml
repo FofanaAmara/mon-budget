@@ -1,0 +1,11 @@
+command: implement-story
+story_id: FIX-BLQ-001
+feature: charges-fixes
+epic: configuration
+status: code_complete
+phase: code_complete
+level: 1
+scope: [frontend, backend]
+started_at: 2026-03-04T00:00:00Z
+completed_at: null
+baseline_tests: "build OK, 0 test suite"
