@@ -338,39 +338,50 @@ export async function markAsPaid(id: string): Promise<void> {
   validateInput(idSchema, id);
   const userId = await requireAuth();
   const today = new Date().toISOString().split("T")[0];
-  await sql`
-    UPDATE monthly_expenses
-    SET status = 'PAID', paid_at = ${today}::date
+
+  // Read debt link BEFORE transaction (non-interactive constraint)
+  const meRows = await sql`
+    SELECT debt_id, amount, month FROM monthly_expenses
     WHERE id = ${id} AND user_id = ${userId}
   `;
 
-  // If this monthly expense is linked to a debt, decrement remaining_balance + log transaction
-  const meRows = await sql`
-    SELECT debt_id, amount, month FROM monthly_expenses
-    WHERE id = ${id} AND user_id = ${userId} AND debt_id IS NOT NULL
-  `;
-  if (meRows.length > 0) {
+  const hasDebtLink = meRows.length > 0 && meRows[0].debt_id !== null;
+
+  if (!hasDebtLink) {
+    // No debt link: single query, no transaction needed
+    await sql`
+      UPDATE monthly_expenses
+      SET status = 'PAID', paid_at = ${today}::date
+      WHERE id = ${id} AND user_id = ${userId}
+    `;
+  } else {
+    // Debt link: atomic update of status + debt balance + debt transaction log
     const { debt_id, amount, month } = meRows[0] as {
       debt_id: string;
       amount: number;
       month: string;
     };
-    await sql`
-      UPDATE debts SET
-        remaining_balance = GREATEST(remaining_balance - ${amount}, 0),
-        updated_at = NOW()
-      WHERE id = ${debt_id} AND user_id = ${userId}
-    `;
-    // Auto-deactivate if fully paid off
-    await sql`
-      UPDATE debts SET is_active = false, updated_at = NOW()
-      WHERE id = ${debt_id} AND user_id = ${userId} AND remaining_balance <= 0
-    `;
-    // Log the payment as a debt transaction
-    await sql`
-      INSERT INTO debt_transactions (user_id, debt_id, type, amount, month, note, source)
-      VALUES (${userId}, ${debt_id}, 'PAYMENT', ${amount}, ${month}, 'Versement mensuel', 'MONTHLY_EXPENSE')
-    `;
+    await sql.transaction((txn) => [
+      txn`
+        UPDATE monthly_expenses
+        SET status = 'PAID', paid_at = ${today}::date
+        WHERE id = ${id} AND user_id = ${userId}
+      `,
+      txn`
+        UPDATE debts SET
+          remaining_balance = GREATEST(remaining_balance - ${amount}, 0),
+          updated_at = NOW()
+        WHERE id = ${debt_id} AND user_id = ${userId}
+      `,
+      txn`
+        UPDATE debts SET is_active = false, updated_at = NOW()
+        WHERE id = ${debt_id} AND user_id = ${userId} AND remaining_balance <= 0
+      `,
+      txn`
+        INSERT INTO debt_transactions (user_id, debt_id, type, amount, month, note, source)
+        VALUES (${userId}, ${debt_id}, 'PAYMENT', ${amount}, ${month}, 'Versement mensuel', 'MONTHLY_EXPENSE')
+      `,
+    ]);
     revalidatePath("/projets");
   }
 

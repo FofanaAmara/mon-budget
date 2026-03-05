@@ -318,18 +318,19 @@ export async function addSavingsContribution(
 ): Promise<void> {
   validateInput(AddSavingsContributionSchema, { expenseId, amount, note });
   const userId = await requireAuth();
-  // Insert the contribution
-  await sql`
-    INSERT INTO savings_contributions (user_id, expense_id, amount, note)
-    VALUES (${userId}, ${expenseId}, ${amount}, ${note ?? null})
-  `;
-  // Update the running total
-  await sql`
-    UPDATE expenses SET
-      saved_amount = saved_amount + ${amount},
-      updated_at = NOW()
-    WHERE id = ${expenseId} AND user_id = ${userId}
-  `;
+  // Atomic: insert contribution + update running total
+  await sql.transaction((txn) => [
+    txn`
+      INSERT INTO savings_contributions (user_id, expense_id, amount, note)
+      VALUES (${userId}, ${expenseId}, ${amount}, ${note ?? null})
+    `,
+    txn`
+      UPDATE expenses SET
+        saved_amount = saved_amount + ${amount},
+        updated_at = NOW()
+      WHERE id = ${expenseId} AND user_id = ${userId}
+    `,
+  ]);
   revalidatePath("/projets");
   revalidatePath("/");
 }
@@ -362,24 +363,38 @@ export async function transferSavings(
     toName,
   });
   const userId = await requireAuth();
-  // Debit source
-  await sql`
-    INSERT INTO savings_contributions (user_id, expense_id, amount, note)
-    VALUES (${userId}, ${fromId}, ${-amount}, ${"Transfert vers " + toName})
-  `;
-  await sql`
-    UPDATE expenses SET saved_amount = saved_amount - ${amount}, updated_at = NOW()
+
+  // Pre-validation: verify source has sufficient funds (AC5)
+  const sourceRows = await sql`
+    SELECT saved_amount FROM expenses
     WHERE id = ${fromId} AND user_id = ${userId}
   `;
-  // Credit destination
-  await sql`
-    INSERT INTO savings_contributions (user_id, expense_id, amount, note)
-    VALUES (${userId}, ${toId}, ${amount}, ${"Transfert depuis " + fromName})
-  `;
-  await sql`
-    UPDATE expenses SET saved_amount = saved_amount + ${amount}, updated_at = NOW()
-    WHERE id = ${toId} AND user_id = ${userId}
-  `;
+  if (sourceRows.length === 0) {
+    throw new Error("Projet source introuvable");
+  }
+  if (Number(sourceRows[0].saved_amount) < amount) {
+    throw new Error("Fonds insuffisants dans le projet source");
+  }
+
+  // Atomic: debit source + credit destination (4 writes)
+  await sql.transaction((txn) => [
+    txn`
+      INSERT INTO savings_contributions (user_id, expense_id, amount, note)
+      VALUES (${userId}, ${fromId}, ${-amount}, ${"Transfert vers " + toName})
+    `,
+    txn`
+      UPDATE expenses SET saved_amount = saved_amount - ${amount}, updated_at = NOW()
+      WHERE id = ${fromId} AND user_id = ${userId}
+    `,
+    txn`
+      INSERT INTO savings_contributions (user_id, expense_id, amount, note)
+      VALUES (${userId}, ${toId}, ${amount}, ${"Transfert depuis " + fromName})
+    `,
+    txn`
+      UPDATE expenses SET saved_amount = saved_amount + ${amount}, updated_at = NOW()
+      WHERE id = ${toId} AND user_id = ${userId}
+    `,
+  ]);
   revalidatePath("/projets");
   revalidatePath("/");
 }

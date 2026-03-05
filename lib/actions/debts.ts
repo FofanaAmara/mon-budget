@@ -113,24 +113,25 @@ export async function makeExtraPayment(
 ): Promise<void> {
   validateInput(MakeExtraPaymentSchema, { id, amount });
   const userId = await requireAuth();
-  // Decrement remaining balance
-  await sql`
-    UPDATE debts SET
-      remaining_balance = GREATEST(remaining_balance - ${amount}, 0),
-      updated_at = NOW()
-    WHERE id = ${id} AND user_id = ${userId}
-  `;
-  // Auto-deactivate if fully paid
-  await sql`
-    UPDATE debts SET is_active = false, updated_at = NOW()
-    WHERE id = ${id} AND user_id = ${userId} AND remaining_balance <= 0
-  `;
-  // Log the extra payment as a debt transaction
   const txMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}`;
-  await sql`
-    INSERT INTO debt_transactions (user_id, debt_id, type, amount, month, note, source)
-    VALUES (${userId}, ${id}, 'PAYMENT', ${amount}, ${txMonth}, 'Paiement supplementaire', 'EXTRA_PAYMENT')
-  `;
+
+  // Atomic: decrement balance + auto-deactivate + log transaction
+  await sql.transaction((txn) => [
+    txn`
+      UPDATE debts SET
+        remaining_balance = GREATEST(remaining_balance - ${amount}, 0),
+        updated_at = NOW()
+      WHERE id = ${id} AND user_id = ${userId}
+    `,
+    txn`
+      UPDATE debts SET is_active = false, updated_at = NOW()
+      WHERE id = ${id} AND user_id = ${userId} AND remaining_balance <= 0
+    `,
+    txn`
+      INSERT INTO debt_transactions (user_id, debt_id, type, amount, month, note, source)
+      VALUES (${userId}, ${id}, 'PAYMENT', ${amount}, ${txMonth}, 'Paiement supplementaire', 'EXTRA_PAYMENT')
+    `,
+  ]);
   revalidatePath("/projets");
   revalidatePath("/");
 }

@@ -26,33 +26,38 @@ export async function addDebtTransaction(
   });
   const userId = await requireAuth();
 
-  // Insert the transaction
-  await sql`
-    INSERT INTO debt_transactions (user_id, debt_id, type, amount, month, note, source)
-    VALUES (${userId}, ${debtId}, ${type}, ${amount}, ${month}, ${note ?? null}, ${source})
-  `;
-
-  // Update remaining_balance: PAYMENT decrements, CHARGE increments
+  // Atomic: insert transaction + update balance
   if (type === "PAYMENT") {
-    await sql`
-      UPDATE debts SET
-        remaining_balance = GREATEST(remaining_balance - ${amount}, 0),
-        updated_at = NOW()
-      WHERE id = ${debtId} AND user_id = ${userId}
-    `;
-    // Auto-deactivate if fully paid
-    await sql`
-      UPDATE debts SET is_active = false, updated_at = NOW()
-      WHERE id = ${debtId} AND user_id = ${userId} AND remaining_balance <= 0
-    `;
+    await sql.transaction((txn) => [
+      txn`
+        INSERT INTO debt_transactions (user_id, debt_id, type, amount, month, note, source)
+        VALUES (${userId}, ${debtId}, ${type}, ${amount}, ${month}, ${note ?? null}, ${source})
+      `,
+      txn`
+        UPDATE debts SET
+          remaining_balance = GREATEST(remaining_balance - ${amount}, 0),
+          updated_at = NOW()
+        WHERE id = ${debtId} AND user_id = ${userId}
+      `,
+      txn`
+        UPDATE debts SET is_active = false, updated_at = NOW()
+        WHERE id = ${debtId} AND user_id = ${userId} AND remaining_balance <= 0
+      `,
+    ]);
   } else {
-    // CHARGE — increase balance
-    await sql`
-      UPDATE debts SET
-        remaining_balance = remaining_balance + ${amount},
-        updated_at = NOW()
-      WHERE id = ${debtId} AND user_id = ${userId}
-    `;
+    // CHARGE — insert transaction + increase balance
+    await sql.transaction((txn) => [
+      txn`
+        INSERT INTO debt_transactions (user_id, debt_id, type, amount, month, note, source)
+        VALUES (${userId}, ${debtId}, ${type}, ${amount}, ${month}, ${note ?? null}, ${source})
+      `,
+      txn`
+        UPDATE debts SET
+          remaining_balance = remaining_balance + ${amount},
+          updated_at = NOW()
+        WHERE id = ${debtId} AND user_id = ${userId}
+      `,
+    ]);
   }
 
   revalidatePath("/projets");
