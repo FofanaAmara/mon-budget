@@ -1,0 +1,13 @@
+# .app-factory/version.yaml
+plugin_version: 1.8.0
+initialized_at: 2026-03-04T18:00:00Z
+last_updated_at: 2026-03-05T10:00:00Z
+updates:
+  - version: 1.8.0
+    date: 2026-03-05T10:00:00Z
+    actions:
+      - "Consolidated 5 root directories into .app-factory/"
+      - "Simplified CLAUDE.md with @imports (af-conventions, af-clean-code, af-clean-architecture)"
+      - "Replaced verbose agent/command tables with plugin reference links"
+      - "Restored discovery TEMPLATE.md"
+      - "Created version.yaml for future update tracking"
