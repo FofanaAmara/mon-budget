@@ -378,7 +378,7 @@ export async function deferExpenseToMonth(
 
   // Fetch the current instance details
   const rows = await sql`
-    SELECT name, amount, section_id, card_id, month FROM monthly_expenses
+    SELECT name, amount, section_id, card_id, expense_id, month FROM monthly_expenses
     WHERE id = ${id} AND user_id = ${userId}
   `;
   if (rows.length === 0) return;
@@ -387,12 +387,14 @@ export async function deferExpenseToMonth(
     amount,
     section_id,
     card_id,
+    expense_id,
     month: sourceMonth,
   } = rows[0] as {
     name: string;
     amount: number;
     section_id: string | null;
     card_id: string | null;
+    expense_id: string | null;
     month: string;
   };
 
@@ -409,14 +411,13 @@ export async function deferExpenseToMonth(
     WHERE id = ${id} AND user_id = ${userId}
   `;
 
-  // Create new entry in target month (expense_id = NULL so it coexists with template generation)
   const [ty, tm] = targetMonth.split("-").map(Number);
   const dueDate = `${targetMonth}-01`;
   await sql`
     INSERT INTO monthly_expenses
       (user_id, expense_id, month, name, amount, due_date, status, section_id, card_id, is_planned, notes)
     VALUES
-      (${userId}, NULL, ${targetMonth}, ${name}, ${amount},
+      (${userId}, ${expense_id}, ${targetMonth}, ${name}, ${amount},
        ${dueDate}::date, 'UPCOMING', ${section_id}, ${card_id}, true,
        ${"Reporté depuis " + sourceLabel})
   `;
