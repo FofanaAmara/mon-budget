@@ -108,13 +108,12 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
   `;
 
   // Monthly cost multipliers (non-monthly → monthly equivalent)
+  // QUARTERLY and YEARLY are handled separately (full amount in due months, or spread_monthly path)
   const monthlyMultipliers: Record<string, number> = {
     WEEKLY: 52 / 12,
     BIWEEKLY: 26 / 12,
     MONTHLY: 1,
     BIMONTHLY: 1 / 2,
-    QUARTERLY: 1 / 3,
-    YEARLY: 1 / 12,
   };
 
   // Insert RECURRING instances
