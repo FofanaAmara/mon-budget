@@ -1,10 +1,16 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { sql } from '@/lib/db';
-import { requireAuth } from '@/lib/auth/helpers';
-import { calcNextDueDate } from '@/lib/utils';
-import type { Expense, ExpenseType, RecurrenceFrequency, SavingsContribution, MonthlySavingsSummary } from '@/lib/types';
+import { revalidatePath } from "next/cache";
+import { sql } from "@/lib/db";
+import { requireAuth } from "@/lib/auth/helpers";
+import { calcNextDueDate } from "@/lib/utils";
+import type {
+  Expense,
+  ExpenseType,
+  RecurrenceFrequency,
+  SavingsContribution,
+  MonthlySavingsSummary,
+} from "@/lib/types";
 
 export async function getExpenses(): Promise<Expense[]> {
   const userId = await requireAuth();
@@ -54,7 +60,7 @@ export async function getExpenseById(id: string): Promise<Expense | null> {
     LEFT JOIN cards c ON e.card_id = c.id
     WHERE e.id = ${id} AND e.user_id = ${userId}
   `;
-  return rows[0] as Expense ?? null;
+  return (rows[0] as Expense) ?? null;
 }
 
 type CreateExpenseInput = {
@@ -79,14 +85,23 @@ type CreateExpenseInput = {
   saved_amount?: number;
 };
 
-export async function createExpense(data: CreateExpenseInput): Promise<Expense> {
+export async function createExpense(
+  data: CreateExpenseInput,
+): Promise<Expense> {
   const userId = await requireAuth();
   // Calculate next_due_date
   let next_due_date: string | null = null;
 
-  if (data.type === 'RECURRING' && data.recurrence_frequency && data.recurrence_day) {
-    const nextDate = calcNextDueDate(data.recurrence_frequency, data.recurrence_day);
-    next_due_date = nextDate.toISOString().split('T')[0];
+  if (
+    data.type === "RECURRING" &&
+    data.recurrence_frequency &&
+    data.recurrence_day
+  ) {
+    const nextDate = calcNextDueDate(
+      data.recurrence_frequency,
+      data.recurrence_day,
+    );
+    next_due_date = nextDate.toISOString().split("T")[0];
   } else if (data.due_date) {
     next_due_date = data.due_date;
   }
@@ -103,7 +118,7 @@ export async function createExpense(data: CreateExpenseInput): Promise<Expense> 
       ${userId},
       ${data.name},
       ${data.amount},
-      ${data.currency ?? 'CAD'},
+      ${data.currency ?? "CAD"},
       ${data.type},
       ${data.section_id ?? null},
       ${data.card_id ?? null},
@@ -124,25 +139,28 @@ export async function createExpense(data: CreateExpenseInput): Promise<Expense> 
     RETURNING *
   `;
 
-  revalidatePath('/depenses');
-  revalidatePath('/projets');
-  revalidatePath('/parametres');
-  revalidatePath('/parametres/charges');
-  revalidatePath('/');
+  revalidatePath("/depenses");
+  revalidatePath("/projets");
+  revalidatePath("/parametres");
+  revalidatePath("/parametres/charges");
+  revalidatePath("/");
   return rows[0] as Expense;
 }
 
 export async function updateExpense(
   id: string,
-  data: Partial<CreateExpenseInput>
+  data: Partial<CreateExpenseInput>,
 ): Promise<Expense> {
   const userId = await requireAuth();
   // Recalculate next_due_date if recurrence fields changed
   let next_due_date: string | null | undefined = undefined;
 
   if (data.recurrence_frequency && data.recurrence_day) {
-    const nextDate = calcNextDueDate(data.recurrence_frequency, data.recurrence_day);
-    next_due_date = nextDate.toISOString().split('T')[0];
+    const nextDate = calcNextDueDate(
+      data.recurrence_frequency,
+      data.recurrence_day,
+    );
+    next_due_date = nextDate.toISOString().split("T")[0];
   } else if (data.due_date !== undefined) {
     next_due_date = data.due_date ?? null;
   }
@@ -155,8 +173,8 @@ export async function updateExpense(
       type = COALESCE(${data.type ?? null}, type),
       section_id = CASE WHEN ${data.section_id !== undefined} THEN ${data.section_id ?? null} ELSE section_id END,
       card_id = CASE WHEN ${data.card_id !== undefined} THEN ${data.card_id ?? null} ELSE card_id END,
-      recurrence_frequency = COALESCE(${data.recurrence_frequency ?? null}, recurrence_frequency),
-      recurrence_day = COALESCE(${data.recurrence_day ?? null}, recurrence_day),
+      recurrence_frequency = CASE WHEN ${data.recurrence_frequency !== undefined} THEN ${data.recurrence_frequency ?? null} ELSE recurrence_frequency END,
+      recurrence_day = CASE WHEN ${data.recurrence_day !== undefined} THEN ${data.recurrence_day ?? null} ELSE recurrence_day END,
       auto_debit = COALESCE(${data.auto_debit ?? null}, auto_debit),
       due_date = CASE WHEN ${data.due_date !== undefined} THEN ${data.due_date ?? null} ELSE due_date END,
       next_due_date = CASE WHEN ${next_due_date !== undefined} THEN ${next_due_date ?? null} ELSE next_due_date END,
@@ -169,11 +187,11 @@ export async function updateExpense(
     RETURNING *
   `;
 
-  revalidatePath('/depenses');
-  revalidatePath('/projets');
-  revalidatePath('/parametres');
-  revalidatePath('/parametres/charges');
-  revalidatePath('/');
+  revalidatePath("/depenses");
+  revalidatePath("/projets");
+  revalidatePath("/parametres");
+  revalidatePath("/parametres/charges");
+  revalidatePath("/");
   revalidatePath(`/depenses/${id}/edit`);
   return rows[0] as Expense;
 }
@@ -181,15 +199,21 @@ export async function updateExpense(
 export async function deleteExpense(id: string): Promise<void> {
   const userId = await requireAuth();
   await sql`UPDATE expenses SET is_active = false, updated_at = NOW() WHERE id = ${id} AND user_id = ${userId}`;
-  revalidatePath('/depenses');
-  revalidatePath('/projets');
-  revalidatePath('/parametres');
-  revalidatePath('/parametres/charges');
-  revalidatePath('/');
+  revalidatePath("/depenses");
+  revalidatePath("/projets");
+  revalidatePath("/parametres");
+  revalidatePath("/parametres/charges");
+  revalidatePath("/");
 }
 
 export async function getMonthlySummaryBySection(): Promise<
-  { section_id: string; section_name: string; section_icon: string; section_color: string; total: number }[]
+  {
+    section_id: string;
+    section_name: string;
+    section_icon: string;
+    section_color: string;
+    total: number;
+  }[]
 > {
   const userId = await requireAuth();
   const rows = await sql`
@@ -215,7 +239,13 @@ export async function getMonthlySummaryBySection(): Promise<
     GROUP BY s.id, s.name, s.icon, s.color, s.position
     ORDER BY s.position ASC
   `;
-  return rows as { section_id: string; section_name: string; section_icon: string; section_color: string; total: number }[];
+  return rows as {
+    section_id: string;
+    section_name: string;
+    section_icon: string;
+    section_color: string;
+    total: number;
+  }[];
 }
 
 export async function getPlannedExpenses(): Promise<Expense[]> {
@@ -236,7 +266,10 @@ export async function getPlannedExpenses(): Promise<Expense[]> {
   return rows as Expense[];
 }
 
-export async function updateSavedAmount(id: string, savedAmount: number): Promise<Expense> {
+export async function updateSavedAmount(
+  id: string,
+  savedAmount: number,
+): Promise<Expense> {
   const userId = await requireAuth();
   const rows = await sql`
     UPDATE expenses SET
@@ -245,8 +278,8 @@ export async function updateSavedAmount(id: string, savedAmount: number): Promis
     WHERE id = ${id} AND user_id = ${userId}
     RETURNING *
   `;
-  revalidatePath('/projets');
-  revalidatePath('/');
+  revalidatePath("/projets");
+  revalidatePath("/");
   return rows[0] as Expense;
 }
 
@@ -268,11 +301,13 @@ export async function addSavingsContribution(
       updated_at = NOW()
     WHERE id = ${expenseId} AND user_id = ${userId}
   `;
-  revalidatePath('/projets');
-  revalidatePath('/');
+  revalidatePath("/projets");
+  revalidatePath("/");
 }
 
-export async function getSavingsContributions(expenseId: string): Promise<SavingsContribution[]> {
+export async function getSavingsContributions(
+  expenseId: string,
+): Promise<SavingsContribution[]> {
   const userId = await requireAuth();
   const rows = await sql`
     SELECT * FROM savings_contributions
@@ -293,7 +328,7 @@ export async function transferSavings(
   // Debit source
   await sql`
     INSERT INTO savings_contributions (user_id, expense_id, amount, note)
-    VALUES (${userId}, ${fromId}, ${-amount}, ${'Transfert vers ' + toName})
+    VALUES (${userId}, ${fromId}, ${-amount}, ${"Transfert vers " + toName})
   `;
   await sql`
     UPDATE expenses SET saved_amount = saved_amount - ${amount}, updated_at = NOW()
@@ -302,14 +337,14 @@ export async function transferSavings(
   // Credit destination
   await sql`
     INSERT INTO savings_contributions (user_id, expense_id, amount, note)
-    VALUES (${userId}, ${toId}, ${amount}, ${'Transfert depuis ' + fromName})
+    VALUES (${userId}, ${toId}, ${amount}, ${"Transfert depuis " + fromName})
   `;
   await sql`
     UPDATE expenses SET saved_amount = saved_amount + ${amount}, updated_at = NOW()
     WHERE id = ${toId} AND user_id = ${userId}
   `;
-  revalidatePath('/projets');
-  revalidatePath('/');
+  revalidatePath("/projets");
+  revalidatePath("/");
 }
 
 // Returns the single "Épargne libre" pot, creating it if it doesn't exist.
@@ -351,12 +386,14 @@ export async function getExpensesByCard(cardId: string): Promise<Expense[]> {
   return rows as Expense[];
 }
 
-export async function getMonthlySavingsSummary(month: string): Promise<MonthlySavingsSummary> {
+export async function getMonthlySavingsSummary(
+  month: string,
+): Promise<MonthlySavingsSummary> {
   const userId = await requireAuth();
-  const [year, monthNum] = month.split('-').map(Number);
-  const monthStart = `${year}-${String(monthNum).padStart(2, '0')}-01`;
+  const [year, monthNum] = month.split("-").map(Number);
+  const monthStart = `${year}-${String(monthNum).padStart(2, "0")}-01`;
   const daysInMonth = new Date(year, monthNum, 0).getDate();
-  const monthEnd = `${year}-${String(monthNum).padStart(2, '0')}-${String(daysInMonth).padStart(2, '0')}`;
+  const monthEnd = `${year}-${String(monthNum).padStart(2, "0")}-${String(daysInMonth).padStart(2, "0")}`;
 
   const rows = await sql`
     SELECT
@@ -372,7 +409,9 @@ export async function getMonthlySavingsSummary(month: string): Promise<MonthlySa
     ORDER BY total DESC
   `;
 
-  const byProject = (rows as { expense_id: string; name: string; total: number }[]).map(r => ({
+  const byProject = (
+    rows as { expense_id: string; name: string; total: number }[]
+  ).map((r) => ({
     expense_id: r.expense_id,
     name: r.name,
     total: Number(r.total),
@@ -409,7 +448,7 @@ export async function getMonthlyExpenseActualsBySection(
       AND user_id = ${userId}
     GROUP BY section_id
   `;
-  return (rows as { section_id: string; total: string }[]).map(r => ({
+  return (rows as { section_id: string; total: string }[]).map((r) => ({
     section_id: r.section_id,
     total: Number(r.total),
   }));
@@ -427,7 +466,7 @@ export async function createAdhocExpense(
   cardId?: string,
 ): Promise<void> {
   const userId = await requireAuth();
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().split("T")[0];
   const effectiveDate = dueDate || today;
 
   if (alreadyPaid) {
@@ -442,6 +481,6 @@ export async function createAdhocExpense(
     `;
   }
 
-  revalidatePath('/depenses');
-  revalidatePath('/');
+  revalidatePath("/depenses");
+  revalidatePath("/");
 }

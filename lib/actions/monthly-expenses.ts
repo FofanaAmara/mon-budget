@@ -111,7 +111,17 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
     notes: string | null;
   }[]) {
     const dueDate = calcDueDateForMonth(expense, month);
-    if (!dueDate) continue;
+
+    // For non-monthly frequencies without a due date in this month, skip
+    // (e.g. YEARLY charge that falls in a different month)
+    if (
+      !dueDate &&
+      expense.recurrence_day &&
+      expense.recurrence_frequency &&
+      expense.recurrence_frequency !== "MONTHLY"
+    ) {
+      continue;
+    }
 
     // Store monthly equivalent for non-monthly charges
     const multiplier =
@@ -123,7 +133,7 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
         (user_id, expense_id, month, name, amount, due_date, status, section_id, card_id, is_auto_charged, notes)
       VALUES
         (${userId}, ${expense.id}, ${month}, ${expense.name}, ${monthlyAmount},
-         ${dueDate}::date, 'UPCOMING', ${expense.section_id}, ${expense.card_id},
+         ${dueDate ?? null}, 'UPCOMING', ${expense.section_id}, ${expense.card_id},
          ${expense.auto_debit}, ${expense.notes})
       ON CONFLICT (expense_id, month) DO NOTHING
     `;
