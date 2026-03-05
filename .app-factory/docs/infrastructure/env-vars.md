@@ -9,6 +9,7 @@
 | `VAPID_PUBLIC_KEY` | Cle publique VAPID pour Web Push | Genere avec `npx web-push generate-vapid-keys` |
 | `VAPID_PRIVATE_KEY` | Cle privee VAPID | — |
 | `VAPID_EMAIL` | Email associe aux notifications VAPID | `your@email.com` |
+| `CRON_SECRET` | Secret partage avec Vercel Cron pour authentifier les appels schedules | Auto-genere par Vercel, configurer dans le dashboard |
 
 ## Optionnelles (Neon)
 

@@ -24,6 +24,8 @@ export async function GET(req: NextRequest) {
   );
 
   try {
+    // Send the same daily reminder to ALL subscribers (not per-user).
+    // This is intentional: the cron delivers a generic reminder, not user-specific data.
     const subscriptions =
       await sql`SELECT endpoint, p256dh, auth FROM push_subscriptions`;
 
@@ -46,6 +48,17 @@ export async function GET(req: NextRequest) {
         ),
       ),
     );
+
+    // Clean up stale subscriptions (410 Gone = browser unsubscribed)
+    for (let i = 0; i < results.length; i++) {
+      const r = results[i];
+      if (
+        r.status === "rejected" &&
+        (r.reason as { statusCode?: number })?.statusCode === 410
+      ) {
+        await sql`DELETE FROM push_subscriptions WHERE endpoint = ${subscriptions[i].endpoint}`;
+      }
+    }
 
     const sent = results.filter((r) => r.status === "fulfilled").length;
     const failed = results.filter((r) => r.status === "rejected").length;
