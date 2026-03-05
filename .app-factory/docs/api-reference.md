@@ -2,7 +2,7 @@
 
 ## Route Handlers (REST)
 
-L'application utilise principalement des **Server Actions** (pas de REST API). Seuls 3 endpoints REST existent pour des contraintes techniques :
+L'application utilise principalement des **Server Actions** (pas de REST API). Seuls 4 endpoints REST existent pour des contraintes techniques :
 
 ### `POST /api/auth/[...path]`
 Proxy vers Neon Auth. Gere l'authentification (login, signup, session).
@@ -89,3 +89,13 @@ Toute la logique metier est dans `lib/actions/`. Chaque fonction est un Server A
 
 ### onboarding.ts
 - `completeOnboarding(data)` — Wizard de premiere configuration
+
+### claim.ts
+- `hasOrphanedData()` — Verifie si des donnees orphelines existent (pre-auth)
+- `claimOrphanedData()` — Relie les donnees orphelines a l'utilisateur authentifie
+- `ensureDefaultSections()` — Cree les sections par defaut si absentes
+
+### demo-data.ts
+- `hasUserData()` — Verifie si l'utilisateur a deja des donnees
+- `loadDemoData()` — Charge un jeu de donnees de demonstration
+- `clearAllUserData()` — Supprime toutes les donnees de l'utilisateur

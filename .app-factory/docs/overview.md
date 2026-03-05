@@ -19,7 +19,7 @@ Phases suivantes : famille et amis, puis potentiellement le grand public en mode
 - **Cartes bancaires** -- Associer les depenses a des cartes pour le suivi par carte.
 - **Sections** -- Organiser les depenses en categories (Habitation, Transport, etc.).
 - **Notifications push** -- Rappel quotidien via Web Push pour ne pas oublier de noter ses depenses.
-- **PWA** -- Installable sur mobile et desktop, fonctionne hors ligne (lecture).
+- **PWA** -- Installable sur mobile et desktop, shell accessible hors ligne.
 
 ## Documentation
 
