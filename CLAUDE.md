@@ -149,11 +149,11 @@ Priorite : Securite > Integrite donnees > Architecture > Performance > Clean cod
 | `.claude/plans/` | Plans d'implementation, PRDs, specs | ignore |
 | `.claude/ralph/` | Prompts Ralph Loop | ignore |
 | `.tmp/` | Screenshots, brouillons, fichiers temporaires | ignore |
-| `docs_permanente/` | Architecture, ADRs, runbooks | track |
-| `implementation_log/` | Logs par feature/story | track |
-| `backlog/` | Epics, features, stories | track |
-| `implementation_discoveries/` | Discoveries pendant le build | track |
-| `.app-factory-state/` | State files pour les commandes implement-* | ignore |
+| `.app-factory/docs/` | Architecture, ADRs, runbooks | track |
+| `.app-factory/log/` | Logs par feature/story | track |
+| `.app-factory/backlog/` | Epics, features, stories | track |
+| `.app-factory/discoveries/` | Discoveries pendant le build | track |
+| `.app-factory/state/` | State files pour les commandes implement-* | ignore |
 | `cs-brand/mes-finances/` | Brand identity | track |
 | `cs-design/mes-finances/` | Design system, mockups | track |
 

@@ -67,4 +67,4 @@ tsconfig.tsbuildinfo
 # Plans, ralph prompts, AF state
 .claude/plans/
 .claude/ralph/
-.app-factory-state/
+.app-factory/state/
