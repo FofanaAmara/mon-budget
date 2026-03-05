@@ -1,29 +1,34 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { sql } from '@/lib/db';
-import { requireAuth } from '@/lib/auth/helpers';
-import { createIncome } from '@/lib/actions/incomes';
+import { revalidatePath } from "next/cache";
+import { sql } from "@/lib/db";
+import { requireAuth } from "@/lib/auth/helpers";
+import { createIncome } from "@/lib/actions/incomes";
+import { BIWEEKLY_MONTHLY_MULTIPLIER } from "@/lib/constants";
+import type { IncomeFrequency } from "@/lib/types";
 
 // ─── Category → Section mapping ─────────────────────────────────
-const CATEGORY_MAP: Record<string, { name: string; icon: string; color: string }> = {
-  logement:     { name: 'Logement',     icon: '🏠', color: '#3D3BF3' },
-  epicerie:     { name: 'Épicerie',     icon: '🛒', color: '#10B981' },
-  transport:    { name: 'Transport',    icon: '🚗', color: '#F59E0B' },
-  services:     { name: 'Services',     icon: '💡', color: '#0EA5E9' },
-  restos:       { name: 'Restos',       icon: '🍽️', color: '#EC4899' },
-  loisirs:      { name: 'Loisirs',      icon: '🎬', color: '#8B5CF6' },
-  sante:        { name: 'Santé',        icon: '🏥', color: '#E53E3E' },
-  vetements:    { name: 'Vêtements',    icon: '👕', color: '#6B7280' },
-  abonnements:  { name: 'Abonnements',  icon: '📱', color: '#7C3AED' },
-  education:    { name: 'Éducation',    icon: '🎓', color: '#14B8A6' },
-  animaux:      { name: 'Animaux',      icon: '🐶', color: '#D97706' },
-  cadeaux:      { name: 'Cadeaux',      icon: '🎁', color: '#F43F5E' },
+const CATEGORY_MAP: Record<
+  string,
+  { name: string; icon: string; color: string }
+> = {
+  logement: { name: "Logement", icon: "🏠", color: "#3D3BF3" },
+  epicerie: { name: "Épicerie", icon: "🛒", color: "#10B981" },
+  transport: { name: "Transport", icon: "🚗", color: "#F59E0B" },
+  services: { name: "Services", icon: "💡", color: "#0EA5E9" },
+  restos: { name: "Restos", icon: "🍽️", color: "#EC4899" },
+  loisirs: { name: "Loisirs", icon: "🎬", color: "#8B5CF6" },
+  sante: { name: "Santé", icon: "🏥", color: "#E53E3E" },
+  vetements: { name: "Vêtements", icon: "👕", color: "#6B7280" },
+  abonnements: { name: "Abonnements", icon: "📱", color: "#7C3AED" },
+  education: { name: "Éducation", icon: "🎓", color: "#14B8A6" },
+  animaux: { name: "Animaux", icon: "🐶", color: "#D97706" },
+  cadeaux: { name: "Cadeaux", icon: "🎁", color: "#F43F5E" },
 };
 
 export async function completeOnboarding(data: {
   monthlyRevenue: number;
-  frequency: 'weekly' | 'biweekly' | 'monthly';
+  frequency: "weekly" | "biweekly" | "monthly";
   categories: string[];
   objective: string | null;
 }): Promise<{ success: boolean; error?: string }> {
@@ -32,12 +37,26 @@ export async function completeOnboarding(data: {
   try {
     // 1. Create the income (if amount provided)
     if (data.monthlyRevenue > 0) {
+      // data.monthlyRevenue is already converted to monthly by the form.
+      // For BIWEEKLY, reverse-calculate the per-pay amount so the income
+      // template stores the real paycheck value with the correct frequency.
+      // 'weekly' has no IncomeFrequency equivalent — store as MONTHLY amount.
+      let incomeFrequency: IncomeFrequency = "MONTHLY";
+      let incomeAmount = data.monthlyRevenue;
+
+      if (data.frequency === "biweekly") {
+        incomeFrequency = "BIWEEKLY";
+        incomeAmount = Math.round(
+          data.monthlyRevenue / BIWEEKLY_MONTHLY_MULTIPLIER,
+        );
+      }
+
       await createIncome({
-        name: 'Revenu principal',
-        source: 'EMPLOYMENT',
-        amount: data.monthlyRevenue,
+        name: "Revenu principal",
+        source: "EMPLOYMENT",
+        amount: incomeAmount,
         estimated_amount: null,
-        frequency: 'MONTHLY',
+        frequency: incomeFrequency,
       });
     }
 
@@ -45,9 +64,7 @@ export async function completeOnboarding(data: {
     await sql`DELETE FROM sections WHERE user_id = ${userId}`;
 
     // 3. Create sections from selected categories
-    const cats = data.categories
-      .map(id => CATEGORY_MAP[id])
-      .filter(Boolean);
+    const cats = data.categories.map((id) => CATEGORY_MAP[id]).filter(Boolean);
 
     if (cats.length > 0) {
       // Build VALUES for bulk insert
@@ -60,15 +77,18 @@ export async function completeOnboarding(data: {
       }
     }
 
-    revalidatePath('/');
-    revalidatePath('/revenus');
-    revalidatePath('/depenses');
-    revalidatePath('/sections');
-    revalidatePath('/parametres');
+    revalidatePath("/");
+    revalidatePath("/revenus");
+    revalidatePath("/depenses");
+    revalidatePath("/sections");
+    revalidatePath("/parametres");
 
     return { success: true };
   } catch (error) {
-    console.error('completeOnboarding error:', error);
-    return { success: false, error: 'Erreur lors de la configuration initiale.' };
+    console.error("completeOnboarding error:", error);
+    return {
+      success: false,
+      error: "Erreur lors de la configuration initiale.",
+    };
   }
 }
