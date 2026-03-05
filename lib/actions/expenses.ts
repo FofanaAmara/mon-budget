@@ -190,6 +190,25 @@ export async function updateExpense(
     RETURNING *
   `;
 
+  // Invalidate stale monthly_expenses when financial fields change
+  const hasFinancialChange =
+    data.amount !== undefined ||
+    data.recurrence_frequency !== undefined ||
+    data.spread_monthly !== undefined ||
+    data.recurrence_day !== undefined;
+
+  if (hasFinancialChange) {
+    const now = new Date();
+    const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+    await sql`
+      DELETE FROM monthly_expenses
+      WHERE expense_id = ${id}
+        AND user_id = ${userId}
+        AND status IN ('UPCOMING', 'OVERDUE')
+        AND month >= ${currentMonth}
+    `;
+  }
+
   revalidatePath("/depenses");
   revalidatePath("/projets");
   revalidatePath("/parametres");
@@ -202,6 +221,18 @@ export async function updateExpense(
 export async function deleteExpense(id: string): Promise<void> {
   const userId = await requireAuth();
   await sql`UPDATE expenses SET is_active = false, updated_at = NOW() WHERE id = ${id} AND user_id = ${userId}`;
+
+  // Remove stale future monthly_expenses for deactivated template
+  const now = new Date();
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  await sql`
+    DELETE FROM monthly_expenses
+    WHERE expense_id = ${id}
+      AND user_id = ${userId}
+      AND status IN ('UPCOMING', 'OVERDUE')
+      AND month >= ${currentMonth}
+  `;
+
   revalidatePath("/depenses");
   revalidatePath("/projets");
   revalidatePath("/parametres");
