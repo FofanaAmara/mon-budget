@@ -306,49 +306,41 @@ export default function ExpenseTemplateManager({
                       "fr-CA",
                       { minimumFractionDigits: 2, maximumFractionDigits: 2 },
                     )}
-                    {monthly != null && (
-                      <span
+                  </span>
+                  {monthly != null && (
+                    <>
+                      <div
                         style={{
-                          fontSize: "10px",
+                          fontSize: "11px",
                           fontWeight: 500,
                           color: "var(--text-tertiary)",
                           letterSpacing: 0,
+                          marginTop: "1px",
                         }}
                       >
-                        /mois
-                      </span>
-                    )}
-                  </span>
-                  {monthly != null && (
-                    <div
-                      style={{
-                        fontSize: "11px",
-                        fontWeight: 500,
-                        color: "var(--text-tertiary)",
-                        letterSpacing: "-0.01em",
-                        marginTop: "1px",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      <span
+                        par mois
+                      </div>
+                      <div
                         style={{
-                          fontSize: "0.85em",
+                          fontSize: "11px",
+                          fontWeight: 500,
                           color: "var(--text-tertiary)",
+                          letterSpacing: "-0.01em",
+                          whiteSpace: "nowrap",
                         }}
                       >
-                        $
-                      </span>
-                      {Number(expense.amount).toLocaleString("fr-CA", {
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 0,
-                      })}
-                      {" /"}
-                      {expense.recurrence_frequency === "YEARLY"
-                        ? "an"
-                        : FREQ_LABELS[
-                            expense.recurrence_frequency!
-                          ]?.toLowerCase()}
-                    </div>
+                        {Number(expense.amount).toLocaleString("fr-CA", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                        ${" /"}
+                        {expense.recurrence_frequency === "YEARLY"
+                          ? "an"
+                          : FREQ_LABELS[
+                              expense.recurrence_frequency!
+                            ]?.toLowerCase()}
+                      </div>
+                    </>
                   )}
                 </>
               );
@@ -532,38 +524,47 @@ export default function ExpenseTemplateManager({
               </span>
             </div>
           </div>
-          <span
+          <div
             style={{
-              fontSize: "15px",
-              fontWeight: 800,
-              letterSpacing: "-0.02em",
-              color: "var(--text-primary)",
-              fontVariantNumeric: "tabular-nums",
+              textAlign: "right",
+              width: "120px",
+              flexShrink: 0,
               marginRight: "74px",
             }}
           >
             <span
               style={{
-                fontSize: "0.65em",
-                fontWeight: 600,
-                color: "var(--accent)",
+                fontSize: "15px",
+                fontWeight: 800,
+                letterSpacing: "-0.02em",
+                color: "var(--text-primary)",
+                fontVariantNumeric: "tabular-nums",
+                whiteSpace: "nowrap",
               }}
             >
-              $
+              <span
+                style={{
+                  fontSize: "0.65em",
+                  fontWeight: 600,
+                  color: "var(--accent)",
+                }}
+              >
+                $
+              </span>
+              {formatSectionTotal(sectionTotal)}
             </span>
-            {formatSectionTotal(sectionTotal)}
-            <span
+            <div
               style={{
                 fontSize: "11px",
                 fontWeight: 500,
                 color: "var(--text-tertiary)",
                 letterSpacing: 0,
+                marginTop: "1px",
               }}
             >
-              {" "}
-              /mois
-            </span>
-          </span>
+              par mois
+            </div>
+          </div>
         </div>
 
         {/* Expense rows */}
