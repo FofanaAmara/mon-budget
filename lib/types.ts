@@ -20,9 +20,20 @@ export type Card = {
   updated_at: string;
 };
 
-export type ExpenseType = 'RECURRING' | 'ONE_TIME' | 'PLANNED';
-export type RecurrenceFrequency = 'WEEKLY' | 'BIWEEKLY' | 'MONTHLY' | 'BIMONTHLY' | 'QUARTERLY' | 'YEARLY';
-export type DebtFrequency = 'WEEKLY' | 'BIWEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
+export type ExpenseType = "RECURRING" | "ONE_TIME" | "PLANNED";
+export type RecurrenceFrequency =
+  | "WEEKLY"
+  | "BIWEEKLY"
+  | "MONTHLY"
+  | "BIMONTHLY"
+  | "QUARTERLY"
+  | "YEARLY";
+export type DebtFrequency =
+  | "WEEKLY"
+  | "BIWEEKLY"
+  | "MONTHLY"
+  | "QUARTERLY"
+  | "YEARLY";
 
 export type Expense = {
   id: string;
@@ -36,6 +47,7 @@ export type Expense = {
   recurrence_frequency: RecurrenceFrequency | null;
   recurrence_day: number | null;
   auto_debit: boolean;
+  spread_monthly: boolean;
   due_date: string | null;
   next_due_date: string | null;
   reminder_offsets: number[];
@@ -88,7 +100,7 @@ export type Debt = {
   card?: Card;
 };
 
-export type MonthlyExpenseStatus = 'UPCOMING' | 'PAID' | 'OVERDUE' | 'DEFERRED';
+export type MonthlyExpenseStatus = "UPCOMING" | "PAID" | "OVERDUE" | "DEFERRED";
 
 export type MonthlyExpense = {
   id: string;
@@ -115,22 +127,22 @@ export type MonthlyExpense = {
 export type MonthSummary = {
   count: number;
   total: number;
-  planned_total: number;       // charges fixes + dépenses prévues
-  unplanned_total: number;     // dépenses imprévues
+  planned_total: number; // charges fixes + dépenses prévues
+  unplanned_total: number; // dépenses imprévues
   paid_count: number;
-  paid_total: number;          // tout ce qui est payé (prévu + imprévu)
+  paid_total: number; // tout ce qui est payé (prévu + imprévu)
   overdue_count: number;
 };
 
-export type IncomeSource = 'EMPLOYMENT' | 'BUSINESS' | 'INVESTMENT' | 'OTHER';
-export type IncomeFrequency = 'MONTHLY' | 'BIWEEKLY' | 'YEARLY' | 'VARIABLE';
+export type IncomeSource = "EMPLOYMENT" | "BUSINESS" | "INVESTMENT" | "OTHER";
+export type IncomeFrequency = "MONTHLY" | "BIWEEKLY" | "YEARLY" | "VARIABLE";
 
 export type Income = {
   id: string;
   user_id: string;
   name: string;
   source: IncomeSource;
-  amount: number | null;           // null si VARIABLE
+  amount: number | null; // null si VARIABLE
   estimated_amount: number | null; // estimation mensuelle pour VARIABLE
   frequency: IncomeFrequency;
   pay_anchor_date: string | Date | null;
@@ -141,13 +153,17 @@ export type Income = {
   updated_at: string;
 };
 
-export type MonthlyIncomeStatus = 'EXPECTED' | 'RECEIVED' | 'PARTIAL' | 'MISSED';
+export type MonthlyIncomeStatus =
+  | "EXPECTED"
+  | "RECEIVED"
+  | "PARTIAL"
+  | "MISSED";
 
 export type MonthlyIncome = {
   id: string;
   user_id: string;
   income_id: string;
-  month: string;                   // "YYYY-MM"
+  month: string; // "YYYY-MM"
   expected_amount: number | null;
   actual_amount: number | null;
   status: MonthlyIncomeStatus;
@@ -171,7 +187,7 @@ export type SavingsContribution = {
   created_at: string;
 };
 
-export type DebtTransactionType = 'PAYMENT' | 'CHARGE';
+export type DebtTransactionType = "PAYMENT" | "CHARGE";
 
 export type DebtTransaction = {
   id: string;
@@ -195,12 +211,12 @@ export type MonthlySavingsSummary = {
 export type MonthlyDebtSummary = {
   totalPayments: number;
   totalCharges: number;
-  netMovement: number;  // payments - charges (positif = dette réduite)
+  netMovement: number; // payments - charges (positif = dette réduite)
   paymentCount: number;
   chargeCount: number;
 };
 
-export type AllocationLinkType = 'charges' | 'savings' | 'free';
+export type AllocationLinkType = "charges" | "savings" | "free";
 
 export type AllocationSection = {
   id: string;
@@ -217,7 +233,7 @@ export type IncomeAllocation = {
   section_ids: string[];
   sections: AllocationSection[];
   project_id: string | null;
-  end_month: string | null;    // "YYYY-MM" — null = permanent
+  end_month: string | null; // "YYYY-MM" — null = permanent
   color: string;
   position: number;
   is_active: boolean;

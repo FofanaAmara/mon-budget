@@ -45,6 +45,9 @@ export default function ExpenseModal({
   );
   const [day, setDay] = useState(expense?.recurrence_day?.toString() ?? "");
   const [autoDebit, setAutoDebit] = useState(expense?.auto_debit ?? false);
+  const [spreadMonthly, setSpreadMonthly] = useState(
+    expense?.spread_monthly ?? false,
+  );
   const [sectionId, setSectionId] = useState(expense?.section_id ?? "");
   const [cardId, setCardId] = useState(expense?.card_id ?? "");
   const [dueDate, setDueDate] = useState(expense?.due_date ?? "");
@@ -65,6 +68,11 @@ export default function ExpenseModal({
         recurrence_frequency: type === "RECURRING" ? frequency : undefined,
         recurrence_day: type === "RECURRING" && day ? parseInt(day) : undefined,
         auto_debit: type === "RECURRING" ? autoDebit : false,
+        spread_monthly:
+          type === "RECURRING" &&
+          (frequency === "QUARTERLY" || frequency === "YEARLY")
+            ? spreadMonthly
+            : false,
         due_date: type === "ONE_TIME" ? dueDate || undefined : undefined,
         notes: notes || undefined,
       };
@@ -622,7 +630,12 @@ export default function ExpenseModal({
                     <button
                       key={f.value}
                       type="button"
-                      onClick={() => setFrequency(f.value)}
+                      onClick={() => {
+                        setFrequency(f.value);
+                        if (f.value !== "QUARTERLY" && f.value !== "YEARLY") {
+                          setSpreadMonthly(false);
+                        }
+                      }}
                       className="em-freq-chip"
                       data-active={frequency === f.value ? "true" : "false"}
                     >
@@ -677,6 +690,53 @@ export default function ExpenseModal({
                   </button>
                 </div>
               </div>
+
+              {/* Répartir mensuellement — seulement pour QUARTERLY/YEARLY */}
+              {(frequency === "QUARTERLY" || frequency === "YEARLY") && (
+                <div style={{ marginBottom: "18px" }}>
+                  <div className="em-toggle-row">
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "2px",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: 600,
+                          color: "var(--text-primary)",
+                          letterSpacing: "-0.01em",
+                        }}
+                      >
+                        Répartir sur chaque mois
+                      </span>
+                      <span
+                        style={{
+                          fontSize: "12px",
+                          fontWeight: 500,
+                          color: "var(--text-tertiary)",
+                          letterSpacing: "-0.01em",
+                        }}
+                      >
+                        {frequency === "QUARTERLY"
+                          ? "Divise le montant sur 3 mois (trimestriel)"
+                          : "Divise le montant sur 12 mois (annuel)"}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setSpreadMonthly(!spreadMonthly)}
+                      className="em-toggle-switch"
+                      data-active={spreadMonthly ? "true" : "false"}
+                      aria-label="Répartir mensuellement"
+                    >
+                      <div className="em-toggle-knob" />
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* Jour du mois — optionnel pour toute charge récurrente */}
               <div style={{ marginBottom: "18px" }}>

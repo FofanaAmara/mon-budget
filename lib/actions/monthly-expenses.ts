@@ -37,13 +37,33 @@ function calcDueDateForMonth(
     return `${year}-${String(monthNum).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
   }
 
-  // For MONTHLY, QUARTERLY, YEARLY: use recurrence_day in this month
-  if (
-    expense.recurrence_day &&
-    ["MONTHLY", "QUARTERLY", "YEARLY"].includes(
-      expense.recurrence_frequency || "",
-    )
-  ) {
+  // For YEARLY: only generate in the due month
+  if (expense.recurrence_frequency === "YEARLY" && expense.recurrence_day) {
+    if (expense.next_due_date) {
+      const ref = new Date(expense.next_due_date + "T00:00:00");
+      const refMonth = ref.getMonth() + 1;
+      if (monthNum !== refMonth) return null;
+    }
+    const daysInMonth = new Date(year, monthNum, 0).getDate();
+    const day = Math.min(expense.recurrence_day, daysInMonth);
+    return `${year}-${String(monthNum).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  }
+
+  // For QUARTERLY: generate in due_month, +3, +6, +9
+  if (expense.recurrence_frequency === "QUARTERLY" && expense.recurrence_day) {
+    if (expense.next_due_date) {
+      const ref = new Date(expense.next_due_date + "T00:00:00");
+      const refMonth = ref.getMonth() + 1;
+      const diff = (((monthNum - refMonth) % 12) + 12) % 12; // positive modulo
+      if (diff % 3 !== 0) return null;
+    }
+    const daysInMonth = new Date(year, monthNum, 0).getDate();
+    const day = Math.min(expense.recurrence_day, daysInMonth);
+    return `${year}-${String(monthNum).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  }
+
+  // For MONTHLY: generate every month
+  if (expense.recurrence_frequency === "MONTHLY" && expense.recurrence_day) {
     const daysInMonth = new Date(year, monthNum, 0).getDate();
     const day = Math.min(expense.recurrence_day, daysInMonth);
     return `${year}-${String(monthNum).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -67,7 +87,7 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
 
   // Fetch active RECURRING expenses
   const recurringExpenses = await sql`
-    SELECT id, name, amount, section_id, card_id, auto_debit,
+    SELECT id, name, amount, section_id, card_id, auto_debit, spread_monthly,
            recurrence_frequency, recurrence_day, next_due_date, notes
     FROM expenses
     WHERE type = 'RECURRING'
@@ -105,27 +125,52 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
     section_id: string | null;
     card_id: string | null;
     auto_debit: boolean;
+    spread_monthly: boolean;
     recurrence_frequency: string | null;
     recurrence_day: number | null;
     next_due_date: string | null;
     notes: string | null;
   }[]) {
-    const dueDate = calcDueDateForMonth(expense, month);
+    const freq = expense.recurrence_frequency;
 
-    // For non-monthly frequencies without a due date in this month, skip
-    // (e.g. YEARLY charge that falls in a different month)
-    if (
-      !dueDate &&
-      expense.recurrence_day &&
-      expense.recurrence_frequency &&
-      expense.recurrence_frequency !== "MONTHLY"
-    ) {
+    // spread_monthly path: generate every month with divided amount
+    // Runs BEFORE calcDueDateForMonth to avoid being skipped by the non-due-month guard
+    if (expense.spread_monthly && (freq === "QUARTERLY" || freq === "YEARLY")) {
+      const periodCount = freq === "QUARTERLY" ? 3 : 12;
+      const spreadAmount =
+        Math.round((expense.amount / periodCount) * 100) / 100;
+      const daysInMonth = new Date(year, monthNum, 0).getDate();
+      const day = expense.recurrence_day
+        ? Math.min(expense.recurrence_day, daysInMonth)
+        : 1;
+      const syntheticDueDate = `${year}-${String(monthNum).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+      await sql`
+        INSERT INTO monthly_expenses
+          (user_id, expense_id, month, name, amount, due_date, status, section_id, card_id, is_auto_charged, notes)
+        VALUES
+          (${userId}, ${expense.id}, ${month}, ${expense.name}, ${spreadAmount},
+           ${syntheticDueDate}, 'UPCOMING', ${expense.section_id}, ${expense.card_id},
+           ${expense.auto_debit}, ${expense.notes})
+        ON CONFLICT (expense_id, month) DO NOTHING
+      `;
       continue;
     }
 
-    // Store monthly equivalent for non-monthly charges
+    // Normal path: calcDueDateForMonth + skip guard
+    const dueDate = calcDueDateForMonth(expense, month);
+
+    // Skip non-due months for QUARTERLY/YEARLY (calcDueDateForMonth returns null)
+    if (!dueDate && expense.recurrence_day && freq && freq !== "MONTHLY") {
+      continue;
+    }
+
+    // For QUARTERLY/YEARLY without spread: full amount in due months only (multiplier = 1)
+    // For other frequencies: use the monthly equivalent multiplier
     const multiplier =
-      monthlyMultipliers[expense.recurrence_frequency ?? "MONTHLY"] ?? 1;
+      freq === "QUARTERLY" || freq === "YEARLY"
+        ? 1
+        : (monthlyMultipliers[freq ?? "MONTHLY"] ?? 1);
     const monthlyAmount = Math.round(expense.amount * multiplier * 100) / 100;
 
     await sql`
