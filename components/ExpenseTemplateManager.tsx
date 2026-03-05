@@ -534,7 +534,7 @@ export default function ExpenseTemplateManager({
           >
             <span
               style={{
-                fontSize: "15px",
+                fontSize: "17px",
                 fontWeight: 800,
                 letterSpacing: "-0.02em",
                 color: "var(--text-primary)",
