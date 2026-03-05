@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { sql } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/helpers";
-import { calcNextDueDate } from "@/lib/utils";
+import { calcNextDueDate, currentMonth } from "@/lib/utils";
 import type {
   Expense,
   ExpenseType,
@@ -198,14 +198,13 @@ export async function updateExpense(
     data.recurrence_day !== undefined;
 
   if (hasFinancialChange) {
-    const now = new Date();
-    const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+    const month = currentMonth();
     await sql`
       DELETE FROM monthly_expenses
       WHERE expense_id = ${id}
         AND user_id = ${userId}
         AND status IN ('UPCOMING', 'OVERDUE')
-        AND month >= ${currentMonth}
+        AND month >= ${month}
     `;
   }
 
@@ -223,14 +222,13 @@ export async function deleteExpense(id: string): Promise<void> {
   await sql`UPDATE expenses SET is_active = false, updated_at = NOW() WHERE id = ${id} AND user_id = ${userId}`;
 
   // Remove stale future monthly_expenses for deactivated template
-  const now = new Date();
-  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const month = currentMonth();
   await sql`
     DELETE FROM monthly_expenses
     WHERE expense_id = ${id}
       AND user_id = ${userId}
       AND status IN ('UPCOMING', 'OVERDUE')
-      AND month >= ${currentMonth}
+      AND month >= ${month}
   `;
 
   revalidatePath("/depenses");
