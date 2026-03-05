@@ -279,6 +279,7 @@ CREATE TABLE IF NOT EXISTS monthly_allocations (
 -- ============================================================
 CREATE TABLE IF NOT EXISTS savings_contributions (
   id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id    TEXT NOT NULL,
   expense_id UUID NOT NULL REFERENCES expenses(id) ON DELETE CASCADE,
   amount     DECIMAL(10, 2) NOT NULL,
   note       TEXT,
@@ -287,9 +288,8 @@ CREATE TABLE IF NOT EXISTS savings_contributions (
 
 CREATE INDEX IF NOT EXISTS idx_savings_contributions_expense
   ON savings_contributions(expense_id, created_at DESC);
-
--- user_id ajoute par migrate-auth.mjs (pas dans le CREATE TABLE original)
--- ALTER TABLE savings_contributions ADD COLUMN user_id TEXT NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_savings_contributions_user_id
+  ON savings_contributions(user_id);
 
 -- ============================================================
 -- TABLE: settings
