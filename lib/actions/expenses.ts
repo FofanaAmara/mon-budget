@@ -254,6 +254,7 @@ export async function getMonthlySummaryBySection(): Promise<
       s.name as section_name,
       s.icon as section_icon,
       s.color as section_color,
+      -- Multipliers must match WEEKLY_MONTHLY_MULTIPLIER and BIWEEKLY_MONTHLY_MULTIPLIER in lib/constants.ts
       COALESCE(SUM(
         CASE
           WHEN e.recurrence_frequency = 'WEEKLY' THEN e.amount * 52.0 / 12

@@ -1,10 +1,11 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { sql } from '@/lib/db';
-import { requireAuth } from '@/lib/auth/helpers';
-import { countBiweeklyPayDatesInMonth } from '@/lib/utils';
-import type { MonthlyIncome } from '@/lib/types';
+import { revalidatePath } from "next/cache";
+import { sql } from "@/lib/db";
+import { requireAuth } from "@/lib/auth/helpers";
+import { countBiweeklyPayDatesInMonth } from "@/lib/utils";
+import type { MonthlyIncome } from "@/lib/types";
+import { BIWEEKLY_MONTHLY_MULTIPLIER } from "@/lib/constants";
 
 // Generates monthly_incomes instances for FIXED incomes of a given month.
 // VARIABLE incomes are NOT auto-generated (manual entry only).
@@ -17,19 +18,33 @@ export async function generateMonthlyIncomes(month: string): Promise<void> {
     WHERE is_active = true AND frequency != 'VARIABLE' AND user_id = ${userId}
   `;
 
-  for (const inc of incomes as { id: string; name: string; amount: number; frequency: string; pay_anchor_date: string | Date | null; auto_deposit: boolean }[]) {
+  for (const inc of incomes as {
+    id: string;
+    name: string;
+    amount: number;
+    frequency: string;
+    pay_anchor_date: string | Date | null;
+    auto_deposit: boolean;
+  }[]) {
     let expectedAmount: number;
 
-    if (inc.frequency === 'BIWEEKLY' && inc.pay_anchor_date) {
-      const [year, monthNum] = month.split('-').map(Number);
-      const payDates = countBiweeklyPayDatesInMonth(inc.pay_anchor_date, year, monthNum - 1);
+    if (inc.frequency === "BIWEEKLY" && inc.pay_anchor_date) {
+      const [year, monthNum] = month.split("-").map(Number);
+      const payDates = countBiweeklyPayDatesInMonth(
+        inc.pay_anchor_date,
+        year,
+        monthNum - 1,
+      );
       expectedAmount = Number(inc.amount) * payDates;
     } else {
       expectedAmount =
-        inc.frequency === 'MONTHLY'  ? Number(inc.amount) :
-        inc.frequency === 'BIWEEKLY' ? (Number(inc.amount) * 2) :
-        inc.frequency === 'YEARLY'   ? (Number(inc.amount) / 12) :
-        Number(inc.amount);
+        inc.frequency === "MONTHLY"
+          ? Number(inc.amount)
+          : inc.frequency === "BIWEEKLY"
+            ? Number(inc.amount) * BIWEEKLY_MONTHLY_MULTIPLIER
+            : inc.frequency === "YEARLY"
+              ? Number(inc.amount) / 12
+              : Number(inc.amount);
     }
 
     await sql`
@@ -46,7 +61,9 @@ export async function generateMonthlyIncomes(month: string): Promise<void> {
 
 // Auto-mark EXPECTED incomes as RECEIVED when is_auto_deposited is true.
 // Same pattern as autoMarkPaidForAutoDebit in monthly-expenses.ts.
-export async function autoMarkReceivedForAutoDeposit(month: string): Promise<void> {
+export async function autoMarkReceivedForAutoDeposit(
+  month: string,
+): Promise<void> {
   const userId = await requireAuth();
   await sql`
     UPDATE monthly_incomes
@@ -83,8 +100,14 @@ export async function getMonthlyIncomeSummary(month: string): Promise<{
   `;
 
   const items = rows as MonthlyIncome[];
-  const expectedTotal = items.reduce((s, i) => s + Number(i.expected_amount ?? 0), 0);
-  const actualTotal = items.reduce((s, i) => s + Number(i.actual_amount ?? 0), 0);
+  const expectedTotal = items.reduce(
+    (s, i) => s + Number(i.expected_amount ?? 0),
+    0,
+  );
+  const actualTotal = items.reduce(
+    (s, i) => s + Number(i.actual_amount ?? 0),
+    0,
+  );
 
   return { items, expectedTotal, actualTotal };
 }
@@ -93,7 +116,7 @@ export async function getMonthlyIncomeSummary(month: string): Promise<{
 export async function markIncomeReceived(
   monthlyIncomeId: string,
   actualAmount: number,
-  notes?: string
+  notes?: string,
 ): Promise<void> {
   const userId = await requireAuth();
   await sql`
@@ -105,21 +128,23 @@ export async function markIncomeReceived(
       notes = ${notes ?? null}
     WHERE id = ${monthlyIncomeId} AND user_id = ${userId}
   `;
-  revalidatePath('/revenus');
-  revalidatePath('/');
+  revalidatePath("/revenus");
+  revalidatePath("/");
 }
 
 // Revert a RECEIVED/PARTIAL income back to EXPECTED.
 // Same pattern as markAsUpcoming in monthly-expenses.ts.
-export async function markIncomeAsExpected(monthlyIncomeId: string): Promise<void> {
+export async function markIncomeAsExpected(
+  monthlyIncomeId: string,
+): Promise<void> {
   const userId = await requireAuth();
   await sql`
     UPDATE monthly_incomes
     SET status = 'EXPECTED', actual_amount = NULL, received_at = NULL
     WHERE id = ${monthlyIncomeId} AND user_id = ${userId}
   `;
-  revalidatePath('/revenus');
-  revalidatePath('/');
+  revalidatePath("/revenus");
+  revalidatePath("/");
 }
 
 // Delete a monthly income instance (adhoc/ponctuel only).
@@ -130,21 +155,24 @@ export async function deleteMonthlyIncome(id: string): Promise<void> {
     DELETE FROM monthly_incomes
     WHERE id = ${id} AND user_id = ${userId}
   `;
-  revalidatePath('/revenus');
-  revalidatePath('/');
+  revalidatePath("/revenus");
+  revalidatePath("/");
 }
 
 // Update the expected_amount for a monthly income (this month only — template unchanged).
 // Use case: congé sans solde → salaire 3 000 $ au lieu de 4 200 $ ce mois.
-export async function updateMonthlyIncomeAmount(id: string, newExpectedAmount: number): Promise<void> {
+export async function updateMonthlyIncomeAmount(
+  id: string,
+  newExpectedAmount: number,
+): Promise<void> {
   const userId = await requireAuth();
   await sql`
     UPDATE monthly_incomes
     SET expected_amount = ${newExpectedAmount}
     WHERE id = ${id} AND user_id = ${userId}
   `;
-  revalidatePath('/revenus');
-  revalidatePath('/');
+  revalidatePath("/revenus");
+  revalidatePath("/");
 }
 
 // Create AND mark as RECEIVED a VARIABLE income for the given month (manual entry).
@@ -152,7 +180,7 @@ export async function markVariableIncomeReceived(
   incomeId: string,
   month: string,
   actualAmount: number,
-  notes?: string
+  notes?: string,
 ): Promise<void> {
   const userId = await requireAuth();
   await sql`
@@ -167,6 +195,6 @@ export async function markVariableIncomeReceived(
         received_at = CURRENT_DATE,
         notes = ${notes ?? null}
   `;
-  revalidatePath('/revenus');
-  revalidatePath('/');
+  revalidatePath("/revenus");
+  revalidatePath("/");
 }

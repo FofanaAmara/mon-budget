@@ -4,6 +4,10 @@ import { revalidatePath } from "next/cache";
 import { sql } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/helpers";
 import type { MonthlyExpense, MonthSummary } from "@/lib/types";
+import {
+  WEEKLY_MONTHLY_MULTIPLIER,
+  BIWEEKLY_MONTHLY_MULTIPLIER,
+} from "@/lib/constants";
 
 // Calculates the due_date for a RECURRING expense in a given month
 function calcDueDateForMonth(
@@ -110,8 +114,8 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
   // Monthly cost multipliers (non-monthly → monthly equivalent)
   // QUARTERLY and YEARLY are handled separately (full amount in due months, or spread_monthly path)
   const monthlyMultipliers: Record<string, number> = {
-    WEEKLY: 52 / 12,
-    BIWEEKLY: 26 / 12,
+    WEEKLY: WEEKLY_MONTHLY_MULTIPLIER,
+    BIWEEKLY: BIWEEKLY_MONTHLY_MULTIPLIER,
     MONTHLY: 1,
     BIMONTHLY: 1 / 2,
   };
