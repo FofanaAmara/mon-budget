@@ -102,6 +102,7 @@ Instances generees automatiquement depuis les templates.
 | status | VARCHAR | EXPECTED, RECEIVED, PARTIAL, MISSED |
 | received_at | DATE | |
 | is_auto_deposited | BOOLEAN | |
+| manually_edited | BOOLEAN | DEFAULT FALSE — preserves manual edits from generation overwrite |
 
 ### debts
 
