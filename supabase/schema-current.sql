@@ -1,5 +1,5 @@
 -- Mes Finances -- Schema PostgreSQL complet (Neon)
--- Reconstitue depuis supabase/schema.sql (MVP) + 14 scripts de migration
+-- Reconstitue depuis supabase/schema.sql (MVP) + 15 scripts de migration
 -- Derniere mise a jour : 2026-03-05
 --
 -- NOTE: La table monthly_incomes a ete creee directement dans la DB Neon
@@ -94,6 +94,9 @@ CREATE TABLE IF NOT EXISTS expenses (
 );
 
 CREATE INDEX IF NOT EXISTS idx_expenses_user_id ON expenses(user_id);
+CREATE INDEX IF NOT EXISTS idx_expenses_section_id ON expenses(section_id);
+CREATE INDEX IF NOT EXISTS idx_expenses_card_id ON expenses(card_id);
+CREATE INDEX IF NOT EXISTS idx_expenses_user_active ON expenses(user_id, is_active) WHERE is_active = true;
 
 -- ============================================================
 -- TABLE: monthly_expenses
@@ -125,6 +128,8 @@ CREATE INDEX IF NOT EXISTS idx_me_month ON monthly_expenses(month);
 CREATE INDEX IF NOT EXISTS idx_me_month_status ON monthly_expenses(month, status);
 CREATE INDEX IF NOT EXISTS idx_me_section ON monthly_expenses(section_id);
 CREATE INDEX IF NOT EXISTS idx_monthly_expenses_user_id ON monthly_expenses(user_id);
+CREATE INDEX IF NOT EXISTS idx_monthly_expenses_card_id ON monthly_expenses(card_id);
+CREATE INDEX IF NOT EXISTS idx_me_user_month ON monthly_expenses(user_id, month);
 
 -- ============================================================
 -- TABLE: incomes
@@ -174,6 +179,7 @@ CREATE TABLE IF NOT EXISTS monthly_incomes (
 );
 
 CREATE INDEX IF NOT EXISTS idx_monthly_incomes_user_id ON monthly_incomes(user_id);
+CREATE INDEX IF NOT EXISTS idx_mi_user_month ON monthly_incomes(user_id, month);
 
 -- ============================================================
 -- TABLE: debts
@@ -246,6 +252,8 @@ CREATE TABLE IF NOT EXISTS income_allocations (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+CREATE INDEX IF NOT EXISTS idx_income_allocations_project_id ON income_allocations(project_id);
 
 -- ============================================================
 -- TABLE: allocation_sections
@@ -342,3 +350,4 @@ CREATE TABLE IF NOT EXISTS notification_log (
 );
 
 CREATE INDEX IF NOT EXISTS idx_notification_log_user_id ON notification_log(user_id);
+CREATE INDEX IF NOT EXISTS idx_notification_log_expense_id ON notification_log(expense_id);
