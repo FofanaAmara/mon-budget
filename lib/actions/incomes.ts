@@ -1,10 +1,17 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { sql } from '@/lib/db';
-import { requireAuth } from '@/lib/auth/helpers';
-import { calcMonthlyIncome } from '@/lib/utils';
-import type { Income, IncomeFrequency, IncomeSource } from '@/lib/types';
+import { revalidatePath } from "next/cache";
+import { sql } from "@/lib/db";
+import { requireAuth } from "@/lib/auth/helpers";
+import { calcMonthlyIncome } from "@/lib/utils";
+import type { Income } from "@/lib/types";
+import { validateInput } from "@/lib/schemas/validate";
+import { idSchema } from "@/lib/schemas/common";
+import {
+  CreateIncomeSchema,
+  type CreateIncomeInput,
+  CreateAdhocIncomeSchema,
+} from "@/lib/schemas/income";
 
 export async function getIncomes(): Promise<Income[]> {
   const userId = await requireAuth();
@@ -18,39 +25,43 @@ export async function getIncomes(): Promise<Income[]> {
 
 export async function getMonthlyIncomeTotal(): Promise<number> {
   const incomes = await getIncomes();
-  return incomes.reduce((sum, inc) => sum + calcMonthlyIncome(
-    inc.amount !== null && inc.amount !== undefined ? Number(inc.amount) : null,
-    inc.frequency,
-    inc.estimated_amount !== null && inc.estimated_amount !== undefined ? Number(inc.estimated_amount) : null,
-  ), 0);
+  return incomes.reduce(
+    (sum, inc) =>
+      sum +
+      calcMonthlyIncome(
+        inc.amount !== null && inc.amount !== undefined
+          ? Number(inc.amount)
+          : null,
+        inc.frequency,
+        inc.estimated_amount !== null && inc.estimated_amount !== undefined
+          ? Number(inc.estimated_amount)
+          : null,
+      ),
+    0,
+  );
 }
 
-type IncomeInput = {
-  name: string;
-  source: IncomeSource;
-  amount: number | null;
-  estimated_amount: number | null;
-  frequency: IncomeFrequency;
-  pay_anchor_date?: string | null;
-  auto_deposit?: boolean;
-  notes?: string | null;
-};
-
-export async function createIncome(data: IncomeInput): Promise<Income> {
+export async function createIncome(data: CreateIncomeInput): Promise<Income> {
+  validateInput(CreateIncomeSchema, data);
   const userId = await requireAuth();
   const rows = await sql`
     INSERT INTO incomes (user_id, name, source, amount, estimated_amount, frequency, pay_anchor_date, auto_deposit, notes)
     VALUES (${userId}, ${data.name}, ${data.source}, ${data.amount}, ${data.estimated_amount}, ${data.frequency}, ${data.pay_anchor_date ?? null}, ${data.auto_deposit ?? false}, ${data.notes ?? null})
     RETURNING *
   `;
-  revalidatePath('/revenus');
-  revalidatePath('/parametres');
-  revalidatePath('/parametres/revenus');
-  revalidatePath('/');
+  revalidatePath("/revenus");
+  revalidatePath("/parametres");
+  revalidatePath("/parametres/revenus");
+  revalidatePath("/");
   return rows[0] as Income;
 }
 
-export async function updateIncome(id: string, data: Partial<IncomeInput>): Promise<Income> {
+export async function updateIncome(
+  id: string,
+  data: Partial<CreateIncomeInput>,
+): Promise<Income> {
+  validateInput(idSchema, id);
+  validateInput(CreateIncomeSchema.partial(), data);
   const userId = await requireAuth();
   const rows = await sql`
     UPDATE incomes SET
@@ -66,27 +77,29 @@ export async function updateIncome(id: string, data: Partial<IncomeInput>): Prom
     WHERE id = ${id} AND user_id = ${userId}
     RETURNING *
   `;
-  revalidatePath('/revenus');
-  revalidatePath('/parametres');
-  revalidatePath('/parametres/revenus');
-  revalidatePath('/');
+  revalidatePath("/revenus");
+  revalidatePath("/parametres");
+  revalidatePath("/parametres/revenus");
+  revalidatePath("/");
   return rows[0] as Income;
 }
 
 export async function deleteIncome(id: string): Promise<void> {
+  validateInput(idSchema, id);
   const userId = await requireAuth();
   await sql`UPDATE incomes SET is_active = false, updated_at = NOW() WHERE id = ${id} AND user_id = ${userId}`;
-  revalidatePath('/revenus');
-  revalidatePath('/');
+  revalidatePath("/revenus");
+  revalidatePath("/");
 }
 
 // Creates a one-time adhoc income and inserts it as RECEIVED in monthly_incomes.
 export async function createAdhocIncome(
   name: string,
   amount: number,
-  source: IncomeSource,
-  month: string
+  source: string,
+  month: string,
 ): Promise<void> {
+  validateInput(CreateAdhocIncomeSchema, { name, amount, source, month });
   const userId = await requireAuth();
   // Insert into incomes table as VARIABLE (one-time use)
   const rows = await sql`
@@ -106,8 +119,8 @@ export async function createAdhocIncome(
   // Deactivate so it doesn't appear in Réglages > Revenus récurrents
   await sql`UPDATE incomes SET is_active = false WHERE id = ${incomeId}`;
 
-  revalidatePath('/revenus');
-  revalidatePath('/parametres');
-  revalidatePath('/parametres/revenus');
-  revalidatePath('/');
+  revalidatePath("/revenus");
+  revalidatePath("/parametres");
+  revalidatePath("/parametres/revenus");
+  revalidatePath("/");
 }

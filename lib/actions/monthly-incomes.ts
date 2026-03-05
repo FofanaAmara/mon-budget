@@ -6,11 +6,22 @@ import { requireAuth } from "@/lib/auth/helpers";
 import { countBiweeklyPayDatesInMonth } from "@/lib/utils";
 import type { MonthlyIncome } from "@/lib/types";
 import { BIWEEKLY_MONTHLY_MULTIPLIER } from "@/lib/constants";
+import { validateInput } from "@/lib/schemas/validate";
+import {
+  idSchema,
+  monthSchema,
+  nonNegativeAmountSchema,
+} from "@/lib/schemas/common";
+import {
+  MarkIncomeReceivedSchema,
+  MarkVariableIncomeReceivedSchema,
+} from "@/lib/schemas/monthly-income";
 
 // Generates monthly_incomes instances for FIXED incomes of a given month.
 // VARIABLE incomes are NOT auto-generated (manual entry only).
 // Idempotent — safe to call multiple times (ON CONFLICT DO NOTHING).
 export async function generateMonthlyIncomes(month: string): Promise<void> {
+  validateInput(monthSchema, month);
   const userId = await requireAuth();
   const incomes = await sql`
     SELECT id, name, source, amount, frequency, pay_anchor_date, auto_deposit
@@ -65,6 +76,7 @@ export async function generateMonthlyIncomes(month: string): Promise<void> {
 export async function autoMarkReceivedForAutoDeposit(
   month: string,
 ): Promise<void> {
+  validateInput(monthSchema, month);
   const userId = await requireAuth();
   await sql`
     UPDATE monthly_incomes
@@ -85,6 +97,7 @@ export async function getMonthlyIncomeSummary(month: string): Promise<{
   expectedTotal: number;
   actualTotal: number;
 }> {
+  validateInput(monthSchema, month);
   const userId = await requireAuth();
   const rows = await sql`
     SELECT
@@ -119,6 +132,11 @@ export async function markIncomeReceived(
   actualAmount: number,
   notes?: string,
 ): Promise<void> {
+  validateInput(MarkIncomeReceivedSchema, {
+    monthlyIncomeId,
+    actualAmount,
+    notes,
+  });
   const userId = await requireAuth();
   await sql`
     UPDATE monthly_incomes
@@ -138,6 +156,7 @@ export async function markIncomeReceived(
 export async function markIncomeAsExpected(
   monthlyIncomeId: string,
 ): Promise<void> {
+  validateInput(idSchema, monthlyIncomeId);
   const userId = await requireAuth();
   await sql`
     UPDATE monthly_incomes
@@ -151,6 +170,7 @@ export async function markIncomeAsExpected(
 // Delete a monthly income instance (adhoc/ponctuel only).
 // Safe: templates in `incomes` are already is_active=false for adhoc entries.
 export async function deleteMonthlyIncome(id: string): Promise<void> {
+  validateInput(idSchema, id);
   const userId = await requireAuth();
   await sql`
     DELETE FROM monthly_incomes
@@ -166,6 +186,8 @@ export async function updateMonthlyIncomeAmount(
   id: string,
   newExpectedAmount: number,
 ): Promise<void> {
+  validateInput(idSchema, id);
+  validateInput(nonNegativeAmountSchema, newExpectedAmount);
   const userId = await requireAuth();
   await sql`
     UPDATE monthly_incomes
@@ -183,6 +205,12 @@ export async function markVariableIncomeReceived(
   actualAmount: number,
   notes?: string,
 ): Promise<void> {
+  validateInput(MarkVariableIncomeReceivedSchema, {
+    incomeId,
+    month,
+    actualAmount,
+    notes,
+  });
   const userId = await requireAuth();
   await sql`
     INSERT INTO monthly_incomes

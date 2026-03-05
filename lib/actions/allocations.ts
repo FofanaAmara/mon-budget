@@ -1,9 +1,26 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { sql } from '@/lib/db';
-import { requireAuth } from '@/lib/auth/helpers';
-import type { IncomeAllocation, MonthlyAllocation, AllocationSection } from '@/lib/types';
+import { revalidatePath } from "next/cache";
+import { sql } from "@/lib/db";
+import { requireAuth } from "@/lib/auth/helpers";
+import type {
+  IncomeAllocation,
+  MonthlyAllocation,
+  AllocationSection,
+} from "@/lib/types";
+import { validateInput } from "@/lib/schemas/validate";
+import {
+  idSchema,
+  monthSchema,
+  orderedIdsSchema,
+  nonNegativeAmountSchema,
+} from "@/lib/schemas/common";
+import {
+  CreateAllocationSchema,
+  type CreateAllocationInput,
+  CreateAdhocAllocationSchema,
+  UpdateMonthlyAllocationSchema,
+} from "@/lib/schemas/allocation";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -22,7 +39,13 @@ async function fetchAllocationSections(
   `;
 
   const map = new Map<string, AllocationSection[]>();
-  for (const r of rows as { allocation_id: string; id: string; name: string; icon: string; color: string }[]) {
+  for (const r of rows as {
+    allocation_id: string;
+    id: string;
+    name: string;
+    icon: string;
+    color: string;
+  }[]) {
     const existing = map.get(r.allocation_id) ?? [];
     existing.push({ id: r.id, name: r.name, icon: r.icon, color: r.color });
     map.set(r.allocation_id, existing);
@@ -65,29 +88,22 @@ export async function getAllocations(): Promise<IncomeAllocation[]> {
     ORDER BY ia.position ASC, ia.created_at ASC
   `;
 
-  const allocationIds = (rows as { id: string }[]).map(r => r.id);
+  const allocationIds = (rows as { id: string }[]).map((r) => r.id);
   const sectionsMap = await fetchAllocationSections(allocationIds);
 
-  return (rows as (Record<string, unknown>)[]).map(r => ({
+  return (rows as Record<string, unknown>[]).map((r) => ({
     ...r,
-    section_ids: (sectionsMap.get(r.id as string) ?? []).map(s => s.id),
+    section_ids: (sectionsMap.get(r.id as string) ?? []).map((s) => s.id),
     sections: sectionsMap.get(r.id as string) ?? [],
   })) as IncomeAllocation[];
 }
 
 // ─── Create / Update / Delete templates ─────────────────────────────────────
 
-type AllocationInput = {
-  label: string;
-  amount: number;
-  section_ids?: string[];
-  project_id?: string | null;
-  end_month?: string | null;
-  color?: string;
-  position?: number;
-};
-
-export async function createAllocation(data: AllocationInput): Promise<IncomeAllocation> {
+export async function createAllocation(
+  data: CreateAllocationInput,
+): Promise<IncomeAllocation> {
+  validateInput(CreateAllocationSchema, data);
   const userId = await requireAuth();
 
   // Position defaults to end of list
@@ -96,10 +112,12 @@ export async function createAllocation(data: AllocationInput): Promise<IncomeAll
     FROM income_allocations
     WHERE is_active = true AND user_id = ${userId}
   `;
-  const position = data.position ?? (posRows[0]?.next_pos ?? 0);
+  const position = data.position ?? posRows[0]?.next_pos ?? 0;
 
   // Still store section_id for first section (backward compat with old queries if any)
-  const primarySectionId = data.section_ids?.length ? data.section_ids[0] : null;
+  const primarySectionId = data.section_ids?.length
+    ? data.section_ids[0]
+    : null;
 
   const rows = await sql`
     INSERT INTO income_allocations
@@ -111,7 +129,7 @@ export async function createAllocation(data: AllocationInput): Promise<IncomeAll
       ${primarySectionId},
       ${data.project_id ?? null},
       ${data.end_month ?? null},
-      ${data.color ?? '#6B6966'},
+      ${data.color ?? "#6B6966"},
       ${position}
     )
     RETURNING *
@@ -124,22 +142,29 @@ export async function createAllocation(data: AllocationInput): Promise<IncomeAll
     await setAllocationSections(alloc.id as string, data.section_ids);
   }
 
-  revalidatePath('/parametres/allocation');
-  revalidatePath('/revenus');
+  revalidatePath("/parametres/allocation");
+  revalidatePath("/revenus");
 
   const sectionsMap = await fetchAllocationSections([alloc.id as string]);
   return {
     ...alloc,
-    section_ids: (sectionsMap.get(alloc.id as string) ?? []).map(s => s.id),
+    section_ids: (sectionsMap.get(alloc.id as string) ?? []).map((s) => s.id),
     sections: sectionsMap.get(alloc.id as string) ?? [],
   } as IncomeAllocation;
 }
 
 // Update always receives the full object (from modal form) so we can safely update all fields.
-export async function updateAllocation(id: string, data: AllocationInput): Promise<void> {
+export async function updateAllocation(
+  id: string,
+  data: CreateAllocationInput,
+): Promise<void> {
+  validateInput(idSchema, id);
+  validateInput(CreateAllocationSchema, data);
   const userId = await requireAuth();
 
-  const primarySectionId = data.section_ids?.length ? data.section_ids[0] : null;
+  const primarySectionId = data.section_ids?.length
+    ? data.section_ids[0]
+    : null;
 
   await sql`
     UPDATE income_allocations SET
@@ -148,7 +173,7 @@ export async function updateAllocation(id: string, data: AllocationInput): Promi
       section_id = ${primarySectionId},
       project_id = ${data.project_id ?? null},
       end_month  = ${data.end_month ?? null},
-      color      = ${data.color ?? '#6B6966'},
+      color      = ${data.color ?? "#6B6966"},
       updated_at = NOW()
     WHERE id = ${id} AND user_id = ${userId} AND is_active = true
   `;
@@ -156,22 +181,24 @@ export async function updateAllocation(id: string, data: AllocationInput): Promi
   // Replace junction table links
   await setAllocationSections(id, data.section_ids ?? []);
 
-  revalidatePath('/parametres/allocation');
-  revalidatePath('/revenus');
+  revalidatePath("/parametres/allocation");
+  revalidatePath("/revenus");
 }
 
 export async function deleteAllocation(id: string): Promise<void> {
+  validateInput(idSchema, id);
   const userId = await requireAuth();
   await sql`
     UPDATE income_allocations SET is_active = false, updated_at = NOW()
     WHERE id = ${id} AND user_id = ${userId}
   `;
   // Junction table rows stay (harmless), but allocation won't appear in queries
-  revalidatePath('/parametres/allocation');
-  revalidatePath('/revenus');
+  revalidatePath("/parametres/allocation");
+  revalidatePath("/revenus");
 }
 
 export async function reorderAllocations(orderedIds: string[]): Promise<void> {
+  validateInput(orderedIdsSchema, orderedIds);
   const userId = await requireAuth();
   for (let i = 0; i < orderedIds.length; i++) {
     await sql`
@@ -179,7 +206,7 @@ export async function reorderAllocations(orderedIds: string[]): Promise<void> {
       WHERE id = ${orderedIds[i]} AND user_id = ${userId}
     `;
   }
-  revalidatePath('/parametres/allocation');
+  revalidatePath("/parametres/allocation");
 }
 
 // ─── Monthly generation ──────────────────────────────────────────────────────
@@ -188,6 +215,7 @@ export async function reorderAllocations(orderedIds: string[]): Promise<void> {
 // Skips: (1) expired temporal allocations (month > end_month)
 //        (2) savings allocations where project goal is already reached
 export async function generateMonthlyAllocations(month: string): Promise<void> {
+  validateInput(monthSchema, month);
   const userId = await requireAuth();
 
   const allocations = await sql`
@@ -201,7 +229,10 @@ export async function generateMonthlyAllocations(month: string): Promise<void> {
     ORDER BY ia.position ASC
   `;
 
-  for (const alloc of allocations as (IncomeAllocation & { project_target_amount: number | null; project_saved_amount: number | null })[]) {
+  for (const alloc of allocations as (IncomeAllocation & {
+    project_target_amount: number | null;
+    project_saved_amount: number | null;
+  })[]) {
     // Skip if temporal allocation has expired
     if (alloc.end_month && month > alloc.end_month) continue;
 
@@ -223,7 +254,10 @@ export async function generateMonthlyAllocations(month: string): Promise<void> {
 
 // ─── Fetch monthly instances ─────────────────────────────────────────────────
 
-export async function getMonthlyAllocations(month: string): Promise<MonthlyAllocation[]> {
+export async function getMonthlyAllocations(
+  month: string,
+): Promise<MonthlyAllocation[]> {
+  validateInput(monthSchema, month);
   const userId = await requireAuth();
   const rows = await sql`
     SELECT
@@ -245,30 +279,33 @@ export async function getMonthlyAllocations(month: string): Promise<MonthlyAlloc
   `;
 
   // Fetch section links for all allocations
-  const allocationIds = (rows as { allocation_id: string }[]).map(r => r.allocation_id);
+  const allocationIds = (rows as { allocation_id: string }[]).map(
+    (r) => r.allocation_id,
+  );
   const sectionsMap = await fetchAllocationSections(allocationIds);
 
-  return (rows as (Record<string, unknown>)[]).map(r => ({
+  return (rows as Record<string, unknown>[]).map((r) => ({
     ...r,
-    section_ids: (sectionsMap.get(r.allocation_id as string) ?? []).map(s => s.id),
+    section_ids: (sectionsMap.get(r.allocation_id as string) ?? []).map(
+      (s) => s.id,
+    ),
     sections: sectionsMap.get(r.allocation_id as string) ?? [],
   })) as MonthlyAllocation[];
 }
 
 // ─── Adhoc allocation (one-time, current month only) ─────────────────────────
 
-type AdhocAllocationInput = {
-  label: string;
-  amount: number;
-  section_ids?: string[];
-  project_id?: string | null;
-  color?: string;
-};
-
 export async function createAdhocMonthlyAllocation(
   month: string,
-  data: AdhocAllocationInput,
+  data: {
+    label: string;
+    amount: number;
+    section_ids?: string[];
+    project_id?: string | null;
+    color?: string;
+  },
 ): Promise<void> {
+  validateInput(CreateAdhocAllocationSchema, { month, data });
   const userId = await requireAuth();
 
   // Position at end of list
@@ -279,7 +316,9 @@ export async function createAdhocMonthlyAllocation(
   `;
   const position = posRows[0]?.next_pos ?? 0;
 
-  const primarySectionId = data.section_ids?.length ? data.section_ids[0] : null;
+  const primarySectionId = data.section_ids?.length
+    ? data.section_ids[0]
+    : null;
 
   // Create a one-time template (expires at end of this month)
   const rows = await sql`
@@ -292,7 +331,7 @@ export async function createAdhocMonthlyAllocation(
       ${primarySectionId},
       ${data.project_id ?? null},
       ${month},
-      ${data.color ?? '#6B6966'},
+      ${data.color ?? "#6B6966"},
       ${position}
     )
     RETURNING id
@@ -311,7 +350,7 @@ export async function createAdhocMonthlyAllocation(
     ON CONFLICT (allocation_id, month) DO NOTHING
   `;
 
-  revalidatePath('/revenus');
+  revalidatePath("/revenus");
 }
 
 // ─── Override monthly allocation ─────────────────────────────────────────────
@@ -321,6 +360,7 @@ export async function updateMonthlyAllocation(
   amount: number,
   notes?: string | null,
 ): Promise<void> {
+  validateInput(UpdateMonthlyAllocationSchema, { id, amount, notes });
   const userId = await requireAuth();
   await sql`
     UPDATE monthly_allocations SET
@@ -328,5 +368,5 @@ export async function updateMonthlyAllocation(
       notes = ${notes ?? null}
     WHERE id = ${id} AND user_id = ${userId}
   `;
-  revalidatePath('/revenus');
+  revalidatePath("/revenus");
 }

@@ -6,11 +6,22 @@ import { requireAuth } from "@/lib/auth/helpers";
 import { calcNextDueDate, currentMonth } from "@/lib/utils";
 import type {
   Expense,
-  ExpenseType,
-  RecurrenceFrequency,
   SavingsContribution,
   MonthlySavingsSummary,
 } from "@/lib/types";
+import { validateInput } from "@/lib/schemas/validate";
+import {
+  idSchema,
+  monthSchema,
+  nonNegativeAmountSchema,
+} from "@/lib/schemas/common";
+import {
+  CreateExpenseSchema,
+  type CreateExpenseInput,
+  AddSavingsContributionSchema,
+  TransferSavingsSchema,
+  CreateAdhocExpenseSchema,
+} from "@/lib/schemas/expense";
 
 export async function getExpenses(): Promise<Expense[]> {
   const userId = await requireAuth();
@@ -49,6 +60,7 @@ export async function getUpcomingExpenses(days = 7): Promise<Expense[]> {
 }
 
 export async function getExpenseById(id: string): Promise<Expense | null> {
+  validateInput(idSchema, id);
   const userId = await requireAuth();
   const rows = await sql`
     SELECT
@@ -63,32 +75,10 @@ export async function getExpenseById(id: string): Promise<Expense | null> {
   return (rows[0] as Expense) ?? null;
 }
 
-type CreateExpenseInput = {
-  name: string;
-  amount: number;
-  currency?: string;
-  type: ExpenseType;
-  section_id?: string;
-  card_id?: string;
-  recurrence_frequency?: RecurrenceFrequency;
-  recurrence_day?: number;
-  auto_debit?: boolean;
-  spread_monthly?: boolean;
-  due_date?: string;
-  reminder_offsets?: number[];
-  notify_push?: boolean;
-  notify_email?: boolean;
-  notify_sms?: boolean;
-  notes?: string;
-  // PLANNED fields
-  target_amount?: number;
-  target_date?: string;
-  saved_amount?: number;
-};
-
 export async function createExpense(
   data: CreateExpenseInput,
 ): Promise<Expense> {
+  validateInput(CreateExpenseSchema, data);
   const userId = await requireAuth();
   // Calculate next_due_date
   let next_due_date: string | null = null;
@@ -153,6 +143,8 @@ export async function updateExpense(
   id: string,
   data: Partial<CreateExpenseInput>,
 ): Promise<Expense> {
+  validateInput(idSchema, id);
+  validateInput(CreateExpenseSchema.partial(), data);
   const userId = await requireAuth();
   // Recalculate next_due_date if recurrence fields changed
   let next_due_date: string | null | undefined = undefined;
@@ -218,6 +210,7 @@ export async function updateExpense(
 }
 
 export async function deleteExpense(id: string): Promise<void> {
+  validateInput(idSchema, id);
   const userId = await requireAuth();
   await sql`UPDATE expenses SET is_active = false, updated_at = NOW() WHERE id = ${id} AND user_id = ${userId}`;
 
@@ -303,6 +296,8 @@ export async function updateSavedAmount(
   id: string,
   savedAmount: number,
 ): Promise<Expense> {
+  validateInput(idSchema, id);
+  validateInput(nonNegativeAmountSchema, savedAmount);
   const userId = await requireAuth();
   const rows = await sql`
     UPDATE expenses SET
@@ -321,6 +316,7 @@ export async function addSavingsContribution(
   amount: number,
   note?: string | null,
 ): Promise<void> {
+  validateInput(AddSavingsContributionSchema, { expenseId, amount, note });
   const userId = await requireAuth();
   // Insert the contribution
   await sql`
@@ -341,6 +337,7 @@ export async function addSavingsContribution(
 export async function getSavingsContributions(
   expenseId: string,
 ): Promise<SavingsContribution[]> {
+  validateInput(idSchema, expenseId);
   const userId = await requireAuth();
   const rows = await sql`
     SELECT * FROM savings_contributions
@@ -357,6 +354,13 @@ export async function transferSavings(
   fromName: string,
   toName: string,
 ): Promise<void> {
+  validateInput(TransferSavingsSchema, {
+    fromId,
+    toId,
+    amount,
+    fromName,
+    toName,
+  });
   const userId = await requireAuth();
   // Debit source
   await sql`
@@ -402,6 +406,7 @@ export async function getOrCreateFreeSavings(): Promise<Expense> {
 }
 
 export async function getExpensesByCard(cardId: string): Promise<Expense[]> {
+  validateInput(idSchema, cardId);
   const userId = await requireAuth();
   const rows = await sql`
     SELECT
@@ -422,6 +427,7 @@ export async function getExpensesByCard(cardId: string): Promise<Expense[]> {
 export async function getMonthlySavingsSummary(
   month: string,
 ): Promise<MonthlySavingsSummary> {
+  validateInput(monthSchema, month);
   const userId = await requireAuth();
   const [year, monthNum] = month.split("-").map(Number);
   const monthStart = `${year}-${String(monthNum).padStart(2, "0")}-01`;
@@ -471,6 +477,7 @@ export async function getMonthlySavingsSummary(
 export async function getMonthlyExpenseActualsBySection(
   month: string,
 ): Promise<{ section_id: string; total: number }[]> {
+  validateInput(monthSchema, month);
   const userId = await requireAuth();
   const rows = await sql`
     SELECT section_id, SUM(amount) AS total
@@ -498,6 +505,15 @@ export async function createAdhocExpense(
   dueDate?: string,
   cardId?: string,
 ): Promise<void> {
+  validateInput(CreateAdhocExpenseSchema, {
+    name,
+    amount,
+    sectionId,
+    month,
+    alreadyPaid,
+    dueDate,
+    cardId,
+  });
   const userId = await requireAuth();
   const today = new Date().toISOString().split("T")[0];
   const effectiveDate = dueDate || today;

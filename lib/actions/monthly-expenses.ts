@@ -8,6 +8,12 @@ import {
   WEEKLY_MONTHLY_MULTIPLIER,
   BIWEEKLY_MONTHLY_MULTIPLIER,
 } from "@/lib/constants";
+import { validateInput } from "@/lib/schemas/validate";
+import {
+  idSchema,
+  monthSchema,
+  nonNegativeAmountSchema,
+} from "@/lib/schemas/common";
 
 // Calculates the due_date for a RECURRING expense in a given month
 function calcDueDateForMonth(
@@ -83,6 +89,7 @@ function calcDueDateForMonth(
 
 // Generates monthly instances for a given month (idempotent — safe to call multiple times)
 export async function generateMonthlyExpenses(month: string): Promise<void> {
+  validateInput(monthSchema, month);
   const userId = await requireAuth();
   const [year, monthNum] = month.split("-").map(Number);
   const monthStart = `${year}-${String(monthNum).padStart(2, "0")}-01`;
@@ -250,6 +257,8 @@ export async function getMonthlyExpenses(
   month: string,
   sectionId?: string,
 ): Promise<MonthlyExpense[]> {
+  validateInput(monthSchema, month);
+  if (sectionId) validateInput(idSchema, sectionId);
   const userId = await requireAuth();
   const rows = sectionId
     ? await sql`
@@ -297,6 +306,7 @@ export async function getMonthlyExpenses(
 
 // Get month summary stats
 export async function getMonthSummary(month: string): Promise<MonthSummary> {
+  validateInput(monthSchema, month);
   const userId = await requireAuth();
   const rows = await sql`
     SELECT
@@ -325,6 +335,7 @@ export async function getMonthSummary(month: string): Promise<MonthSummary> {
 
 // Mark a monthly expense as PAID
 export async function markAsPaid(id: string): Promise<void> {
+  validateInput(idSchema, id);
   const userId = await requireAuth();
   const today = new Date().toISOString().split("T")[0];
   await sql`
@@ -374,6 +385,8 @@ export async function deferExpenseToMonth(
   id: string,
   targetMonth: string,
 ): Promise<void> {
+  validateInput(idSchema, id);
+  validateInput(monthSchema, targetMonth);
   const userId = await requireAuth();
 
   // Fetch the current instance details
@@ -428,6 +441,7 @@ export async function deferExpenseToMonth(
 
 // Revert a monthly expense back to UPCOMING
 export async function markAsUpcoming(id: string): Promise<void> {
+  validateInput(idSchema, id);
   const userId = await requireAuth();
   await sql`
     UPDATE monthly_expenses
@@ -441,6 +455,7 @@ export async function markAsUpcoming(id: string): Promise<void> {
 // Delete an adhoc/imprévue monthly expense (expense_id IS NULL — no template).
 // Planned expenses linked to a template cannot be deleted this way.
 export async function deleteMonthlyExpense(id: string): Promise<void> {
+  validateInput(idSchema, id);
   const userId = await requireAuth();
   await sql`
     DELETE FROM monthly_expenses
@@ -456,6 +471,8 @@ export async function updateMonthlyExpenseAmount(
   id: string,
   newAmount: number,
 ): Promise<void> {
+  validateInput(idSchema, id);
+  validateInput(nonNegativeAmountSchema, newAmount);
   const userId = await requireAuth();
   await sql`
     UPDATE monthly_expenses
@@ -468,6 +485,7 @@ export async function updateMonthlyExpenseAmount(
 
 // Auto-mark OVERDUE: mark UPCOMING instances past their due_date as OVERDUE
 export async function autoMarkOverdue(month: string): Promise<void> {
+  validateInput(monthSchema, month);
   const userId = await requireAuth();
   const today = new Date().toISOString().split("T")[0];
   await sql`
@@ -485,6 +503,7 @@ export async function autoMarkOverdue(month: string): Promise<void> {
 
 // Auto-mark PAID for auto-charged expenses past their due_date
 export async function autoMarkPaidForAutoDebit(month: string): Promise<void> {
+  validateInput(monthSchema, month);
   const userId = await requireAuth();
   const today = new Date().toISOString().split("T")[0];
   await sql`

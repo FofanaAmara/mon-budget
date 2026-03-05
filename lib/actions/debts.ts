@@ -1,9 +1,16 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { sql } from '@/lib/db';
-import { requireAuth } from '@/lib/auth/helpers';
-import type { Debt, DebtFrequency } from '@/lib/types';
+import { revalidatePath } from "next/cache";
+import { sql } from "@/lib/db";
+import { requireAuth } from "@/lib/auth/helpers";
+import type { Debt } from "@/lib/types";
+import { validateInput } from "@/lib/schemas/validate";
+import { idSchema } from "@/lib/schemas/common";
+import {
+  CreateDebtSchema,
+  type CreateDebtInput,
+  MakeExtraPaymentSchema,
+} from "@/lib/schemas/debt";
 
 export async function getDebts(): Promise<Debt[]> {
   const userId = await requireAuth();
@@ -21,21 +28,8 @@ export async function getDebts(): Promise<Debt[]> {
   return rows as Debt[];
 }
 
-type CreateDebtInput = {
-  name: string;
-  original_amount: number;
-  remaining_balance: number;
-  interest_rate?: number | null;
-  payment_amount: number;
-  payment_frequency: DebtFrequency;
-  payment_day?: number | null;
-  auto_debit?: boolean;
-  card_id?: string | null;
-  section_id?: string | null;
-  notes?: string | null;
-};
-
 export async function createDebt(data: CreateDebtInput): Promise<Debt> {
+  validateInput(CreateDebtSchema, data);
   const userId = await requireAuth();
   const rows = await sql`
     INSERT INTO debts (
@@ -58,8 +52,8 @@ export async function createDebt(data: CreateDebtInput): Promise<Debt> {
     )
     RETURNING *
   `;
-  revalidatePath('/projets');
-  revalidatePath('/');
+  revalidatePath("/projets");
+  revalidatePath("/");
   return rows[0] as Debt;
 }
 
@@ -67,6 +61,8 @@ export async function updateDebt(
   id: string,
   data: Partial<CreateDebtInput>,
 ): Promise<Debt> {
+  validateInput(idSchema, id);
+  validateInput(CreateDebtSchema.partial(), data);
   const userId = await requireAuth();
   const rows = await sql`
     UPDATE debts SET
@@ -85,19 +81,20 @@ export async function updateDebt(
     WHERE id = ${id} AND user_id = ${userId}
     RETURNING *
   `;
-  revalidatePath('/projets');
-  revalidatePath('/');
+  revalidatePath("/projets");
+  revalidatePath("/");
   return rows[0] as Debt;
 }
 
 export async function deleteDebt(id: string): Promise<void> {
+  validateInput(idSchema, id);
   const userId = await requireAuth();
   await sql`
     UPDATE debts SET is_active = false, updated_at = NOW()
     WHERE id = ${id} AND user_id = ${userId}
   `;
-  revalidatePath('/projets');
-  revalidatePath('/');
+  revalidatePath("/projets");
+  revalidatePath("/");
 }
 
 export async function getTotalDebtBalance(): Promise<number> {
@@ -110,7 +107,11 @@ export async function getTotalDebtBalance(): Promise<number> {
   return Number(rows[0].total);
 }
 
-export async function makeExtraPayment(id: string, amount: number): Promise<void> {
+export async function makeExtraPayment(
+  id: string,
+  amount: number,
+): Promise<void> {
+  validateInput(MakeExtraPaymentSchema, { id, amount });
   const userId = await requireAuth();
   // Decrement remaining balance
   await sql`
@@ -125,11 +126,11 @@ export async function makeExtraPayment(id: string, amount: number): Promise<void
     WHERE id = ${id} AND user_id = ${userId} AND remaining_balance <= 0
   `;
   // Log the extra payment as a debt transaction
-  const txMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+  const txMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}`;
   await sql`
     INSERT INTO debt_transactions (user_id, debt_id, type, amount, month, note, source)
     VALUES (${userId}, ${id}, 'PAYMENT', ${amount}, ${txMonth}, 'Paiement supplementaire', 'EXTRA_PAYMENT')
   `;
-  revalidatePath('/projets');
-  revalidatePath('/');
+  revalidatePath("/projets");
+  revalidatePath("/");
 }

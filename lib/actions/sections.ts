@@ -4,6 +4,9 @@ import { revalidatePath } from "next/cache";
 import { sql } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/helpers";
 import type { Section } from "@/lib/types";
+import { validateInput } from "@/lib/schemas/validate";
+import { idSchema, orderedIdsSchema } from "@/lib/schemas/common";
+import { CreateSectionSchema } from "@/lib/schemas/section";
 
 export async function getSections(): Promise<Section[]> {
   const userId = await requireAuth();
@@ -18,6 +21,7 @@ export async function createSection(data: {
   icon: string;
   color: string;
 }): Promise<Section> {
+  validateInput(CreateSectionSchema, data);
   const userId = await requireAuth();
   const maxPos =
     await sql`SELECT COALESCE(MAX(position), -1) as max FROM sections WHERE user_id = ${userId}`;
@@ -37,6 +41,8 @@ export async function updateSection(
   id: string,
   data: Partial<{ name: string; icon: string; color: string }>,
 ): Promise<Section> {
+  validateInput(idSchema, id);
+  validateInput(CreateSectionSchema.partial(), data);
   const userId = await requireAuth();
   const rows = await sql`
     UPDATE sections
@@ -54,6 +60,7 @@ export async function updateSection(
 }
 
 export async function getSectionExpenseCount(id: string): Promise<number> {
+  validateInput(idSchema, id);
   const userId = await requireAuth();
   const rows = await sql`
     SELECT COUNT(*)::int AS count FROM expenses
@@ -63,6 +70,7 @@ export async function getSectionExpenseCount(id: string): Promise<number> {
 }
 
 export async function deleteSection(id: string): Promise<void> {
+  validateInput(idSchema, id);
   const userId = await requireAuth();
   // Unlink expenses and monthly_expenses before deleting to prevent FK violations
   await sql`UPDATE expenses SET section_id = NULL WHERE section_id = ${id} AND user_id = ${userId}`;
@@ -75,6 +83,7 @@ export async function deleteSection(id: string): Promise<void> {
 }
 
 export async function reorderSections(orderedIds: string[]): Promise<void> {
+  validateInput(orderedIdsSchema, orderedIds);
   const userId = await requireAuth();
   for (let i = 0; i < orderedIds.length; i++) {
     await sql`UPDATE sections SET position = ${i}, updated_at = NOW() WHERE id = ${orderedIds[i]} AND user_id = ${userId}`;

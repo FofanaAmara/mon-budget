@@ -1,18 +1,29 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { sql } from '@/lib/db';
-import { requireAuth } from '@/lib/auth/helpers';
-import type { DebtTransaction, MonthlyDebtSummary } from '@/lib/types';
+import { revalidatePath } from "next/cache";
+import { sql } from "@/lib/db";
+import { requireAuth } from "@/lib/auth/helpers";
+import type { DebtTransaction, MonthlyDebtSummary } from "@/lib/types";
+import { validateInput } from "@/lib/schemas/validate";
+import { idSchema, monthSchema } from "@/lib/schemas/common";
+import { AddDebtTransactionSchema } from "@/lib/schemas/debt-transaction";
 
 export async function addDebtTransaction(
   debtId: string,
-  type: 'PAYMENT' | 'CHARGE',
+  type: "PAYMENT" | "CHARGE",
   amount: number,
   month: string,
   note?: string | null,
-  source: string = 'MANUAL',
+  source: string = "MANUAL",
 ): Promise<void> {
+  validateInput(AddDebtTransactionSchema, {
+    debtId,
+    type,
+    amount,
+    month,
+    note,
+    source,
+  });
   const userId = await requireAuth();
 
   // Insert the transaction
@@ -22,7 +33,7 @@ export async function addDebtTransaction(
   `;
 
   // Update remaining_balance: PAYMENT decrements, CHARGE increments
-  if (type === 'PAYMENT') {
+  if (type === "PAYMENT") {
     await sql`
       UPDATE debts SET
         remaining_balance = GREATEST(remaining_balance - ${amount}, 0),
@@ -44,11 +55,14 @@ export async function addDebtTransaction(
     `;
   }
 
-  revalidatePath('/projets');
-  revalidatePath('/');
+  revalidatePath("/projets");
+  revalidatePath("/");
 }
 
-export async function getMonthlyDebtSummary(month: string): Promise<MonthlyDebtSummary> {
+export async function getMonthlyDebtSummary(
+  month: string,
+): Promise<MonthlyDebtSummary> {
+  validateInput(monthSchema, month);
   const userId = await requireAuth();
   const rows = await sql`
     SELECT
@@ -73,7 +87,10 @@ export async function getMonthlyDebtSummary(month: string): Promise<MonthlyDebtS
   };
 }
 
-export async function getDebtTransactions(debtId: string): Promise<DebtTransaction[]> {
+export async function getDebtTransactions(
+  debtId: string,
+): Promise<DebtTransaction[]> {
+  validateInput(idSchema, debtId);
   const userId = await requireAuth();
   const rows = await sql`
     SELECT dt.*, d.name as debt_name

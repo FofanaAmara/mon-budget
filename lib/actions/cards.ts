@@ -1,9 +1,12 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { sql } from '@/lib/db';
-import { requireAuth } from '@/lib/auth/helpers';
-import type { Card } from '@/lib/types';
+import { revalidatePath } from "next/cache";
+import { sql } from "@/lib/db";
+import { requireAuth } from "@/lib/auth/helpers";
+import type { Card } from "@/lib/types";
+import { validateInput } from "@/lib/schemas/validate";
+import { idSchema } from "@/lib/schemas/common";
+import { CreateCardSchema } from "@/lib/schemas/card";
 
 export async function getCards(): Promise<Card[]> {
   const userId = await requireAuth();
@@ -14,9 +17,11 @@ export async function getCards(): Promise<Card[]> {
 }
 
 export async function getCardById(id: string): Promise<Card | null> {
+  validateInput(idSchema, id);
   const userId = await requireAuth();
-  const rows = await sql`SELECT * FROM cards WHERE id = ${id} AND user_id = ${userId}`;
-  return rows[0] as Card ?? null;
+  const rows =
+    await sql`SELECT * FROM cards WHERE id = ${id} AND user_id = ${userId}`;
+  return (rows[0] as Card) ?? null;
 }
 
 export async function createCard(data: {
@@ -25,6 +30,7 @@ export async function createCard(data: {
   bank?: string;
   color?: string;
 }): Promise<Card> {
+  validateInput(CreateCardSchema, data);
   const userId = await requireAuth();
   const rows = await sql`
     INSERT INTO cards (user_id, name, last_four, bank, color)
@@ -33,18 +39,25 @@ export async function createCard(data: {
       ${data.name},
       ${data.last_four ?? null},
       ${data.bank ?? null},
-      ${data.color ?? '#6366F1'}
+      ${data.color ?? "#6366F1"}
     )
     RETURNING *
   `;
-  revalidatePath('/cartes');
+  revalidatePath("/cartes");
   return rows[0] as Card;
 }
 
 export async function updateCard(
   id: string,
-  data: Partial<{ name: string; last_four: string; bank: string; color: string }>
+  data: Partial<{
+    name: string;
+    last_four: string;
+    bank: string;
+    color: string;
+  }>,
 ): Promise<Card> {
+  validateInput(idSchema, id);
+  validateInput(CreateCardSchema.partial(), data);
   const userId = await requireAuth();
   const rows = await sql`
     UPDATE cards
@@ -57,12 +70,13 @@ export async function updateCard(
     WHERE id = ${id} AND user_id = ${userId}
     RETURNING *
   `;
-  revalidatePath('/cartes');
+  revalidatePath("/cartes");
   return rows[0] as Card;
 }
 
 export async function deleteCard(id: string): Promise<void> {
+  validateInput(idSchema, id);
   const userId = await requireAuth();
   await sql`DELETE FROM cards WHERE id = ${id} AND user_id = ${userId}`;
-  revalidatePath('/cartes');
+  revalidatePath("/cartes");
 }

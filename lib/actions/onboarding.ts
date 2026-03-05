@@ -6,6 +6,8 @@ import { requireAuth } from "@/lib/auth/helpers";
 import { createIncome } from "@/lib/actions/incomes";
 import { BIWEEKLY_MONTHLY_MULTIPLIER } from "@/lib/constants";
 import type { IncomeFrequency } from "@/lib/types";
+import { validateInput } from "@/lib/schemas/validate";
+import { CompleteOnboardingSchema } from "@/lib/schemas/onboarding";
 
 // ─── Category → Section mapping ─────────────────────────────────
 const CATEGORY_MAP: Record<
@@ -32,6 +34,11 @@ export async function completeOnboarding(data: {
   categories: string[];
   objective: string | null;
 }): Promise<{ success: boolean; error?: string }> {
+  try {
+    validateInput(CompleteOnboardingSchema, data);
+  } catch {
+    return { success: false, error: "Donnees de configuration invalides." };
+  }
   const userId = await requireAuth();
 
   try {
