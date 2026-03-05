@@ -431,10 +431,10 @@ export default function TabSanteFinanciere({
   valeurNette,
   savingsSummary,
 }: Props) {
-  // Score: coverage of planned charges by actual income (0-100)
+  // Score: percentage of expected expenses already paid (0-100)
   const coverageActual =
-    summary.planned_total > 0
-      ? Math.min((incomeSummary.actualTotal / summary.planned_total) * 100, 100)
+    summary.total > 0
+      ? Math.min((summary.paid_total / summary.total) * 100, 100)
       : 100;
 
   // Score is a blend: coverage (60%) + savings rate indicator (20%) + no-overdue bonus (20%)
@@ -605,7 +605,7 @@ export default function TabSanteFinanciere({
           <MetricCard
             value={`${Math.round(coveragePct)}%`}
             label="Couverture dépenses"
-            desc={`${formatCAD(summary.paid_total)} / ${formatCAD(summary.planned_total)} prévu`}
+            desc={`${formatCAD(summary.paid_total)} / ${formatCAD(summary.total)} prévu`}
             color="var(--positive)"
             barPct={coveragePct}
             barColor="var(--positive)"
