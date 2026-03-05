@@ -54,6 +54,7 @@ export async function generateMonthlyIncomes(month: string): Promise<void> {
         SET expected_amount = EXCLUDED.expected_amount,
             is_auto_deposited = EXCLUDED.is_auto_deposited
         WHERE monthly_incomes.status = 'EXPECTED'
+          AND NOT monthly_incomes.manually_edited
     `;
   }
   // No revalidatePath — called during page render
@@ -140,7 +141,7 @@ export async function markIncomeAsExpected(
   const userId = await requireAuth();
   await sql`
     UPDATE monthly_incomes
-    SET status = 'EXPECTED', actual_amount = NULL, received_at = NULL
+    SET status = 'EXPECTED', actual_amount = NULL, received_at = NULL, manually_edited = false
     WHERE id = ${monthlyIncomeId} AND user_id = ${userId}
   `;
   revalidatePath("/revenus");
@@ -168,7 +169,7 @@ export async function updateMonthlyIncomeAmount(
   const userId = await requireAuth();
   await sql`
     UPDATE monthly_incomes
-    SET expected_amount = ${newExpectedAmount}
+    SET expected_amount = ${newExpectedAmount}, manually_edited = true
     WHERE id = ${id} AND user_id = ${userId}
   `;
   revalidatePath("/revenus");
