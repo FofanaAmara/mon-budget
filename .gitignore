@@ -68,3 +68,6 @@ tsconfig.tsbuildinfo
 .claude/plans/
 .claude/ralph/
 .app-factory/state/
+
+# Test coverage
+coverage/
