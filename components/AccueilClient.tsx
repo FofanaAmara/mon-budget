@@ -272,6 +272,7 @@ export default function AccueilClient({
             totalEpargne={totalEpargne}
             totalDebtBalance={totalDebtBalance}
             valeurNette={valeurNette}
+            savingsSummary={savingsSummary}
           />
         )}
       </div>
