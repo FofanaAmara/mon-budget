@@ -327,16 +327,27 @@ export default function ExpenseTemplateManager({
                         color: "var(--text-tertiary)",
                         letterSpacing: "-0.01em",
                         marginTop: "1px",
+                        whiteSpace: "nowrap",
                       }}
                     >
+                      <span
+                        style={{
+                          fontSize: "0.85em",
+                          color: "var(--text-tertiary)",
+                        }}
+                      >
+                        $
+                      </span>
                       {Number(expense.amount).toLocaleString("fr-CA", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0,
                       })}
-                      $/
-                      {FREQ_LABELS[
-                        expense.recurrence_frequency!
-                      ]?.toLowerCase()}
+                      {" /"}
+                      {expense.recurrence_frequency === "YEARLY"
+                        ? "an"
+                        : FREQ_LABELS[
+                            expense.recurrence_frequency!
+                          ]?.toLowerCase()}
                     </div>
                   )}
                 </>
@@ -528,6 +539,7 @@ export default function ExpenseTemplateManager({
               letterSpacing: "-0.02em",
               color: "var(--text-primary)",
               fontVariantNumeric: "tabular-nums",
+              marginRight: "74px",
             }}
           >
             <span
