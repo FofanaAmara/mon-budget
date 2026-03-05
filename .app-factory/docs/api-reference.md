@@ -21,6 +21,16 @@ Envoie une notification push a l'utilisateur connecte.
 **Auth** : Session requise
 **Response** : `{ success: true, sent: number, failed: number }`
 
+### `GET /api/cron/push`
+Cron job quotidien qui envoie un rappel push a tous les abonnes. Configure dans `vercel.json` avec le schedule `0 13 * * *` (13h UTC chaque jour).
+
+**Auth** : `Authorization: Bearer <CRON_SECRET>` (header injecte automatiquement par Vercel Cron)
+**Response** : `{ success: true, sent: number, failed: number }`
+**Comportement** :
+- Envoie le meme rappel generique a tous les abonnes
+- Nettoie automatiquement les abonnements expires (HTTP 410)
+- Retourne `401` si le secret est invalide
+
 ---
 
 ## Server Actions
