@@ -53,6 +53,9 @@ export default function ExpenseModal({
   const [spreadMonthly, setSpreadMonthly] = useState(
     expense?.spread_monthly ?? false,
   );
+  const [isProgressive, setIsProgressive] = useState(
+    expense?.is_progressive ?? false,
+  );
   const [sectionId, setSectionId] = useState(expense?.section_id ?? "");
   const [cardId, setCardId] = useState(expense?.card_id ?? "");
   const [dueDate, setDueDate] = useState(expense?.due_date ?? "");
@@ -78,6 +81,7 @@ export default function ExpenseModal({
           (frequency === "QUARTERLY" || frequency === "YEARLY")
             ? spreadMonthly
             : false,
+        is_progressive: type === "RECURRING" ? isProgressive : false,
         due_date: type === "ONE_TIME" ? dueDate || undefined : undefined,
         notes: notes || undefined,
       };
@@ -611,7 +615,9 @@ export default function ExpenseModal({
           {/* Montant */}
           <div style={{ marginBottom: "18px" }}>
             <label htmlFor="expense-amount" className="em-label">
-              Montant
+              {type === "RECURRING" && isProgressive
+                ? "Budget mensuel"
+                : "Montant"}
             </label>
             <div style={{ position: "relative" }}>
               <span
@@ -707,6 +713,49 @@ export default function ExpenseModal({
                     className="em-toggle-switch"
                     data-active={autoDebit ? "true" : "false"}
                     aria-label="Prélèvement automatique"
+                  >
+                    <div className="em-toggle-knob" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Consommation progressive toggle */}
+              <div style={{ marginBottom: "18px" }}>
+                <div className="em-toggle-row">
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "2px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        color: "var(--text-primary)",
+                        letterSpacing: "-0.01em",
+                      }}
+                    >
+                      Consommation progressive
+                    </span>
+                    <span
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: 500,
+                        color: "var(--text-tertiary)",
+                        letterSpacing: "-0.01em",
+                      }}
+                    >
+                      Le montant est un budget consommé graduellement
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsProgressive(!isProgressive)}
+                    className="em-toggle-switch"
+                    data-active={isProgressive ? "true" : "false"}
+                    aria-label="Consommation progressive"
                   >
                     <div className="em-toggle-knob" />
                   </button>

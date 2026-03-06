@@ -230,6 +230,42 @@ describe("Expense schemas", () => {
       });
       expect(result.success).toBe(true);
     });
+
+    it("accepts is_progressive=true for RECURRING expense", () => {
+      const result = CreateExpenseSchema.safeParse({
+        name: "Épicerie",
+        amount: 600,
+        type: "RECURRING",
+        recurrence_frequency: "MONTHLY",
+        is_progressive: true,
+      });
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.is_progressive).toBe(true);
+      }
+    });
+
+    it("defaults is_progressive to undefined when omitted", () => {
+      const result = CreateExpenseSchema.safeParse({
+        name: "Loyer",
+        amount: 1200,
+        type: "RECURRING",
+      });
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.is_progressive).toBeUndefined();
+      }
+    });
+
+    it("rejects non-boolean is_progressive", () => {
+      const result = CreateExpenseSchema.safeParse({
+        name: "Test",
+        amount: 100,
+        type: "RECURRING",
+        is_progressive: "yes",
+      });
+      expect(result.success).toBe(false);
+    });
   });
 
   describe("AddSavingsContributionSchema", () => {

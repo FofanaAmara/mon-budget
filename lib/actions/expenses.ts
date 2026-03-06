@@ -91,6 +91,7 @@ export async function createExpense(
       user_id, name, amount, currency, type,
       section_id, card_id,
       recurrence_frequency, recurrence_day, auto_debit, spread_monthly,
+      is_progressive,
       due_date, next_due_date,
       reminder_offsets, notify_push, notify_email, notify_sms,
       notes, target_amount, target_date, saved_amount
@@ -106,6 +107,7 @@ export async function createExpense(
       ${data.recurrence_day ?? null},
       ${data.auto_debit ?? false},
       ${data.spread_monthly ?? false},
+      ${data.is_progressive ?? false},
       ${data.due_date ?? null},
       ${next_due_date},
       ${data.reminder_offsets ?? [1, 3, 7]},
@@ -160,6 +162,7 @@ export async function updateExpense(
       recurrence_day = CASE WHEN ${data.recurrence_day !== undefined} THEN ${data.recurrence_day ?? null} ELSE recurrence_day END,
       auto_debit = COALESCE(${data.auto_debit ?? null}, auto_debit),
       spread_monthly = COALESCE(${data.spread_monthly ?? null}, spread_monthly),
+      is_progressive = CASE WHEN ${data.is_progressive !== undefined} THEN ${data.is_progressive ?? false} ELSE is_progressive END,
       due_date = CASE WHEN ${data.due_date !== undefined} THEN ${data.due_date ?? null} ELSE due_date END,
       next_due_date = CASE WHEN ${next_due_date !== undefined} THEN ${next_due_date ?? null} ELSE next_due_date END,
       notes = CASE WHEN ${data.notes !== undefined} THEN ${data.notes ?? null} ELSE notes END,

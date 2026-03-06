@@ -55,6 +55,7 @@ export type Expense = {
   notify_email: boolean;
   notify_sms: boolean;
   notes: string | null;
+  is_progressive: boolean;
   is_active: boolean;
   created_at: string;
   updated_at: string;

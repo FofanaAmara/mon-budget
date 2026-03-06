@@ -29,6 +29,7 @@ export const CreateExpenseSchema = z.object({
   recurrence_day: dayOfMonthSchema.optional(),
   auto_debit: z.boolean().optional(),
   spread_monthly: z.boolean().optional(),
+  is_progressive: z.boolean().optional(),
   due_date: isoDateSchema.optional(),
   reminder_offsets: reminderOffsetsSchema.optional(),
   notify_push: z.boolean().optional(),
