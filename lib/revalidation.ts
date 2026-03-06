@@ -12,10 +12,11 @@ export function revalidateExpensePages() {
   revalidatePath("/", "layout"); // refresh setup guide state
 }
 
-/** Revalidate income-related pages (revenus + home). */
+/** Revalidate income-related pages (revenus + home + layout for setup guide). */
 export function revalidateIncomePages() {
   revalidatePath("/revenus");
   revalidatePath("/");
+  revalidatePath("/", "layout"); // refresh setup guide state
 }
 
 /** Revalidate project/savings-related pages (projets + home). */

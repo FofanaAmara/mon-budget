@@ -198,6 +198,7 @@ export async function updateExpense(
   revalidatePath("/parametres");
   revalidatePath("/parametres/charges");
   revalidatePath("/");
+  revalidatePath("/", "layout"); // refresh setup guide state
   revalidatePath(`/depenses/${id}/edit`);
   return rows[0] as Expense;
 }

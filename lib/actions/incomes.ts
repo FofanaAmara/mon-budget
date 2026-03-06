@@ -82,6 +82,7 @@ export async function updateIncome(
   revalidatePath("/parametres");
   revalidatePath("/parametres/revenus");
   revalidatePath("/");
+  revalidatePath("/", "layout"); // refresh setup guide state
   return rows[0] as Income;
 }
 
