@@ -37,7 +37,7 @@ const STEPS_CONFIG = [
     id: "expense" as const,
     title: "Ajouter une charge fixe",
     description: "Loyer, abonnements, assurances...",
-    href: "/parametres",
+    href: "/parametres/charges",
   },
   {
     id: "generate" as const,

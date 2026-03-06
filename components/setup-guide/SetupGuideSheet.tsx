@@ -22,7 +22,6 @@
  *   - isCelebration: show celebration view instead of step list
  *   - onCelebrationCTA: passed to SetupGuideCelebration
  *
- * TODO for developer: the `onStepClick` should use router.push(href). Currently uses window.location.
  */
 
 import SetupGuideProgressRing from "./SetupGuideProgressRing";
