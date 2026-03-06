@@ -8,6 +8,9 @@
 export const WEEKLY_MONTHLY_MULTIPLIER = 52 / 12;
 export const BIWEEKLY_MONTHLY_MULTIPLIER = 26 / 12;
 
+// Milliseconds in one day — used by daysUntil and date arithmetic.
+export const MS_PER_DAY = 86_400_000;
+
 import type { MonthlyExpenseStatus, IncomeSource } from "@/lib/types";
 
 export const STATUS_LABELS: Record<MonthlyExpenseStatus, string> = {

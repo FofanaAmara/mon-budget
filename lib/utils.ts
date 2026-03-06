@@ -2,6 +2,7 @@ import type { Expense, IncomeFrequency, RecurrenceFrequency } from "./types";
 import {
   WEEKLY_MONTHLY_MULTIPLIER,
   BIWEEKLY_MONTHLY_MULTIPLIER,
+  MS_PER_DAY,
 } from "./constants";
 
 export function formatCAD(amount: number, currency = "CAD"): string {
@@ -39,13 +40,14 @@ export function formatShortDate(date: string | Date | null): string {
 
 /**
  * Calculate the next due date for a recurring expense.
- * Returns the next occurrence on or after today.
+ * Returns the next occurrence on or after referenceDate (defaults to today).
  */
 export function calcNextDueDate(
   frequency: RecurrenceFrequency,
   day: number,
+  referenceDate: Date = new Date(),
 ): Date {
-  const today = new Date();
+  const today = new Date(referenceDate);
   today.setHours(0, 0, 0, 0);
 
   const next = new Date(today);
@@ -255,5 +257,5 @@ export function daysUntil(date: string | Date | null): number {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   d.setHours(0, 0, 0, 0);
-  return Math.round((d.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  return Math.round((d.getTime() - today.getTime()) / MS_PER_DAY);
 }
