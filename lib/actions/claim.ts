@@ -93,10 +93,11 @@ export async function ensureDefaultSections(): Promise<void> {
     await sql`SELECT COUNT(*) as count FROM sections WHERE user_id = ${userId}`;
   if (Number(existing[0].count) > 0) return; // already has sections
 
-  for (const s of DEFAULT_SECTIONS) {
-    await sql`
+  const inserts = DEFAULT_SECTIONS.map(
+    (s) => sql`
       INSERT INTO sections (user_id, name, icon, color, position)
       VALUES (${userId}, ${s.name}, ${s.icon}, ${s.color}, ${s.position})
-    `;
-  }
+    `,
+  );
+  if (inserts.length > 0) await Promise.all(inserts);
 }

@@ -85,9 +85,11 @@ export async function deleteSection(id: string): Promise<void> {
 export async function reorderSections(orderedIds: string[]): Promise<void> {
   validateInput(orderedIdsSchema, orderedIds);
   const userId = await requireAuth();
-  for (let i = 0; i < orderedIds.length; i++) {
-    await sql`UPDATE sections SET position = ${i}, updated_at = NOW() WHERE id = ${orderedIds[i]} AND user_id = ${userId}`;
-  }
+  const updates = orderedIds.map(
+    (id, i) =>
+      sql`UPDATE sections SET position = ${i}, updated_at = NOW() WHERE id = ${id} AND user_id = ${userId}`,
+  );
+  if (updates.length > 0) await Promise.all(updates);
   revalidatePath("/sections");
   revalidatePath("/");
 }

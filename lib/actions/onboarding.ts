@@ -74,14 +74,13 @@ export async function completeOnboarding(data: {
     const cats = data.categories.map((id) => CATEGORY_MAP[id]).filter(Boolean);
 
     if (cats.length > 0) {
-      // Build VALUES for bulk insert
-      for (let i = 0; i < cats.length; i++) {
-        const cat = cats[i];
-        await sql`
+      const inserts = cats.map(
+        (cat, i) => sql`
           INSERT INTO sections (user_id, name, icon, color, position)
           VALUES (${userId}, ${cat.name}, ${cat.icon}, ${cat.color}, ${i})
-        `;
-      }
+        `,
+      );
+      await Promise.all(inserts);
     }
 
     revalidatePath("/");

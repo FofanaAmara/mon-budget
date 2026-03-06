@@ -55,6 +55,8 @@ async function generateRecurringInstances(
       AND user_id = ${userId}
   `;
 
+  const inserts: Promise<unknown>[] = [];
+
   for (const expense of recurringExpenses as RecurringExpenseRow[]) {
     const freq = expense.recurrence_frequency;
 
@@ -70,7 +72,7 @@ async function generateRecurringInstances(
         : 1;
       const syntheticDueDate = formatDueDate(year, monthNum, day);
 
-      await sql`
+      inserts.push(sql`
         INSERT INTO monthly_expenses
           (user_id, expense_id, month, name, amount, due_date, status, section_id, card_id, is_auto_charged, notes)
         VALUES
@@ -78,7 +80,7 @@ async function generateRecurringInstances(
            ${syntheticDueDate}, 'UPCOMING', ${expense.section_id}, ${expense.card_id},
            ${expense.auto_debit}, ${expense.notes})
         ON CONFLICT (expense_id, month) DO NOTHING
-      `;
+      `);
       continue;
     }
 
@@ -107,7 +109,7 @@ async function generateRecurringInstances(
         : (MONTHLY_MULTIPLIERS[freq ?? "MONTHLY"] ?? 1);
     const monthlyAmount = Math.round(expense.amount * multiplier * 100) / 100;
 
-    await sql`
+    inserts.push(sql`
       INSERT INTO monthly_expenses
         (user_id, expense_id, month, name, amount, due_date, status, section_id, card_id, is_auto_charged, notes)
       VALUES
@@ -115,8 +117,10 @@ async function generateRecurringInstances(
          ${dueDate ?? null}, 'UPCOMING', ${expense.section_id}, ${expense.card_id},
          ${expense.auto_debit}, ${expense.notes})
       ON CONFLICT (expense_id, month) DO NOTHING
-    `;
+    `);
   }
+
+  if (inserts.length > 0) await Promise.all(inserts);
 }
 
 async function generateOneTimeInstances(
@@ -136,8 +140,8 @@ async function generateOneTimeInstances(
       AND next_due_date <= ${monthEnd}::date
   `;
 
-  for (const expense of oneTimeExpenses) {
-    await sql`
+  const inserts = oneTimeExpenses.map(
+    (expense) => sql`
       INSERT INTO monthly_expenses
         (user_id, expense_id, month, name, amount, due_date, status, section_id, card_id, is_auto_charged, notes)
       VALUES
@@ -145,8 +149,9 @@ async function generateOneTimeInstances(
          ${expense.next_due_date}::date, 'UPCOMING', ${expense.section_id}, ${expense.card_id},
          ${expense.auto_debit}, ${expense.notes})
       ON CONFLICT (expense_id, month) DO NOTHING
-    `;
-  }
+    `,
+  );
+  if (inserts.length > 0) await Promise.all(inserts);
 }
 
 async function generateDebtPaymentInstances(
@@ -161,6 +166,8 @@ async function generateDebtPaymentInstances(
       AND remaining_balance > 0
       AND user_id = ${userId}
   `;
+
+  const inserts: Promise<unknown>[] = [];
 
   for (const debt of activeDebts as {
     id: string;
@@ -186,7 +193,7 @@ async function generateDebtPaymentInstances(
     );
     if (!dueDate) continue;
 
-    await sql`
+    inserts.push(sql`
       INSERT INTO monthly_expenses
         (user_id, debt_id, month, name, amount, due_date, status, section_id, card_id, is_auto_charged, is_planned, notes)
       VALUES
@@ -194,8 +201,10 @@ async function generateDebtPaymentInstances(
          ${dueDate}::date, 'UPCOMING', ${debt.section_id}, ${debt.card_id},
          ${debt.auto_debit}, true, ${debt.notes})
       ON CONFLICT (debt_id, month) WHERE debt_id IS NOT NULL DO NOTHING
-    `;
+    `);
   }
+
+  if (inserts.length > 0) await Promise.all(inserts);
 }
 
 // Generates monthly instances for a given month (idempotent — safe to call multiple times)

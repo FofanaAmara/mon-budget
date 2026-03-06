@@ -29,14 +29,16 @@ export async function generateMonthlyIncomes(month: string): Promise<void> {
     WHERE is_active = true AND frequency != 'VARIABLE' AND user_id = ${userId}
   `;
 
-  for (const inc of incomes as {
-    id: string;
-    name: string;
-    amount: number;
-    frequency: string;
-    pay_anchor_date: string | Date | null;
-    auto_deposit: boolean;
-  }[]) {
+  const inserts = (
+    incomes as {
+      id: string;
+      name: string;
+      amount: number;
+      frequency: string;
+      pay_anchor_date: string | Date | null;
+      auto_deposit: boolean;
+    }[]
+  ).map((inc) => {
     let expectedAmount: number;
 
     if (inc.frequency === "BIWEEKLY" && inc.pay_anchor_date) {
@@ -58,7 +60,7 @@ export async function generateMonthlyIncomes(month: string): Promise<void> {
               : Number(inc.amount);
     }
 
-    await sql`
+    return sql`
       INSERT INTO monthly_incomes (user_id, income_id, month, expected_amount, status, is_auto_deposited)
       VALUES (${userId}, ${inc.id}, ${month}, ${expectedAmount}, 'EXPECTED', ${inc.auto_deposit ?? false})
       ON CONFLICT (income_id, month) DO UPDATE
@@ -67,7 +69,9 @@ export async function generateMonthlyIncomes(month: string): Promise<void> {
         WHERE monthly_incomes.status = 'EXPECTED'
           AND NOT monthly_incomes.manually_edited
     `;
-  }
+  });
+
+  if (inserts.length > 0) await Promise.all(inserts);
   // No revalidatePath — called during page render
 }
 

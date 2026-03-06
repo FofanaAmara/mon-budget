@@ -63,12 +63,13 @@ async function setAllocationSections(
     DELETE FROM allocation_sections WHERE allocation_id = ${allocationId}
   `;
   // Insert new links
-  for (const sid of sectionIds) {
-    await sql`
+  const inserts = sectionIds.map(
+    (sid) => sql`
       INSERT INTO allocation_sections (allocation_id, section_id)
       VALUES (${allocationId}, ${sid})
-    `;
-  }
+    `,
+  );
+  if (inserts.length > 0) await Promise.all(inserts);
 }
 
 // ─── Fetch templates ────────────────────────────────────────────────────────
@@ -200,12 +201,13 @@ export async function deleteAllocation(id: string): Promise<void> {
 export async function reorderAllocations(orderedIds: string[]): Promise<void> {
   validateInput(orderedIdsSchema, orderedIds);
   const userId = await requireAuth();
-  for (let i = 0; i < orderedIds.length; i++) {
-    await sql`
+  const updates = orderedIds.map(
+    (id, i) => sql`
       UPDATE income_allocations SET position = ${i}, updated_at = NOW()
-      WHERE id = ${orderedIds[i]} AND user_id = ${userId}
-    `;
-  }
+      WHERE id = ${id} AND user_id = ${userId}
+    `,
+  );
+  if (updates.length > 0) await Promise.all(updates);
   revalidatePath("/parametres/allocation");
 }
 
@@ -229,6 +231,8 @@ export async function generateMonthlyAllocations(month: string): Promise<void> {
     ORDER BY ia.position ASC
   `;
 
+  const inserts: Promise<unknown>[] = [];
+
   for (const alloc of allocations as (IncomeAllocation & {
     project_target_amount: number | null;
     project_saved_amount: number | null;
@@ -243,12 +247,14 @@ export async function generateMonthlyAllocations(month: string): Promise<void> {
       if (saved >= target) continue;
     }
 
-    await sql`
+    inserts.push(sql`
       INSERT INTO monthly_allocations (user_id, allocation_id, month, allocated_amount)
       VALUES (${userId}, ${alloc.id}, ${month}, ${alloc.amount})
       ON CONFLICT (allocation_id, month) DO NOTHING
-    `;
+    `);
   }
+
+  if (inserts.length > 0) await Promise.all(inserts);
   // No revalidatePath — called during page render
 }
 
