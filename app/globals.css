@@ -1416,3 +1416,707 @@ body:has(.landing-page) {
     opacity: 0;
   }
 }
+
+/* ══════════════════════════════════════════════════════════
+   ONBOARDING CAROUSEL — Styles & Animation keyframes
+   Used by OnboardingCarousel (components/onboarding/)
+   Stance: Typography Monument
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Keyframe: word reveal (slide 1 headline stagger) ── */
+@keyframes onboardingWordReveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Keyframe: fade in (slide 1 subtitle, slide 4 subtitle) ── */
+@keyframes onboardingFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Keyframe: slide up + fade (slides 2-3 feature blocks) ── */
+@keyframes onboardingSlideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Keyframe: scale in with spring (slide 4 CTA button) ── */
+@keyframes onboardingScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── Layout ── */
+.onboarding-carousel {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+.onboarding-viewport {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.onboarding-track {
+  display: flex;
+  height: 100%;
+  transition: transform 580ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.onboarding-track--dragging {
+  transition: none;
+}
+
+/* ── Slide base ── */
+.onboarding-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Slide 1: Bienvenue ── */
+.onboarding-slide--welcome {
+  background: var(--teal-700);
+  color: var(--white);
+  padding: 0 32px;
+  justify-content: flex-end;
+  padding-bottom: 18vh;
+}
+
+/* Decorative typographic period */
+.onboarding-slide--welcome::before {
+  content: '.';
+  position: absolute;
+  top: 8vh;
+  right: 24px;
+  font-size: clamp(10rem, 40vw, 24rem);
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.04);
+  line-height: 1;
+  pointer-events: none;
+  font-family: var(--font);
+}
+
+.onboarding-slide-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 20px;
+}
+
+.onboarding-headline-welcome {
+  font-size: clamp(2.8rem, 12vw, 5.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  margin-bottom: 24px;
+  color: var(--white);
+}
+
+/* Headline words — stagger reveal on activate */
+.onboarding-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.onboarding-word--visible {
+  animation: onboardingWordReveal 500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.onboarding-word--1.onboarding-word--visible { animation-delay: 200ms; }
+.onboarding-word--2.onboarding-word--visible { animation-delay: 320ms; }
+.onboarding-word--3.onboarding-word--visible { animation-delay: 440ms; }
+.onboarding-word--4.onboarding-word--visible { animation-delay: 560ms; }
+.onboarding-word--5.onboarding-word--visible { animation-delay: 680ms; }
+
+.onboarding-line-break {
+  display: block;
+}
+
+/* Subtitle — fade in after headline stagger */
+.onboarding-subtitle-welcome {
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 320px;
+  opacity: 0;
+}
+
+.onboarding-subtitle-welcome--visible {
+  animation: onboardingFadeIn 600ms ease forwards;
+  animation-delay: 900ms;
+}
+
+/* ── Slide 2: Depenses ── */
+.onboarding-slide--depenses {
+  background: var(--white);
+  padding: 0 28px;
+  justify-content: center;
+}
+
+/* ── Slide 3: Patrimoine ── */
+.onboarding-slide--patrimoine {
+  background: var(--teal-50);
+  padding: 0 28px;
+  justify-content: center;
+}
+
+/* ── Shared: slides 2 & 3 header ── */
+.onboarding-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal-700);
+  margin-bottom: 16px;
+}
+
+.onboarding-slide-title {
+  font-size: clamp(1.8rem, 7vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--slate-900);
+  margin-bottom: 40px;
+}
+
+/* ── Feature blocks (slide 2) ── */
+.onboarding-feature-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.onboarding-feature-block {
+  padding: 16px 0;
+  border-top: 1px solid var(--slate-100);
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.onboarding-feature-block:last-child {
+  border-bottom: 1px solid var(--slate-100);
+}
+
+.onboarding-feature-block--visible {
+  animation: onboardingSlideUpFade 400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.onboarding-feature-block--1.onboarding-feature-block--visible { animation-delay: 150ms; }
+.onboarding-feature-block--2.onboarding-feature-block--visible { animation-delay: 250ms; }
+.onboarding-feature-block--3.onboarding-feature-block--visible { animation-delay: 350ms; }
+.onboarding-feature-block--4.onboarding-feature-block--visible { animation-delay: 450ms; }
+
+/* ── Patrimoine blocks (slide 3) ── */
+.onboarding-patrimoine-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.onboarding-patrimoine-block {
+  padding: 16px 0;
+  border-top: 1px solid rgba(15, 118, 110, 0.08);
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.onboarding-patrimoine-block:last-child {
+  border-bottom: 1px solid rgba(15, 118, 110, 0.08);
+}
+
+.onboarding-patrimoine-block--visible {
+  animation: onboardingSlideUpFade 400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.onboarding-patrimoine-block--1.onboarding-patrimoine-block--visible { animation-delay: 150ms; }
+.onboarding-patrimoine-block--2.onboarding-patrimoine-block--visible { animation-delay: 250ms; }
+.onboarding-patrimoine-block--3.onboarding-patrimoine-block--visible { animation-delay: 350ms; }
+
+/* ── Shared feature/patrimoine block text ── */
+.onboarding-feature-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--slate-900);
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.onboarding-feature-desc {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--slate-500);
+  line-height: 1.5;
+}
+
+/* ── Slide 4: C'est parti ── */
+.onboarding-slide--go {
+  background: var(--teal-700);
+  color: var(--white);
+  padding: 0 32px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.onboarding-slide-number {
+  font-size: clamp(6rem, 25vw, 12rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.85;
+  color: rgba(255, 255, 255, 0.06);
+  margin-bottom: -20px;
+  position: relative;
+  z-index: 0;
+  font-family: var(--font);
+  pointer-events: none;
+}
+
+.onboarding-go-headline {
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+  color: var(--white);
+}
+
+.onboarding-go-subtitle {
+  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 300px;
+  margin-bottom: 40px;
+  opacity: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.onboarding-go-subtitle--visible {
+  animation: onboardingFadeIn 500ms ease forwards;
+  animation-delay: 300ms;
+}
+
+/* CTA button — amber milestone pattern */
+.onboarding-btn-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 36px;
+  background: var(--amber-500);
+  color: var(--slate-900);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+  position: relative;
+  z-index: 1;
+  transform: scale(0.9);
+  opacity: 0;
+}
+
+.onboarding-btn-go--visible {
+  animation: onboardingScaleIn 500ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: 500ms;
+}
+
+.onboarding-btn-go:hover {
+  background: var(--amber-600);
+  transform: translateY(-2px) scale(1);
+  box-shadow: 0 8px 28px rgba(245, 158, 11, 0.4);
+}
+
+.onboarding-btn-go:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.onboarding-btn-go svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s ease;
+}
+
+.onboarding-btn-go:hover svg {
+  transform: translateX(3px);
+}
+
+/* ── Navigation bar ── */
+.onboarding-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+  background: var(--white);
+  position: relative;
+  z-index: 10;
+  transition: background 580ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.onboarding-nav--dark {
+  background: var(--teal-800);
+}
+
+/* Skip button */
+.onboarding-btn-skip {
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--slate-400);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 4px;
+  letter-spacing: -0.01em;
+  transition: color 0.15s ease;
+  min-width: 60px;
+  text-align: left;
+}
+
+.onboarding-btn-skip:hover {
+  color: var(--slate-700);
+}
+
+.onboarding-nav--dark .onboarding-btn-skip {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.onboarding-nav--dark .onboarding-btn-skip:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Dot indicators */
+.onboarding-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.onboarding-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--slate-200);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.onboarding-dot--active {
+  width: 28px;
+  border-radius: 100px;
+  background: var(--teal-700);
+}
+
+.onboarding-nav--dark .onboarding-dot {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.onboarding-nav--dark .onboarding-dot--active {
+  background: var(--white);
+}
+
+/* Next button */
+.onboarding-btn-next {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--teal-700);
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 44px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.onboarding-btn-next svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s ease;
+}
+
+.onboarding-btn-next:hover {
+  background: var(--teal-800);
+  transform: scale(1.05);
+}
+
+.onboarding-btn-next:active {
+  transform: scale(0.95);
+}
+
+.onboarding-btn-next:hover svg {
+  transform: translateX(2px);
+}
+
+.onboarding-btn-next--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.onboarding-nav--dark .onboarding-btn-next {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.onboarding-nav--dark .onboarding-btn-next:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ── Slides 2-3 header group — shared structure ── */
+.onboarding-slide-header {
+  /* Mobile: above the stack (no margin needed — flex column default) */
+}
+
+/* ══════════════════════════════════════════════════════════
+   ONBOARDING CAROUSEL — Desktop adaptation (>= 768px)
+   ══════════════════════════════════════════════════════════ */
+
+@media (min-width: 768px) {
+
+  .onboarding-slide {
+    padding: 0 80px;
+  }
+
+  /* Slide 1 — Welcome: center content, bigger type, left-aligned */
+  .onboarding-slide--welcome {
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 10vw;
+    padding-bottom: 0;
+  }
+
+  .onboarding-slide--welcome::before {
+    font-size: clamp(16rem, 30vw, 32rem);
+    top: -5vh;
+    right: 5vw;
+  }
+
+  .onboarding-headline-welcome {
+    font-size: clamp(4rem, 8vw, 7rem);
+    max-width: 700px;
+  }
+
+  .onboarding-subtitle-welcome {
+    font-size: 1.2rem;
+    max-width: 440px;
+  }
+
+  /* Slide 2 — Depenses: two-column layout */
+  .onboarding-slide--depenses {
+    flex-direction: row;
+    align-items: center;
+    gap: 80px;
+    padding: 0 8vw;
+  }
+
+  .onboarding-slide--depenses .onboarding-slide-header {
+    flex: 0 0 auto;
+    max-width: 320px;
+  }
+
+  .onboarding-slide--depenses .onboarding-slide-title {
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    margin-bottom: 0;
+  }
+
+  .onboarding-slide--depenses .onboarding-feature-stack {
+    flex: 1;
+    max-width: 480px;
+  }
+
+  /* Slide 3 — Patrimoine: two-column layout */
+  .onboarding-slide--patrimoine {
+    flex-direction: row;
+    align-items: center;
+    gap: 80px;
+    padding: 0 8vw;
+  }
+
+  .onboarding-slide--patrimoine .onboarding-slide-header {
+    flex: 0 0 auto;
+    max-width: 320px;
+  }
+
+  .onboarding-slide--patrimoine .onboarding-slide-title {
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    margin-bottom: 0;
+  }
+
+  .onboarding-slide--patrimoine .onboarding-patrimoine-grid {
+    flex: 1;
+    max-width: 480px;
+  }
+
+  /* Slide 4 — Go: bigger everything */
+  .onboarding-slide--go {
+    padding: 0 80px;
+  }
+
+  .onboarding-slide-number {
+    font-size: clamp(10rem, 20vw, 18rem);
+    margin-bottom: -40px;
+  }
+
+  .onboarding-go-headline {
+    font-size: clamp(3rem, 5vw, 5rem);
+  }
+
+  .onboarding-go-subtitle {
+    font-size: 1.15rem;
+    max-width: 400px;
+  }
+
+  .onboarding-btn-go {
+    padding: 20px 44px;
+    font-size: 18px;
+  }
+
+  /* Nav bar — wider padding on desktop */
+  .onboarding-nav {
+    padding: 20px 48px;
+    padding-bottom: max(20px, env(safe-area-inset-bottom, 20px));
+  }
+
+  .onboarding-dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .onboarding-dot--active {
+    width: 36px;
+  }
+
+  .onboarding-btn-next {
+    width: 48px;
+    height: 48px;
+  }
+
+  .onboarding-btn-skip {
+    font-size: 15px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   ONBOARDING CAROUSEL — Large desktop (>= 1200px)
+   ══════════════════════════════════════════════════════════ */
+
+@media (min-width: 1200px) {
+
+  .onboarding-slide--welcome {
+    padding: 0 12vw;
+  }
+
+  .onboarding-headline-welcome {
+    font-size: clamp(5rem, 7vw, 8rem);
+    max-width: 800px;
+  }
+
+  .onboarding-slide--depenses,
+  .onboarding-slide--patrimoine {
+    padding: 0 12vw;
+    gap: 120px;
+  }
+
+  .onboarding-feature-block,
+  .onboarding-patrimoine-block {
+    padding: 20px 0;
+  }
+
+  .onboarding-feature-name {
+    font-size: 18px;
+  }
+
+  .onboarding-feature-desc {
+    font-size: 15px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   ONBOARDING CAROUSEL — Small mobile (<= 374px)
+   ══════════════════════════════════════════════════════════ */
+
+@media (max-width: 374px) {
+
+  .onboarding-slide {
+    padding: 0 20px;
+  }
+
+  .onboarding-slide--welcome {
+    padding: 0 20px;
+    padding-bottom: 14vh;
+  }
+
+  .onboarding-headline-welcome {
+    font-size: 2.4rem;
+  }
+
+  .onboarding-slide--depenses,
+  .onboarding-slide--patrimoine {
+    padding: 0 20px;
+  }
+
+  .onboarding-slide--go {
+    padding: 0 20px;
+  }
+
+  .onboarding-nav {
+    padding: 12px 16px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));
+  }
+
+  .onboarding-btn-go {
+    padding: 16px 28px;
+    font-size: 15px;
+  }
+}
