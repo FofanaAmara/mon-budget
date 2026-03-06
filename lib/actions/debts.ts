@@ -1,8 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { sql } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/helpers";
+import { revalidateDebtPages } from "@/lib/revalidation";
 import type { Debt } from "@/lib/types";
 import { validateInput } from "@/lib/schemas/validate";
 import { idSchema } from "@/lib/schemas/common";
@@ -52,8 +52,7 @@ export async function createDebt(data: CreateDebtInput): Promise<Debt> {
     )
     RETURNING *
   `;
-  revalidatePath("/projets");
-  revalidatePath("/");
+  revalidateDebtPages();
   return rows[0] as Debt;
 }
 
@@ -81,8 +80,7 @@ export async function updateDebt(
     WHERE id = ${id} AND user_id = ${userId}
     RETURNING *
   `;
-  revalidatePath("/projets");
-  revalidatePath("/");
+  revalidateDebtPages();
   return rows[0] as Debt;
 }
 
@@ -93,8 +91,7 @@ export async function deleteDebt(id: string): Promise<void> {
     UPDATE debts SET is_active = false, updated_at = NOW()
     WHERE id = ${id} AND user_id = ${userId}
   `;
-  revalidatePath("/projets");
-  revalidatePath("/");
+  revalidateDebtPages();
 }
 
 export async function getTotalDebtBalance(): Promise<number> {
@@ -132,6 +129,5 @@ export async function makeExtraPayment(
       VALUES (${userId}, ${id}, 'PAYMENT', ${amount}, ${txMonth}, 'Paiement supplementaire', 'EXTRA_PAYMENT')
     `,
   ]);
-  revalidatePath("/projets");
-  revalidatePath("/");
+  revalidateDebtPages();
 }

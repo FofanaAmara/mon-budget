@@ -58,3 +58,13 @@ export const SOURCE_META: Record<
   },
   OTHER: { label: "Autre", icon: "🔧", color: "#6B6966", bg: "#F5F4F1" },
 };
+
+/** Default sections created for new users. Single source of truth. */
+export const DEFAULT_SECTIONS = [
+  { name: "Maison", icon: "🏠", color: "#3D3BF3", position: 0 },
+  { name: "Perso", icon: "👤", color: "#8B5CF6", position: 1 },
+  { name: "Famille", icon: "👨‍👩‍👧‍👦", color: "#EC4899", position: 2 },
+  { name: "Transport", icon: "🚗", color: "#F59E0B", position: 3 },
+  { name: "Business", icon: "💼", color: "#10B981", position: 4 },
+  { name: "Projets", icon: "🎯", color: "#EF4444", position: 5 },
+] as const;

@@ -1,8 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { sql } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/helpers";
+import { DEFAULT_SECTIONS } from "@/lib/constants";
+import { revalidateAllPages } from "@/lib/revalidation";
 
 // Checks if there are any orphaned rows with user_id = 'unclaimed'
 export async function hasOrphanedData(): Promise<boolean> {
@@ -61,14 +62,7 @@ export async function claimOrphanedData(): Promise<{ claimed: number }> {
       r10.length +
       r11.length;
 
-    // Revalidate all pages
-    revalidatePath("/");
-    revalidatePath("/depenses");
-    revalidatePath("/revenus");
-    revalidatePath("/projets");
-    revalidatePath("/parametres");
-    revalidatePath("/cartes");
-    revalidatePath("/sections");
+    revalidateAllPages();
 
     return { claimed: total };
   } catch (error) {
@@ -78,15 +72,6 @@ export async function claimOrphanedData(): Promise<{ claimed: number }> {
 }
 
 // Ensures the user has default sections. Called for new users on first visit.
-const DEFAULT_SECTIONS = [
-  { name: "Maison", icon: "🏠", color: "#3D3BF3", position: 0 },
-  { name: "Perso", icon: "👤", color: "#8B5CF6", position: 1 },
-  { name: "Famille", icon: "👨‍👩‍👧‍👦", color: "#EC4899", position: 2 },
-  { name: "Transport", icon: "🚗", color: "#F59E0B", position: 3 },
-  { name: "Business", icon: "💼", color: "#10B981", position: 4 },
-  { name: "Projets", icon: "🎯", color: "#EF4444", position: 5 },
-];
-
 export async function ensureDefaultSections(): Promise<void> {
   const userId = await requireAuth();
   const existing =

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { sql } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/helpers";
+import { revalidateExpensePages } from "@/lib/revalidation";
 import type { MonthlyExpense, MonthSummary } from "@/lib/types";
 import {
   WEEKLY_MONTHLY_MULTIPLIER,
@@ -356,8 +357,7 @@ export async function markAsPaid(id: string): Promise<void> {
     revalidatePath("/projets");
   }
 
-  revalidatePath("/depenses");
-  revalidatePath("/");
+  revalidateExpensePages();
 }
 
 // Defer a monthly expense to a future month.
@@ -417,8 +417,7 @@ export async function deferExpenseToMonth(
        ${"Reporté depuis " + sourceLabel})
   `;
 
-  revalidatePath("/depenses");
-  revalidatePath("/");
+  revalidateExpensePages();
 }
 
 // Revert a monthly expense back to UPCOMING
@@ -430,8 +429,7 @@ export async function markAsUpcoming(id: string): Promise<void> {
     SET status = 'UPCOMING', paid_at = NULL
     WHERE id = ${id} AND user_id = ${userId}
   `;
-  revalidatePath("/depenses");
-  revalidatePath("/");
+  revalidateExpensePages();
 }
 
 // Delete an adhoc/imprévue monthly expense (expense_id IS NULL — no template).
@@ -443,8 +441,7 @@ export async function deleteMonthlyExpense(id: string): Promise<void> {
     DELETE FROM monthly_expenses
     WHERE id = ${id} AND user_id = ${userId} AND expense_id IS NULL
   `;
-  revalidatePath("/depenses");
-  revalidatePath("/");
+  revalidateExpensePages();
 }
 
 // Update the amount for a monthly expense (this month only — template unchanged).
@@ -461,8 +458,7 @@ export async function updateMonthlyExpenseAmount(
     SET amount = ${newAmount}
     WHERE id = ${id} AND user_id = ${userId}
   `;
-  revalidatePath("/depenses");
-  revalidatePath("/");
+  revalidateExpensePages();
 }
 
 // Auto-mark OVERDUE: mark UPCOMING instances past their due_date as OVERDUE

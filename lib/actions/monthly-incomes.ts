@@ -1,8 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { sql } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/helpers";
+import { revalidateIncomePages } from "@/lib/revalidation";
 import { countBiweeklyPayDatesInMonth } from "@/lib/utils";
 import type { MonthlyIncome } from "@/lib/types";
 import { BIWEEKLY_MONTHLY_MULTIPLIER } from "@/lib/constants";
@@ -151,8 +151,7 @@ export async function markIncomeReceived(
       notes = ${notes ?? null}
     WHERE id = ${monthlyIncomeId} AND user_id = ${userId}
   `;
-  revalidatePath("/revenus");
-  revalidatePath("/");
+  revalidateIncomePages();
 }
 
 // Revert a RECEIVED/PARTIAL income back to EXPECTED.
@@ -167,8 +166,7 @@ export async function markIncomeAsExpected(
     SET status = 'EXPECTED', actual_amount = NULL, received_at = NULL, manually_edited = false
     WHERE id = ${monthlyIncomeId} AND user_id = ${userId}
   `;
-  revalidatePath("/revenus");
-  revalidatePath("/");
+  revalidateIncomePages();
 }
 
 // Delete a monthly income instance (adhoc/ponctuel only).
@@ -180,8 +178,7 @@ export async function deleteMonthlyIncome(id: string): Promise<void> {
     DELETE FROM monthly_incomes
     WHERE id = ${id} AND user_id = ${userId}
   `;
-  revalidatePath("/revenus");
-  revalidatePath("/");
+  revalidateIncomePages();
 }
 
 // Update the expected_amount for a monthly income (this month only — template unchanged).
@@ -198,8 +195,7 @@ export async function updateMonthlyIncomeAmount(
     SET expected_amount = ${newExpectedAmount}, manually_edited = true
     WHERE id = ${id} AND user_id = ${userId}
   `;
-  revalidatePath("/revenus");
-  revalidatePath("/");
+  revalidateIncomePages();
 }
 
 // Create AND mark as RECEIVED a VARIABLE income for the given month (manual entry).
@@ -228,6 +224,5 @@ export async function markVariableIncomeReceived(
         received_at = CURRENT_DATE,
         notes = ${notes ?? null}
   `;
-  revalidatePath("/revenus");
-  revalidatePath("/");
+  revalidateIncomePages();
 }

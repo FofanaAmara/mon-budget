@@ -1,8 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { sql } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/helpers";
+import { revalidateDebtPages } from "@/lib/revalidation";
 import type { DebtTransaction, MonthlyDebtSummary } from "@/lib/types";
 import { validateInput } from "@/lib/schemas/validate";
 import { idSchema, monthSchema } from "@/lib/schemas/common";
@@ -60,8 +60,7 @@ export async function addDebtTransaction(
     ]);
   }
 
-  revalidatePath("/projets");
-  revalidatePath("/");
+  revalidateDebtPages();
 }
 
 export async function getMonthlyDebtSummary(
