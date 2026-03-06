@@ -12,8 +12,8 @@ import {
   getMonthSummary,
   autoMarkOverdue,
   autoMarkPaidForAutoDebit,
-  getMonthlySummaryBySection,
 } from "@/lib/actions/monthly-expenses";
+import { getMonthlySummaryBySection } from "@/lib/actions/expenses";
 import { getMonthlyIncomeTotal } from "@/lib/actions/incomes";
 import {
   generateMonthlyIncomes,

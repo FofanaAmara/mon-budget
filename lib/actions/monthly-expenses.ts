@@ -497,50 +497,7 @@ export async function autoMarkPaidForAutoDebit(month: string): Promise<void> {
   // Note: no revalidatePath here — this is called during page render
 }
 
-// --- Aggregation functions (query monthly_expenses) ---
-
-export async function getMonthlySummaryBySection(): Promise<
-  {
-    section_id: string;
-    section_name: string;
-    section_icon: string;
-    section_color: string;
-    total: number;
-  }[]
-> {
-  const userId = await requireAuth();
-  const rows = await sql`
-    SELECT
-      s.id as section_id,
-      s.name as section_name,
-      s.icon as section_icon,
-      s.color as section_color,
-      -- Multipliers must match WEEKLY_MONTHLY_MULTIPLIER and BIWEEKLY_MONTHLY_MULTIPLIER in lib/constants.ts
-      COALESCE(SUM(
-        CASE
-          WHEN e.recurrence_frequency = 'WEEKLY' THEN e.amount * 52.0 / 12
-          WHEN e.recurrence_frequency = 'BIWEEKLY' THEN e.amount * 26.0 / 12
-          WHEN e.recurrence_frequency = 'MONTHLY' THEN e.amount
-          WHEN e.recurrence_frequency = 'BIMONTHLY' THEN e.amount / 2.0
-          WHEN e.recurrence_frequency = 'QUARTERLY' THEN e.amount / 3.0
-          WHEN e.recurrence_frequency = 'YEARLY' THEN e.amount / 12.0
-          ELSE e.amount
-        END
-      ), 0) as total
-    FROM sections s
-    LEFT JOIN expenses e ON e.section_id = s.id AND e.is_active = true AND e.user_id = ${userId}
-    WHERE s.user_id = ${userId}
-    GROUP BY s.id, s.name, s.icon, s.color, s.position
-    ORDER BY s.position ASC
-  `;
-  return rows as {
-    section_id: string;
-    section_name: string;
-    section_icon: string;
-    section_color: string;
-    total: number;
-  }[];
-}
+// --- Aggregation functions (query monthly_expenses for actuals) ---
 
 // Returns the total amount paid per section for a given month.
 // Used by the allocation tab to compare allocated vs actually spent.

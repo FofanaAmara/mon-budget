@@ -150,7 +150,7 @@ export async function transferSavings({
   revalidatePath("/");
 }
 
-// Returns the single "Epargne libre" pot, creating it if it doesn't exist.
+// Returns the single "Épargne libre" pot, creating it if it doesn't exist.
 export async function getOrCreateFreeSavings(): Promise<Expense> {
   const userId = await requireAuth();
   const existing = await sql`
@@ -158,14 +158,14 @@ export async function getOrCreateFreeSavings(): Promise<Expense> {
     FROM expenses e
     LEFT JOIN sections s ON e.section_id = s.id
     LEFT JOIN cards c ON e.card_id = c.id
-    WHERE e.is_active = true AND e.type = 'PLANNED' AND e.name = 'Epargne libre' AND e.user_id = ${userId}
+    WHERE e.is_active = true AND e.type = 'PLANNED' AND e.name = 'Épargne libre' AND e.user_id = ${userId}
     LIMIT 1
   `;
   if (existing.length > 0) return existing[0] as Expense;
 
   const rows = await sql`
     INSERT INTO expenses (user_id, name, amount, type, saved_amount)
-    VALUES (${userId}, 'Epargne libre', 0, 'PLANNED', 0)
+    VALUES (${userId}, 'Épargne libre', 0, 'PLANNED', 0)
     RETURNING *, NULL as section, NULL as card
   `;
   return rows[0] as Expense;
