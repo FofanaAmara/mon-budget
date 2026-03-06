@@ -27,6 +27,7 @@ import {
 } from "@/lib/schemas/income";
 import { CreateDebtSchema, MakeExtraPaymentSchema } from "@/lib/schemas/debt";
 import { AddDebtTransactionSchema } from "@/lib/schemas/debt-transaction";
+import { AddExpenseTransactionSchema } from "@/lib/schemas/expense-transaction";
 import { CreateSectionSchema } from "@/lib/schemas/section";
 import { CreateCardSchema } from "@/lib/schemas/card";
 import { UpdateSettingsSchema } from "@/lib/schemas/settings";
@@ -287,6 +288,78 @@ describe("Expense schemas", () => {
       });
       expect(result.success).toBe(true);
       if (result.success) expect(result.data.alreadyPaid).toBe(false);
+    });
+  });
+});
+
+describe("ExpenseTransaction schemas", () => {
+  const validUUID = "550e8400-e29b-41d4-a716-446655440000";
+
+  describe("AddExpenseTransactionSchema", () => {
+    it("accepts valid transaction with note", () => {
+      const result = AddExpenseTransactionSchema.safeParse({
+        monthlyExpenseId: validUUID,
+        amount: 87.5,
+        note: "Metro",
+      });
+      expect(result.success).toBe(true);
+    });
+
+    it("accepts valid transaction without note", () => {
+      const result = AddExpenseTransactionSchema.safeParse({
+        monthlyExpenseId: validUUID,
+        amount: 25,
+      });
+      expect(result.success).toBe(true);
+    });
+
+    it("accepts null note", () => {
+      const result = AddExpenseTransactionSchema.safeParse({
+        monthlyExpenseId: validUUID,
+        amount: 10,
+        note: null,
+      });
+      expect(result.success).toBe(true);
+    });
+
+    it("rejects zero amount", () => {
+      const result = AddExpenseTransactionSchema.safeParse({
+        monthlyExpenseId: validUUID,
+        amount: 0,
+      });
+      expect(result.success).toBe(false);
+    });
+
+    it("rejects negative amount", () => {
+      const result = AddExpenseTransactionSchema.safeParse({
+        monthlyExpenseId: validUUID,
+        amount: -50,
+      });
+      expect(result.success).toBe(false);
+    });
+
+    it("rejects invalid UUID", () => {
+      const result = AddExpenseTransactionSchema.safeParse({
+        monthlyExpenseId: "not-a-uuid",
+        amount: 50,
+      });
+      expect(result.success).toBe(false);
+    });
+
+    it("rejects missing monthlyExpenseId", () => {
+      const result = AddExpenseTransactionSchema.safeParse({
+        amount: 50,
+      });
+      expect(result.success).toBe(false);
+    });
+
+    it("rejects note over 500 chars", () => {
+      const result = AddExpenseTransactionSchema.safeParse({
+        monthlyExpenseId: validUUID,
+        amount: 50,
+        note: "a".repeat(501),
+      });
+      expect(result.success).toBe(false);
     });
   });
 });

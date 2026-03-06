@@ -127,11 +127,21 @@ export type MonthlyExpense = {
   card_id: string | null;
   is_auto_charged: boolean;
   is_planned: boolean;
+  paid_amount: number;
   notes: string | null;
   created_at: string;
   // Joined
   section?: Section;
   card?: Card;
+};
+
+export type ExpenseTransaction = {
+  id: string;
+  user_id: string;
+  monthly_expense_id: string;
+  amount: number;
+  note: string | null;
+  created_at: string;
 };
 
 export type MonthSummary = {
