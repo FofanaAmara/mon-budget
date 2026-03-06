@@ -53,6 +53,7 @@ export async function createIncome(data: CreateIncomeInput): Promise<Income> {
   revalidatePath("/parametres");
   revalidatePath("/parametres/revenus");
   revalidatePath("/");
+  revalidatePath("/", "layout"); // refresh setup guide state
   return rows[0] as Income;
 }
 
@@ -90,6 +91,7 @@ export async function deleteIncome(id: string): Promise<void> {
   await sql`UPDATE incomes SET is_active = false, updated_at = NOW() WHERE id = ${id} AND user_id = ${userId}`;
   revalidatePath("/revenus");
   revalidatePath("/");
+  revalidatePath("/", "layout"); // refresh setup guide state
 }
 
 // Creates a one-time adhoc income and inserts it as RECEIVED in monthly_incomes.

@@ -5,10 +5,11 @@
 
 import { revalidatePath } from "next/cache";
 
-/** Revalidate expense-related pages (depenses + home). */
+/** Revalidate expense-related pages (depenses + home + layout for setup guide). */
 export function revalidateExpensePages() {
   revalidatePath("/depenses");
   revalidatePath("/");
+  revalidatePath("/", "layout"); // refresh setup guide state
 }
 
 /** Revalidate income-related pages (revenus + home). */
