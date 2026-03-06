@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef, useEffect } from "react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth/client";
 import { loadDemoData, clearAllUserData } from "@/lib/actions/demo-data";
@@ -201,6 +201,13 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
   const [isPendingLoad, startLoadTransition] = useTransition();
   const [isPendingClear, startClearTransition] = useTransition();
   const [feedback, setFeedback] = useState<string | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (showClearModal) {
+      dialogRef.current?.focus();
+    }
+  }, [showClearModal]);
 
   function handleLoadDemo() {
     setFeedback(null);
@@ -484,6 +491,7 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
           }}
         >
           <div
+            ref={dialogRef}
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useRef } from "react";
+import { useState, useTransition, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import SheetCloseButton from "@/components/SheetCloseButton";
 import {
@@ -90,6 +90,13 @@ export default function SectionsClient({
   const [color, setColor] = useState(COLORS[0].value);
 
   const dragIndex = useRef<number | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (modal.mode !== "closed") {
+      dialogRef.current?.focus();
+    }
+  }, [modal.mode]);
 
   /* ── Handlers ── */
 
@@ -642,6 +649,7 @@ export default function SectionsClient({
           role="presentation"
         >
           <div
+            ref={dialogRef}
             className="sheet"
             role="dialog"
             aria-modal="true"
