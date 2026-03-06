@@ -1,5 +1,6 @@
 export const runtime = "nodejs";
 
+import { timingSafeEqual } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import webpush from "web-push";
 import { sql } from "@/lib/db";
@@ -11,16 +12,41 @@ const NOTIFICATION_PAYLOAD = JSON.stringify({
 });
 
 export async function GET(req: NextRequest) {
+  // Timing-safe CRON_SECRET verification
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret) {
+    return NextResponse.json(
+      { error: "CRON_SECRET not configured" },
+      { status: 500 },
+    );
+  }
   const authHeader = req.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const token = authHeader?.replace("Bearer ", "") ?? "";
+  const expected = Buffer.from(cronSecret, "utf-8");
+  const received = Buffer.from(token, "utf-8");
+  if (
+    expected.length !== received.length ||
+    !timingSafeEqual(expected, received)
+  ) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Runtime checks for VAPID env vars
+  const vapidPublicKey = process.env.VAPID_PUBLIC_KEY;
+  const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
+  const vapidEmail = process.env.VAPID_EMAIL;
+  if (!vapidPublicKey || !vapidPrivateKey || !vapidEmail) {
+    return NextResponse.json(
+      { error: "VAPID configuration missing" },
+      { status: 500 },
+    );
   }
 
   // Initialize VAPID inside the handler — env vars are not available at module eval time during Vercel builds
   webpush.setVapidDetails(
-    `mailto:${process.env.VAPID_EMAIL}`,
-    process.env.VAPID_PUBLIC_KEY!,
-    process.env.VAPID_PRIVATE_KEY!,
+    `mailto:${vapidEmail}`,
+    vapidPublicKey,
+    vapidPrivateKey,
   );
 
   try {

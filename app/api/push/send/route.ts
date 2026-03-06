@@ -7,11 +7,22 @@ import { auth } from "@/lib/auth/server";
 import { PushSendSchema } from "@/lib/schemas/push";
 
 export async function POST(req: NextRequest) {
+  // Runtime checks for VAPID env vars
+  const vapidPublicKey = process.env.VAPID_PUBLIC_KEY;
+  const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
+  const vapidEmail = process.env.VAPID_EMAIL;
+  if (!vapidPublicKey || !vapidPrivateKey || !vapidEmail) {
+    return NextResponse.json(
+      { error: "VAPID configuration missing" },
+      { status: 500 },
+    );
+  }
+
   // Initialize VAPID inside the handler — env vars are not available at module eval time during Vercel builds
   webpush.setVapidDetails(
-    `mailto:${process.env.VAPID_EMAIL}`,
-    process.env.VAPID_PUBLIC_KEY!,
-    process.env.VAPID_PRIVATE_KEY!,
+    `mailto:${vapidEmail}`,
+    vapidPublicKey,
+    vapidPrivateKey,
   );
 
   try {
