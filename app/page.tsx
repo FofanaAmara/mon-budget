@@ -1,27 +1,31 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-import { getMonthlySummaryBySection, getPlannedExpenses, getMonthlySavingsSummary } from '@/lib/actions/expenses';
-import { getTotalDebtBalance } from '@/lib/actions/debts';
-import { getMonthlyDebtSummary } from '@/lib/actions/debt-transactions';
+import {
+  getPlannedExpenses,
+  getMonthlySavingsSummary,
+} from "@/lib/actions/savings";
+import { getTotalDebtBalance } from "@/lib/actions/debts";
+import { getMonthlyDebtSummary } from "@/lib/actions/debt-transactions";
 import {
   generateMonthlyExpenses,
   getMonthlyExpenses,
   getMonthSummary,
   autoMarkOverdue,
   autoMarkPaidForAutoDebit,
-} from '@/lib/actions/monthly-expenses';
-import { getMonthlyIncomeTotal } from '@/lib/actions/incomes';
+  getMonthlySummaryBySection,
+} from "@/lib/actions/monthly-expenses";
+import { getMonthlyIncomeTotal } from "@/lib/actions/incomes";
 import {
   generateMonthlyIncomes,
   getMonthlyIncomeSummary,
   autoMarkReceivedForAutoDeposit,
-} from '@/lib/actions/monthly-incomes';
-import { hasOrphanedData, ensureDefaultSections } from '@/lib/actions/claim';
-import { hasUserData } from '@/lib/actions/demo-data';
-import { currentMonth } from '@/lib/utils';
-import AccueilClient from '@/components/AccueilClient';
-import ClaimBanner from '@/components/ClaimBanner';
-import NotificationPermission from '@/components/NotificationPermission';
+} from "@/lib/actions/monthly-incomes";
+import { hasOrphanedData, ensureDefaultSections } from "@/lib/actions/claim";
+import { hasUserData } from "@/lib/actions/demo-data";
+import { currentMonth } from "@/lib/utils";
+import AccueilClient from "@/components/AccueilClient";
+import ClaimBanner from "@/components/ClaimBanner";
+import NotificationPermission from "@/components/NotificationPermission";
 
 type PageProps = {
   searchParams: Promise<{ month?: string }>;
@@ -51,7 +55,17 @@ export default async function AccueilPage({ searchParams }: PageProps) {
     await autoMarkReceivedForAutoDeposit(month);
   }
 
-  const [expenses, summary, incomeSummary, sectionSummary, monthlyIncomeFromTemplates, projets, totalDebtBalance, savingsSummary, debtSummary] = await Promise.all([
+  const [
+    expenses,
+    summary,
+    incomeSummary,
+    sectionSummary,
+    monthlyIncomeFromTemplates,
+    projets,
+    totalDebtBalance,
+    savingsSummary,
+    debtSummary,
+  ] = await Promise.all([
     getMonthlyExpenses(month),
     getMonthSummary(month),
     getMonthlyIncomeSummary(month),
@@ -63,15 +77,25 @@ export default async function AccueilPage({ searchParams }: PageProps) {
     getMonthlyDebtSummary(month),
   ]);
 
-  const totalMonthlyExpenses = sectionSummary.reduce((sum, s) => sum + Number(s.total), 0);
+  const totalMonthlyExpenses = sectionSummary.reduce(
+    (sum, s) => sum + Number(s.total),
+    0,
+  );
 
   return (
     <>
       <NotificationPermission />
-      {showClaimBanner && <div style={{ padding: '20px 20px 0' }}><ClaimBanner /></div>}
+      {showClaimBanner && (
+        <div style={{ padding: "20px 20px 0" }}>
+          <ClaimBanner />
+        </div>
+      )}
       <AccueilClient
         summary={summary}
-        incomeSummary={{ expectedTotal: incomeSummary.expectedTotal, actualTotal: incomeSummary.actualTotal }}
+        incomeSummary={{
+          expectedTotal: incomeSummary.expectedTotal,
+          actualTotal: incomeSummary.actualTotal,
+        }}
         expenses={expenses}
         monthlyIncomes={incomeSummary.items}
         month={month}

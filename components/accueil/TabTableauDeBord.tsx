@@ -19,32 +19,6 @@ type Props = {
   valeurNette: number;
 };
 
-// Chevron arrow for clickable cards
-function ChevronRight() {
-  return (
-    <svg
-      style={{
-        position: "absolute",
-        top: "16px",
-        right: "14px",
-        width: "20px",
-        height: "20px",
-        color: "var(--slate-300)",
-        transition: "all 0.25s ease",
-        flexShrink: 0,
-      }}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="9 18 15 12 9 6" />
-    </svg>
-  );
-}
-
 // Card icon wrapper
 function CardIcon({
   children,

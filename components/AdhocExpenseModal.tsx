@@ -43,16 +43,17 @@ export default function AdhocExpenseModal({
     setLoading(true);
     setError("");
     try {
-      const { createAdhocExpense } = await import("@/lib/actions/expenses");
-      await createAdhocExpense(
-        name.trim(),
-        parseFloat(amount),
+      const { createAdhocExpense } =
+        await import("@/lib/actions/monthly-expenses");
+      await createAdhocExpense({
+        name: name.trim(),
+        amount: parseFloat(amount),
         sectionId,
         month,
-        mode === "paid",
-        dueDate || undefined,
-        cardId || undefined,
-      );
+        alreadyPaid: mode === "paid",
+        dueDate: dueDate || undefined,
+        cardId: cardId || undefined,
+      });
       onClose();
     } catch {
       setError("Erreur lors de la création");

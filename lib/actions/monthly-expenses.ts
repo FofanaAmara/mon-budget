@@ -16,6 +16,7 @@ import {
   monthSchema,
   nonNegativeAmountSchema,
 } from "@/lib/schemas/common";
+import { CreateAdhocExpenseSchema } from "@/lib/schemas/expense";
 
 // --- Sub-functions for generateMonthlyExpenses (I/O — stay in server action) ---
 
@@ -406,7 +407,6 @@ export async function deferExpenseToMonth(
     WHERE id = ${id} AND user_id = ${userId}
   `;
 
-  const [ty, tm] = targetMonth.split("-").map(Number);
   const dueDate = `${targetMonth}-01`;
   await sql`
     INSERT INTO monthly_expenses
@@ -495,4 +495,119 @@ export async function autoMarkPaidForAutoDebit(month: string): Promise<void> {
       AND user_id = ${userId}
   `;
   // Note: no revalidatePath here — this is called during page render
+}
+
+// --- Aggregation functions (query monthly_expenses) ---
+
+export async function getMonthlySummaryBySection(): Promise<
+  {
+    section_id: string;
+    section_name: string;
+    section_icon: string;
+    section_color: string;
+    total: number;
+  }[]
+> {
+  const userId = await requireAuth();
+  const rows = await sql`
+    SELECT
+      s.id as section_id,
+      s.name as section_name,
+      s.icon as section_icon,
+      s.color as section_color,
+      -- Multipliers must match WEEKLY_MONTHLY_MULTIPLIER and BIWEEKLY_MONTHLY_MULTIPLIER in lib/constants.ts
+      COALESCE(SUM(
+        CASE
+          WHEN e.recurrence_frequency = 'WEEKLY' THEN e.amount * 52.0 / 12
+          WHEN e.recurrence_frequency = 'BIWEEKLY' THEN e.amount * 26.0 / 12
+          WHEN e.recurrence_frequency = 'MONTHLY' THEN e.amount
+          WHEN e.recurrence_frequency = 'BIMONTHLY' THEN e.amount / 2.0
+          WHEN e.recurrence_frequency = 'QUARTERLY' THEN e.amount / 3.0
+          WHEN e.recurrence_frequency = 'YEARLY' THEN e.amount / 12.0
+          ELSE e.amount
+        END
+      ), 0) as total
+    FROM sections s
+    LEFT JOIN expenses e ON e.section_id = s.id AND e.is_active = true AND e.user_id = ${userId}
+    WHERE s.user_id = ${userId}
+    GROUP BY s.id, s.name, s.icon, s.color, s.position
+    ORDER BY s.position ASC
+  `;
+  return rows as {
+    section_id: string;
+    section_name: string;
+    section_icon: string;
+    section_color: string;
+    total: number;
+  }[];
+}
+
+// Returns the total amount paid per section for a given month.
+// Used by the allocation tab to compare allocated vs actually spent.
+export async function getMonthlyExpenseActualsBySection(
+  month: string,
+): Promise<{ section_id: string; total: number }[]> {
+  validateInput(monthSchema, month);
+  const userId = await requireAuth();
+  const rows = await sql`
+    SELECT section_id, SUM(amount) AS total
+    FROM monthly_expenses
+    WHERE month = ${month}
+      AND status = 'PAID'
+      AND section_id IS NOT NULL
+      AND user_id = ${userId}
+    GROUP BY section_id
+  `;
+  return (rows as { section_id: string; total: string }[]).map((r) => ({
+    section_id: r.section_id,
+    total: Number(r.total),
+  }));
+}
+
+// Creates an adhoc (imprevu) expense directly in monthly_expenses.
+// No template is created in `expenses` — adhoc items are standalone transactions.
+export async function createAdhocExpense({
+  name,
+  amount,
+  sectionId,
+  month,
+  alreadyPaid = false,
+  dueDate,
+  cardId,
+}: {
+  name: string;
+  amount: number;
+  sectionId: string;
+  month: string;
+  alreadyPaid?: boolean;
+  dueDate?: string;
+  cardId?: string;
+}): Promise<void> {
+  validateInput(CreateAdhocExpenseSchema, {
+    name,
+    amount,
+    sectionId,
+    month,
+    alreadyPaid,
+    dueDate,
+    cardId,
+  });
+  const userId = await requireAuth();
+  const today = new Date().toISOString().split("T")[0];
+  const effectiveDate = dueDate || today;
+
+  if (alreadyPaid) {
+    await sql`
+      INSERT INTO monthly_expenses (user_id, expense_id, section_id, card_id, month, name, amount, status, due_date, paid_at, is_planned)
+      VALUES (${userId}, NULL, ${sectionId}, ${cardId ?? null}, ${month}, ${name}, ${amount}, 'PAID', ${effectiveDate}::date, ${effectiveDate}::date, false)
+    `;
+  } else {
+    await sql`
+      INSERT INTO monthly_expenses (user_id, expense_id, section_id, card_id, month, name, amount, status, due_date, is_planned)
+      VALUES (${userId}, NULL, ${sectionId}, ${cardId ?? null}, ${month}, ${name}, ${amount}, 'UPCOMING', ${effectiveDate}::date, false)
+    `;
+  }
+
+  revalidatePath("/depenses");
+  revalidatePath("/");
 }

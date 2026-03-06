@@ -41,8 +41,7 @@ export default function SavingsHistoryModal({
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const { getSavingsContributions } =
-        await import("@/lib/actions/expenses");
+      const { getSavingsContributions } = await import("@/lib/actions/savings");
       const data = await getSavingsContributions(expenseId);
       if (!cancelled) {
         setContributions(data);

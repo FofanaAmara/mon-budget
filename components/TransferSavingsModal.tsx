@@ -46,8 +46,14 @@ export default function TransferSavingsModal({
     if (isNaN(val) || val <= 0 || val > sourceBalance || !dest) return;
     setLoading(true);
     try {
-      const { transferSavings } = await import("@/lib/actions/expenses");
-      await transferSavings(source.id, dest.id, val, source.name, dest.name);
+      const { transferSavings } = await import("@/lib/actions/savings");
+      await transferSavings({
+        fromId: source.id,
+        toId: dest.id,
+        amount: val,
+        fromName: source.name,
+        toName: dest.name,
+      });
       onDone();
     } catch {
       setLoading(false);

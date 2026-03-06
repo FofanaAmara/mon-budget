@@ -44,7 +44,7 @@ export default function AddSavingsModal({
     if (isNaN(val) || val <= 0) return;
     setLoading(true);
     try {
-      const { addSavingsContribution } = await import("@/lib/actions/expenses");
+      const { addSavingsContribution } = await import("@/lib/actions/savings");
       await addSavingsContribution(expenseId, val, note.trim() || null);
       onDone();
     } catch {
