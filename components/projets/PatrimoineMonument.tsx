@@ -1,7 +1,6 @@
 "use client";
 
 import { formatCAD } from "@/lib/utils";
-import type { Debt } from "@/lib/types";
 
 type Props = {
   totalEpargne: number;
@@ -88,7 +87,7 @@ export default function PatrimoineMonument({
             letterSpacing: "-0.01em",
           }}
         >
-          Epargne {formatCAD(totalEpargne)} · Dettes{" "}
+          Épargne {formatCAD(totalEpargne)} · Dettes{" "}
           {formatCAD(totalDebtBalance)}
         </p>
 
@@ -136,7 +135,7 @@ export default function PatrimoineMonument({
               <polyline points="16 17 22 17 22 11" />
             </svg>
           )}
-          {isPositive ? "En croissance" : "En deficit"}
+          {isPositive ? "En croissance" : "En déficit"}
         </span>
       </div>
 
@@ -170,7 +169,7 @@ export default function PatrimoineMonument({
               marginBottom: "4px",
             }}
           >
-            Epargne
+            Épargne
           </p>
           <p
             style={{

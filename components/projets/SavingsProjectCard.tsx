@@ -10,7 +10,7 @@ type SavingsProjectCardProps = {
   onTransfer: () => void;
   onHistory: () => void;
   onDelete: () => void;
-  /** True for the permanent "Epargne libre" card (no progress bar, no delete) */
+  /** True for the permanent "Épargne libre" card (no progress bar, no delete) */
   isFreeSavings?: boolean;
 };
 
@@ -61,7 +61,7 @@ function SavingsProjectCardComponent({
               flexWrap: "wrap",
             }}
           >
-            {isFreeSavings ? "Epargne libre" : projet.name}
+            {isFreeSavings ? "Épargne libre" : projet.name}
             {isFreeSavings && (
               <span
                 style={{
@@ -161,7 +161,7 @@ function SavingsProjectCardComponent({
             <button
               onClick={onAddSavings}
               className="icon-btn"
-              aria-label="Ajouter epargne"
+              aria-label="Ajouter épargne"
             >
               <svg
                 width="14"

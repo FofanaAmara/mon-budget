@@ -41,7 +41,7 @@ export default function EpargneSection({
             color: "var(--teal-700)",
           }}
         >
-          Epargne
+          Épargne
         </h2>
         <button
           onClick={onCreateProject}
@@ -78,7 +78,7 @@ export default function EpargneSection({
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        {/* Epargne libre -- permanent */}
+        {/* Épargne libre -- permanent */}
         <SavingsProjectCard
           projet={freeSavings}
           isFreeSavings
@@ -107,7 +107,7 @@ export default function EpargneSection({
                 marginBottom: "4px",
               }}
             >
-              Aucun projet d&apos;epargne
+              Aucun projet d&apos;épargne
             </p>
             <p
               style={{
@@ -116,7 +116,7 @@ export default function EpargneSection({
                 opacity: 0.7,
               }}
             >
-              Creez un projet avec un objectif et une date cible
+              Créez un projet avec un objectif et une date cible
             </p>
           </div>
         ) : (
