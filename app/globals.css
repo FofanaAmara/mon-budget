@@ -1347,3 +1347,72 @@ body:has(.landing-page) {
     border-radius: 10px;
   }
 }
+
+/* ══════════════════════════════════════════════════════════
+   SETUP GUIDE — Animation keyframes
+   Used by SetupGuide components (components/setup-guide/)
+   ══════════════════════════════════════════════════════════ */
+
+/* Mobile bar entrance: slide up from below */
+@keyframes setupGuideBarIn {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Desktop widget entrance: slide up + fade */
+@keyframes setupGuideWidgetIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile bottom sheet entrance: slide up */
+@keyframes setupGuideSheetIn {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Mobile backdrop fade-in */
+@keyframes setupGuideBackdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Desktop widget expand: scale + fade from bottom-right */
+@keyframes setupGuideWidgetExpand {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Confetti particles fall animation */
+@keyframes setupGuideConfettiFall {
+  0% {
+    transform: translateY(-20px) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(200px) rotate(720deg) scale(0.5);
+    opacity: 0;
+  }
+}
