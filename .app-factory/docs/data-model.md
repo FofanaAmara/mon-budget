@@ -70,6 +70,7 @@ Templates de charges fixes, ponctuelles et projets d'epargne.
 | target_date | DATE | | Pour PLANNED |
 | saved_amount | DECIMAL(10,2) | DEFAULT 0 | Pour PLANNED |
 | notes | TEXT | | |
+| is_progressive | BOOLEAN | DEFAULT FALSE | Depense a consommation progressive |
 | is_active | BOOLEAN | DEFAULT TRUE | |
 | created_at | TIMESTAMPTZ | DEFAULT NOW() | |
 | updated_at | TIMESTAMPTZ | DEFAULT NOW() | |
@@ -93,6 +94,7 @@ Instances mensuelles generees depuis les templates (ou ad-hoc).
 | card_id | UUID | FK cards ON DELETE SET NULL | |
 | is_auto_charged | BOOLEAN | DEFAULT FALSE | |
 | is_planned | BOOLEAN | NOT NULL DEFAULT TRUE | true = prevu, false = ad-hoc |
+| paid_amount | DECIMAL(10,2) | DEFAULT 0 | Montant deja paye (depenses progressives) |
 | notes | TEXT | | |
 | created_at | TIMESTAMPTZ | DEFAULT NOW() | |
 
@@ -231,6 +233,20 @@ Contributions individuelles aux projets d'epargne (PLANNED expenses).
 
 Index : idx_savings_contributions_expense(expense_id, created_at DESC).
 
+### expense_transactions
+Sous-transactions pour les depenses progressives (paiements partiels).
+
+| Colonne | Type | Contraintes | Description |
+|---------|------|-------------|-------------|
+| id | UUID | PK, DEFAULT gen_random_uuid() | |
+| user_id | TEXT | NOT NULL | |
+| monthly_expense_id | UUID | NOT NULL, FK monthly_expenses ON DELETE CASCADE | Instance mensuelle cible |
+| amount | DECIMAL(10,2) | NOT NULL | Montant du paiement partiel |
+| note | TEXT | | |
+| created_at | TIMESTAMPTZ | DEFAULT NOW() | |
+
+Index : idx_expense_tx_monthly(monthly_expense_id, created_at DESC).
+
 ### settings
 Configuration utilisateur (singleton par user_id).
 
@@ -301,6 +317,7 @@ Les migrations sont des scripts Node.js dans `scripts/` executes manuellement :
 | migrate-allocation-sections.mjs | CREATE allocation_sections (junction N:N) + migration |
 | migrate-spread-monthly.mjs | ADD spread_monthly sur expenses |
 | migrate-manually-edited.mjs | ADD manually_edited sur monthly_incomes |
+| migrate-progressive-expenses.mjs | ADD is_progressive sur expenses, ADD paid_amount sur monthly_expenses, CREATE expense_transactions |
 
 ### Gap connu
 
