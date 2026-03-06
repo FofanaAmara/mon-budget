@@ -127,6 +127,7 @@ export async function createExpense(
   revalidatePath("/parametres");
   revalidatePath("/parametres/charges");
   revalidatePath("/");
+  revalidatePath("/", "layout"); // refresh setup guide state
   return rows[0] as Expense;
 }
 
@@ -197,6 +198,7 @@ export async function updateExpense(
   revalidatePath("/parametres");
   revalidatePath("/parametres/charges");
   revalidatePath("/");
+  revalidatePath("/", "layout"); // refresh setup guide state
   revalidatePath(`/depenses/${id}/edit`);
   return rows[0] as Expense;
 }
@@ -221,6 +223,7 @@ export async function deleteExpense(id: string): Promise<void> {
   revalidatePath("/parametres");
   revalidatePath("/parametres/charges");
   revalidatePath("/");
+  revalidatePath("/", "layout"); // refresh setup guide state
 }
 
 export async function getExpensesByCard(cardId: string): Promise<Expense[]> {

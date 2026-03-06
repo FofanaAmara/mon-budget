@@ -13,7 +13,6 @@
  * The timeline connector line is rendered via a pseudo-element in the parent's
  * CSS. Here we expose a `isLast` prop so the parent knows not to render it.
  *
- * TODO for developer: wire `onClick` to router.push(step.href) or Link navigation.
  */
 
 type StepState = "upcoming" | "current" | "completed";
@@ -108,12 +107,11 @@ export default function SetupGuideStep({
 
   return (
     <div
-      role={state !== "completed" ? "link" : undefined}
-      aria-disabled={state === "completed" ? "true" : undefined}
-      tabIndex={state !== "completed" ? 0 : -1}
-      onClick={state !== "completed" ? onClick : undefined}
+      role="link"
+      tabIndex={0}
+      onClick={onClick}
       onKeyDown={(e) => {
-        if (state !== "completed" && (e.key === "Enter" || e.key === " ")) {
+        if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           onClick?.();
         }
@@ -123,23 +121,19 @@ export default function SetupGuideStep({
         alignItems: "flex-start",
         gap,
         padding,
-        cursor: state !== "completed" ? "pointer" : "default",
+        cursor: "pointer",
         transition: "background 0.15s ease",
         position: "relative",
         outline: "none",
       }}
       onMouseEnter={(e) => {
-        if (state !== "completed") {
-          e.currentTarget.style.background = "var(--slate-50)";
-        }
+        e.currentTarget.style.background = "var(--slate-50)";
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.background = "transparent";
       }}
       onFocus={(e) => {
-        if (state !== "completed") {
-          e.currentTarget.style.background = "var(--slate-50)";
-        }
+        e.currentTarget.style.background = "var(--slate-50)";
       }}
       onBlur={(e) => {
         e.currentTarget.style.background = "transparent";

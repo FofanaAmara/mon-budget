@@ -4,6 +4,7 @@ import { useState, useTransition, useRef, useEffect } from "react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth/client";
 import { loadDemoData, clearAllUserData } from "@/lib/actions/demo-data";
+import { resetSetupGuide } from "@/lib/actions/setup-guide";
 
 const PREFERENCE_ITEMS = [
   {
@@ -200,7 +201,9 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
   const [showClearModal, setShowClearModal] = useState(false);
   const [isPendingLoad, startLoadTransition] = useTransition();
   const [isPendingClear, startClearTransition] = useTransition();
+  const [isPendingReset, startResetTransition] = useTransition();
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [guideResetDone, setGuideResetDone] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -208,6 +211,13 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
       dialogRef.current?.focus();
     }
   }, [showClearModal]);
+
+  function handleResetGuide() {
+    startResetTransition(async () => {
+      await resetSetupGuide();
+      setGuideResetDone(true);
+    });
+  }
 
   function handleLoadDemo() {
     setFeedback(null);
@@ -319,6 +329,65 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
               </svg>
             }
           />
+        </div>
+
+        {/* Guide de configuration */}
+        <div className="list-card">
+          <div
+            style={{
+              padding: "8px 20px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <button
+              onClick={handleResetGuide}
+              disabled={isPendingReset || guideResetDone}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                background: "none",
+                border: "none",
+                cursor:
+                  isPendingReset || guideResetDone ? "default" : "pointer",
+                padding: "8px 0",
+                width: "100%",
+                textAlign: "left",
+              }}
+            >
+              <span style={{ color: "var(--text-tertiary)" }}>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                </svg>
+              </span>
+              <span
+                style={{
+                  fontSize: "var(--text-sm)",
+                  color: guideResetDone
+                    ? "var(--text-tertiary)"
+                    : "var(--text-primary)",
+                  fontWeight: guideResetDone ? 500 : undefined,
+                }}
+              >
+                {isPendingReset
+                  ? "Relance en cours..."
+                  : guideResetDone
+                    ? "Guide relance !"
+                    : "Revoir le guide de configuration"}
+              </span>
+            </button>
+          </div>
         </div>
 
         {/* Preferences */}
