@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import { formatCAD } from "@/lib/utils";
 
@@ -24,6 +24,11 @@ export default function AddSavingsModal({
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    dialogRef.current?.focus();
+  }, []);
 
   const afterBalance =
     amount && parseFloat(amount) > 0 ? currentSaved + parseFloat(amount) : null;
@@ -50,8 +55,18 @@ export default function AddSavingsModal({
     <div
       className="sheet-backdrop"
       onClick={(e) => e.target === e.currentTarget && onClose()}
+      role="presentation"
     >
-      <div className="sheet" onClick={(e) => e.stopPropagation()}>
+      <div
+        ref={dialogRef}
+        className="sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="savings-add-dialog-title"
+        tabIndex={-1}
+        onKeyDown={(e) => e.key === "Escape" && onClose()}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="sheet-handle" />
 
         {/* Sheet header */}
@@ -92,6 +107,7 @@ export default function AddSavingsModal({
               </svg>
             </div>
             <h3
+              id="savings-add-dialog-title"
               style={{
                 fontSize: "18px",
                 fontWeight: 700,
@@ -186,6 +202,7 @@ export default function AddSavingsModal({
             {/* Amount */}
             <div style={{ marginBottom: "18px" }}>
               <label
+                htmlFor="savings-amount"
                 style={{
                   display: "block",
                   fontSize: "11px",
@@ -200,6 +217,7 @@ export default function AddSavingsModal({
               </label>
               <div style={{ position: "relative" }}>
                 <input
+                  id="savings-amount"
                   type="number"
                   min="0"
                   step="0.01"
@@ -255,6 +273,7 @@ export default function AddSavingsModal({
             {/* Note (optionnel) */}
             <div style={{ marginBottom: "18px" }}>
               <label
+                htmlFor="savings-note"
                 style={{
                   display: "block",
                   fontSize: "11px",
@@ -268,6 +287,7 @@ export default function AddSavingsModal({
                 Note (optionnel)
               </label>
               <input
+                id="savings-note"
                 type="text"
                 placeholder="Ex: Bonus mars, Vente Kijiji..."
                 value={note}

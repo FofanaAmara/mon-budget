@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import type { Section, Card, Debt, DebtFrequency } from "@/lib/types";
 
@@ -46,6 +46,11 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
   const [notes, setNotes] = useState(debt?.notes ?? "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    dialogRef.current?.focus();
+  }, []);
 
   // Auto-calculate duration and interest cost
   const remaining =
@@ -137,8 +142,18 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
     <div
       className="sheet-backdrop"
       onClick={(e) => e.target === e.currentTarget && onClose()}
+      role="presentation"
     >
-      <div className="sheet" onClick={(e) => e.stopPropagation()}>
+      <div
+        ref={dialogRef}
+        className="sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="debt-dialog-title"
+        tabIndex={-1}
+        onKeyDown={(e) => e.key === "Escape" && onClose()}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="sheet-handle" />
 
         {/* Sheet header */}
@@ -179,6 +194,7 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
               </svg>
             </div>
             <h3
+              id="debt-dialog-title"
               style={{
                 fontSize: "18px",
                 fontWeight: 700,
@@ -236,8 +252,11 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
           >
             {/* Nom */}
             <div style={{ marginBottom: "18px" }}>
-              <label style={labelStyle}>Nom de la dette</label>
+              <label htmlFor="debt-name" style={labelStyle}>
+                Nom de la dette
+              </label>
               <input
+                id="debt-name"
                 type="text"
                 placeholder="ex: Prêt auto, Carte Visa..."
                 value={name}
@@ -248,9 +267,12 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
 
             {/* Solde restant */}
             <div style={{ marginBottom: "18px" }}>
-              <label style={labelStyle}>Solde restant</label>
+              <label htmlFor="debt-remaining" style={labelStyle}>
+                Solde restant
+              </label>
               <div style={{ position: "relative" }}>
                 <input
+                  id="debt-remaining"
                   type="number"
                   min="0"
                   step="0.01"
@@ -292,9 +314,12 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
 
             {/* Taux d'intérêt */}
             <div style={{ marginBottom: "18px" }}>
-              <label style={labelStyle}>Taux d&apos;intérêt annuel</label>
+              <label htmlFor="debt-interest" style={labelStyle}>
+                Taux d&apos;intérêt annuel
+              </label>
               <div style={{ position: "relative" }}>
                 <input
+                  id="debt-interest"
                   type="number"
                   min="0"
                   step="0.01"
@@ -333,9 +358,12 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
 
             {/* Paiement mensuel */}
             <div style={{ marginBottom: "18px" }}>
-              <label style={labelStyle}>Paiement mensuel</label>
+              <label htmlFor="debt-payment" style={labelStyle}>
+                Paiement mensuel
+              </label>
               <div style={{ position: "relative" }}>
                 <input
+                  id="debt-payment"
                   type="number"
                   min="0"
                   step="0.01"
@@ -377,9 +405,12 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
 
             {/* Montant initial (for tracking %) */}
             <div style={{ marginBottom: "18px" }}>
-              <label style={labelStyle}>Montant original (pour suivi)</label>
+              <label htmlFor="debt-original" style={labelStyle}>
+                Montant original (pour suivi)
+              </label>
               <div style={{ position: "relative" }}>
                 <input
+                  id="debt-original"
                   type="number"
                   min="0"
                   step="0.01"
@@ -420,8 +451,11 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
             {/* Frequency + Payment day */}
             <div style={{ display: "flex", gap: "12px", marginBottom: "18px" }}>
               <div style={{ flex: 1 }}>
-                <label style={labelStyle}>Fréquence</label>
+                <label htmlFor="debt-frequency" style={labelStyle}>
+                  Fréquence
+                </label>
                 <select
+                  id="debt-frequency"
                   value={paymentFrequency}
                   onChange={(e) =>
                     setPaymentFrequency(e.target.value as DebtFrequency)
@@ -436,8 +470,11 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
                 </select>
               </div>
               <div style={{ flex: 1 }}>
-                <label style={labelStyle}>Jour de paiement</label>
+                <label htmlFor="debt-pay-day" style={labelStyle}>
+                  Jour de paiement
+                </label>
                 <input
+                  id="debt-pay-day"
                   type="number"
                   min="1"
                   max="31"
@@ -485,8 +522,11 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
             {/* Card */}
             {cards.length > 0 && (
               <div style={{ marginBottom: "18px" }}>
-                <label style={labelStyle}>Carte (optionnel)</label>
+                <label htmlFor="debt-card" style={labelStyle}>
+                  Carte (optionnel)
+                </label>
                 <select
+                  id="debt-card"
                   value={cardId}
                   onChange={(e) => setCardId(e.target.value)}
                   className="input-field"
@@ -505,8 +545,11 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
             {/* Section */}
             {sections.length > 0 && (
               <div style={{ marginBottom: "18px" }}>
-                <label style={labelStyle}>Section (optionnel)</label>
+                <label htmlFor="debt-section" style={labelStyle}>
+                  Section (optionnel)
+                </label>
                 <select
+                  id="debt-section"
                   value={sectionId}
                   onChange={(e) => setSectionId(e.target.value)}
                   className="input-field"
@@ -523,8 +566,11 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
 
             {/* Notes */}
             <div style={{ marginBottom: "18px" }}>
-              <label style={labelStyle}>Notes (optionnel)</label>
+              <label htmlFor="debt-notes" style={labelStyle}>
+                Notes (optionnel)
+              </label>
               <textarea
+                id="debt-notes"
                 placeholder="Informations supplémentaires..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}

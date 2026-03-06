@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import { formatCAD } from "@/lib/utils";
 import type { Expense } from "@/lib/types";
@@ -22,6 +22,11 @@ export default function TransferSavingsModal({
   const [destId, setDestId] = useState(destinations[0]?.id ?? "");
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    dialogRef.current?.focus();
+  }, []);
 
   const sourceBalance = Number(source.saved_amount ?? 0);
   const dest = destinations.find((p) => p.id === destId);
@@ -52,8 +57,18 @@ export default function TransferSavingsModal({
     <div
       className="sheet-backdrop"
       onClick={(e) => e.target === e.currentTarget && onClose()}
+      role="presentation"
     >
-      <div className="sheet" onClick={(e) => e.stopPropagation()}>
+      <div
+        ref={dialogRef}
+        className="sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="transfer-dialog-title"
+        tabIndex={-1}
+        onKeyDown={(e) => e.key === "Escape" && onClose()}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="sheet-handle" />
 
         {/* Sheet header */}
@@ -96,6 +111,7 @@ export default function TransferSavingsModal({
               </svg>
             </div>
             <h3
+              id="transfer-dialog-title"
               style={{
                 fontSize: "18px",
                 fontWeight: 700,
@@ -207,6 +223,7 @@ export default function TransferSavingsModal({
             {/* Vers */}
             <div style={{ marginBottom: "18px" }}>
               <label
+                htmlFor="transfer-dest"
                 style={{
                   display: "block",
                   fontSize: "11px",
@@ -220,6 +237,7 @@ export default function TransferSavingsModal({
                 Vers
               </label>
               <select
+                id="transfer-dest"
                 value={destId}
                 onChange={(e) => setDestId(e.target.value)}
                 style={{
@@ -252,6 +270,7 @@ export default function TransferSavingsModal({
             {/* Amount */}
             <div style={{ marginBottom: "18px" }}>
               <label
+                htmlFor="transfer-amount"
                 style={{
                   display: "block",
                   fontSize: "11px",
@@ -266,6 +285,7 @@ export default function TransferSavingsModal({
               </label>
               <div style={{ position: "relative" }}>
                 <input
+                  id="transfer-amount"
                   type="number"
                   min="0"
                   step="0.01"

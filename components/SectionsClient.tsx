@@ -639,9 +639,15 @@ export default function SectionsClient({
         <div
           className="sheet-backdrop"
           onClick={(e) => e.target === e.currentTarget && closeModal()}
+          role="presentation"
         >
           <div
             className="sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="section-dialog-title"
+            tabIndex={-1}
+            onKeyDown={(e) => e.key === "Escape" && closeModal()}
             style={{ maxHeight: "90dvh", overflowY: "auto" }}
           >
             {/* Handle */}
@@ -673,6 +679,7 @@ export default function SectionsClient({
                   <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
                 </svg>
                 <h3
+                  id="section-dialog-title"
                   style={{
                     fontSize: "18px",
                     fontWeight: 700,
@@ -725,8 +732,11 @@ export default function SectionsClient({
             >
               {/* Name input */}
               <div>
-                <label className="field-label">Nom *</label>
+                <label htmlFor="section-name" className="field-label">
+                  Nom *
+                </label>
                 <input
+                  id="section-name"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}

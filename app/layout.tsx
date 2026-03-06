@@ -1,40 +1,39 @@
-import type { Metadata, Viewport } from 'next';
-import { Plus_Jakarta_Sans } from 'next/font/google';
-import './globals.css';
-import { AuthProviders } from './providers';
-import LayoutShell from '@/components/LayoutShell';
-import ServiceWorkerInit from '@/components/ServiceWorkerInit';
+import type { Metadata, Viewport } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
+import "./globals.css";
+import { AuthProviders } from "./providers";
+import LayoutShell from "@/components/LayoutShell";
+import ServiceWorkerInit from "@/components/ServiceWorkerInit";
 
 const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
-  variable: '--font-jakarta',
-  display: 'swap',
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-jakarta",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: 'Mes Finances',
-  description: 'Toute ta vie financière, claire et sous contrôle',
-  manifest: '/manifest.json',
+  title: "Mes Finances",
+  description: "Toute ta vie financière, claire et sous contrôle",
+  manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'default',
-    title: 'Mes Finances',
+    statusBarStyle: "default",
+    title: "Mes Finances",
   },
   formatDetection: { telephone: false },
   icons: {
-    icon: '/icons/favicon.svg',
-    apple: '/icons/icon-192.png',
+    icon: "/icons/favicon.svg",
+    apple: "/icons/icon-192.png",
   },
 };
 
 export const viewport: Viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
-  viewportFit: 'cover',
-  themeColor: '#FAFBFC',
+  maximumScale: 5,
+  viewportFit: "cover",
+  themeColor: "#FAFBFC",
 };
 
 export default function RootLayout({
@@ -55,7 +54,6 @@ export default function RootLayout({
           <LayoutShell>{children}</LayoutShell>
         </AuthProviders>
         <ServiceWorkerInit />
-
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef, useEffect } from "react";
 
 import { createExpense, updateExpense } from "@/lib/actions/expenses";
 import type {
@@ -36,6 +36,11 @@ export default function ExpenseModal({
   onSuccess,
 }: Props) {
   const [isPending, startTransition] = useTransition();
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    dialogRef.current?.focus();
+  }, []);
 
   const [name, setName] = useState(expense?.name ?? "");
   const [amount, setAmount] = useState(expense?.amount?.toString() ?? "");
@@ -418,11 +423,18 @@ export default function ExpenseModal({
           animation: "sheet-backdrop-in 0.25s ease both",
         }}
         onClick={onClose}
+        role="presentation"
       />
 
       {/* Modal */}
       <div
+        ref={dialogRef}
         className="em-modal-container"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="expense-dialog-title"
+        tabIndex={-1}
+        onKeyDown={(e) => e.key === "Escape" && onClose()}
         style={{
           position: "fixed",
           bottom: 0,
@@ -497,6 +509,7 @@ export default function ExpenseModal({
               </svg>
             </div>
             <h3
+              id="expense-dialog-title"
               style={{
                 fontSize: "18px",
                 fontWeight: 700,
@@ -544,8 +557,11 @@ export default function ExpenseModal({
         <div className="em-modal-body" style={{ padding: "20px 20px 0" }}>
           {/* Section — en premier */}
           <div style={{ marginBottom: "18px" }}>
-            <label className="em-label">Section</label>
+            <label htmlFor="expense-section" className="em-label">
+              Section
+            </label>
             <select
+              id="expense-section"
               value={sectionId}
               onChange={(e) => setSectionId(e.target.value)}
               className="expense-modal-select"
@@ -561,8 +577,11 @@ export default function ExpenseModal({
 
           {/* Nom de la charge */}
           <div style={{ marginBottom: "18px" }}>
-            <label className="em-label">Nom de la charge</label>
+            <label htmlFor="expense-name" className="em-label">
+              Nom de la charge
+            </label>
             <input
+              id="expense-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -591,7 +610,9 @@ export default function ExpenseModal({
 
           {/* Montant */}
           <div style={{ marginBottom: "18px" }}>
-            <label className="em-label">Montant</label>
+            <label htmlFor="expense-amount" className="em-label">
+              Montant
+            </label>
             <div style={{ position: "relative" }}>
               <span
                 style={{
@@ -608,6 +629,7 @@ export default function ExpenseModal({
                 $
               </span>
               <input
+                id="expense-amount"
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
@@ -740,7 +762,7 @@ export default function ExpenseModal({
 
               {/* Jour du mois — optionnel pour toute charge récurrente */}
               <div style={{ marginBottom: "18px" }}>
-                <label className="em-label">
+                <label htmlFor="expense-day" className="em-label">
                   Jour du mois{" "}
                   <span
                     style={{
@@ -754,6 +776,7 @@ export default function ExpenseModal({
                   </span>
                 </label>
                 <input
+                  id="expense-day"
                   type="number"
                   value={day}
                   onChange={(e) => setDay(e.target.value)}
@@ -778,8 +801,11 @@ export default function ExpenseModal({
               {/* Carte bancaire — seulement si auto-debit */}
               {autoDebit && cards.length > 0 && (
                 <div style={{ marginBottom: "18px" }}>
-                  <label className="em-label">Carte bancaire</label>
+                  <label htmlFor="expense-card" className="em-label">
+                    Carte bancaire
+                  </label>
                   <select
+                    id="expense-card"
                     value={cardId}
                     onChange={(e) => setCardId(e.target.value)}
                     className="expense-modal-select"
@@ -800,8 +826,11 @@ export default function ExpenseModal({
           {/* ONE_TIME date */}
           {type === "ONE_TIME" && (
             <div style={{ marginBottom: "18px" }}>
-              <label className="em-label">Date exacte</label>
+              <label htmlFor="expense-due-date" className="em-label">
+                Date exacte
+              </label>
               <input
+                id="expense-due-date"
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
@@ -812,7 +841,7 @@ export default function ExpenseModal({
 
           {/* Notes */}
           <div style={{ marginBottom: "4px" }}>
-            <label className="em-label">
+            <label htmlFor="expense-notes" className="em-label">
               Notes{" "}
               <span
                 style={{
@@ -826,6 +855,7 @@ export default function ExpenseModal({
               </span>
             </label>
             <textarea
+              id="expense-notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="ex: Payé par virement, inclut le stationnement..."

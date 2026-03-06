@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useTransition } from 'react';
-import Breadcrumb from '@/components/Breadcrumb';
-import { updateSettings } from '@/lib/actions/settings';
+import { useState, useTransition } from "react";
+import Breadcrumb from "@/components/Breadcrumb";
+import { updateSettings } from "@/lib/actions/settings";
 
 type Props = {
   settingsId: string;
@@ -41,40 +41,67 @@ export default function NotificationsClient({
   }
 
   return (
-    <div style={{ padding: '36px 20px 96px', minHeight: '100vh' }}>
-      <Breadcrumb items={[
-        { label: 'Reglages', href: '/parametres' },
-        { label: 'Notifications' },
-      ]} />
-      <div style={{ marginBottom: '24px' }}>
-        <h1 style={{
-          fontSize: 'var(--text-xl)',
-          fontWeight: 750,
-          color: 'var(--text-primary)',
-          letterSpacing: 'var(--tracking-tight)',
-          lineHeight: 'var(--leading-tight)',
-        }}>
+    <div style={{ padding: "36px 20px 96px", minHeight: "100vh" }}>
+      <Breadcrumb
+        items={[
+          { label: "Reglages", href: "/parametres" },
+          { label: "Notifications" },
+        ]}
+      />
+      <div style={{ marginBottom: "24px" }}>
+        <h1
+          style={{
+            fontSize: "var(--text-xl)",
+            fontWeight: 750,
+            color: "var(--text-primary)",
+            letterSpacing: "var(--tracking-tight)",
+            lineHeight: "var(--leading-tight)",
+          }}
+        >
           Notifications
         </h1>
-        <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '4px' }}>
+        <p
+          style={{
+            fontSize: "var(--text-xs)",
+            color: "var(--text-tertiary)",
+            marginTop: "4px",
+          }}
+        >
           Canaux de notification et coordonnees
         </p>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
         {/* Channels */}
-        <div className="card" style={{ padding: '20px' }}>
-          <h2 style={{
-            fontSize: 'var(--text-sm)', fontWeight: 650,
-            color: 'var(--text-primary)', marginBottom: '16px',
-          }}>Canaux</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="card" style={{ padding: "20px" }}>
+          <h2
+            style={{
+              fontSize: "var(--text-sm)",
+              fontWeight: 650,
+              color: "var(--text-primary)",
+              marginBottom: "16px",
+            }}
+          >
+            Canaux
+          </h2>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+          >
             {[
-              { label: 'Notifications push', value: notifyPush, onChange: setNotifyPush },
-              { label: 'Email', value: notifyEmail, onChange: setNotifyEmail },
+              {
+                label: "Notifications push",
+                value: notifyPush,
+                onChange: setNotifyPush,
+              },
+              { label: "Email", value: notifyEmail, onChange: setNotifyEmail },
             ].map(({ label, value, onChange }) => (
               <div key={label} className="flex items-center justify-between">
-                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>
+                <span
+                  style={{
+                    fontSize: "var(--text-sm)",
+                    color: "var(--text-primary)",
+                  }}
+                >
                   {label}
                 </span>
                 <button
@@ -91,19 +118,35 @@ export default function NotificationsClient({
         </div>
 
         {/* Contact */}
-        <div className="card" style={{ padding: '20px' }}>
-          <h2 style={{
-            fontSize: 'var(--text-sm)', fontWeight: 650,
-            color: 'var(--text-primary)', marginBottom: '4px',
-          }}>Coordonnees</h2>
-          <p style={{
-            fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)',
-            marginBottom: '16px',
-          }}>Pour les notifications email et SMS</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="card" style={{ padding: "20px" }}>
+          <h2
+            style={{
+              fontSize: "var(--text-sm)",
+              fontWeight: 650,
+              color: "var(--text-primary)",
+              marginBottom: "4px",
+            }}
+          >
+            Coordonnees
+          </h2>
+          <p
+            style={{
+              fontSize: "var(--text-xs)",
+              color: "var(--text-tertiary)",
+              marginBottom: "16px",
+            }}
+          >
+            Pour les notifications email et SMS
+          </p>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+          >
             <div>
-              <label className="field-label">Email</label>
+              <label htmlFor="notif-email" className="field-label">
+                Email
+              </label>
               <input
+                id="notif-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -112,8 +155,11 @@ export default function NotificationsClient({
               />
             </div>
             <div>
-              <label className="field-label">Telephone (SMS)</label>
+              <label htmlFor="notif-phone" className="field-label">
+                Telephone (SMS)
+              </label>
               <input
+                id="notif-phone"
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -130,14 +176,14 @@ export default function NotificationsClient({
         disabled={isPending}
         className="btn-primary"
         style={{
-          width: '100%',
-          padding: '16px',
-          fontSize: 'var(--text-base)',
-          marginTop: '16px',
+          width: "100%",
+          padding: "16px",
+          fontSize: "var(--text-base)",
+          marginTop: "16px",
           opacity: isPending ? 0.5 : 1,
         }}
       >
-        {saved ? 'Sauvegarde !' : isPending ? 'Sauvegarde...' : 'Sauvegarder'}
+        {saved ? "Sauvegarde !" : isPending ? "Sauvegarde..." : "Sauvegarder"}
       </button>
     </div>
   );

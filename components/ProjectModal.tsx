@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import { calcMonthlySuggested } from "@/lib/utils";
 import type { Section } from "@/lib/types";
@@ -18,6 +18,11 @@ export default function ProjectModal({ sections, onClose }: Props) {
   const [initialAmount, setInitialAmount] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    dialogRef.current?.focus();
+  }, []);
 
   const monthlySuggested =
     targetAmount && targetDate
@@ -72,8 +77,18 @@ export default function ProjectModal({ sections, onClose }: Props) {
     <div
       className="sheet-backdrop"
       onClick={(e) => e.target === e.currentTarget && onClose()}
+      role="presentation"
     >
-      <div className="sheet" onClick={(e) => e.stopPropagation()}>
+      <div
+        ref={dialogRef}
+        className="sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="project-dialog-title"
+        tabIndex={-1}
+        onKeyDown={(e) => e.key === "Escape" && onClose()}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="sheet-handle" />
 
         {/* Sheet header */}
@@ -115,6 +130,7 @@ export default function ProjectModal({ sections, onClose }: Props) {
               </svg>
             </div>
             <h3
+              id="project-dialog-title"
               style={{
                 fontSize: "18px",
                 fontWeight: 700,
@@ -176,10 +192,12 @@ export default function ProjectModal({ sections, onClose }: Props) {
                   color: "var(--slate-400)",
                   marginBottom: "7px",
                 }}
+                htmlFor="project-name"
               >
                 Nom du projet
               </label>
               <input
+                id="project-name"
                 type="text"
                 placeholder="ex: Vacances, Voiture, Urgences..."
                 value={name}
@@ -191,6 +209,7 @@ export default function ProjectModal({ sections, onClose }: Props) {
             {/* Objectif */}
             <div style={{ marginBottom: "18px" }}>
               <label
+                htmlFor="project-target"
                 style={{
                   display: "block",
                   fontSize: "11px",
@@ -205,6 +224,7 @@ export default function ProjectModal({ sections, onClose }: Props) {
               </label>
               <div style={{ position: "relative" }}>
                 <input
+                  id="project-target"
                   type="number"
                   min="0"
                   step="0.01"
@@ -247,6 +267,7 @@ export default function ProjectModal({ sections, onClose }: Props) {
             {/* Date cible */}
             <div style={{ marginBottom: "18px" }}>
               <label
+                htmlFor="project-date"
                 style={{
                   display: "block",
                   fontSize: "11px",
@@ -260,6 +281,7 @@ export default function ProjectModal({ sections, onClose }: Props) {
                 Date cible
               </label>
               <input
+                id="project-date"
                 type="date"
                 value={targetDate}
                 onChange={(e) => setTargetDate(e.target.value)}
@@ -270,6 +292,7 @@ export default function ProjectModal({ sections, onClose }: Props) {
             {/* Montant initial (optionnel) */}
             <div style={{ marginBottom: "18px" }}>
               <label
+                htmlFor="project-initial"
                 style={{
                   display: "block",
                   fontSize: "11px",
@@ -284,6 +307,7 @@ export default function ProjectModal({ sections, onClose }: Props) {
               </label>
               <div style={{ position: "relative" }}>
                 <input
+                  id="project-initial"
                   type="number"
                   min="0"
                   step="0.01"
@@ -327,6 +351,7 @@ export default function ProjectModal({ sections, onClose }: Props) {
             {sections.length > 0 && (
               <div style={{ marginBottom: "18px" }}>
                 <label
+                  htmlFor="project-section"
                   style={{
                     display: "block",
                     fontSize: "11px",
@@ -340,6 +365,7 @@ export default function ProjectModal({ sections, onClose }: Props) {
                   Section (optionnel)
                 </label>
                 <select
+                  id="project-section"
                   value={sectionId}
                   onChange={(e) => setSectionId(e.target.value)}
                   className="input-field"
