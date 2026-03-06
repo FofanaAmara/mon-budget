@@ -309,7 +309,7 @@ export default function ExpenseActionSheet({
                 padding: "20px 0",
               }}
             >
-              Aucun achat enregistre
+              Aucun achat enregistré
             </p>
           ) : (
             <div>
@@ -787,7 +787,7 @@ export default function ExpenseActionSheet({
               iconBg="var(--teal-50)"
               iconColor="var(--teal-700)"
               title="Historique des achats"
-              desc="Voir les transactions enregistrees"
+              desc="Voir les transactions enregistrées"
               icon={
                 <svg
                   viewBox="0 0 24 24"

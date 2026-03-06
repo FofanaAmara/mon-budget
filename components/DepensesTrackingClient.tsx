@@ -12,13 +12,8 @@ import ExpenseFilters from "@/components/depenses/ExpenseFilters";
 import StatusGroupSection from "@/components/depenses/StatusGroupSection";
 import ExpenseSummaryStats from "@/components/depenses/ExpenseSummaryStats";
 import ExpenseActionSheet from "@/components/depenses/ExpenseActionSheet";
-import type {
-  MonthlyExpense,
-  MonthSummary,
-  Section,
-  Card,
-  ExpenseGroupKey,
-} from "@/lib/types";
+import { getDisplayGroup } from "@/lib/expense-display-utils";
+import type { MonthlyExpense, MonthSummary, Section, Card } from "@/lib/types";
 
 type Props = {
   expenses: MonthlyExpense[];
@@ -27,26 +22,6 @@ type Props = {
   cards: Card[];
   month: string;
 };
-
-/**
- * Derives the display group for a monthly expense.
- * M1: OVERDUE/DEFERRED always take priority over progressive logic.
- */
-function getDisplayGroup(expense: MonthlyExpense): ExpenseGroupKey {
-  // DB statuses OVERDUE and DEFERRED always take priority
-  if (expense.status === "OVERDUE" || expense.status === "DEFERRED") {
-    return expense.status;
-  }
-  if (!expense.is_progressive) return expense.status;
-  // Progressive with partial payment = "En cours"
-  if (expense.paid_amount > 0 && expense.paid_amount < expense.amount) {
-    return "IN_PROGRESS";
-  }
-  // Progressive finished (paid_amount >= amount) = "Paye"
-  if (expense.paid_amount >= expense.amount) return "PAID";
-  // Progressive with no payment yet = "A venir"
-  return "UPCOMING";
-}
 
 export default function DepensesTrackingClient({
   expenses,

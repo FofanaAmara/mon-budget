@@ -7,8 +7,9 @@ import {
   getExpenseIconVariant,
   getStatusBadge,
   getStatusLabel,
+  getDisplayGroup,
 } from "@/lib/expense-display-utils";
-import type { MonthlyExpense, ExpenseGroupKey } from "@/lib/types";
+import type { MonthlyExpense } from "@/lib/types";
 
 // --- Helper to build a minimal MonthlyExpense ---
 
@@ -34,20 +35,6 @@ function makeExpense(overrides: Partial<MonthlyExpense> = {}): MonthlyExpense {
     created_at: "2026-03-01",
     ...overrides,
   };
-}
-
-// --- Inline getDisplayGroup (mirrors DepensesTrackingClient logic) ---
-
-function getDisplayGroup(expense: MonthlyExpense): ExpenseGroupKey {
-  if (expense.status === "OVERDUE" || expense.status === "DEFERRED") {
-    return expense.status;
-  }
-  if (!expense.is_progressive) return expense.status;
-  if (expense.paid_amount > 0 && expense.paid_amount < expense.amount) {
-    return "IN_PROGRESS";
-  }
-  if (expense.paid_amount >= expense.amount) return "PAID";
-  return "UPCOMING";
 }
 
 // ── getDisplayGroup ──

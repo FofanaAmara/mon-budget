@@ -94,22 +94,23 @@ export default function ExpenseTrackingRow({
 }: Props) {
   const isPaid = expense.status === "PAID";
   const isProgressive = expense.is_progressive;
+  // Cast to number — DB returns DECIMAL as string
+  const paidAmount = Number(expense.paid_amount);
+  const budgetAmount = Number(expense.amount);
   const isOverBudget =
-    isProgressive &&
-    expense.paid_amount >= expense.amount &&
-    expense.amount > 0;
+    isProgressive && paidAmount >= budgetAmount && budgetAmount > 0;
   const progressPct =
-    isProgressive && expense.amount > 0
-      ? Math.min((expense.paid_amount / expense.amount) * 100, 100)
+    isProgressive && budgetAmount > 0
+      ? Math.min((paidAmount / budgetAmount) * 100, 100)
       : 0;
 
   // For progressive expenses, derive the display status for badge/icon
   const displayStatus = isProgressive
     ? expense.status === "OVERDUE" || expense.status === "DEFERRED"
       ? expense.status
-      : expense.paid_amount > 0 && expense.paid_amount < expense.amount
+      : paidAmount > 0 && paidAmount < budgetAmount
         ? "IN_PROGRESS"
-        : expense.paid_amount >= expense.amount
+        : paidAmount >= budgetAmount
           ? "PAID"
           : expense.status
     : expense.status;

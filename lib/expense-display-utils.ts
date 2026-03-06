@@ -175,3 +175,23 @@ export function getStatusLabel(status: string): string {
   if (status === "IN_PROGRESS") return "En cours";
   return "Prévu";
 }
+
+// ── Display group derivation (progressive expense logic) ──
+
+import type { MonthlyExpense, ExpenseGroupKey } from "@/lib/types";
+
+/**
+ * Derives the display group for a monthly expense.
+ * M1: OVERDUE/DEFERRED always take priority over progressive logic.
+ */
+export function getDisplayGroup(expense: MonthlyExpense): ExpenseGroupKey {
+  if (expense.status === "OVERDUE" || expense.status === "DEFERRED") {
+    return expense.status;
+  }
+  if (!expense.is_progressive) return expense.status;
+  const paidAmount = Number(expense.paid_amount);
+  const budgetAmount = Number(expense.amount);
+  if (paidAmount > 0 && paidAmount < budgetAmount) return "IN_PROGRESS";
+  if (paidAmount >= budgetAmount) return "PAID";
+  return "UPCOMING";
+}

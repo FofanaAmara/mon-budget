@@ -24,6 +24,17 @@ export async function addExpenseTransaction(
   });
   const userId = await requireAuth();
 
+  // Verify the expense is progressive (defense in depth — UI also guards)
+  const [me] = await sql`
+    SELECT me.id
+    FROM monthly_expenses me
+    JOIN expenses e ON me.expense_id = e.id
+    WHERE me.id = ${monthlyExpenseId}
+      AND me.user_id = ${userId}
+      AND e.is_progressive = true
+  `;
+  if (!me) throw new Error("Expense not found or not progressive");
+
   await sql.transaction((txn) => [
     txn`
       INSERT INTO expense_transactions (user_id, monthly_expense_id, amount, note)
