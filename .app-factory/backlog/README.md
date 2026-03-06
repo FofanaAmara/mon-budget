@@ -1,8 +1,8 @@
 # Backlog — Mes Finances
 
 Generated: 2026-03-04 by af-bootstrap-backlog
-Updated: 2026-03-05 by af-pm (feature audit-remediation — 15 stories issues de l'audit complet)
-Features: 20 existing | Stories: 15 FIX (fiabilite-calculs) + 15 AUDIT (audit-remediation) | Status: READY
+Updated: 2026-03-06 by af-pm (feature guide-configuration brief + placeholder ONBOARD-REFONTE)
+Features: 21 existing (20 + guide-configuration) | Stories: 15 FIX + 15 AUDIT + 1 PLACEHOLDER | Status: READY
 
 ## Priorite P0 — Features transversales actives
 
@@ -28,6 +28,23 @@ Groupees par ACTION, pas par domaine. Zero regression comme contrainte #1.
 Brief: `epics/stabilisation/features/audit-remediation/FEATURE.md`
 Audit: `.app-factory/docs/audits/2026-03-05-full-audit.md`
 
+## Priorite P1 — Nouvelles features
+
+### onboarding-auth / guide-configuration — BRIEF READY (pas encore decompose)
+
+Guide de configuration style "checklist Stripe" pour accompagner les nouveaux utilisateurs.
+4 etapes detectees automatiquement : revenu recurrent, charge fixe, generer le mois, marquer une depense payee.
+Barre fixe en bas (mobile), persistance DB, celebration a la completion, rejouable depuis les parametres.
+
+Brief: `epics/onboarding-auth/features/guide-configuration/feature-brief.md`
+Prochaine etape: decomposition en stories (quand priorise pour implementation).
+
+### onboarding-auth / onboarding — REFONTE A PLANIFIER (P2)
+
+L'onboarding actuel doit etre retravaille (UX non pensee, detection fragile, relation avec le guide).
+Placeholder: `epics/onboarding-auth/features/onboarding/stories/ONBOARD-REFONTE.md`
+A planifier APRES le guide de configuration.
+
 ## Feature Map
 See: [feature-map.md](feature-map.md)
 
@@ -38,7 +55,7 @@ See: [feature-map.md](feature-map.md)
 | core-financier | 4 | BLQ-001, BLQ-002, BLQ-003, MIN-001, MIN-002, MIN-003, MIN-004 |
 | patrimoine | 3 | BLQ-004, BLQ-005 |
 | configuration | 5 | BLQ-001 (shared), BLQ-006, MIN-005 |
-| onboarding-auth | 4 | MIN-006, MIN-007 |
+| onboarding-auth | 5 (4 existing + guide-configuration) | MIN-006, MIN-007 |
 | notifications | 1 | MIN-008 |
 | pwa | 1 | MIN-009 |
 | **stabilisation** | 2 (fiabilite-calculs, audit-remediation) | fiabilite-calculs: 12 FIX, audit-remediation: 15 AUDIT |
@@ -54,7 +71,8 @@ See: [feature-map.md](feature-map.md)
 ## Implementation Order
 
 1. **Immediat** : Feature `audit-remediation` (Waves 1-6 ci-dessus)
-2. **Apres audit-remediation** : nouvelles features par epic
+2. **Ensuite** : Feature `guide-configuration` (decomposer en stories puis implementer)
+3. **Plus tard** : Refonte onboarding (ONBOARD-REFONTE) + nouvelles features par epic
 
 ## Quick Reference
 

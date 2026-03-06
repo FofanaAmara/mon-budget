@@ -1285,3 +1285,94 @@ Palettes de status:
 8. Check mobile layout first -- 375px is the primary design canvas
 9. Bottom nav on mobile has 4 items max -- icons 22px, labels 10px
 10. All hover effects include `transform: translateY(-Npx)` -- never just color change
+
+---
+
+## Patterns ajoutes par feature
+
+### Guide de configuration (setup checklist)
+
+**Pattern: Persistent guide bar (mobile)**
+- Position: fixed bottom, ABOVE bottom nav (`bottom: 72px`)
+- Container: `padding: 0 12px` (12px margin from device edges)
+- Inner bar: white bg, 1px slate-200 border, `border-radius: var(--radius-md)`, `box-shadow: var(--shadow-lg)`
+- Layout: progress ring (36px) + text (label + action) + chevron button (28px circle, teal-50 bg)
+- Step label: 10px / 700 / uppercase / 0.08em tracking / teal-700
+- Step action text: 14px / 600 / slate-900, ellipsis overflow
+- Z-index: 100 (above content, below modals)
+
+**Pattern: Progress ring**
+- SVG circle with `stroke-dasharray` / `stroke-dashoffset` technique
+- Track: slate-100, Fill: teal-700 (normal) or amber-500 (celebration)
+- Sizes: 36px (collapsed bar), 48px (expanded sheet / desktop card), 72px (celebration)
+- Counter text centered absolutely: 11-14px / 800 / teal-700
+- Stroke-width: 3 (small), 3.5 (medium), 4 (large)
+- Rotation: `transform: rotate(-90deg)` on SVG for top-start position
+
+**Pattern: Bottom sheet (mobile)**
+- Slides up from guide bar position, 350ms ease-out
+- Border-radius: `var(--radius-lg) var(--radius-lg) 0 0`
+- Shadow: `0 -8px 32px rgba(15, 23, 42, 0.12), 0 -2px 8px rgba(15, 118, 110, 0.06)`
+- Drag handle: 36px x 4px, slate-300, centered, `border-radius: 2px`
+- Backdrop: `rgba(15, 23, 42, 0.2)` — lighter than modal backdrop (0.5)
+- Max-height: 520px, `overflow-y: auto`
+- Swipe-dismiss down to collapse
+
+**Pattern: Checklist steps (mobile timeline)**
+- Vertical layout with connector lines between steps
+- Step circle: 28px, 2px border, border-radius 50%
+  - Pending: slate-300 border, number in slate-400
+  - Current (first incomplete): teal-700 border, teal-50 bg, teal-700 number
+  - Completed: success bg + border, white checkmark
+- Connector line: 1.5px width, positioned absolutely left of circles
+  - Default: slate-200
+  - Between completed steps: success at 30% opacity
+- Step text: title 15px/600, description 13px/400/slate-500
+- Completed title: slate-400 + line-through (text-decoration-color: slate-300)
+- Arrow chevron: 20px, slate-300 (or teal-700 for current), translateX(3px) on hover
+- Padding: 16px 24px per step
+
+**Pattern: Guide widget (desktop — compact floating, bottom-right)**
+- Position: `fixed`, `bottom: 24px`, `right: 24px`
+- Z-index: 200
+- Two states:
+  - **Collapsed pill**: 340px wide, `border-radius: var(--radius-lg)`, `box-shadow: var(--shadow-lg)`
+    - Progress ring (36px) + "Etape suivante : [action]" + chevron-up (28px circle, teal-50 bg)
+    - Hover: border teal-tinted + translateY(-1px)
+  - **Expanded card**: 360px wide, max-height 500px, `border-radius: var(--radius-lg)`
+    - Shadow: `0 16px 48px rgba(15, 23, 42, 0.14), 0 4px 16px rgba(15, 118, 110, 0.08)`
+    - Header: progress ring (44px) + title + subtitle + collapse button (28px circle, chevron-down)
+    - Steps: vertical list with timeline connectors (NOT 2x2 — too narrow for grid)
+    - Step circles: 26px, same states as mobile (completed/current/pending)
+    - Footer: subtle note "Visible sur toutes les pages jusqu'a la completion"
+- NO backdrop/overlay — widget floats independently, does not dim the page
+- Expand animation: `scale-in` from `transform-origin: bottom right` (0.95->1.0 + fade, 250ms ease-out)
+- Collapse animation: scale(1.0->0.95) + fade-out, 200ms ease-in
+- Visible on ALL pages until all 4 steps completed
+- Does not overlap the sidebar (positioned in main content area, right-aligned)
+
+**Pattern: Celebration moment**
+- Ring transitions: teal-700 fill -> amber-500 fill (color shift = milestone signal)
+- Ring size grows to 72px for celebration
+- Confetti: CSS-only particles, brand colors only (amber-500, amber-400, teal-700, teal-600, slate-300, slate-400)
+  - 16 particles, varied sizes (4-10px), mixed shapes (square + circle)
+  - `animation: confetti-fall 2s ease-out forwards` with staggered delays
+- Title: 24px / 800 / slate-900 / -0.03em tracking
+- Message: 15px / 500 / slate-500 / max-width 280px centered
+- CTA: amber button (milestone moment) with amber shadow: `0 4px 12px rgba(245, 158, 11, 0.3)`
+- Auto-dismiss after 5s or on CTA tap
+
+**Animation intentions for this feature:**
+- Guide bar entrance: slide-up from bottom, 350ms ease-out, delay 800ms after page load
+- Bottom sheet open: slide-up 350ms ease-out + backdrop fade 200ms
+- Checklist items: stagger(slide-up-fade, delay=60ms)
+- Step completion: circle scale 1.0->1.2->1.0 (spring 400ms) + check-draw 300ms
+- Progress ring: stroke-dashoffset transition 800ms ease
+- Celebration sequence (orchestrated):
+  1. Final check-draw (300ms)
+  2. Ring fills 100% (800ms)
+  3. Ring morphs teal->amber + scale spring (500ms)
+  4. Content crossfade to celebration (300ms)
+  5. Confetti burst (1200ms)
+  6. Text slide-up-fade (400ms, delay 400ms)
+  7. After 3-5s: auto-collapse with slide-down (400ms)
