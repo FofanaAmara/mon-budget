@@ -63,6 +63,7 @@ export async function getOrInitSetupGuideData(): Promise<GuideData | null> {
       ) AS has_paid,
 
       (SELECT dismissed_at FROM setup_guide WHERE user_id = ${userId}) AS dismissed_at,
+      (SELECT completed_at FROM setup_guide WHERE user_id = ${userId}) AS completed_at,
       (SELECT created_at FROM setup_guide WHERE user_id = ${userId}) AS guide_created_at
   `;
 
@@ -72,6 +73,7 @@ export async function getOrInitSetupGuideData(): Promise<GuideData | null> {
   const hasGenerated = Boolean(row.has_generated);
   const hasPaid = Boolean(row.has_paid);
   const dismissedAt = row.dismissed_at;
+  const completedAt = row.completed_at;
   const guideRowExists = row.guide_created_at !== null;
 
   const allCompleted = hasIncome && hasExpense && hasGenerated && hasPaid;
@@ -83,11 +85,12 @@ export async function getOrInitSetupGuideData(): Promise<GuideData | null> {
     pay: hasPaid,
   };
 
-  // Visibility logic (M3: no completed_at usage in GUIDE-001)
+  // Visibility logic (GUIDE-003: uses completed_at + dismissed_at)
   const isVisible = computeVisibility(
     allCompleted,
     guideRowExists,
     dismissedAt,
+    completedAt,
   );
 
   // If visible and no guide row yet, create one (idempotent side-effect)
@@ -109,8 +112,10 @@ export async function getOrInitSetupGuideData(): Promise<GuideData | null> {
 /**
  * Determines whether the setup guide should be shown.
  *
- * Rules (GUIDE-001 scope):
- * - dismissed_at IS NOT NULL -> hide
+ * Rules (GUIDE-003):
+ * - completed_at IS NOT NULL AND dismissed_at IS NOT NULL -> hide (fully done)
+ * - completed_at IS NOT NULL AND dismissed_at IS NULL -> show (celebration in progress)
+ * - dismissed_at IS NOT NULL (without completed_at) -> hide (dismissed early)
  * - No guide row + all 4 steps complete -> hide (existing user, AC-6)
  * - Otherwise -> show
  */
@@ -118,8 +123,12 @@ function computeVisibility(
   allCompleted: boolean,
   guideRowExists: boolean,
   dismissedAt: string | null,
+  completedAt: string | null,
 ): boolean {
-  // Already dismissed
+  // Fully completed AND dismissed -> hide permanently
+  if (completedAt && dismissedAt) return false;
+
+  // Dismissed without completion (shouldn't happen in normal flow, but safe)
   if (dismissedAt) return false;
 
   // Existing user (all done, never had the guide) — AC-6
@@ -131,14 +140,42 @@ function computeVisibility(
 // ── Server action (mutation) ─────────────────────────────────────────────────
 
 /**
+ * Marks the setup guide as completed — sets completed_at to NOW().
+ * Called when all 4 steps are detected as complete (celebration trigger).
+ */
+export async function completeSetupGuide(): Promise<void> {
+  const userId = await requireAuth();
+  await sql`
+    UPDATE setup_guide
+    SET completed_at = NOW()
+    WHERE user_id = ${userId} AND completed_at IS NULL
+  `;
+  revalidatePath("/", "layout");
+}
+
+/**
  * Dismisses the setup guide — sets dismissed_at to NOW().
- * Called from the celebration CTA in the guide UI.
+ * Called from the celebration CTA or auto-dismiss timer.
  */
 export async function dismissSetupGuide(): Promise<void> {
   const userId = await requireAuth();
   await sql`
     UPDATE setup_guide
     SET dismissed_at = NOW()
+    WHERE user_id = ${userId}
+  `;
+  revalidatePath("/", "layout");
+}
+
+/**
+ * Resets the setup guide — allows the user to relaunch from /parametres.
+ * Sets reset_at = NOW(), clears completed_at and dismissed_at.
+ */
+export async function resetSetupGuide(): Promise<void> {
+  const userId = await requireAuth();
+  await sql`
+    UPDATE setup_guide
+    SET reset_at = NOW(), completed_at = NULL, dismissed_at = NULL
     WHERE user_id = ${userId}
   `;
   revalidatePath("/", "layout");

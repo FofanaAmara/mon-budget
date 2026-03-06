@@ -15,12 +15,15 @@
  *   Bottom nav (app): 50
  */
 
-import { useState, useEffect, useCallback, useTransition } from "react";
+import { useState, useEffect, useCallback, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import SetupGuideBar from "./SetupGuideBar";
 import SetupGuideSheet from "./SetupGuideSheet";
 import type { SetupGuideStepData } from "./SetupGuideStep";
-import { dismissSetupGuide } from "@/lib/actions/setup-guide";
+import {
+  dismissSetupGuide,
+  completeSetupGuide,
+} from "@/lib/actions/setup-guide";
 import type { GuideData, GuideStepCompletion } from "@/lib/actions/setup-guide";
 
 // ── Static step definitions ──────────────────────────────────────────────────
@@ -102,6 +105,7 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
   const [, startTransition] = useTransition();
+  const hasTriggeredCompletion = useRef(false);
 
   // Compute derived values from server data
   const completion = guideData?.stepsCompletion;
@@ -114,6 +118,17 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
   // First uncompleted step title (for the bar label)
   const nextStep = steps.find((s) => s.state !== "completed");
   const nextStepTitle = nextStep?.title ?? "Terminer la configuration";
+
+  // Auto-expand and persist completion when all 4 steps are done
+  useEffect(() => {
+    if (isCelebration && !hasTriggeredCompletion.current) {
+      hasTriggeredCompletion.current = true;
+      setIsExpanded(true);
+      startTransition(async () => {
+        await completeSetupGuide();
+      });
+    }
+  }, [isCelebration, startTransition]);
 
   // Collapse on Escape key
   useEffect(() => {
