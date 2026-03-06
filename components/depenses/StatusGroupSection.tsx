@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { GROUP_LABELS } from "@/lib/constants";
 import ExpenseTrackingRow from "@/components/ExpenseTrackingRow";
-import type { MonthlyExpense, MonthlyExpenseStatus } from "@/lib/types";
+import type { MonthlyExpense, ExpenseGroupKey } from "@/lib/types";
 
 type GroupedExpenses = {
-  status: MonthlyExpenseStatus;
+  status: ExpenseGroupKey;
   items: MonthlyExpense[];
 };
 

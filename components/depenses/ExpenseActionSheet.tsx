@@ -9,7 +9,12 @@ import {
   updateMonthlyExpenseAmount,
   deferExpenseToMonth,
 } from "@/lib/actions/monthly-expenses";
-import type { MonthlyExpense } from "@/lib/types";
+import {
+  addExpenseTransaction,
+  getExpenseTransactions,
+} from "@/lib/actions/expense-transactions";
+import { formatCAD } from "@/lib/utils";
+import type { MonthlyExpense, ExpenseTransaction } from "@/lib/types";
 
 type ExpenseActionSheetProps = {
   expense: MonthlyExpense;
@@ -30,9 +35,9 @@ export default function ExpenseActionSheet({
   const [, startTransition] = useTransition();
 
   // Sub-sheet state
-  const [view, setView] = useState<"actions" | "defer" | "edit" | "delete">(
-    "actions",
-  );
+  const [view, setView] = useState<
+    "actions" | "defer" | "edit" | "delete" | "add-transaction" | "history"
+  >("actions");
   const [deferTargetMonth, setDeferTargetMonth] = useState(() => {
     const [y, m] = month.split("-").map(Number);
     const next = new Date(y, m, 1);
@@ -41,6 +46,12 @@ export default function ExpenseActionSheet({
   const [editAmountValue, setEditAmountValue] = useState(
     String(expense.amount ?? ""),
   );
+
+  // Progressive expense state
+  const [transactionAmount, setTransactionAmount] = useState("");
+  const [transactionNote, setTransactionNote] = useState("");
+  const [transactions, setTransactions] = useState<ExpenseTransaction[]>([]);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
 
   // Current month label
   const currentMonthLabel = (() => {
@@ -118,7 +129,254 @@ export default function ExpenseActionSheet({
     });
   }
 
+  function confirmAddTransaction() {
+    const amt = parseFloat(transactionAmount);
+    if (isNaN(amt) || amt <= 0) return;
+    startTransition(async () => {
+      await addExpenseTransaction(expense.id, amt, transactionNote || null);
+      onClose();
+      router.refresh();
+    });
+  }
+
+  async function loadHistory() {
+    setIsLoadingHistory(true);
+    const txns = await getExpenseTransactions(expense.id);
+    setTransactions(txns);
+    setIsLoadingHistory(false);
+  }
+
   // ── Render ──────────────────────────────────────────────────────────────
+
+  if (view === "add-transaction") {
+    return (
+      <SheetWrapper onClose={onClose} titleId="add-transaction-sheet-title">
+        <SheetHandle />
+        <div style={{ padding: "0 20px 8px" }}>
+          <h3 id="add-transaction-sheet-title" style={sheetTitleStyle}>
+            Ajouter un achat
+          </h3>
+
+          {/* Expense summary */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              paddingBottom: "16px",
+            }}
+          >
+            <div style={iconBoxStyle}>{expense.section?.icon ?? "💳"}</div>
+            <div>
+              <p style={expenseNameStyle}>{expense.name}</p>
+              <p style={expenseMetaStyle}>
+                {formatCAD(expense.paid_amount)} / {formatCAD(expense.amount)} ·{" "}
+                {expense.section?.name ?? "—"}
+              </p>
+            </div>
+          </div>
+
+          <div style={{ marginBottom: "8px" }}>
+            <p style={sectionLabelStyle}>Montant</p>
+            <input
+              type="number"
+              min="0.01"
+              step="0.01"
+              value={transactionAmount}
+              onChange={(e) => setTransactionAmount(e.target.value)}
+              placeholder="0"
+              autoFocus
+              style={{
+                width: "100%",
+                padding: "16px",
+                border: "1px solid var(--slate-200)",
+                borderRadius: "var(--radius-sm)",
+                fontFamily: "var(--font)",
+                fontSize: "28px",
+                fontWeight: 800,
+                letterSpacing: "-0.03em",
+                fontVariantNumeric: "tabular-nums",
+                textAlign: "center",
+                color: "var(--slate-900)",
+                background: "var(--white)",
+                outline: "none",
+                transition: "border-color 0.2s, box-shadow 0.2s",
+                WebkitAppearance: "none",
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = "var(--teal-700)";
+                e.target.style.boxShadow = "0 0 0 3px rgba(15, 118, 110, 0.08)";
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = "var(--slate-200)";
+                e.target.style.boxShadow = "none";
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: "8px" }}>
+            <p style={sectionLabelStyle}>Note (optionnel)</p>
+            <input
+              type="text"
+              value={transactionNote}
+              onChange={(e) => setTransactionNote(e.target.value)}
+              placeholder="Ex: Achat Amazon"
+              style={{
+                width: "100%",
+                padding: "12px 16px",
+                border: "1px solid var(--slate-200)",
+                borderRadius: "var(--radius-sm)",
+                fontFamily: "var(--font)",
+                fontSize: "14px",
+                fontWeight: 500,
+                color: "var(--slate-900)",
+                background: "var(--white)",
+                outline: "none",
+                transition: "border-color 0.2s, box-shadow 0.2s",
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = "var(--teal-700)";
+                e.target.style.boxShadow = "0 0 0 3px rgba(15, 118, 110, 0.08)";
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = "var(--slate-200)";
+                e.target.style.boxShadow = "none";
+              }}
+            />
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", padding: "16px 20px 4px" }}>
+          <button onClick={onClose} style={btnCancelStyle}>
+            Annuler
+          </button>
+          <button
+            onClick={confirmAddTransaction}
+            disabled={!transactionAmount || parseFloat(transactionAmount) <= 0}
+            style={btnPrimaryStyle}
+          >
+            Ajouter
+          </button>
+        </div>
+      </SheetWrapper>
+    );
+  }
+
+  if (view === "history") {
+    return (
+      <SheetWrapper onClose={onClose} titleId="history-sheet-title">
+        <SheetHandle />
+        <div style={{ padding: "0 20px 8px" }}>
+          <h3 id="history-sheet-title" style={sheetTitleStyle}>
+            Historique des achats
+          </h3>
+
+          {/* Expense summary */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              paddingBottom: "16px",
+            }}
+          >
+            <div style={iconBoxStyle}>{expense.section?.icon ?? "💳"}</div>
+            <div>
+              <p style={expenseNameStyle}>{expense.name}</p>
+              <p style={expenseMetaStyle}>
+                {formatCAD(expense.paid_amount)} / {formatCAD(expense.amount)} ·{" "}
+                {expense.section?.name ?? "—"}
+              </p>
+            </div>
+          </div>
+
+          {isLoadingHistory ? (
+            <p
+              style={{
+                fontSize: "14px",
+                color: "var(--slate-400)",
+                textAlign: "center",
+                padding: "20px 0",
+              }}
+            >
+              Chargement...
+            </p>
+          ) : transactions.length === 0 ? (
+            <p
+              style={{
+                fontSize: "14px",
+                color: "var(--slate-400)",
+                textAlign: "center",
+                padding: "20px 0",
+              }}
+            >
+              Aucun achat enregistre
+            </p>
+          ) : (
+            <div>
+              {transactions.map((txn) => {
+                const date = new Date(txn.created_at);
+                const dateLabel = new Intl.DateTimeFormat("fr-CA", {
+                  day: "numeric",
+                  month: "short",
+                }).format(date);
+                return (
+                  <div
+                    key={txn.id}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid var(--slate-100)",
+                    }}
+                  >
+                    <div>
+                      <p
+                        style={{
+                          fontSize: "13px",
+                          fontWeight: 600,
+                          color: "var(--slate-900)",
+                        }}
+                      >
+                        {txn.note || dateLabel}
+                      </p>
+                      {txn.note && (
+                        <p
+                          style={{
+                            fontSize: "11px",
+                            fontWeight: 500,
+                            color: "var(--slate-400)",
+                            marginTop: "2px",
+                          }}
+                        >
+                          {dateLabel}
+                        </p>
+                      )}
+                    </div>
+                    <span
+                      style={{
+                        fontSize: "14px",
+                        fontWeight: 700,
+                        fontVariantNumeric: "tabular-nums",
+                        color: "var(--slate-900)",
+                      }}
+                    >
+                      {formatCAD(txn.amount)}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+        <div style={{ display: "flex", gap: "10px", padding: "16px 20px 4px" }}>
+          <button onClick={onClose} style={{ ...btnCancelStyle, flex: 1 }}>
+            Fermer
+          </button>
+        </div>
+      </SheetWrapper>
+    );
+  }
 
   if (view === "defer") {
     return (
@@ -499,76 +757,130 @@ export default function ExpenseActionSheet({
 
       {/* Action list */}
       <div style={{ padding: "0 12px 8px" }}>
-        {/* Mark paid / upcoming */}
-        {expense.status !== "PAID" ? (
-          <ActionItem
-            iconBg="var(--success-light)"
-            iconColor="var(--positive)"
-            title="Marquer payée"
-            desc="Cette dépense est réglée"
-            icon={
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
-                <polyline points="22 4 12 14.01 9 11.01" />
-              </svg>
-            }
-            onClick={() => handleToggle("paid")}
-          />
-        ) : (
-          <ActionItem
-            iconBg="var(--teal-50)"
-            iconColor="var(--teal-700)"
-            title="Remettre à venir"
-            desc="Annuler le paiement de cette dépense"
-            icon={
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
-            }
-            onClick={() => handleToggle("upcoming")}
-          />
-        )}
+        {expense.is_progressive ? (
+          <>
+            {/* Progressive: Add transaction */}
+            <ActionItem
+              iconBg="var(--success-light)"
+              iconColor="var(--positive)"
+              title="Ajouter un achat"
+              desc="Enregistrer une nouvelle transaction"
+              icon={
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              }
+              onClick={() => setView("add-transaction")}
+              showChevron
+            />
 
-        {/* Defer */}
-        {expense.status !== "PAID" && expense.status !== "DEFERRED" && (
-          <ActionItem
-            iconBg="var(--warning-light)"
-            iconColor="var(--amber-600)"
-            title="Reporter à un autre mois"
-            desc="Déplacer vers un mois futur"
-            icon={
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="17 1 21 5 17 9" />
-                <path d="M3 11V9a4 4 0 014-4h14" />
-                <polyline points="7 23 3 19 7 15" />
-                <path d="M21 13v2a4 4 0 01-4 4H3" />
-              </svg>
-            }
-            onClick={() => setView("defer")}
-            showChevron
-          />
+            {/* Progressive: History */}
+            <ActionItem
+              iconBg="var(--teal-50)"
+              iconColor="var(--teal-700)"
+              title="Historique des achats"
+              desc="Voir les transactions enregistrees"
+              icon={
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+              }
+              onClick={() => {
+                setView("history");
+                loadHistory();
+              }}
+              showChevron
+            />
+          </>
+        ) : (
+          <>
+            {/* Non-progressive: Mark paid / upcoming */}
+            {expense.status !== "PAID" ? (
+              <ActionItem
+                iconBg="var(--success-light)"
+                iconColor="var(--positive)"
+                title="Marquer payée"
+                desc="Cette dépense est réglée"
+                icon={
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                  </svg>
+                }
+                onClick={() => handleToggle("paid")}
+              />
+            ) : (
+              <ActionItem
+                iconBg="var(--teal-50)"
+                iconColor="var(--teal-700)"
+                title="Remettre à venir"
+                desc="Annuler le paiement de cette dépense"
+                icon={
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                }
+                onClick={() => handleToggle("upcoming")}
+              />
+            )}
+
+            {/* Defer */}
+            {expense.status !== "PAID" && expense.status !== "DEFERRED" && (
+              <ActionItem
+                iconBg="var(--warning-light)"
+                iconColor="var(--amber-600)"
+                title="Reporter à un autre mois"
+                desc="Déplacer vers un mois futur"
+                icon={
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="17 1 21 5 17 9" />
+                    <path d="M3 11V9a4 4 0 014-4h14" />
+                    <polyline points="7 23 3 19 7 15" />
+                    <path d="M21 13v2a4 4 0 01-4 4H3" />
+                  </svg>
+                }
+                onClick={() => setView("defer")}
+                showChevron
+              />
+            )}
+          </>
         )}
 
         {/* Edit amount */}

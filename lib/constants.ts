@@ -11,7 +11,11 @@ export const BIWEEKLY_MONTHLY_MULTIPLIER = 26 / 12;
 // Milliseconds in one day — used by daysUntil and date arithmetic.
 export const MS_PER_DAY = 86_400_000;
 
-import type { MonthlyExpenseStatus, IncomeSource } from "@/lib/types";
+import type {
+  MonthlyExpenseStatus,
+  ExpenseGroupKey,
+  IncomeSource,
+} from "@/lib/types";
 
 export const STATUS_LABELS: Record<MonthlyExpenseStatus, string> = {
   UPCOMING: "A venir",
@@ -21,24 +25,27 @@ export const STATUS_LABELS: Record<MonthlyExpenseStatus, string> = {
 };
 
 export const STATUS_STYLES: Record<
-  MonthlyExpenseStatus,
+  ExpenseGroupKey,
   { bg: string; color: string }
 > = {
   UPCOMING: { bg: "var(--accent-subtle)", color: "var(--accent)" },
+  IN_PROGRESS: { bg: "var(--teal-50)", color: "var(--teal-700)" },
   PAID: { bg: "var(--positive-subtle)", color: "var(--positive-text)" },
   OVERDUE: { bg: "var(--negative-subtle)", color: "var(--negative-text)" },
   DEFERRED: { bg: "var(--surface-sunken)", color: "var(--text-tertiary)" },
 };
 
-export const GROUP_ORDER: MonthlyExpenseStatus[] = [
+export const GROUP_ORDER: ExpenseGroupKey[] = [
   "OVERDUE",
+  "IN_PROGRESS",
   "UPCOMING",
   "DEFERRED",
   "PAID",
 ];
 
-export const GROUP_LABELS: Record<MonthlyExpenseStatus, string> = {
+export const GROUP_LABELS: Record<ExpenseGroupKey, string> = {
   OVERDUE: "En retard",
+  IN_PROGRESS: "En cours",
   UPCOMING: "A venir",
   DEFERRED: "Reporte",
   PAID: "Paye",

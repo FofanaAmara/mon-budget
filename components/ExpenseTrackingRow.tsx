@@ -37,6 +37,21 @@ function ExpenseIcon({ variant }: { variant: ExpenseIconVariant }) {
     >
       {variant === "expense-paid" ? (
         <IconCheck size={20} />
+      ) : variant === "expense-in-progress" ? (
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <line x1="12" y1="20" x2="12" y2="10" />
+          <line x1="18" y1="20" x2="18" y2="4" />
+          <line x1="6" y1="20" x2="6" y2="16" />
+        </svg>
       ) : variant === "expense-late" ? (
         <svg
           width="20"
@@ -78,8 +93,33 @@ export default function ExpenseTrackingRow({
   onOpenActions,
 }: Props) {
   const isPaid = expense.status === "PAID";
-  const badge = getStatusBadge(expense.status);
-  const variant = getExpenseIconVariant(expense.status);
+  const isProgressive = expense.is_progressive;
+  const isOverBudget =
+    isProgressive &&
+    expense.paid_amount >= expense.amount &&
+    expense.amount > 0;
+  const progressPct =
+    isProgressive && expense.amount > 0
+      ? Math.min((expense.paid_amount / expense.amount) * 100, 100)
+      : 0;
+
+  // For progressive expenses, derive the display status for badge/icon
+  const displayStatus = isProgressive
+    ? expense.status === "OVERDUE" || expense.status === "DEFERRED"
+      ? expense.status
+      : expense.paid_amount > 0 && expense.paid_amount < expense.amount
+        ? "IN_PROGRESS"
+        : expense.paid_amount >= expense.amount
+          ? "PAID"
+          : expense.status
+    : expense.status;
+
+  const badge = getStatusBadge(displayStatus);
+  const variant = getExpenseIconVariant(
+    displayStatus,
+    isProgressive,
+    expense.paid_amount,
+  );
 
   return (
     <div
@@ -165,33 +205,77 @@ export default function ExpenseTrackingRow({
       </div>
 
       {/* Amount + status label — stacked vertically like Timeline */}
-      <div style={{ textAlign: "right", flexShrink: 0 }}>
-        <div
-          style={{
-            fontSize: "15px",
-            fontWeight: 800,
-            letterSpacing: "-0.02em",
-            fontVariantNumeric: "tabular-nums",
-            color: getExpenseAmountColor(expense.status),
-          }}
-        >
-          {isPaid && "-"}
-          {formatCAD(Number(expense.amount))}
-        </div>
-        <div
-          style={{
-            fontSize: "11px",
-            fontWeight: 500,
-            color: "var(--slate-400)",
-            marginTop: "2px",
-          }}
-        >
-          {getStatusLabel(expense.status)}
-        </div>
+      <div
+        style={{
+          textAlign: "right",
+          flexShrink: 0,
+          minWidth: isProgressive ? "110px" : undefined,
+        }}
+      >
+        {isProgressive ? (
+          <>
+            <div
+              style={{
+                fontSize: "14px",
+                fontWeight: 800,
+                letterSpacing: "-0.02em",
+                fontVariantNumeric: "tabular-nums",
+                color: isOverBudget ? "var(--error)" : "var(--slate-900)",
+              }}
+            >
+              {formatCAD(expense.paid_amount)} / {formatCAD(expense.amount)}
+            </div>
+            {/* Mini progress bar */}
+            <div
+              style={{
+                height: "4px",
+                borderRadius: "2px",
+                background: "var(--slate-100)",
+                marginTop: "4px",
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  height: "100%",
+                  width: `${progressPct}%`,
+                  borderRadius: "2px",
+                  background: isOverBudget ? "var(--error)" : "var(--teal-700)",
+                  transition: "width 0.3s ease",
+                }}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <div
+              style={{
+                fontSize: "15px",
+                fontWeight: 800,
+                letterSpacing: "-0.02em",
+                fontVariantNumeric: "tabular-nums",
+                color: getExpenseAmountColor(expense.status),
+              }}
+            >
+              {isPaid && "-"}
+              {formatCAD(Number(expense.amount))}
+            </div>
+            <div
+              style={{
+                fontSize: "11px",
+                fontWeight: 500,
+                color: "var(--slate-400)",
+                marginTop: "2px",
+              }}
+            >
+              {getStatusLabel(expense.status)}
+            </div>
+          </>
+        )}
       </div>
 
-      {/* Toggle button — far right, only for current month */}
-      {isCurrentMonth && (
+      {/* Toggle button — far right, only for current month, hidden for progressives */}
+      {isCurrentMonth && !isProgressive && (
         <button
           onClick={(e) => {
             e.stopPropagation();

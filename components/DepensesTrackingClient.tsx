@@ -12,7 +12,13 @@ import ExpenseFilters from "@/components/depenses/ExpenseFilters";
 import StatusGroupSection from "@/components/depenses/StatusGroupSection";
 import ExpenseSummaryStats from "@/components/depenses/ExpenseSummaryStats";
 import ExpenseActionSheet from "@/components/depenses/ExpenseActionSheet";
-import type { MonthlyExpense, MonthSummary, Section, Card } from "@/lib/types";
+import type {
+  MonthlyExpense,
+  MonthSummary,
+  Section,
+  Card,
+  ExpenseGroupKey,
+} from "@/lib/types";
 
 type Props = {
   expenses: MonthlyExpense[];
@@ -21,6 +27,26 @@ type Props = {
   cards: Card[];
   month: string;
 };
+
+/**
+ * Derives the display group for a monthly expense.
+ * M1: OVERDUE/DEFERRED always take priority over progressive logic.
+ */
+function getDisplayGroup(expense: MonthlyExpense): ExpenseGroupKey {
+  // DB statuses OVERDUE and DEFERRED always take priority
+  if (expense.status === "OVERDUE" || expense.status === "DEFERRED") {
+    return expense.status;
+  }
+  if (!expense.is_progressive) return expense.status;
+  // Progressive with partial payment = "En cours"
+  if (expense.paid_amount > 0 && expense.paid_amount < expense.amount) {
+    return "IN_PROGRESS";
+  }
+  // Progressive finished (paid_amount >= amount) = "Paye"
+  if (expense.paid_amount >= expense.amount) return "PAID";
+  // Progressive with no payment yet = "A venir"
+  return "UPCOMING";
+}
 
 export default function DepensesTrackingClient({
   expenses,
@@ -58,12 +84,16 @@ export default function DepensesTrackingClient({
     )
     .filter((e) => (selectedSection ? e.section_id === selectedSection : true));
 
-  const grouped = GROUP_ORDER.map((status) => ({
-    status,
-    items: filtered.filter((e) => e.status === status),
+  const grouped = GROUP_ORDER.map((groupKey) => ({
+    status: groupKey,
+    items: filtered.filter((e) => getDisplayGroup(e) === groupKey),
   })).filter((g) => g.items.length > 0);
 
   function handleToggle(id: string, action: "paid" | "upcoming") {
+    // Progressive expenses are never toggled — they accumulate via sub-transactions
+    const expense = expenses.find((e) => e.id === id);
+    if (expense?.is_progressive) return;
+
     startTransition(async () => {
       if (action === "paid") await markAsPaid(id);
       else await markAsUpcoming(id);

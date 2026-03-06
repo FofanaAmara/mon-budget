@@ -238,10 +238,12 @@ export async function getMonthlyExpenses(
         SELECT
           me.*,
           row_to_json(s.*) as section,
-          row_to_json(c.*) as card
+          row_to_json(c.*) as card,
+          COALESCE(e.is_progressive, false) AS is_progressive
         FROM monthly_expenses me
         LEFT JOIN sections s ON me.section_id = s.id
         LEFT JOIN cards c ON me.card_id = c.id
+        LEFT JOIN expenses e ON me.expense_id = e.id
         WHERE me.month = ${month}
           AND me.section_id = ${sectionId}
           AND me.user_id = ${userId}
@@ -258,10 +260,12 @@ export async function getMonthlyExpenses(
         SELECT
           me.*,
           row_to_json(s.*) as section,
-          row_to_json(c.*) as card
+          row_to_json(c.*) as card,
+          COALESCE(e.is_progressive, false) AS is_progressive
         FROM monthly_expenses me
         LEFT JOIN sections s ON me.section_id = s.id
         LEFT JOIN cards c ON me.card_id = c.id
+        LEFT JOIN expenses e ON me.expense_id = e.id
         WHERE me.month = ${month}
           AND me.user_id = ${userId}
         ORDER BY
@@ -284,14 +288,19 @@ export async function getMonthSummary(month: string): Promise<MonthSummary> {
   const rows = await sql`
     SELECT
       COUNT(*) as count,
-      COALESCE(SUM(amount), 0) as total,
-      COALESCE(SUM(amount) FILTER (WHERE is_planned = true), 0) as planned_total,
-      COALESCE(SUM(amount) FILTER (WHERE is_planned = false), 0) as unplanned_total,
-      COUNT(*) FILTER (WHERE status = 'PAID') as paid_count,
-      COALESCE(SUM(amount) FILTER (WHERE status = 'PAID'), 0) as paid_total,
-      COUNT(*) FILTER (WHERE status = 'OVERDUE') as overdue_count
-    FROM monthly_expenses
-    WHERE month = ${month} AND user_id = ${userId}
+      COALESCE(SUM(me.amount), 0) as total,
+      COALESCE(SUM(me.amount) FILTER (WHERE me.is_planned = true), 0) as planned_total,
+      COALESCE(SUM(me.amount) FILTER (WHERE me.is_planned = false), 0) as unplanned_total,
+      COUNT(*) FILTER (WHERE me.status = 'PAID') as paid_count,
+      COALESCE(SUM(CASE
+        WHEN e.is_progressive = true THEN me.paid_amount
+        WHEN me.status = 'PAID' THEN me.amount
+        ELSE 0
+      END), 0) as paid_total,
+      COUNT(*) FILTER (WHERE me.status = 'OVERDUE') as overdue_count
+    FROM monthly_expenses me
+    LEFT JOIN expenses e ON me.expense_id = e.id
+    WHERE me.month = ${month} AND me.user_id = ${userId}
   `;
 
   const row = rows[0];
@@ -484,15 +493,21 @@ export async function autoMarkPaidForAutoDebit(month: string): Promise<void> {
   validateInput(monthSchema, month);
   const userId = await requireAuth();
   const today = new Date().toISOString().split("T")[0];
+  // Exclude progressive expenses — they accumulate via sub-transactions, not auto-mark
   await sql`
-    UPDATE monthly_expenses
+    UPDATE monthly_expenses me
     SET status = 'PAID', paid_at = due_date
-    WHERE month = ${month}
-      AND status = 'UPCOMING'
-      AND is_auto_charged = true
-      AND due_date IS NOT NULL
-      AND due_date <= ${today}::date
-      AND user_id = ${userId}
+    FROM (SELECT 1) AS dummy
+    WHERE me.month = ${month}
+      AND me.status = 'UPCOMING'
+      AND me.is_auto_charged = true
+      AND me.due_date IS NOT NULL
+      AND me.due_date <= ${today}::date
+      AND me.user_id = ${userId}
+      AND NOT EXISTS (
+        SELECT 1 FROM expenses e
+        WHERE e.id = me.expense_id AND e.is_progressive = true
+      )
   `;
   // Note: no revalidatePath here — this is called during page render
 }

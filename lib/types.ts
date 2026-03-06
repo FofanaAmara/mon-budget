@@ -113,6 +113,9 @@ export type CalcDueDateInput = {
 
 export type MonthlyExpenseStatus = "UPCOMING" | "PAID" | "OVERDUE" | "DEFERRED";
 
+/** Frontend-only grouping key — adds "IN_PROGRESS" for progressive expenses with partial payment. */
+export type ExpenseGroupKey = MonthlyExpenseStatus | "IN_PROGRESS";
+
 export type MonthlyExpense = {
   id: string;
   user_id: string;
@@ -128,6 +131,7 @@ export type MonthlyExpense = {
   card_id: string | null;
   is_auto_charged: boolean;
   is_planned: boolean;
+  is_progressive: boolean;
   paid_amount: number;
   notes: string | null;
   created_at: string;
