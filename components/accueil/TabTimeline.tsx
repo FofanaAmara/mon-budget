@@ -1,6 +1,7 @@
 "use client";
 
 import { formatCAD } from "@/lib/utils";
+import { IconCheck } from "@/components/icons";
 import type { MonthlyExpense, MonthlyIncome } from "@/lib/types";
 import {
   getTimelineIconVariant,
@@ -98,18 +99,7 @@ function EventIcon({ variant }: { variant: TimelineIconVariant }) {
           <polyline points="17 6 23 6 23 12" />
         </svg>
       ) : variant === "expense-paid" ? (
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <polyline points="20 6 9 17 4 12" />
-        </svg>
+        <IconCheck size={20} />
       ) : variant === "expense-late" ? (
         <svg
           width="20"

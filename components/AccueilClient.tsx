@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import MonthNavigator from "@/components/MonthNavigator";
 import Onboarding from "@/components/Onboarding";
+import { IconCheck, IconClose } from "@/components/icons";
 import TabTableauDeBord from "@/components/accueil/TabTableauDeBord";
 import TabTimeline from "@/components/accueil/TabTimeline";
 import TabSanteFinanciere from "@/components/accueil/TabSanteFinanciere";
@@ -166,25 +167,7 @@ export default function AccueilClient({
               color: isPositive ? "var(--positive)" : "var(--error)",
             }}
           >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              {isPositive ? (
-                <polyline points="20 6 9 17 4 12" />
-              ) : (
-                <>
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </>
-              )}
-            </svg>
+            {isPositive ? <IconCheck size={14} /> : <IconClose size={14} />}
             {isPositive ? "Ton mois est sous contrôle" : "Budget dépassé"}
           </span>
         </div>

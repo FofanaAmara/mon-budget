@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { createIncome, updateIncome } from "@/lib/actions/incomes";
+import { IconClose, IconCheck } from "@/components/icons";
 import type { Income, IncomeFrequency, IncomeSource } from "@/lib/types";
 
 // ── Type/frequency options ────────────────────────────────────────────────────
@@ -336,18 +337,7 @@ export default function IncomeModal({ income, onClose }: Props) {
               e.currentTarget.style.color = "var(--slate-500)";
             }}
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              width="18"
-              height="18"
-            >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+            <IconClose size={18} />
           </button>
         </div>
 
@@ -870,20 +860,7 @@ export default function IncomeModal({ income, onClose }: Props) {
                 e.currentTarget.style.boxShadow = "none";
               }}
             >
-              {!loading && (
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  width="18"
-                  height="18"
-                >
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              )}
+              {!loading && <IconCheck size={18} />}
               {loading
                 ? "Enregistrement..."
                 : isEdit
