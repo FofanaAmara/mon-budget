@@ -3,132 +3,77 @@
 /**
  * SetupGuide — Orchestrator component for the onboarding setup checklist.
  *
- * This component manages the collapsed/expanded state and renders the
- * appropriate sub-components. It is designed to be added once to the
- * authenticated layout so it appears on ALL pages.
+ * Renders on ALL authenticated pages (mobile bar + desktop widget).
+ * Receives real data from the server via props (fetched in app/layout.tsx).
  *
- * ── MOCKED DATA ──────────────────────────────────────────────────────────────
- * Currently, all data is hardcoded (MOCK_STEPS, MOCK_GUIDE_STATE).
- * The guide always appears and shows step 1 as "current", others as "upcoming".
+ * Keyboard: Escape collapses the open sheet/widget.
  *
- * ── WHAT THE DEVELOPER NEEDS TO DO ───────────────────────────────────────────
- * 1. Replace MOCK_STEPS with real data from the server (4 COUNT queries or
- *    a single SQL with 4 EXISTS). Each step's `completed` boolean comes from DB.
- *
- * 2. Replace MOCK_GUIDE_STATE.isVisible with a server check:
- *    - The guide should NOT appear if ALL 4 conditions are already met on first
- *      login (existing user with data). See feature-brief.md § "Utilisateur existant".
- *    - The guide should NOT appear if it was previously dismissed (setup_guide.dismissed_at IS NOT NULL).
- *
- * 3. Replace the `onCelebrationCTA` handler to:
- *    a. Call a server action: dismissSetupGuide() — sets dismissed_at in DB
- *    b. Then navigate to '/' (dashboard)
- *
- * 4. Replace the `handleStepClick` handler to use Next.js router:
- *    import { useRouter } from 'next/navigation'; router.push(href)
- *
- * 5. Add revalidation: after any server action that touches incomes, expenses,
- *    or monthly_expenses, call revalidatePath('/') so the guide re-checks step states.
- *
- * ── DATA INTERFACE ────────────────────────────────────────────────────────────
- * The component expects this shape from the server (replace MOCK_STEPS with this):
- *
- * type GuideStepRaw = {
- *   id: 'income' | 'expense' | 'generate' | 'pay';
- *   completed: boolean; // from DB COUNT query
- * };
- *
- * type GuideState = {
- *   isVisible: boolean; // guide not dismissed + user is "new enough" to see it
- *   isCompleted: boolean; // all 4 steps done (triggers celebration)
- * };
- *
- * Pass them as props: <SetupGuide steps={guideSteps} guideState={guideState} />
- *
- * ── KEYBOARD SHORTCUTS ───────────────────────────────────────────────────────
- * - Escape key collapses the open sheet/widget
- *
- * ── Z-INDEX STACK ────────────────────────────────────────────────────────────
- * Backdrop (mobile): 90
- * Bottom sheet / Guide bar: 100
- * Desktop widget: 200
- * Bottom nav (app): 50
- * → The guide floats above nav but doesn't interfere with desktop sidebar.
+ * Z-index stack:
+ *   Backdrop (mobile): 90
+ *   Bottom sheet / Guide bar: 100
+ *   Desktop widget: 200
+ *   Bottom nav (app): 50
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import SetupGuideBar from "./SetupGuideBar";
 import SetupGuideSheet from "./SetupGuideSheet";
 import type { SetupGuideStepData } from "./SetupGuideStep";
+import { dismissSetupGuide } from "@/lib/actions/setup-guide";
+import type { GuideData, GuideStepCompletion } from "@/lib/actions/setup-guide";
 
-// ── Mocked data — replace with server props ──────────────────────────────────
+// ── Static step definitions ──────────────────────────────────────────────────
 
-/**
- * MOCK: Static step definitions.
- * TODO for developer: derive `completed` from server data.
- * The `state` field is computed below in `buildStepData()`.
- */
-const MOCK_STEPS_RAW = [
+const STEPS_CONFIG = [
   {
     id: "income" as const,
-    title: "Ajouter un revenu récurrent",
-    description: "Ton salaire ou toute entrée d'argent régulière.",
+    title: "Ajouter un revenu r\u00e9current",
+    description:
+      "Ton salaire ou toute entr\u00e9e d\u2019argent r\u00e9guli\u00e8re.",
     href: "/revenus",
-    completed: false, // TODO: replace with: count(incomes) >= 1
   },
   {
     id: "expense" as const,
     title: "Ajouter une charge fixe",
     description: "Loyer, abonnements, assurances...",
     href: "/parametres",
-    completed: false, // TODO: replace with: count(expense_templates) >= 1
   },
   {
     id: "generate" as const,
-    title: "Générer le mois courant",
-    description: "Crée les dépenses à partir de tes modèles.",
+    title: "G\u00e9n\u00e9rer le mois courant",
+    description:
+      "Cr\u00e9e les d\u00e9penses \u00e0 partir de tes mod\u00e8les.",
     href: "/depenses",
-    completed: false, // TODO: replace with: count(monthly_expenses for current month) >= 1
   },
   {
     id: "pay" as const,
-    title: "Marquer une dépense payée",
+    title: "Marquer une d\u00e9pense pay\u00e9e",
     description: "Confirme un paiement pour voir ton budget bouger.",
     href: "/depenses",
-    completed: false, // TODO: replace with: count(monthly_expenses where is_paid=true, current month) >= 1
   },
-];
+] as const;
+
+// ── Step state computation ──────────────────────────────────────────────────
 
 /**
- * MOCK: Guide visibility state.
- * TODO for developer: replace with server-side check:
- *   - isVisible: guide NOT dismissed (setup_guide.dismissed_at IS NULL) AND user is "new"
- *   - isCompleted: all 4 step conditions return true
- */
-const MOCK_GUIDE_STATE = {
-  isVisible: true,
-  isCompleted: false,
-};
-
-// ── Step state computation ────────────────────────────────────────────────────
-
-/**
- * Converts raw step data (completed: boolean) into display state
+ * Converts step completion booleans into display state
  * (upcoming | current | completed) based on sequential progression.
  *
- * Logic: the first uncompleted step is 'current', all before it are 'completed',
+ * The first uncompleted step is 'current', all before are 'completed',
  * all after are 'upcoming'.
  */
 function buildStepData(
-  rawSteps: typeof MOCK_STEPS_RAW,
+  completion: GuideStepCompletion,
   completedCount: number,
 ): SetupGuideStepData[] {
-  return rawSteps.map((step, i) => {
+  const completionMap: Record<string, boolean> = completion;
+  return STEPS_CONFIG.map((step, i) => {
+    const isCompleted = completionMap[step.id];
     let state: "upcoming" | "current" | "completed";
-    if (step.completed) {
+    if (isCompleted) {
       state = "completed";
     } else if (i === completedCount) {
-      // First uncompleted step = current
       state = "current";
     } else {
       state = "upcoming";
@@ -144,20 +89,27 @@ function buildStepData(
   });
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// ── Props ────────────────────────────────────────────────────────────────────
 
-export default function SetupGuide() {
+type SetupGuideProps = {
+  guideData: GuideData | null;
+};
+
+// ── Component ────────────────────────────────────────────────────────────────
+
+export default function SetupGuide({ guideData }: SetupGuideProps) {
+  const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
+  const [, startTransition] = useTransition();
 
-  // TODO for developer: replace these with props from server
-  const rawSteps = MOCK_STEPS_RAW;
-  const guideState = MOCK_GUIDE_STATE;
-
-  // Compute derived values
-  const completedCount = rawSteps.filter((s) => s.completed).length;
-  const isCelebration = guideState.isCompleted || completedCount === 4;
-  const steps = buildStepData(rawSteps, completedCount);
+  // Compute derived values from server data
+  const completion = guideData?.stepsCompletion;
+  const completedCount = completion
+    ? Object.values(completion).filter(Boolean).length
+    : 0;
+  const isCelebration = guideData?.isCompleted ?? false;
+  const steps = completion ? buildStepData(completion, completedCount) : [];
 
   // First uncompleted step title (for the bar label)
   const nextStep = steps.find((s) => s.state !== "completed");
@@ -176,29 +128,30 @@ export default function SetupGuide() {
 
   /**
    * Handles CTA in celebration view.
-   * TODO for developer:
-   *   1. Call server action: dismissSetupGuide()
-   *   2. Then: router.push('/')
+   * Persists dismissal via server action, then navigates to dashboard.
    */
   const handleCelebrationCTA = useCallback(() => {
     setIsDismissed(true);
     setIsExpanded(false);
-    // TODO: router.push('/');
-    // TODO: dismissSetupGuide() server action
-  }, []);
+    startTransition(async () => {
+      await dismissSetupGuide();
+      router.push("/");
+    });
+  }, [router, startTransition]);
 
   /**
-   * Handles step tap — navigates to the step's target page.
-   * TODO for developer: use router.push(href) instead of window.location.href
+   * Handles step tap — navigates to the step's target page via Next.js router.
    */
-  const handleStepClick = useCallback((href: string) => {
-    setIsExpanded(false);
-    // TODO: router.push(href)
-    window.location.href = href;
-  }, []);
+  const handleStepClick = useCallback(
+    (href: string) => {
+      setIsExpanded(false);
+      router.push(href);
+    },
+    [router],
+  );
 
-  // Don't render if guide is not visible or was dismissed
-  if (!guideState.isVisible || isDismissed) return null;
+  // Don't render if no data, guide not visible, or dismissed locally
+  if (!guideData || !guideData.isVisible || isDismissed) return null;
 
   return (
     <>

@@ -3,12 +3,14 @@
 import { usePathname } from "next/navigation";
 import BottomNav from "@/components/BottomNav";
 import SetupGuide from "@/components/setup-guide/SetupGuide";
+import type { GuideData } from "@/lib/actions/setup-guide";
 
-export default function LayoutShell({
-  children,
-}: {
+type LayoutShellProps = {
   children: React.ReactNode;
-}) {
+  guideData?: GuideData | null;
+};
+
+export default function LayoutShell({ children, guideData }: LayoutShellProps) {
   const pathname = usePathname();
   const isAuthPage =
     pathname.startsWith("/auth") ||
@@ -22,13 +24,7 @@ export default function LayoutShell({
   return (
     <>
       <BottomNav />
-      {/*
-       * SetupGuide — persistent onboarding checklist.
-       * Renders on ALL authenticated pages (mobile bar + desktop widget).
-       * Currently uses mocked data — wire real data in SetupGuide.tsx.
-       * TODO for developer: pass server-fetched guide state as props.
-       */}
-      <SetupGuide />
+      <SetupGuide guideData={guideData ?? null} />
       <div className="md:ml-[260px]">
         <div className="max-w-lg mx-auto md:max-w-2xl min-h-dvh relative">
           {children}
