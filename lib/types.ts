@@ -100,6 +100,16 @@ export type Debt = {
   card?: Card;
 };
 
+/**
+ * Input for calcDueDateForMonth — minimal shape shared by expenses and debts.
+ * Uses RecurrenceFrequency | null for type safety (callers cast DB strings at the call site).
+ */
+export type CalcDueDateInput = {
+  recurrence_frequency: RecurrenceFrequency | null;
+  recurrence_day: number | null;
+  next_due_date: string | null;
+};
+
 export type MonthlyExpenseStatus = "UPCOMING" | "PAID" | "OVERDUE" | "DEFERRED";
 
 export type MonthlyExpense = {

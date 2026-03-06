@@ -1,4 +1,9 @@
-import type { Expense, IncomeFrequency, RecurrenceFrequency } from "./types";
+import type {
+  CalcDueDateInput,
+  Expense,
+  IncomeFrequency,
+  RecurrenceFrequency,
+} from "./types";
 import {
   WEEKLY_MONTHLY_MULTIPLIER,
   BIWEEKLY_MONTHLY_MULTIPLIER,
@@ -258,4 +263,94 @@ export function daysUntil(date: string | Date | null): number {
   today.setHours(0, 0, 0, 0);
   d.setHours(0, 0, 0, 0);
   return Math.round((d.getTime() - today.getTime()) / MS_PER_DAY);
+}
+
+/**
+ * Format a date as "YYYY-MM-DD" from numeric parts.
+ * Exported for reuse in sub-functions (monthly-expenses generation).
+ */
+export function formatDueDate(
+  year: number,
+  month: number,
+  day: number,
+): string {
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+/**
+ * Calculate the due_date for a RECURRING expense in a given month.
+ * Pure function — no I/O.
+ *
+ * @param expense - Minimal shape with recurrence info
+ * @param month - Target month as "YYYY-MM"
+ * @returns ISO date string "YYYY-MM-DD" or null if the expense is not due this month
+ */
+export function calcDueDateForMonth(
+  expense: CalcDueDateInput,
+  month: string,
+): string | null {
+  const [year, monthNum] = month.split("-").map(Number);
+
+  // If next_due_date falls in this month, use it directly
+  if (expense.next_due_date) {
+    const nd = new Date(expense.next_due_date + "T00:00:00");
+    if (nd.getFullYear() === year && nd.getMonth() + 1 === monthNum) {
+      return expense.next_due_date;
+    }
+  }
+
+  // For BIMONTHLY: only generate if this month is an even number of months from the reference
+  if (expense.recurrence_frequency === "BIMONTHLY" && expense.recurrence_day) {
+    if (expense.next_due_date) {
+      const ref = new Date(expense.next_due_date + "T00:00:00");
+      const diffMonths =
+        (year - ref.getFullYear()) * 12 + (monthNum - (ref.getMonth() + 1));
+      if (diffMonths % 2 !== 0) return null; // skip odd-offset months
+    }
+    const daysInMonth = new Date(year, monthNum, 0).getDate();
+    const day = Math.min(expense.recurrence_day, daysInMonth);
+    return formatDueDate(year, monthNum, day);
+  }
+
+  // For YEARLY: only generate in the due month
+  if (expense.recurrence_frequency === "YEARLY" && expense.recurrence_day) {
+    if (expense.next_due_date) {
+      const ref = new Date(expense.next_due_date + "T00:00:00");
+      const refMonth = ref.getMonth() + 1;
+      if (monthNum !== refMonth) return null;
+    }
+    const daysInMonth = new Date(year, monthNum, 0).getDate();
+    const day = Math.min(expense.recurrence_day, daysInMonth);
+    return formatDueDate(year, monthNum, day);
+  }
+
+  // For QUARTERLY: generate in due_month, +3, +6, +9
+  if (expense.recurrence_frequency === "QUARTERLY" && expense.recurrence_day) {
+    if (expense.next_due_date) {
+      const ref = new Date(expense.next_due_date + "T00:00:00");
+      const refMonth = ref.getMonth() + 1;
+      const diff = (((monthNum - refMonth) % 12) + 12) % 12; // positive modulo
+      if (diff % 3 !== 0) return null;
+    }
+    const daysInMonth = new Date(year, monthNum, 0).getDate();
+    const day = Math.min(expense.recurrence_day, daysInMonth);
+    return formatDueDate(year, monthNum, day);
+  }
+
+  // For MONTHLY: generate every month
+  if (expense.recurrence_frequency === "MONTHLY" && expense.recurrence_day) {
+    const daysInMonth = new Date(year, monthNum, 0).getDate();
+    const day = Math.min(expense.recurrence_day, daysInMonth);
+    return formatDueDate(year, monthNum, day);
+  }
+
+  // For WEEKLY / BIWEEKLY: use the 1st of the month as fallback
+  if (
+    expense.recurrence_frequency === "WEEKLY" ||
+    expense.recurrence_frequency === "BIWEEKLY"
+  ) {
+    return formatDueDate(year, monthNum, 1);
+  }
+
+  return null;
 }

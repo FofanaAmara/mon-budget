@@ -8,6 +8,7 @@ import {
   WEEKLY_MONTHLY_MULTIPLIER,
   BIWEEKLY_MONTHLY_MULTIPLIER,
 } from "@/lib/constants";
+import { calcDueDateForMonth, formatDueDate } from "@/lib/utils";
 import { validateInput } from "@/lib/schemas/validate";
 import {
   idSchema,
@@ -15,88 +16,36 @@ import {
   nonNegativeAmountSchema,
 } from "@/lib/schemas/common";
 
-// Calculates the due_date for a RECURRING expense in a given month
-function calcDueDateForMonth(
-  expense: {
-    recurrence_frequency: string | null;
-    recurrence_day: number | null;
-    next_due_date: string | null;
-  },
+// --- Sub-functions for generateMonthlyExpenses (I/O — stay in server action) ---
+
+type RecurringExpenseRow = {
+  id: string;
+  name: string;
+  amount: number;
+  section_id: string | null;
+  card_id: string | null;
+  auto_debit: boolean;
+  spread_monthly: boolean;
+  recurrence_frequency: string | null;
+  recurrence_day: number | null;
+  next_due_date: string | null;
+  notes: string | null;
+};
+
+/** Monthly cost multipliers (non-monthly → monthly equivalent) */
+const MONTHLY_MULTIPLIERS: Record<string, number> = {
+  WEEKLY: WEEKLY_MONTHLY_MULTIPLIER,
+  BIWEEKLY: BIWEEKLY_MONTHLY_MULTIPLIER,
+  MONTHLY: 1,
+  BIMONTHLY: 1 / 2,
+};
+
+async function generateRecurringInstances(
+  userId: string,
   month: string,
-): string | null {
-  const [year, monthNum] = month.split("-").map(Number);
-
-  // If next_due_date falls in this month, use it directly
-  if (expense.next_due_date) {
-    const nd = new Date(expense.next_due_date + "T00:00:00");
-    if (nd.getFullYear() === year && nd.getMonth() + 1 === monthNum) {
-      return expense.next_due_date;
-    }
-  }
-
-  // For BIMONTHLY: only generate if this month is an even number of months from the reference
-  if (expense.recurrence_frequency === "BIMONTHLY" && expense.recurrence_day) {
-    if (expense.next_due_date) {
-      const ref = new Date(expense.next_due_date + "T00:00:00");
-      const diffMonths =
-        (year - ref.getFullYear()) * 12 + (monthNum - (ref.getMonth() + 1));
-      if (diffMonths % 2 !== 0) return null; // skip odd-offset months
-    }
-    const daysInMonth = new Date(year, monthNum, 0).getDate();
-    const day = Math.min(expense.recurrence_day, daysInMonth);
-    return `${year}-${String(monthNum).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-  }
-
-  // For YEARLY: only generate in the due month
-  if (expense.recurrence_frequency === "YEARLY" && expense.recurrence_day) {
-    if (expense.next_due_date) {
-      const ref = new Date(expense.next_due_date + "T00:00:00");
-      const refMonth = ref.getMonth() + 1;
-      if (monthNum !== refMonth) return null;
-    }
-    const daysInMonth = new Date(year, monthNum, 0).getDate();
-    const day = Math.min(expense.recurrence_day, daysInMonth);
-    return `${year}-${String(monthNum).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-  }
-
-  // For QUARTERLY: generate in due_month, +3, +6, +9
-  if (expense.recurrence_frequency === "QUARTERLY" && expense.recurrence_day) {
-    if (expense.next_due_date) {
-      const ref = new Date(expense.next_due_date + "T00:00:00");
-      const refMonth = ref.getMonth() + 1;
-      const diff = (((monthNum - refMonth) % 12) + 12) % 12; // positive modulo
-      if (diff % 3 !== 0) return null;
-    }
-    const daysInMonth = new Date(year, monthNum, 0).getDate();
-    const day = Math.min(expense.recurrence_day, daysInMonth);
-    return `${year}-${String(monthNum).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-  }
-
-  // For MONTHLY: generate every month
-  if (expense.recurrence_frequency === "MONTHLY" && expense.recurrence_day) {
-    const daysInMonth = new Date(year, monthNum, 0).getDate();
-    const day = Math.min(expense.recurrence_day, daysInMonth);
-    return `${year}-${String(monthNum).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-  }
-
-  // For WEEKLY / BIWEEKLY: use the 1st of the month as fallback
-  if (["WEEKLY", "BIWEEKLY"].includes(expense.recurrence_frequency || "")) {
-    return `${year}-${String(monthNum).padStart(2, "0")}-01`;
-  }
-
-  return null;
-}
-
-// Generates monthly instances for a given month (idempotent — safe to call multiple times)
-export async function generateMonthlyExpenses(month: string): Promise<void> {
-  validateInput(monthSchema, month);
-  const userId = await requireAuth();
-  const [year, monthNum] = month.split("-").map(Number);
-  const monthStart = `${year}-${String(monthNum).padStart(2, "0")}-01`;
-  const daysInMonth = new Date(year, monthNum, 0).getDate();
-  const monthEnd = `${year}-${String(monthNum).padStart(2, "0")}-${String(daysInMonth).padStart(2, "0")}`;
-
-  // Fetch active RECURRING expenses
+  year: number,
+  monthNum: number,
+): Promise<void> {
   const recurringExpenses = await sql`
     SELECT id, name, amount, section_id, card_id, auto_debit, spread_monthly,
            recurrence_frequency, recurrence_day, next_due_date, notes
@@ -106,41 +55,7 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
       AND user_id = ${userId}
   `;
 
-  // Fetch ONE_TIME expenses whose next_due_date falls in this month
-  const oneTimeExpenses = await sql`
-    SELECT id, name, amount, section_id, card_id, auto_debit, next_due_date, notes
-    FROM expenses
-    WHERE type = 'ONE_TIME'
-      AND is_active = true
-      AND user_id = ${userId}
-      AND next_due_date IS NOT NULL
-      AND next_due_date >= ${monthStart}::date
-      AND next_due_date <= ${monthEnd}::date
-  `;
-
-  // Monthly cost multipliers (non-monthly → monthly equivalent)
-  // QUARTERLY and YEARLY are handled separately (full amount in due months, or spread_monthly path)
-  const monthlyMultipliers: Record<string, number> = {
-    WEEKLY: WEEKLY_MONTHLY_MULTIPLIER,
-    BIWEEKLY: BIWEEKLY_MONTHLY_MULTIPLIER,
-    MONTHLY: 1,
-    BIMONTHLY: 1 / 2,
-  };
-
-  // Insert RECURRING instances
-  for (const expense of recurringExpenses as {
-    id: string;
-    name: string;
-    amount: number;
-    section_id: string | null;
-    card_id: string | null;
-    auto_debit: boolean;
-    spread_monthly: boolean;
-    recurrence_frequency: string | null;
-    recurrence_day: number | null;
-    next_due_date: string | null;
-    notes: string | null;
-  }[]) {
+  for (const expense of recurringExpenses as RecurringExpenseRow[]) {
     const freq = expense.recurrence_frequency;
 
     // spread_monthly path: generate every month with divided amount
@@ -153,7 +68,7 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
       const day = expense.recurrence_day
         ? Math.min(expense.recurrence_day, daysInMonth)
         : 1;
-      const syntheticDueDate = `${year}-${String(monthNum).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      const syntheticDueDate = formatDueDate(year, monthNum, day);
 
       await sql`
         INSERT INTO monthly_expenses
@@ -168,7 +83,16 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
     }
 
     // Normal path: calcDueDateForMonth + skip guard
-    const dueDate = calcDueDateForMonth(expense, month);
+    // Cast DB string to RecurrenceFrequency at the call site (type safety per M-01)
+    const dueDate = calcDueDateForMonth(
+      {
+        recurrence_frequency:
+          (freq as import("@/lib/types").RecurrenceFrequency) ?? null,
+        recurrence_day: expense.recurrence_day,
+        next_due_date: expense.next_due_date,
+      },
+      month,
+    );
 
     // Skip non-due months for QUARTERLY/YEARLY (calcDueDateForMonth returns null)
     if (!dueDate && expense.recurrence_day && freq && freq !== "MONTHLY") {
@@ -180,7 +104,7 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
     const multiplier =
       freq === "QUARTERLY" || freq === "YEARLY"
         ? 1
-        : (monthlyMultipliers[freq ?? "MONTHLY"] ?? 1);
+        : (MONTHLY_MULTIPLIERS[freq ?? "MONTHLY"] ?? 1);
     const monthlyAmount = Math.round(expense.amount * multiplier * 100) / 100;
 
     await sql`
@@ -193,8 +117,25 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
       ON CONFLICT (expense_id, month) DO NOTHING
     `;
   }
+}
 
-  // Insert ONE_TIME instances
+async function generateOneTimeInstances(
+  userId: string,
+  month: string,
+  monthStart: string,
+  monthEnd: string,
+): Promise<void> {
+  const oneTimeExpenses = await sql`
+    SELECT id, name, amount, section_id, card_id, auto_debit, next_due_date, notes
+    FROM expenses
+    WHERE type = 'ONE_TIME'
+      AND is_active = true
+      AND user_id = ${userId}
+      AND next_due_date IS NOT NULL
+      AND next_due_date >= ${monthStart}::date
+      AND next_due_date <= ${monthEnd}::date
+  `;
+
   for (const expense of oneTimeExpenses) {
     await sql`
       INSERT INTO monthly_expenses
@@ -206,8 +147,12 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
       ON CONFLICT (expense_id, month) DO NOTHING
     `;
   }
+}
 
-  // Insert DEBT payment instances
+async function generateDebtPaymentInstances(
+  userId: string,
+  month: string,
+): Promise<void> {
   const activeDebts = await sql`
     SELECT id, name, payment_amount, payment_frequency, payment_day,
            auto_debit, card_id, section_id, notes
@@ -228,9 +173,12 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
     section_id: string | null;
     notes: string | null;
   }[]) {
+    // Cast DB string to RecurrenceFrequency at the call site
     const dueDate = calcDueDateForMonth(
       {
-        recurrence_frequency: debt.payment_frequency,
+        recurrence_frequency:
+          (debt.payment_frequency as import("@/lib/types").RecurrenceFrequency) ??
+          null,
         recurrence_day: debt.payment_day,
         next_due_date: null,
       },
@@ -248,6 +196,20 @@ export async function generateMonthlyExpenses(month: string): Promise<void> {
       ON CONFLICT (debt_id, month) WHERE debt_id IS NOT NULL DO NOTHING
     `;
   }
+}
+
+// Generates monthly instances for a given month (idempotent — safe to call multiple times)
+export async function generateMonthlyExpenses(month: string): Promise<void> {
+  validateInput(monthSchema, month);
+  const userId = await requireAuth();
+  const [year, monthNum] = month.split("-").map(Number);
+  const monthStart = formatDueDate(year, monthNum, 1);
+  const daysInMonth = new Date(year, monthNum, 0).getDate();
+  const monthEnd = formatDueDate(year, monthNum, daysInMonth);
+
+  await generateRecurringInstances(userId, month, year, monthNum);
+  await generateOneTimeInstances(userId, month, monthStart, monthEnd);
+  await generateDebtPaymentInstances(userId, month);
 
   // Note: no revalidatePath here — this is called during page render
 }
