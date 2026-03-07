@@ -1,8 +1,8 @@
 # Backlog — Mes Finances
 
 Generated: 2026-03-04 by af-bootstrap-backlog
-Updated: 2026-03-06 by af-pm (feature guide-configuration brief + placeholder ONBOARD-REFONTE)
-Features: 21 existing (20 + guide-configuration) | Stories: 15 FIX + 15 AUDIT + 1 PLACEHOLDER | Status: READY
+Updated: 2026-03-06 by af-pm (refonte onboarding decomposee en 3 stories ONBOARD-001/002/003)
+Features: 21 existing (20 + guide-configuration) | Stories: 15 FIX + 15 AUDIT + 3 ONBOARD | Status: READY
 
 ## Priorite P0 — Features transversales actives
 
@@ -39,11 +39,19 @@ Barre fixe en bas (mobile), persistance DB, celebration a la completion, rejouab
 Brief: `epics/onboarding-auth/features/guide-configuration/feature-brief.md`
 Prochaine etape: decomposition en stories (quand priorise pour implementation).
 
-### onboarding-auth / onboarding — REFONTE A PLANIFIER (P2)
+### onboarding-auth / onboarding (refonte) — STORIES READY (3 stories, 11 pts)
 
-L'onboarding actuel doit etre retravaille (UX non pensee, detection fragile, relation avec le guide).
-Placeholder: `epics/onboarding-auth/features/onboarding/stories/ONBOARD-REFONTE.md`
-A planifier APRES le guide de configuration.
+Refonte complete de l'onboarding : carousel educatif (pas de saisie), detection DB, nettoyage ancien code, ajout etape categories au guide.
+
+| # | Story | Titre | Taille | Dep. |
+|---|-------|-------|--------|------|
+| 1 | ONBOARD-001 | Carousel educatif pour les nouveaux utilisateurs | 5 pts | - |
+| 2 | ONBOARD-002 | Detection DB et nettoyage de l'ancien onboarding | 3 pts | ONBOARD-001 |
+| 3 | ONBOARD-003 | Ajout de l'etape categories au guide de configuration | 3 pts | ONBOARD-001 |
+
+Brief: `epics/onboarding-auth/features/onboarding/feature-brief.md`
+Stories: `epics/onboarding-auth/features/onboarding/stories/ONBOARD-00*.md`
+Note: FIX-MIN-006 et FIX-MIN-007 restent des corrections independantes dans le meme dossier.
 
 ## Feature Map
 See: [feature-map.md](feature-map.md)
@@ -72,7 +80,8 @@ See: [feature-map.md](feature-map.md)
 
 1. **Immediat** : Feature `audit-remediation` (Waves 1-6 ci-dessus)
 2. **Ensuite** : Feature `guide-configuration` (decomposer en stories puis implementer)
-3. **Plus tard** : Refonte onboarding (ONBOARD-REFONTE) + nouvelles features par epic
+3. **Ensuite** : Refonte onboarding (ONBOARD-001 → 002 → 003) — 3 stories, 11 pts
+4. **Plus tard** : Nouvelles features par epic
 
 ## Quick Reference
 

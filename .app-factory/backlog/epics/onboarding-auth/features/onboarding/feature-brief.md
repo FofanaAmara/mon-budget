@@ -1,95 +1,142 @@
-# Feature Brief — Onboarding
+# Feature Brief — Onboarding (Refonte)
+
+> Status: READY
+> Epic: onboarding-auth
+> Priority: P1
+> Date: 2026-03-06
+> Replaces: ancien onboarding (overlay 3 etapes revenu/categories/objectif)
+
+---
 
 ## Section A — Fonctionnel
 
 ### Titre
-Onboarding nouvel utilisateur
+
+Onboarding educatif pour nouveaux utilisateurs
 
 ### Objectif utilisateur (Job-to-be-done)
-En tant que nouvel utilisateur, je veux etre guide pour configurer mon budget initial (revenu, categories, objectif) pour commencer a utiliser l'app rapidement.
+
+En tant que nouvel utilisateur, je veux comprendre ce que l'app peut faire pour moi avant de commencer a l'utiliser, afin d'arriver sur le tableau de bord avec une vision claire de l'outil et un guide pour me lancer.
+
+### Probleme
+
+L'onboarding actuel (overlay plein ecran en 3 etapes) souffre de plusieurs problemes :
+1. **Saisie prematuree** — L'utilisateur doit entrer des donnees (revenu, categories, objectif) avant de comprendre l'app. Le guide de configuration fait deja ce travail.
+2. **Detection fragile** — Basee sur localStorage + absence de donnees. Pas de persistence DB.
+3. **Objectif inutile** — L'etape "choisir un objectif" n'a jamais ete fonctionnellement exploitee.
+4. **Duplication avec le guide** — L'onboarding fait de la configuration, le guide fait de la configuration. Roles confus.
+
+### Proposition de valeur
+
+Un carousel educatif (ZERO saisie de donnees) qui presente les capacites de l'app en 4 slides. L'utilisateur comprend ce qu'il peut faire, puis arrive sur le tableau de bord ou le guide de configuration prend le relais pour l'accompagner dans la configuration reelle.
+
+**Separation claire des roles :**
+- Onboarding = COMPRENDRE (educatif, lecture seule)
+- Guide de configuration = FAIRE (actions concretes, saisie de donnees)
 
 ### Description
-Overlay plein ecran en 3 etapes affiche pour les nouveaux utilisateurs (aucune donnee existante + localStorage flag absent). Etape 1 : saisir son revenu et frequence de paie. Etape 2 : choisir ses categories de depenses. Etape 3 : choisir son objectif principal. Alternative : charger des donnees de demo. Option : passer la configuration.
+
+**Carousel educatif en 4 slides :**
+
+| # | Slide | Contenu |
+|---|-------|---------|
+| 1 | Bienvenue | "Prends le controle de tes finances." Message d'accueil, ton chaleureux. |
+| 2 | Suivi des depenses | Revenus (sources avec frequence), charges recurrentes (mensuelles, trimestrielles, annuelles), generation automatique des depenses du mois, ajout de depenses imprevues. |
+| 3 | Patrimoine | Projets d'epargne (objectif + progression), epargne libre, suivi des dettes avec paiements automatiques. |
+| 4 | C'est parti ! | CTA principal vers le tableau de bord. Le guide de configuration prend le relais. |
+
+**Detection par DB** — L'etat "onboarding vu" est persiste en base de donnees (pas localStorage). Cela garantit la coherence multi-appareils.
+
+**Aucune saisie de donnees** — Le carousel est purement educatif. Pas de formulaire, pas de creation de donnees. Le CTA final redirige vers le dashboard ou le guide de configuration accompagne l'utilisateur.
 
 ### Flows cles
 
-1. **Etape 1 — Revenu** : Saisir montant + choisir frequence (hebdo/bi-hebdo/mensuel) -> apercu mensualise.
-2. **Etape 2 — Categories** : Selectionner parmi 12 categories predefinies (grille 2 colonnes).
-3. **Etape 3 — Objectif** : Choisir un objectif parmi 4 options (reduire depenses, epargner plus, suivre budget, atteindre objectif).
-4. **Finaliser** : Appel completeOnboarding() -> cree les sections + revenu + localStorage flag -> redirect vers /.
-5. **Demo** : Lien "explorer avec des donnees de test" -> loadDemoData() -> redirect vers /.
-6. **Passer** : Lien "Passer la configuration" -> completeOnboarding() sans donnees -> redirect vers /.
+1. **Premiere connexion** : L'utilisateur se connecte pour la premiere fois. Le carousel s'affiche en plein ecran. Il swipe ou clique pour naviguer entre les 4 slides. Au slide 4, il clique "C'est parti !" et arrive sur le dashboard avec le guide de configuration actif.
+2. **Navigation libre** : L'utilisateur peut passer le carousel a tout moment (bouton "Passer" visible sur chaque slide). Il arrive directement sur le dashboard.
+3. **Pas de retour** : Le carousel ne se reaffiche plus apres completion ou skip. Il n'y a pas d'option "revoir l'onboarding" (le contenu est statique et educatif, pas utile a revoir).
 
 ### Criteres d'acceptation (niveau feature)
 
-**AC-1 : Detection nouvel utilisateur**
-- Given un utilisateur vient de s'inscrire (aucune donnee ET pas de localStorage flag)
-- When il arrive sur la page d'accueil
-- Then l'overlay onboarding s'affiche en plein ecran
+**AC-F1 : Carousel educatif sans saisie**
+- Given un nouvel utilisateur qui n'a jamais vu l'onboarding
+- When il se connecte pour la premiere fois
+- Then un carousel plein ecran s'affiche avec 4 slides educatives
+- And aucun formulaire ou champ de saisie n'est present
 
-**AC-2 : Navigation 3 etapes**
-- Given l'onboarding est affiche
-- When l'utilisateur navigue entre les etapes
-- Then il peut aller en avant (Suivant) et en arriere (Retour)
-- And chaque etape est : 1. Revenu 2. Categories 3. Objectif
+**AC-F2 : Detection par DB**
+- Given l'onboarding a ete complete ou skip
+- When l'utilisateur se reconnecte (meme appareil ou autre)
+- Then l'onboarding ne reapparait plus
+- And la detection ne depend pas de localStorage
 
-**AC-3 : Mensualisation du revenu**
-- Given l'utilisateur saisit un revenu
-- When la frequence est "hebdo" → montant * 4.33
-- When la frequence est "bi-hebdo" → montant * 2.17
-- When la frequence est "mensuel" → montant * 1
-- Then l'apercu mensualise s'affiche en temps reel
-- **Edge case** : le multiplicateur 2.17 (onboarding) vs 26/12=2.1667 (generation mensuelle) — incoherence
+**AC-F3 : Transition vers le guide**
+- Given l'utilisateur termine le carousel (CTA "C'est parti !")
+- When il arrive sur le dashboard
+- Then le guide de configuration est visible et l'accompagne pour les prochaines etapes
 
-**AC-4 : Creation des sections**
-- Given l'utilisateur selectionne des categories
-- When il finalise l'onboarding
-- Then les categories selectionnees sont creees comme sections
-- And les sections par defaut (creees par ensureDefaultSections) sont supprimees et remplacees
+**AC-F4 : Nettoyage de l'ancien code**
+- Given la refonte est deployee
+- When on inspecte le code
+- Then l'ancien composant Onboarding.tsx et ses actions sont supprimes
+- And la detection localStorage est supprimee
+- And aucune regression n'est introduite sur les fonctionnalites existantes
 
-**AC-5 : Alternative demo**
-- Given l'onboarding est affiche
-- When l'utilisateur clique "explorer avec des donnees de test"
-- Then loadDemoData est appele et l'app se recharge
+### Exclusions explicites
 
-**AC-6 : Passer la configuration**
-- Given l'onboarding est affiche
-- When l'utilisateur clique "Passer la configuration"
-- Then completeOnboarding est appele sans donnees significatives
-- And le localStorage flag est pose
-- And l'utilisateur est redirige vers /
-
-**AC-7 : Onboarding ne s'affiche qu'une fois**
-- Given l'onboarding a ete complete (localStorage flag = true)
-- When l'utilisateur revient sur la page d'accueil
-- Then l'onboarding ne s'affiche plus
-
-### Stories (squelette)
-1. Detection nouvel utilisateur
-2. Etape 1 : revenu
-3. Etape 2 : categories
-4. Etape 3 : objectif
-5. Finalisation (creation donnees)
-6. Alternative demo
+| Exclu | Raison |
+|-------|--------|
+| Saisie de donnees dans l'onboarding | Le guide de configuration couvre ce besoin. Pas de duplication. |
+| "Explorer avec donnees de test" dans l'onboarding | Reste accessible dans /parametres pour usage dev. Pas dans le flow utilisateur. |
+| Etape "Choisir un objectif" | Jamais exploitee fonctionnellement. Supprimee. |
+| Video educative | Notee pour la landing page future. Pas dans l'onboarding in-app. |
+| Option "Revoir l'onboarding" | Contenu statique educatif, pas utile a revoir. Le guide est rejouable, pas l'onboarding. |
+| Modification du guide de configuration existant (4 etapes) | Traitee dans ONBOARD-003 comme story specifique pour l'ajout de l'etape categories. |
 
 ### Dependances
-- Depends on : Authentification, Gestion sections (creation)
-- Used by : Tableau de bord (affichage conditionnel)
+
+- **Depend de** : Authentification (utilisateur connecte), Guide de configuration (doit exister pour le relais)
+- **Utilise par** : Tableau de bord (affichage conditionnel), Guide de configuration (prend le relais apres)
+
+### Stories
+
+| ID | Titre | Tags | Dep. |
+|----|-------|------|------|
+| ONBOARD-001 | Carousel educatif pour les nouveaux utilisateurs | [frontend, backend, data] | - |
+| ONBOARD-002 | Detection DB et nettoyage de l'ancien onboarding | [backend, data, frontend] | ONBOARD-001 |
+| ONBOARD-003 | Ajout de l'etape categories au guide de configuration | [frontend, backend, data] | ONBOARD-001 |
 
 ---
 
-## Section B — Technique
+## Section B — Technique (considerations, pas prescriptions)
 
-### Source files
-- `components/Onboarding.tsx`
-- `lib/actions/onboarding.ts` : completeOnboarding
-- `lib/actions/demo-data.ts` : loadDemoData
+### Fichiers a creer
 
-### Tables DB
-- sections (creation depuis categories selectionnees)
-- incomes (creation du revenu)
+- Nouveau composant carousel (slides educatives, navigation, CTA)
+- Migration DB pour la table/colonne de tracking "onboarding vu"
 
-### Notes techniques
-- Detection : isNewUser = !(await hasUserData()) && !localStorage('mes-finances-onboarding-done').
-- L'overlay est z-index 9999, position fixed, couvre tout l'ecran.
-- La mensualisation utilise : weekly * 4.33, biweekly * 2.17, monthly * 1.
+### Fichiers a modifier
+
+- `app/layout.tsx` ou logique de routing — condition d'affichage du carousel
+- `lib/actions/setup-guide.ts` — ajout de la detection de l'etape "categories" (ONBOARD-003)
+- `components/setup-guide/SetupGuide.tsx` — ajout de l'etape "categories" dans STEPS_CONFIG (ONBOARD-003)
+
+### Fichiers a supprimer (ONBOARD-002)
+
+- `components/Onboarding.tsx` — ancien composant overlay 3 etapes
+- `lib/actions/onboarding.ts` — ancienne action completeOnboarding
+- `lib/actions/demo-data.ts` — si exclusivement liee a l'onboarding (a verifier)
+- References localStorage `mes-finances-onboarding-done`
+
+### Changements DB
+
+- **Table ou colonne** pour tracker "onboarding vu" par utilisateur (timestamp nullable)
+- **Modification de la query setup-guide** pour detecter l'existence de sections/categories (ONBOARD-003)
+- Operations : ADD COLUMN ou CREATE TABLE (SAFE), pas de migration destructive
+
+### Risques identifies
+
+| Risque | Impact | Mitigation |
+|--------|--------|------------|
+| Ancien code onboarding reference ailleurs | Moyen | ONBOARD-002 inclut un nettoyage exhaustif de toutes les references |
+| Guide de configuration deja en place avec 4 etapes | Faible | ONBOARD-003 ajoute l'etape 2 et decale les suivantes, verification de non-regression |
+| localStorage residuel chez les utilisateurs existants | Faible | Le nettoyage de localStorage peut etre fait cote client au premier chargement |

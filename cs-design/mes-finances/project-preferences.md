@@ -1376,3 +1376,41 @@ Palettes de status:
   5. Confetti burst (1200ms)
   6. Text slide-up-fade (400ms, delay 400ms)
   7. After 3-5s: auto-collapse with slide-down (400ms)
+
+### Carousel educatif onboarding
+
+**Pattern: Full-screen onboarding carousel**
+- Position: fixed, inset 0, z-index 9999 (above everything)
+- Track: horizontal flex, 100% width per slide, transition 580ms cubic-bezier(0.22, 1, 0.36, 1)
+- Touch/swipe: threshold 20% viewport width, track follows finger (no transition during drag)
+- Keyboard: arrow left/right
+
+**Pattern: Carousel navigation bar**
+- Fixed bottom, z-index above track
+- Layout: [Skip button] [Dots] [Next circle button]
+- Skip button: 14px / 600, ghost style (no bg, no border), slate-400 text
+- Dots: 8px circles, slate-200 default. Active = pill shape (28px wide, teal-700). Transition 350ms.
+- Next button: 44px circle, teal-700 bg, white arrow icon. Hidden on last slide.
+- Dark variant: bg teal-800, dots and text become white/rgba. Activates on slides with teal background.
+- Safe area: padding-bottom uses env(safe-area-inset-bottom)
+
+**Pattern: Alternating slide backgrounds (onboarding-specific)**
+- Sequence: teal-700 -> white -> teal-50 -> teal-700
+- Creates visual rhythm without illustration (Typography Monument compatible)
+- Nav bar dark/light syncs with slide background
+
+**Pattern: Stagger word reveal (hero/onboarding moments only)**
+- Each word of headline appears with translateY(20px) + opacity 0->1
+- Duration: 500ms per word, cubic-bezier(0.22, 1, 0.36, 1)
+- Stagger delay: ~120ms between words
+- Reserve for high-impact moments only (onboarding, landing page hero)
+
+**Animation intentions for this feature:**
+- Track slide: slide-horizontal 580ms cubic-bezier(0.22, 1, 0.36, 1)
+- Slide 1 words: stagger(wordReveal, delay=120ms), starts at 200ms
+- Slide 1 subtitle: fade-in 600ms, delay 900ms
+- Slide 2-3 feature blocks: stagger(slide-up-fade, delay=100ms), starts at 150ms
+- Slide 4 subtitle: fade-in 500ms, delay 300ms
+- Slide 4 CTA: scale-in 500ms spring cubic-bezier(0.34, 1.56, 0.64, 1), delay 500ms
+- Dots: width + background 350ms
+- Nav background: 580ms color transition synced with track

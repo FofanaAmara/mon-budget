@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding -- Mes Finances</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ========================================
+   DESIGN TOKENS (from project-preferences)
+   ======================================== */
+:root {
+  --teal-700: #0F766E;
+  --teal-800: #115E59;
+  --teal-600: #0D9488;
+  --teal-50: #F0FDFA;
+  --amber-500: #F59E0B;
+  --amber-600: #D97706;
+  --amber-400: #FBBF24;
+  --amber-100: #FEF3C7;
+  --slate-900: #0F172A;
+  --slate-700: #334155;
+  --slate-500: #64748B;
+  --slate-400: #94A3B8;
+  --slate-300: #CBD5E1;
+  --slate-200: #E2E8F0;
+  --slate-100: #F1F5F9;
+  --slate-50: #FAFBFC;
+  --white: #FFFFFF;
+  --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --shadow-sm: 0 1px 2px rgba(15, 118, 110, 0.05);
+  --shadow-md: 0 4px 12px rgba(15, 118, 110, 0.08);
+  --shadow-lg: 0 8px 24px rgba(15, 118, 110, 0.12);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+}
+
+::selection {
+  background: rgba(15, 118, 110, 0.15);
+  color: var(--slate-900);
+}
+
+/* ========================================
+   RESET & BASE
+   ======================================== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--white);
+  color: var(--slate-900);
+}
+
+/* ========================================
+   CAROUSEL CONTAINER
+   ======================================== */
+.onboarding {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+}
+
+.carousel-viewport {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.carousel-track {
+  display: flex;
+  height: 100%;
+  transition: transform 580ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.carousel-track.dragging {
+  transition: none;
+}
+
+/* ========================================
+   SLIDE BASE
+   ======================================== */
+.slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ========================================
+   SLIDE 1 -- BIENVENUE
+   Typography Monument: The tagline IS the architecture.
+   Monumental weight. Intimate tone. Deep teal background.
+   ======================================== */
+
+/* ANIMATION: slide-1-entrance: stagger(fade-up, delay=120ms) on headline words */
+/* ANIMATION: slide-1-subtitle: fade-in after 600ms */
+
+.slide--welcome {
+  background: var(--teal-700);
+  color: var(--white);
+  padding: 0 32px;
+  justify-content: flex-end;
+  padding-bottom: 18vh;
+}
+
+.slide--welcome .slide-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 20px;
+}
+
+.slide--welcome .slide-headline {
+  font-size: clamp(2.8rem, 12vw, 5.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  margin-bottom: 24px;
+}
+
+.slide--welcome .slide-headline .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: wordReveal 500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.slide--welcome .slide-headline .word:nth-child(1) { animation-delay: 200ms; }
+.slide--welcome .slide-headline .word:nth-child(2) { animation-delay: 320ms; }
+.slide--welcome .slide-headline .word:nth-child(3) { animation-delay: 440ms; }
+.slide--welcome .slide-headline .word:nth-child(4) { animation-delay: 560ms; }
+.slide--welcome .slide-headline .word:nth-child(5) { animation-delay: 680ms; }
+
+.slide--welcome .slide-headline .line-break {
+  display: block;
+}
+
+.slide--welcome .slide-subtitle {
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 320px;
+  opacity: 0;
+  animation: fadeIn 600ms ease forwards;
+  animation-delay: 900ms;
+}
+
+/* Decorative typographic element -- a monumental period */
+.slide--welcome::before {
+  content: '.';
+  position: absolute;
+  top: 8vh;
+  right: 24px;
+  font-size: clamp(10rem, 40vw, 24rem);
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.04);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* ========================================
+   SLIDE 2 -- SUIVI DES DEPENSES
+   Typography Monument: The feature names are the visual.
+   Stacked typographic blocks with weight contrast.
+   ======================================== */
+
+/* ANIMATION: slide-2-entrance: stagger(slide-up-fade, delay=80ms) on feature blocks */
+
+.slide--depenses {
+  background: var(--white);
+  padding: 0 28px;
+  justify-content: center;
+}
+
+.slide--depenses .slide-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal-700);
+  margin-bottom: 16px;
+}
+
+.slide--depenses .slide-title {
+  font-size: clamp(1.8rem, 7vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--slate-900);
+  margin-bottom: 40px;
+}
+
+.feature-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.feature-block {
+  padding: 16px 0;
+  border-top: 1px solid var(--slate-100);
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.feature-block:last-child {
+  border-bottom: 1px solid var(--slate-100);
+}
+
+.slide.active .feature-block {
+  animation: slideUpFade 400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.slide.active .feature-block:nth-child(1) { animation-delay: 150ms; }
+.slide.active .feature-block:nth-child(2) { animation-delay: 250ms; }
+.slide.active .feature-block:nth-child(3) { animation-delay: 350ms; }
+.slide.active .feature-block:nth-child(4) { animation-delay: 450ms; }
+
+.feature-block .feature-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--slate-900);
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.feature-block .feature-desc {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--slate-500);
+  line-height: 1.5;
+}
+
+/* ========================================
+   SLIDE 3 -- PATRIMOINE
+   Typography Monument: Big number as anchor.
+   Teal-50 background for visual rhythm variation.
+   ======================================== */
+
+/* ANIMATION: slide-3-entrance: count-up on the big number + stagger on blocks */
+
+.slide--patrimoine {
+  background: var(--teal-50);
+  padding: 0 28px;
+  justify-content: center;
+}
+
+.slide--patrimoine .slide-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal-700);
+  margin-bottom: 16px;
+}
+
+.slide--patrimoine .slide-title {
+  font-size: clamp(1.8rem, 7vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--slate-900);
+  margin-bottom: 40px;
+}
+
+.patrimoine-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.patrimoine-block {
+  padding: 16px 0;
+  border-top: 1px solid rgba(15, 118, 110, 0.08);
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.patrimoine-block:last-child {
+  border-bottom: 1px solid rgba(15, 118, 110, 0.08);
+}
+
+.slide.active .patrimoine-block {
+  animation: slideUpFade 400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.slide.active .patrimoine-block:nth-child(1) { animation-delay: 150ms; }
+.slide.active .patrimoine-block:nth-child(2) { animation-delay: 250ms; }
+.slide.active .patrimoine-block:nth-child(3) { animation-delay: 350ms; }
+
+.patrimoine-block .feature-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--slate-900);
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.patrimoine-block .feature-desc {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--slate-500);
+  line-height: 1.5;
+}
+
+/* ========================================
+   SLIDE 4 -- C'EST PARTI !
+   Typography Monument: Amber CTA as the monument.
+   Full teal background, celebration energy.
+   ======================================== */
+
+/* ANIMATION: slide-4-entrance: scale-in on CTA button with spring */
+/* ANIMATION: slide-4-subtitle: fade-in after 400ms */
+
+.slide--go {
+  background: var(--teal-700);
+  color: var(--white);
+  padding: 0 32px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.slide--go .slide-number {
+  font-size: clamp(6rem, 25vw, 12rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.85;
+  color: rgba(255, 255, 255, 0.06);
+  margin-bottom: -20px;
+  position: relative;
+  z-index: 0;
+}
+
+.slide--go .slide-headline {
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.slide--go .slide-subtitle {
+  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 300px;
+  margin-bottom: 40px;
+  opacity: 0;
+}
+
+.slide--go.active .slide-subtitle {
+  animation: fadeIn 500ms ease forwards;
+  animation-delay: 300ms;
+}
+
+.btn-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 36px;
+  background: var(--amber-500);
+  color: var(--slate-900);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+  position: relative;
+  z-index: 1;
+  transform: scale(0.9);
+  opacity: 0;
+}
+
+.slide--go.active .btn-go {
+  animation: scaleIn 500ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: 500ms;
+}
+
+.btn-go:hover {
+  background: var(--amber-600);
+  transform: translateY(-2px) scale(1);
+  box-shadow: 0 8px 28px rgba(245, 158, 11, 0.4);
+}
+
+.btn-go:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.btn-go svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s ease;
+}
+
+.btn-go:hover svg {
+  transform: translateX(3px);
+}
+
+/* ========================================
+   NAVIGATION CONTROLS
+   ======================================== */
+.carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+  background: var(--white);
+  position: relative;
+  z-index: 10;
+  transition: background 580ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.carousel-nav.dark {
+  background: var(--teal-800);
+}
+
+/* Skip button */
+.btn-skip {
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--slate-400);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 4px;
+  letter-spacing: -0.01em;
+  transition: color 0.15s ease;
+  min-width: 60px;
+  text-align: left;
+}
+
+.btn-skip:hover {
+  color: var(--slate-600);
+}
+
+.carousel-nav.dark .btn-skip {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.carousel-nav.dark .btn-skip:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Dot indicators */
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--slate-200);
+  transition: all 350ms cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+}
+
+.dot.active {
+  width: 28px;
+  border-radius: 100px;
+  background: var(--teal-700);
+}
+
+.carousel-nav.dark .dot {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.carousel-nav.dark .dot.active {
+  background: var(--white);
+}
+
+/* Next button */
+.btn-next {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--teal-700);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 44px;
+}
+
+.btn-next svg {
+  width: 20px;
+  height: 20px;
+  color: var(--white);
+  transition: transform 0.2s ease;
+}
+
+.btn-next:hover {
+  background: var(--teal-800);
+  transform: scale(1.05);
+}
+
+.btn-next:active {
+  transform: scale(0.95);
+}
+
+.btn-next:hover svg {
+  transform: translateX(2px);
+}
+
+.carousel-nav.dark .btn-next {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.carousel-nav.dark .btn-next:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Hide next button on last slide */
+.btn-next.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ========================================
+   KEYFRAME ANIMATIONS
+   ======================================== */
+@keyframes wordReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+@keyframes slideUpFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ========================================
+   DESKTOP ADAPTATION (>= 768px)
+   ======================================== */
+@media (min-width: 768px) {
+
+  .slide {
+    padding: 0 80px;
+  }
+
+  /* Slide 1 -- Welcome: center content, bigger type */
+  .slide--welcome {
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 10vw;
+    padding-bottom: 0;
+  }
+
+  .slide--welcome .slide-headline {
+    font-size: clamp(4rem, 8vw, 7rem);
+    max-width: 700px;
+  }
+
+  .slide--welcome .slide-subtitle {
+    font-size: 1.2rem;
+    max-width: 440px;
+  }
+
+  .slide--welcome::before {
+    font-size: clamp(16rem, 30vw, 32rem);
+    top: -5vh;
+    right: 5vw;
+  }
+
+  /* Slide 2 -- Depenses: two-column layout */
+  .slide--depenses {
+    flex-direction: row;
+    align-items: center;
+    gap: 80px;
+    padding: 0 8vw;
+  }
+
+  .slide--depenses .slide-header-group {
+    flex: 0 0 auto;
+    max-width: 320px;
+  }
+
+  .slide--depenses .slide-title {
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    margin-bottom: 0;
+  }
+
+  .slide--depenses .feature-stack {
+    flex: 1;
+    max-width: 480px;
+  }
+
+  /* Slide 3 -- Patrimoine: two-column layout */
+  .slide--patrimoine {
+    flex-direction: row;
+    align-items: center;
+    gap: 80px;
+    padding: 0 8vw;
+  }
+
+  .slide--patrimoine .slide-header-group {
+    flex: 0 0 auto;
+    max-width: 320px;
+  }
+
+  .slide--patrimoine .slide-title {
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    margin-bottom: 0;
+  }
+
+  .slide--patrimoine .patrimoine-grid {
+    flex: 1;
+    max-width: 480px;
+  }
+
+  /* Slide 4 -- Go: bigger everything */
+  .slide--go {
+    padding: 0 80px;
+  }
+
+  .slide--go .slide-number {
+    font-size: clamp(10rem, 20vw, 18rem);
+    margin-bottom: -40px;
+  }
+
+  .slide--go .slide-headline {
+    font-size: clamp(3rem, 5vw, 5rem);
+  }
+
+  .slide--go .slide-subtitle {
+    font-size: 1.15rem;
+    max-width: 400px;
+  }
+
+  .btn-go {
+    padding: 20px 44px;
+    font-size: 18px;
+  }
+
+  /* Nav bar */
+  .carousel-nav {
+    padding: 20px 48px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .dot.active {
+    width: 36px;
+  }
+
+  .btn-next {
+    width: 48px;
+    height: 48px;
+  }
+
+  .btn-skip {
+    font-size: 15px;
+  }
+}
+
+/* ========================================
+   LARGE DESKTOP (>= 1200px)
+   ======================================== */
+@media (min-width: 1200px) {
+
+  .slide--welcome {
+    padding: 0 12vw;
+  }
+
+  .slide--welcome .slide-headline {
+    font-size: clamp(5rem, 7vw, 8rem);
+    max-width: 800px;
+  }
+
+  .slide--depenses,
+  .slide--patrimoine {
+    padding: 0 12vw;
+    gap: 120px;
+  }
+
+  .feature-block,
+  .patrimoine-block {
+    padding: 20px 0;
+  }
+
+  .feature-block .feature-name,
+  .patrimoine-block .feature-name {
+    font-size: 18px;
+  }
+
+  .feature-block .feature-desc,
+  .patrimoine-block .feature-desc {
+    font-size: 15px;
+  }
+}
+
+/* ========================================
+   SMALL MOBILE (320px)
+   ======================================== */
+@media (max-width: 374px) {
+  .slide {
+    padding: 0 20px;
+  }
+
+  .slide--welcome {
+    padding: 0 20px;
+    padding-bottom: 14vh;
+  }
+
+  .slide--welcome .slide-headline {
+    font-size: 2.4rem;
+  }
+
+  .slide--depenses,
+  .slide--patrimoine {
+    padding: 0 20px;
+  }
+
+  .slide--go {
+    padding: 0 20px;
+  }
+
+  .carousel-nav {
+    padding: 12px 16px;
+  }
+
+  .btn-go {
+    padding: 16px 28px;
+    font-size: 15px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ANIMATION: page-entrance: fade-in 300ms on mount -->
+<!-- ANIMATION: carousel-transition: slide-horizontal 580ms cubic-bezier(0.22, 1, 0.36, 1) -->
+<!-- ANIMATION: dot-indicator: width transition 350ms, background transition 350ms -->
+
+<div class="onboarding" role="region" aria-label="Presentation de Mes Finances" aria-roledescription="carousel">
+
+  <div class="carousel-viewport">
+    <div class="carousel-track" id="carouselTrack">
+
+      <!-- ====== SLIDE 1: BIENVENUE ====== -->
+      <div class="slide slide--welcome active" role="group" aria-roledescription="slide" aria-label="Slide 1 sur 4: Bienvenue">
+        <p class="slide-label">Mes Finances</p>
+        <h1 class="slide-headline">
+          <span class="word">Prends</span>
+          <span class="word">le</span>
+          <span class="word">controle</span>
+          <span class="line-break"></span>
+          <span class="word">de</span>
+          <span class="word">tes&nbsp;finances.</span>
+        </h1>
+        <p class="slide-subtitle">Tout ce dont tu as besoin pour voir clair dans ton budget. Simplement.</p>
+      </div>
+
+      <!-- ====== SLIDE 2: SUIVI DES DEPENSES ====== -->
+      <div class="slide slide--depenses" role="group" aria-roledescription="slide" aria-label="Slide 2 sur 4: Suivi des depenses">
+        <div class="slide-header-group">
+          <p class="slide-eyebrow">Depenses</p>
+          <h2 class="slide-title">Suis chaque dollar, sans effort.</h2>
+        </div>
+        <div class="feature-stack">
+          <div class="feature-block">
+            <p class="feature-name">Revenus recurrents</p>
+            <p class="feature-desc">Salaire, pigiste, allocations -- avec leur frequence.</p>
+          </div>
+          <div class="feature-block">
+            <p class="feature-name">Charges fixes</p>
+            <p class="feature-desc">Loyer, abonnements, assurances. Mensuelles, trimestrielles ou annuelles.</p>
+          </div>
+          <div class="feature-block">
+            <p class="feature-name">Generation automatique</p>
+            <p class="feature-desc">Tes depenses du mois se creent toutes seules a partir de tes modeles.</p>
+          </div>
+          <div class="feature-block">
+            <p class="feature-name">Depenses imprevues</p>
+            <p class="feature-desc">Ajoute ce qui sort du cadre en quelques secondes.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== SLIDE 3: PATRIMOINE ====== -->
+      <div class="slide slide--patrimoine" role="group" aria-roledescription="slide" aria-label="Slide 3 sur 4: Patrimoine">
+        <div class="slide-header-group">
+          <p class="slide-eyebrow">Patrimoine</p>
+          <h2 class="slide-title">Construis, rembourse, progresse.</h2>
+        </div>
+        <div class="patrimoine-grid">
+          <div class="patrimoine-block">
+            <p class="feature-name">Projets d'epargne</p>
+            <p class="feature-desc">Definis un objectif, vois ta progression en temps reel.</p>
+          </div>
+          <div class="patrimoine-block">
+            <p class="feature-name">Epargne libre</p>
+            <p class="feature-desc">Pas de projet precis? Mets de cote quand meme.</p>
+          </div>
+          <div class="patrimoine-block">
+            <p class="feature-name">Suivi des dettes</p>
+            <p class="feature-desc">Paiements automatiques, solde restant, date de liberation.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== SLIDE 4: C'EST PARTI ! ====== -->
+      <div class="slide slide--go" role="group" aria-roledescription="slide" aria-label="Slide 4 sur 4: C'est parti">
+        <div class="slide-number" aria-hidden="true">4</div>
+        <h2 class="slide-headline">C'est parti.</h2>
+        <p class="slide-subtitle">Ton tableau de bord t'attend. Le guide de configuration va t'accompagner pas a pas.</p>
+        <button class="btn-go" aria-label="Acceder au tableau de bord">
+          C'est parti !
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Navigation bar -->
+  <nav class="carousel-nav dark" id="carouselNav" aria-label="Navigation du carousel">
+    <button class="btn-skip" id="btnSkip" aria-label="Passer la presentation">Passer</button>
+
+    <div class="dots" role="tablist" aria-label="Slides">
+      <button class="dot active" role="tab" aria-selected="true" aria-label="Slide 1" data-slide="0"></button>
+      <button class="dot" role="tab" aria-selected="false" aria-label="Slide 2" data-slide="1"></button>
+      <button class="dot" role="tab" aria-selected="false" aria-label="Slide 3" data-slide="2"></button>
+      <button class="dot" role="tab" aria-selected="false" aria-label="Slide 4" data-slide="3"></button>
+    </div>
+
+    <button class="btn-next" id="btnNext" aria-label="Slide suivante">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </nav>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  const track = document.getElementById('carouselTrack');
+  const nav = document.getElementById('carouselNav');
+  const btnSkip = document.getElementById('btnSkip');
+  const btnNext = document.getElementById('btnNext');
+  const dots = document.querySelectorAll('.dot');
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+
+  let current = 0;
+  let startX = 0;
+  let currentX = 0;
+  let isDragging = false;
+
+  // Slides that need dark nav
+  const darkSlides = [0, 3];
+
+  function goTo(index) {
+    if (index < 0 || index >= totalSlides) return;
+    current = index;
+
+    // Move track
+    track.style.transform = `translateX(-${current * 100}%)`;
+
+    // Update dots
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === current);
+      dot.setAttribute('aria-selected', i === current ? 'true' : 'false');
+    });
+
+    // Update slide active state (for entrance animations)
+    slides.forEach((slide, i) => {
+      if (i === current) {
+        slide.classList.add('active');
+      }
+      // Don't remove active from previous slides -- keep their animations visible
+    });
+
+    // Dark/light nav
+    if (darkSlides.includes(current)) {
+      nav.classList.add('dark');
+    } else {
+      nav.classList.remove('dark');
+    }
+
+    // Hide next button on last slide
+    btnNext.classList.toggle('hidden', current === totalSlides - 1);
+  }
+
+  // Button events
+  btnNext.addEventListener('click', () => goTo(current + 1));
+
+  btnSkip.addEventListener('click', () => {
+    // In production: navigate to dashboard
+    alert('Navigation vers le tableau de bord');
+  });
+
+  document.querySelector('.btn-go').addEventListener('click', () => {
+    // In production: mark onboarding complete + navigate to dashboard
+    alert('Onboarding termine ! Navigation vers le tableau de bord.');
+  });
+
+  // Dot clicks
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      goTo(parseInt(dot.dataset.slide));
+    });
+  });
+
+  // Touch/swipe support
+  const viewport = document.querySelector('.carousel-viewport');
+
+  viewport.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+    track.classList.add('dragging');
+  }, { passive: true });
+
+  viewport.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    currentX = e.touches[0].clientX;
+    const diff = currentX - startX;
+    const offset = -(current * 100) + (diff / viewport.offsetWidth * 100);
+    track.style.transform = `translateX(${offset}%)`;
+  }, { passive: true });
+
+  viewport.addEventListener('touchend', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    track.classList.remove('dragging');
+
+    const diff = currentX - startX;
+    const threshold = viewport.offsetWidth * 0.2;
+
+    if (diff < -threshold && current < totalSlides - 1) {
+      goTo(current + 1);
+    } else if (diff > threshold && current > 0) {
+      goTo(current - 1);
+    } else {
+      goTo(current); // snap back
+    }
+
+    startX = 0;
+    currentX = 0;
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') goTo(current + 1);
+    if (e.key === 'ArrowLeft') goTo(current - 1);
+  });
+
+  // Initialize first slide
+  goTo(0);
+
+})();
+</script>
+
+</body>
+</html>
