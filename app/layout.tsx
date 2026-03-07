@@ -43,7 +43,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   // Safe fetch — returns null if not authenticated
-  // Safe fetch — returns null if not authenticated
   const guideData = await getOrInitSetupGuideData().catch(() => null);
 
   return (
