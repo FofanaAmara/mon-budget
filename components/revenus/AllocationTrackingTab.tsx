@@ -858,7 +858,7 @@ export default function AllocationTrackingTab({
                   marginBottom: "20px",
                 }}
               >
-                Ce mois uniquement — le gabarit dans les Réglages reste
+                Ce mois uniquement — le modèle récurrent dans les Réglages reste
                 inchangé.
               </p>
               <div style={{ marginBottom: "16px" }}>

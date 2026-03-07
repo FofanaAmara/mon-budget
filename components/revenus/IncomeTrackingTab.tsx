@@ -526,7 +526,7 @@ export default function IncomeTrackingTab({
                   marginBottom: "20px",
                 }}
               >
-                Ce mois uniquement — le gabarit dans les réglages reste
+                Ce mois uniquement — le modèle récurrent dans les réglages reste
                 inchangé.
               </p>
               <div style={{ marginBottom: "20px" }}>

@@ -34,7 +34,7 @@ const STEPS_CONFIG = [
     title: "Ajouter un revenu r\u00e9current",
     description:
       "Ton salaire ou toute entr\u00e9e d\u2019argent r\u00e9guli\u00e8re.",
-    href: "/revenus",
+    href: "/parametres/revenus",
   },
   {
     id: "expense" as const,

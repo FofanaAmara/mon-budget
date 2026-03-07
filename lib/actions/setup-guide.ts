@@ -140,14 +140,16 @@ function computeVisibility(
 // ── Server action (mutation) ─────────────────────────────────────────────────
 
 /**
- * Marks the setup guide as completed — sets completed_at to NOW().
- * Called when all steps are detected as complete (celebration trigger).
+ * Marks the setup guide as completed AND auto-dismisses it.
+ * Sets both completed_at and dismissed_at to NOW() so the guide
+ * hides on the next navigation. The celebration CTA still works
+ * on the current page because isDismissed is local React state.
  */
 export async function completeSetupGuide(): Promise<void> {
   const userId = await requireAuth();
   await sql`
     UPDATE setup_guide
-    SET completed_at = NOW()
+    SET completed_at = NOW(), dismissed_at = NOW()
     WHERE user_id = ${userId} AND completed_at IS NULL
   `;
   revalidatePath("/", "layout");

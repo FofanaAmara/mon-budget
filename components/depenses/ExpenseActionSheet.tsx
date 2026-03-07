@@ -568,8 +568,9 @@ export default function ExpenseActionSheet({
               }}
             />
             <p style={hintStyle}>
-              Modification pour {currentMonthLabel} uniquement. Le gabarit
-              restera à ${Number(expense.amount).toLocaleString("fr-CA")}.
+              Modification pour {currentMonthLabel} uniquement. Le modèle
+              récurrent restera à $
+              {Number(expense.amount).toLocaleString("fr-CA")}.
             </p>
           </div>
         </div>

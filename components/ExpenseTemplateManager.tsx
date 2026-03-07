@@ -248,7 +248,7 @@ export default function ExpenseTemplateManager({
               color: "var(--text-tertiary)",
             }}
           >
-            Gabarits
+            Modèles récurrents
           </span>
           <button
             onClick={() => {
@@ -286,7 +286,7 @@ export default function ExpenseTemplateManager({
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-            Ajouter une charge
+            Ajouter une dépense récurrente
           </button>
         </div>
 
@@ -530,7 +530,7 @@ export default function ExpenseTemplateManager({
           setShowModal(true);
         }}
         className="fab fab-mobile-only"
-        aria-label="Ajouter une charge"
+        aria-label="Ajouter une dépense récurrente"
       >
         <svg
           width="24"
