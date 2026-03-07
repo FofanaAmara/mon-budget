@@ -169,6 +169,11 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
 
       const timer = setTimeout(() => {
         setShowCelebration(true);
+        // Auto-dismiss in DB so the guide won't reappear on next navigation.
+        // The CTA remains as an early-exit option on the current page.
+        startTransition(async () => {
+          await dismissSetupGuide();
+        });
       }, CELEBRATION_DELAY_MS);
 
       return () => clearTimeout(timer);
