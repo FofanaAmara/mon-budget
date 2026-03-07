@@ -145,7 +145,7 @@ export default function DepensesTrackingClient({
         <button
           onClick={() => setAdhocModal(true)}
           aria-label="Ajouter une dépense imprévue"
-          className="fab fab-mobile-only"
+          className="fab"
         >
           <svg
             width="26"
