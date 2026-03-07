@@ -26,6 +26,8 @@ import { currentMonth } from "@/lib/utils";
 import AccueilClient from "@/components/AccueilClient";
 import ClaimBanner from "@/components/ClaimBanner";
 import NotificationPermission from "@/components/NotificationPermission";
+import OnboardingCarouselWrapper from "@/components/onboarding/OnboardingCarouselWrapper";
+import { hasSeenOnboarding } from "@/lib/actions/onboarding-carousel";
 
 type PageProps = {
   searchParams: Promise<{ month?: string }>;
@@ -37,6 +39,12 @@ export default async function AccueilPage({ searchParams }: PageProps) {
 
   // Ensure new users have default sections
   await ensureDefaultSections();
+
+  // Onboarding carousel: check if user has seen it (DB-based, not localStorage)
+  const onboardingSeen = await hasSeenOnboarding();
+  if (!onboardingSeen) {
+    return <OnboardingCarouselWrapper />;
+  }
 
   // Check for orphaned data (pre-auth migration)
   const showClaimBanner = await hasOrphanedData();
