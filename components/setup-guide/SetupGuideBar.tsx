@@ -17,7 +17,7 @@
  *
  * Props:
  *   - nextStepTitle: text for the next uncompleted step title
- *   - completedCount: 0–4
+ *   - completedCount: 0–N
  *   - isExpanded: controls chevron rotation (rotated when sheet is open)
  *   - onClick: expand handler
  */
@@ -27,6 +27,7 @@ import SetupGuideProgressRing from "./SetupGuideProgressRing";
 type Props = {
   nextStepTitle: string;
   completedCount: number;
+  totalSteps: number;
   isExpanded: boolean;
   onClick: () => void;
 };
@@ -34,6 +35,7 @@ type Props = {
 export default function SetupGuideBar({
   nextStepTitle,
   completedCount,
+  totalSteps,
   isExpanded,
   onClick,
 }: Props) {
@@ -60,7 +62,7 @@ export default function SetupGuideBar({
         <div
           role="button"
           aria-expanded={isExpanded}
-          aria-label={`Guide de configuration, ${completedCount} sur 4 étapes complétées. Étape suivante : ${nextStepTitle}`}
+          aria-label={`Guide de configuration, ${completedCount} sur ${totalSteps} étapes complétées. Étape suivante : ${nextStepTitle}`}
           tabIndex={0}
           onClick={onClick}
           onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onClick()}
@@ -92,7 +94,7 @@ export default function SetupGuideBar({
         >
           <SetupGuideProgressRing
             completed={completedCount}
-            total={4}
+            total={totalSteps}
             size="sm"
           />
 
@@ -180,7 +182,7 @@ export default function SetupGuideBar({
         <div
           role="button"
           aria-expanded={isExpanded}
-          aria-label={`Guide de configuration, ${completedCount} sur 4 étapes complétées. Étape suivante : ${nextStepTitle}`}
+          aria-label={`Guide de configuration, ${completedCount} sur ${totalSteps} étapes complétées. Étape suivante : ${nextStepTitle}`}
           tabIndex={0}
           onClick={onClick}
           onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onClick()}
@@ -218,7 +220,7 @@ export default function SetupGuideBar({
         >
           <SetupGuideProgressRing
             completed={completedCount}
-            total={4}
+            total={totalSteps}
             size="sm"
           />
 

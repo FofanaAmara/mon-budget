@@ -2,7 +2,7 @@
  * SetupGuideCelebration — Full completion celebration view.
  *
  * Shown inside the bottom sheet (mobile) or expanded widget (desktop)
- * when all 4 steps are completed.
+ * when all steps are completed.
  *
  * Features:
  *   - Amber progress ring (72px) with check icon

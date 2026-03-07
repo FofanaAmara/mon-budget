@@ -37,6 +37,13 @@ const STEPS_CONFIG = [
     href: "/revenus",
   },
   {
+    id: "sections" as const,
+    title: "Cr\u00e9er tes cat\u00e9gories de d\u00e9penses",
+    description:
+      "Organise tes charges fixes par cat\u00e9gorie (logement, transport...).",
+    href: "/sections",
+  },
+  {
     id: "expense" as const,
     title: "Ajouter une charge fixe",
     description: "Loyer, abonnements, assurances...",
@@ -57,27 +64,32 @@ const STEPS_CONFIG = [
   },
 ] as const;
 
+/** Total number of steps in the guide. Derived from STEPS_CONFIG. */
+export const TOTAL_STEPS = STEPS_CONFIG.length;
+
 // ── Step state computation ──────────────────────────────────────────────────
 
 /**
  * Converts step completion booleans into display state
- * (upcoming | current | completed) based on sequential progression.
+ * (upcoming | current | completed).
  *
- * The first uncompleted step is 'current', all before are 'completed',
- * all after are 'upcoming'.
+ * The first uncompleted step is 'current', all completed steps are 'completed',
+ * all remaining uncompleted steps are 'upcoming'.
+ *
+ * This handles non-sequential completions (e.g. migration from 4→5 steps
+ * where step 1 and 3 may be done but step 2 is not).
  */
-function buildStepData(
-  completion: GuideStepCompletion,
-  completedCount: number,
-): SetupGuideStepData[] {
+function buildStepData(completion: GuideStepCompletion): SetupGuideStepData[] {
   const completionMap: Record<string, boolean> = completion;
+  let foundFirstUncompleted = false;
   return STEPS_CONFIG.map((step, i) => {
     const isCompleted = completionMap[step.id];
     let state: "upcoming" | "current" | "completed";
     if (isCompleted) {
       state = "completed";
-    } else if (i === completedCount) {
+    } else if (!foundFirstUncompleted) {
       state = "current";
+      foundFirstUncompleted = true;
     } else {
       state = "upcoming";
     }
@@ -113,13 +125,13 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
     ? Object.values(completion).filter(Boolean).length
     : 0;
   const isCelebration = guideData?.isCompleted ?? false;
-  const steps = completion ? buildStepData(completion, completedCount) : [];
+  const steps = completion ? buildStepData(completion) : [];
 
   // First uncompleted step title (for the bar label)
   const nextStep = steps.find((s) => s.state !== "completed");
   const nextStepTitle = nextStep?.title ?? "Terminer la configuration";
 
-  // Auto-expand and persist completion when all 4 steps are done
+  // Auto-expand and persist completion when all steps are done
   useEffect(() => {
     if (isCelebration && !hasTriggeredCompletion.current) {
       hasTriggeredCompletion.current = true;
@@ -175,6 +187,7 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
         <SetupGuideBar
           nextStepTitle={nextStepTitle}
           completedCount={completedCount}
+          totalSteps={TOTAL_STEPS}
           isExpanded={false}
           onClick={() => setIsExpanded(true)}
         />
@@ -184,6 +197,7 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
       <SetupGuideSheet
         steps={steps}
         completedCount={completedCount}
+        totalSteps={TOTAL_STEPS}
         isOpen={isExpanded}
         onClose={() => setIsExpanded(false)}
         onStepClick={handleStepClick}

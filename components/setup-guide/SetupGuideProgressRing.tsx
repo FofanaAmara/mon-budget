@@ -7,8 +7,8 @@
  *   - lg (44px): used in the desktop expanded widget header
  *
  * Props:
- *   - completed: number of completed steps (0–4)
- *   - total: total steps (default 4)
+ *   - completed: number of completed steps (0–N)
+ *   - total: total steps (default 5)
  *   - size: 'sm' | 'md' | 'lg'
  *   - celebration: when true, renders amber ring (all steps done)
  *
@@ -72,7 +72,7 @@ const RING_CONFIGS: Record<
 
 export default function SetupGuideProgressRing({
   completed,
-  total = 4,
+  total = 5,
   size = "sm",
   celebration = false,
 }: Props) {
