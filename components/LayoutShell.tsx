@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { usePathname } from "next/navigation";
 import BottomNav from "@/components/BottomNav";
 import SetupGuide from "@/components/setup-guide/SetupGuide";
@@ -24,7 +25,9 @@ export default function LayoutShell({ children, guideData }: LayoutShellProps) {
   return (
     <>
       <BottomNav />
-      <SetupGuide guideData={guideData ?? null} />
+      <Suspense>
+        <SetupGuide guideData={guideData ?? null} />
+      </Suspense>
       <div className="md:ml-[260px]">
         <div className="max-w-lg mx-auto md:max-w-2xl min-h-dvh relative">
           {children}

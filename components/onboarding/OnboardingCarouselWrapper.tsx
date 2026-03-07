@@ -22,7 +22,7 @@ export default function OnboardingCarouselWrapper() {
     } catch (e) {
       console.error("markOnboardingSeen failed:", e);
     }
-    router.refresh();
+    router.push("/?guide=open");
   }, [router]);
 
   return <OnboardingCarousel onComplete={handleDone} onSkip={handleDone} />;

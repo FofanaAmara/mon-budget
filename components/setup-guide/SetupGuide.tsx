@@ -16,7 +16,7 @@
  */
 
 import { useState, useEffect, useCallback, useTransition, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import SetupGuideBar from "./SetupGuideBar";
 import SetupGuideSheet from "./SetupGuideSheet";
 import type { SetupGuideStepData } from "./SetupGuideStep";
@@ -114,7 +114,9 @@ type SetupGuideProps = {
 
 export default function SetupGuide({ guideData }: SetupGuideProps) {
   const router = useRouter();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const searchParams = useSearchParams();
+  const shouldAutoOpen = searchParams.get("guide") === "open";
+  const [isExpanded, setIsExpanded] = useState(shouldAutoOpen);
   const [isDismissed, setIsDismissed] = useState(false);
   const [, startTransition] = useTransition();
   const hasTriggeredCompletion = useRef(false);
@@ -130,6 +132,13 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
   // First uncompleted step title (for the bar label)
   const nextStep = steps.find((s) => s.state !== "completed");
   const nextStepTitle = nextStep?.title ?? "Terminer la configuration";
+
+  // Clean up ?guide=open from URL after auto-expanding
+  useEffect(() => {
+    if (shouldAutoOpen) {
+      window.history.replaceState({}, "", "/");
+    }
+  }, [shouldAutoOpen]);
 
   // Auto-expand and persist completion when all steps are done
   useEffect(() => {
