@@ -10,17 +10,12 @@
  *   - Subtitle
  *   - CTA button: "Voir mon tableau de bord"
  *   - CSS-only confetti in brand colors (16 particles)
- *   - Auto-dismiss via `onDismiss` callback after 5 seconds
- *
  * TODO for developer:
  *   - Wire `onCTA` to navigate to dashboard ('/') AND persist dismissal server-side
- *   - The auto-dismiss timer should also call the server action to mark guide as dismissed
  */
 
-import { useEffect } from "react";
-
 type Props = {
-  /** Called when user taps CTA or on auto-dismiss (5s). Wire to dismiss + navigate. */
+  /** Called when user taps CTA. Wire to dismiss + navigate. */
   onCTA: () => void;
 };
 
@@ -174,14 +169,6 @@ const CONFETTI_PARTICLES = [
 ] as const;
 
 export default function SetupGuideCelebration({ onCTA }: Props) {
-  // Auto-dismiss after 5 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onCTA();
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [onCTA]);
-
   return (
     <div
       style={{
