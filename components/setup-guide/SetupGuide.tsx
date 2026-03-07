@@ -190,7 +190,7 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
       {/* Push FABs up when collapsed guide bar is visible */}
       {showBar && (
         <style>{`
-          .fab { bottom: max(132px, calc(116px + var(--safe-bottom))) !important; }
+          .fab { bottom: max(137px, calc(121px + var(--safe-bottom))) !important; }
           @media (min-width: 1024px) {
             .fab { bottom: max(72px, calc(56px + var(--safe-bottom))) !important; }
           }
