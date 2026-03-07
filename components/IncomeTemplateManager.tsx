@@ -131,7 +131,7 @@ export default function IncomeTemplateManager({ incomes }: Props) {
               color: "var(--slate-400)",
             }}
           >
-            Mes sources
+            Mes revenus récurrents
           </h2>
 
           {/* Desktop add button — hidden on mobile (FAB handles it) */}
@@ -193,7 +193,7 @@ export default function IncomeTemplateManager({ incomes }: Props) {
           }}
         >
           {incomes.length === 0 ? (
-            <EmptyState onAdd={openAdd} />
+            <EmptyState />
           ) : (
             incomes.map((inc) => (
               <SourceCard
@@ -690,7 +690,7 @@ function SourceCard({
 
 // ── Empty state ────────────────────────────────────────────────────────────────
 
-function EmptyState({ onAdd }: { onAdd: () => void }) {
+function EmptyState() {
   return (
     <div style={{ textAlign: "center", padding: "48px 20px" }}>
       <div
@@ -717,7 +717,7 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
           marginBottom: "6px",
         }}
       >
-        Aucune source configuree
+        Aucun revenu récurrent
       </p>
       <p
         style={{
@@ -729,52 +729,9 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
           lineHeight: 1.5,
         }}
       >
-        Ajoute ta premiere source de revenu pour suivre tes entrees
+        Ajoute ton premier revenu récurrent pour suivre tes entrées
         d&apos;argent.
       </p>
-      <button
-        onClick={onAdd}
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "8px",
-          padding: "12px 24px",
-          background: "var(--teal-700)",
-          color: "#FFFFFF",
-          border: "none",
-          borderRadius: "var(--radius-md)",
-          fontFamily: "var(--font)",
-          fontSize: "15px",
-          fontWeight: 700,
-          cursor: "pointer",
-          transition: "all 0.2s ease",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = "var(--teal-800)";
-          e.currentTarget.style.transform = "translateY(-1px)";
-          e.currentTarget.style.boxShadow =
-            "0 4px 12px rgba(15, 118, 110, 0.08)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = "var(--teal-700)";
-          e.currentTarget.style.transform = "translateY(0)";
-          e.currentTarget.style.boxShadow = "none";
-        }}
-      >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          width="18"
-          height="18"
-        >
-          <line x1="12" y1="5" x2="12" y2="19" />
-          <line x1="5" y1="12" x2="19" y2="12" />
-        </svg>
-        Ajouter un revenu récurrent
-      </button>
     </div>
   );
 }
