@@ -330,63 +330,22 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
           />
         </div>
 
-        {/* Guide de configuration */}
+        {/* Gestion */}
         <div className="list-card">
-          <div
-            style={{
-              padding: "8px 20px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <button
-              onClick={handleResetGuide}
-              disabled={isPendingReset || guideResetDone}
+          <div style={{ padding: "16px 20px 8px" }}>
+            <h2
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
-                background: "none",
-                border: "none",
-                cursor:
-                  isPendingReset || guideResetDone ? "default" : "pointer",
-                padding: "8px 0",
-                width: "100%",
-                textAlign: "left",
+                fontSize: "var(--text-sm)",
+                fontWeight: 650,
+                color: "var(--text-primary)",
               }}
             >
-              <span style={{ color: "var(--text-tertiary)" }}>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-                </svg>
-              </span>
-              <span
-                style={{
-                  fontSize: "var(--text-sm)",
-                  color: guideResetDone
-                    ? "var(--text-tertiary)"
-                    : "var(--text-primary)",
-                  fontWeight: guideResetDone ? 500 : undefined,
-                }}
-              >
-                {isPendingReset
-                  ? "Relance en cours..."
-                  : guideResetDone
-                    ? "Guide relance !"
-                    : "Revoir le guide de configuration"}
-              </span>
-            </button>
+              Gestion
+            </h2>
           </div>
+          {MANAGEMENT_ITEMS.map(({ href, label, icon }) => (
+            <LinkRow key={href} href={href} label={label} icon={icon} />
+          ))}
         </div>
 
         {/* Preferences */}
@@ -403,24 +362,6 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
             </h2>
           </div>
           {PREFERENCE_ITEMS.map(({ href, label, icon }) => (
-            <LinkRow key={href} href={href} label={label} icon={icon} />
-          ))}
-        </div>
-
-        {/* Gestion */}
-        <div className="list-card">
-          <div style={{ padding: "16px 20px 8px" }}>
-            <h2
-              style={{
-                fontSize: "var(--text-sm)",
-                fontWeight: 650,
-                color: "var(--text-primary)",
-              }}
-            >
-              Gestion
-            </h2>
-          </div>
-          {MANAGEMENT_ITEMS.map(({ href, label, icon }) => (
             <LinkRow key={href} href={href} label={label} icon={icon} />
           ))}
         </div>
@@ -446,6 +387,34 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
               gap: "10px",
             }}
           >
+            {/* Reset guide */}
+            <button
+              onClick={handleResetGuide}
+              disabled={isPendingReset || guideResetDone}
+              style={{
+                width: "100%",
+                padding: "12px",
+                fontSize: "var(--text-sm)",
+                fontWeight: 600,
+                background: "var(--surface-inset)",
+                color: guideResetDone
+                  ? "var(--text-tertiary)"
+                  : "var(--text-primary)",
+                border: "none",
+                borderRadius: "var(--radius-md)",
+                cursor:
+                  isPendingReset || guideResetDone ? "default" : "pointer",
+                opacity: isPendingReset ? 0.7 : 1,
+                transition: "opacity 0.2s",
+              }}
+            >
+              {isPendingReset
+                ? "Relance en cours..."
+                : guideResetDone
+                  ? "✓ Guide relancé !"
+                  : "Revoir le guide de configuration"}
+            </button>
+
             {/* Load demo */}
             <button
               onClick={handleLoadDemo}
