@@ -656,6 +656,7 @@ export async function clearAllUserData(): Promise<{
     await sql`DELETE FROM sections WHERE user_id = ${userId}`;
     await sql`DELETE FROM settings WHERE user_id = ${userId}`;
     await sql`DELETE FROM user_onboarding WHERE user_id = ${userId}`;
+    await sql`DELETE FROM setup_guide WHERE user_id = ${userId}`;
 
     // Re-create default sections
     for (const s of DEFAULT_SECTIONS) {
