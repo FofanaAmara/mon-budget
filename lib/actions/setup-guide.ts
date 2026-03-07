@@ -140,16 +140,17 @@ function computeVisibility(
 // ── Server action (mutation) ─────────────────────────────────────────────────
 
 /**
- * Marks the setup guide as completed AND auto-dismisses it.
- * Sets both completed_at and dismissed_at to NOW() so the guide
- * hides on the next navigation. The celebration CTA still works
- * on the current page because isDismissed is local React state.
+ * Marks the setup guide as completed (sets completed_at only).
+ * The guide remains visible in "celebration in progress" state
+ * (completed_at NOT NULL, dismissed_at NULL) so the user sees
+ * all steps checked before the celebration view appears.
+ * dismissSetupGuide() hides the guide permanently after the CTA.
  */
 export async function completeSetupGuide(): Promise<void> {
   const userId = await requireAuth();
   await sql`
     UPDATE setup_guide
-    SET completed_at = NOW(), dismissed_at = NOW()
+    SET completed_at = NOW()
     WHERE user_id = ${userId} AND completed_at IS NULL
   `;
   revalidatePath("/", "layout");

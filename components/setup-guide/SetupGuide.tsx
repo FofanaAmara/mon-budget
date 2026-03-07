@@ -16,7 +16,7 @@
  */
 
 import { useState, useEffect, useCallback, useTransition, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import SetupGuideBar from "./SetupGuideBar";
 import SetupGuideSheet from "./SetupGuideSheet";
 import type { SetupGuideStepData } from "./SetupGuideStep";
@@ -105,26 +105,48 @@ type SetupGuideProps = {
 
 // ── Component ────────────────────────────────────────────────────────────────
 
+/** Delay (ms) before switching from "all steps checked" to celebration view. */
+const CELEBRATION_DELAY_MS = 15_000;
+
 export default function SetupGuide({ guideData }: SetupGuideProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const shouldAutoOpen = searchParams.get("guide") === "open";
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
   const [, startTransition] = useTransition();
   const hasTriggeredCompletion = useRef(false);
+  const hasRefreshedForStep3 = useRef(false);
 
   // Compute derived values from server data
   const completion = guideData?.stepsCompletion;
   const completedCount = completion
     ? Object.values(completion).filter(Boolean).length
     : 0;
-  const isCelebration = guideData?.isCompleted ?? false;
+  const isAllComplete = guideData?.isCompleted ?? false;
   const steps = completion ? buildStepData(completion) : [];
 
   // First uncompleted step title (for the bar label)
   const nextStep = steps.find((s) => s.state !== "completed");
   const nextStepTitle = nextStep?.title ?? "Terminer la configuration";
+
+  // AC-1: Auto-refresh guide data when arriving on /depenses.
+  // The /depenses page generates monthly_expenses server-side, but the
+  // layout (which fetches guide data) may render before those rows exist.
+  // A single router.refresh() re-runs server components with fresh data.
+  useEffect(() => {
+    if (
+      pathname === "/depenses" &&
+      completion &&
+      !completion.generate &&
+      !hasRefreshedForStep3.current
+    ) {
+      hasRefreshedForStep3.current = true;
+      router.refresh();
+    }
+  }, [pathname, completion, router]);
 
   // Auto-expand when arriving from onboarding carousel (?guide=open)
   useEffect(() => {
@@ -134,16 +156,24 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
     }
   }, [shouldAutoOpen]);
 
-  // Auto-expand and persist completion when all steps are done
+  // AC-2: Auto-expand, persist completion, and delay celebration view.
+  // When all steps are done, the guide first shows all 4 steps checked
+  // for 15 seconds, then switches to the celebration view.
   useEffect(() => {
-    if (isCelebration && !hasTriggeredCompletion.current) {
+    if (isAllComplete && !hasTriggeredCompletion.current) {
       hasTriggeredCompletion.current = true;
       setIsExpanded(true);
       startTransition(async () => {
         await completeSetupGuide();
       });
+
+      const timer = setTimeout(() => {
+        setShowCelebration(true);
+      }, CELEBRATION_DELAY_MS);
+
+      return () => clearTimeout(timer);
     }
-  }, [isCelebration, startTransition]);
+  }, [isAllComplete, startTransition]);
 
   // Collapse on Escape key
   useEffect(() => {
@@ -214,7 +244,7 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
         isOpen={isExpanded}
         onClose={() => setIsExpanded(false)}
         onStepClick={handleStepClick}
-        isCelebration={isCelebration}
+        isCelebration={showCelebration}
         onCelebrationCTA={handleCelebrationCTA}
       />
     </>
