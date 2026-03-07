@@ -136,9 +136,9 @@ export default function IncomeTemplateManager({ incomes }: Props) {
 
           {/* Desktop add button — hidden on mobile (FAB handles it) */}
           <button
+            className="btn-desktop-only"
             onClick={openAdd}
             style={{
-              display: "inline-flex",
               alignItems: "center",
               gap: "6px",
               padding: "9px 18px",
@@ -741,6 +741,7 @@ function EmptyState() {
 function FabButton({ onClick }: { onClick: () => void }) {
   return (
     <button
+      className="fab fab-mobile-only"
       onClick={onClick}
       aria-label="Ajouter un revenu récurrent"
       style={{
