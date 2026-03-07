@@ -37,13 +37,6 @@ const STEPS_CONFIG = [
     href: "/revenus",
   },
   {
-    id: "sections" as const,
-    title: "Cr\u00e9er tes cat\u00e9gories de d\u00e9penses",
-    description:
-      "Organise tes d\u00e9penses par cat\u00e9gorie (logement, transport...).",
-    href: "/sections",
-  },
-  {
     id: "expense" as const,
     title: "Ajouter une d\u00e9pense r\u00e9currente",
     description: "Loyer, abonnements, assurances...",
@@ -51,9 +44,9 @@ const STEPS_CONFIG = [
   },
   {
     id: "generate" as const,
-    title: "G\u00e9n\u00e9rer le mois courant",
+    title: "Consulter les d\u00e9penses du mois",
     description:
-      "Cr\u00e9e les d\u00e9penses \u00e0 partir de tes mod\u00e8les.",
+      "Tes d\u00e9penses r\u00e9currentes apparaissent automatiquement.",
     href: "/depenses",
   },
   {
@@ -190,10 +183,22 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
   // Don't render if no data, guide not visible, or dismissed locally
   if (!guideData || !guideData.isVisible || isDismissed) return null;
 
+  const showBar = !isExpanded;
+
   return (
     <>
+      {/* Push FABs up when collapsed guide bar is visible */}
+      {showBar && (
+        <style>{`
+          .fab { bottom: max(132px, calc(116px + var(--safe-bottom))) !important; }
+          @media (min-width: 1024px) {
+            .fab { bottom: max(72px, calc(56px + var(--safe-bottom))) !important; }
+          }
+        `}</style>
+      )}
+
       {/* Collapsed bar (shown when sheet is closed) */}
-      {!isExpanded && (
+      {showBar && (
         <SetupGuideBar
           nextStepTitle={nextStepTitle}
           completedCount={completedCount}

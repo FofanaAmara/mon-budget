@@ -10,7 +10,6 @@ import { currentMonth } from "@/lib/utils";
 
 export type GuideStepCompletion = {
   income: boolean;
-  sections: boolean;
   expense: boolean;
   generate: boolean;
   pay: boolean;
@@ -49,11 +48,6 @@ export async function getOrInitSetupGuideData(): Promise<GuideData | null> {
       ) AS has_income,
 
       EXISTS(
-        SELECT 1 FROM sections
-        WHERE user_id = ${userId}
-      ) AS has_sections,
-
-      EXISTS(
         SELECT 1 FROM expenses
         WHERE user_id = ${userId} AND is_active = true
       ) AS has_expense,
@@ -75,7 +69,6 @@ export async function getOrInitSetupGuideData(): Promise<GuideData | null> {
 
   const row = rows[0];
   const hasIncome = Boolean(row.has_income);
-  const hasSections = Boolean(row.has_sections);
   const hasExpense = Boolean(row.has_expense);
   const hasGenerated = Boolean(row.has_generated);
   const hasPaid = Boolean(row.has_paid);
@@ -83,12 +76,10 @@ export async function getOrInitSetupGuideData(): Promise<GuideData | null> {
   const completedAt = row.completed_at;
   const guideRowExists = row.guide_created_at !== null;
 
-  const allCompleted =
-    hasIncome && hasSections && hasExpense && hasGenerated && hasPaid;
+  const allCompleted = hasIncome && hasExpense && hasGenerated && hasPaid;
 
   const stepsCompletion: GuideStepCompletion = {
     income: hasIncome,
-    sections: hasSections,
     expense: hasExpense,
     generate: hasGenerated,
     pay: hasPaid,
