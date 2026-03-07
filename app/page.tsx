@@ -21,7 +21,6 @@ import {
   autoMarkReceivedForAutoDeposit,
 } from "@/lib/actions/monthly-incomes";
 import { hasOrphanedData, ensureDefaultSections } from "@/lib/actions/claim";
-import { hasUserData } from "@/lib/actions/demo-data";
 import { currentMonth } from "@/lib/utils";
 import AccueilClient from "@/components/AccueilClient";
 import ClaimBanner from "@/components/ClaimBanner";
@@ -48,9 +47,6 @@ export default async function AccueilPage({ searchParams }: PageProps) {
 
   // Check for orphaned data (pre-auth migration)
   const showClaimBanner = await hasOrphanedData();
-
-  // New user detection for onboarding
-  const isNewUser = !(await hasUserData());
 
   // Ensure instances exist for this month (idempotent)
   await generateMonthlyExpenses(month);
@@ -113,7 +109,6 @@ export default async function AccueilPage({ searchParams }: PageProps) {
         totalDebtBalance={totalDebtBalance}
         savingsSummary={savingsSummary}
         debtSummary={debtSummary}
-        isNewUser={isNewUser}
       />
     </>
   );

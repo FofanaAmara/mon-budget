@@ -236,7 +236,6 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
     startClearTransition(async () => {
       const result = await clearAllUserData();
       if (result.success) {
-        localStorage.removeItem("mes-finances-onboarding-done");
         window.location.href = "/";
       } else {
         setFeedback(result.error ?? "Erreur");

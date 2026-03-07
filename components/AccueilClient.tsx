@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import MonthNavigator from "@/components/MonthNavigator";
-import Onboarding from "@/components/Onboarding";
 import { IconCheck, IconClose } from "@/components/icons";
 import TabTableauDeBord from "@/components/accueil/TabTableauDeBord";
 import TabTimeline from "@/components/accueil/TabTimeline";
@@ -36,7 +35,6 @@ type Props = {
   totalDebtBalance: number;
   savingsSummary: MonthlySavingsSummary;
   debtSummary: MonthlyDebtSummary;
-  isNewUser?: boolean;
 };
 
 export default function AccueilClient({
@@ -51,16 +49,8 @@ export default function AccueilClient({
   totalDebtBalance,
   savingsSummary,
   debtSummary,
-  isNewUser,
 }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>("dashboard");
-  const [showOnboarding, setShowOnboarding] = useState(false);
-
-  useEffect(() => {
-    if (isNewUser && !localStorage.getItem("mes-finances-onboarding-done")) {
-      setShowOnboarding(true);
-    }
-  }, [isNewUser]);
 
   const totalEpargne = projets.reduce(
     (s, p) => s + Number(p.saved_amount ?? 0),
@@ -77,10 +67,6 @@ export default function AccueilClient({
 
   return (
     <div style={{ paddingBottom: "100px", minHeight: "100vh" }}>
-      {showOnboarding && (
-        <Onboarding onComplete={() => setShowOnboarding(false)} />
-      )}
-
       {/* ====== MONUMENT: BALANCE HERO ====== */}
       <section
         style={{
