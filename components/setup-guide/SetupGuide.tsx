@@ -187,15 +187,13 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
 
   return (
     <>
-      {/* Push FABs up when collapsed guide bar is visible */}
-      {showBar && (
-        <style>{`
-          .fab { bottom: max(137px, calc(121px + var(--safe-bottom))) !important; }
-          @media (min-width: 1024px) {
-            .fab { bottom: max(72px, calc(56px + var(--safe-bottom))) !important; }
-          }
-        `}</style>
-      )}
+      {/* Push FABs up so they don't overlap with the guide (bar or widget) */}
+      <style>{`
+        .fab { bottom: max(137px, calc(121px + var(--safe-bottom))) !important; }
+        @media (min-width: 1024px) {
+          .fab { bottom: 100px !important; }
+        }
+      `}</style>
 
       {/* Collapsed bar (shown when sheet is closed) */}
       {showBar && (
