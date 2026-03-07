@@ -23,7 +23,7 @@ export default async function EditExpensePage({
       <Breadcrumb
         items={[
           { label: "Reglages", href: "/parametres" },
-          { label: "Mes charges récurrentes", href: "/parametres/charges" },
+          { label: "Mes dépenses récurrentes", href: "/parametres/charges" },
           { label: "Modifier" },
         ]}
       />

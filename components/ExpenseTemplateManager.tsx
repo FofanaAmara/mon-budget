@@ -314,7 +314,7 @@ export default function ExpenseTemplateManager({
                 marginBottom: "4px",
               }}
             >
-              Aucune charge fixe
+              Aucune dépense récurrente
             </p>
             <p
               style={{

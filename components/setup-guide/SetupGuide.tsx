@@ -40,12 +40,12 @@ const STEPS_CONFIG = [
     id: "sections" as const,
     title: "Cr\u00e9er tes cat\u00e9gories de d\u00e9penses",
     description:
-      "Organise tes charges fixes par cat\u00e9gorie (logement, transport...).",
+      "Organise tes d\u00e9penses par cat\u00e9gorie (logement, transport...).",
     href: "/sections",
   },
   {
     id: "expense" as const,
-    title: "Ajouter une charge fixe",
+    title: "Ajouter une d\u00e9pense r\u00e9currente",
     description: "Loyer, abonnements, assurances...",
     href: "/parametres/charges",
   },
