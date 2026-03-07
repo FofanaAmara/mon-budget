@@ -68,8 +68,8 @@ const PREFERENCE_ITEMS = [
 
 const MANAGEMENT_ITEMS = [
   {
-    href: "/parametres/allocation",
-    label: "Allocation du revenu",
+    href: "/sections",
+    label: "Mes catégories de dépenses",
     icon: (
       <svg
         width="16"
@@ -81,8 +81,7 @@ const MANAGEMENT_ITEMS = [
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <circle cx="12" cy="12" r="10" />
-        <path d="M12 6v6l4 2" />
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
       </svg>
     ),
   },
@@ -124,6 +123,25 @@ const MANAGEMENT_ITEMS = [
     ),
   },
   {
+    href: "/parametres/allocation",
+    label: "Allocation du revenu",
+    icon: (
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 6v6l4 2" />
+      </svg>
+    ),
+  },
+  {
     href: "/cartes",
     label: "Mes cartes de paiement",
     icon: (
@@ -139,24 +157,6 @@ const MANAGEMENT_ITEMS = [
       >
         <rect x="2" y="5" width="20" height="14" rx="3" />
         <path d="M2 10h20" />
-      </svg>
-    ),
-  },
-  {
-    href: "/sections",
-    label: "Mes catégories de dépenses",
-    icon: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
       </svg>
     ),
   },
