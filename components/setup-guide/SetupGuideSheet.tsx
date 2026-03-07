@@ -31,6 +31,7 @@ import SetupGuideCelebration from "./SetupGuideCelebration";
 type Props = {
   steps: SetupGuideStepData[];
   completedCount: number;
+  totalSteps: number;
   isOpen: boolean;
   onClose: () => void;
   onStepClick: (href: string) => void;
@@ -39,31 +40,25 @@ type Props = {
 };
 
 /** Returns the subtitle text based on how many steps are completed. */
-function getSubtitle(completedCount: number): string {
-  switch (completedCount) {
-    case 0:
-      return "4 étapes pour être opérationnel";
-    case 1:
-      return "Beau début !";
-    case 2:
-      return "Déjà à mi-chemin !";
-    case 3:
-      return "Plus qu'une étape !";
-    default:
-      return "4 étapes pour être opérationnel";
-  }
+function getSubtitle(completedCount: number, totalSteps: number): string {
+  if (completedCount === 0)
+    return `${totalSteps} étapes pour être opérationnel`;
+  if (completedCount === totalSteps - 1) return "Plus qu'une étape !";
+  if (completedCount >= Math.floor(totalSteps / 2)) return "Déjà à mi-chemin !";
+  return "Beau début !";
 }
 
 export default function SetupGuideSheet({
   steps,
   completedCount,
+  totalSteps,
   isOpen,
   onClose,
   onStepClick,
   isCelebration = false,
   onCelebrationCTA,
 }: Props) {
-  const subtitle = getSubtitle(completedCount);
+  const subtitle = getSubtitle(completedCount, totalSteps);
   const isInProgress = completedCount > 0;
 
   if (!isOpen) return null;
@@ -147,7 +142,7 @@ export default function SetupGuideSheet({
         >
           <SetupGuideProgressRing
             completed={completedCount}
-            total={4}
+            total={totalSteps}
             size="md"
             celebration={isCelebration}
           />
@@ -245,7 +240,7 @@ export default function SetupGuideSheet({
         >
           <SetupGuideProgressRing
             completed={completedCount}
-            total={4}
+            total={totalSteps}
             size="lg"
             celebration={isCelebration}
           />

@@ -21,11 +21,12 @@ import {
   autoMarkReceivedForAutoDeposit,
 } from "@/lib/actions/monthly-incomes";
 import { hasOrphanedData, ensureDefaultSections } from "@/lib/actions/claim";
-import { hasUserData } from "@/lib/actions/demo-data";
 import { currentMonth } from "@/lib/utils";
 import AccueilClient from "@/components/AccueilClient";
 import ClaimBanner from "@/components/ClaimBanner";
 import NotificationPermission from "@/components/NotificationPermission";
+import OnboardingCarouselWrapper from "@/components/onboarding/OnboardingCarouselWrapper";
+import { hasSeenOnboarding } from "@/lib/actions/onboarding-carousel";
 
 type PageProps = {
   searchParams: Promise<{ month?: string }>;
@@ -35,14 +36,17 @@ export default async function AccueilPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const month = params.month ?? currentMonth();
 
+  // Onboarding carousel: check before any data setup (carousel doesn't need sections)
+  const onboardingSeen = await hasSeenOnboarding();
+  if (!onboardingSeen) {
+    return <OnboardingCarouselWrapper />;
+  }
+
   // Ensure new users have default sections
   await ensureDefaultSections();
 
   // Check for orphaned data (pre-auth migration)
   const showClaimBanner = await hasOrphanedData();
-
-  // New user detection for onboarding
-  const isNewUser = !(await hasUserData());
 
   // Ensure instances exist for this month (idempotent)
   await generateMonthlyExpenses(month);
@@ -105,7 +109,6 @@ export default async function AccueilPage({ searchParams }: PageProps) {
         totalDebtBalance={totalDebtBalance}
         savingsSummary={savingsSummary}
         debtSummary={debtSummary}
-        isNewUser={isNewUser}
       />
     </>
   );

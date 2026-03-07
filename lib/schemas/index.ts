@@ -11,5 +11,4 @@ export * from "./allocation";
 export * from "./section";
 export * from "./card";
 export * from "./settings";
-export * from "./onboarding";
 export * from "./push";

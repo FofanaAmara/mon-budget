@@ -87,8 +87,9 @@ Toute la logique metier est dans `lib/actions/`. Chaque fonction est un Server A
 ### debt-transactions.ts
 - `getDebtTransactions(debtId)` / `addDebtTransaction(data)`
 
-### onboarding.ts
-- `completeOnboarding(data)` — Wizard de premiere configuration
+### onboarding-carousel.ts
+- `hasSeenOnboarding()` — Verifie si l'utilisateur a vu le carousel educatif (DB-based)
+- `markOnboardingSeen()` — Marque le carousel comme vu en DB
 
 ### claim.ts
 - `hasOrphanedData()` — Verifie si des donnees orphelines existent (pre-auth)

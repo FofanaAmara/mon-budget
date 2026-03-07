@@ -31,7 +31,6 @@ import { AddExpenseTransactionSchema } from "@/lib/schemas/expense-transaction";
 import { CreateSectionSchema } from "@/lib/schemas/section";
 import { CreateCardSchema } from "@/lib/schemas/card";
 import { UpdateSettingsSchema } from "@/lib/schemas/settings";
-import { CompleteOnboardingSchema } from "@/lib/schemas/onboarding";
 import { PushSendSchema, PushSubscribeSchema } from "@/lib/schemas/push";
 import { ValidationError, validateInput } from "@/lib/schemas/validate";
 
@@ -632,40 +631,6 @@ describe("Settings schemas", () => {
       const result = UpdateSettingsSchema.safeParse({
         id: validUUID,
         data: { email: "not-an-email" },
-      });
-      expect(result.success).toBe(false);
-    });
-  });
-});
-
-describe("Onboarding schemas", () => {
-  describe("CompleteOnboardingSchema", () => {
-    it("accepts valid onboarding data", () => {
-      const result = CompleteOnboardingSchema.safeParse({
-        monthlyRevenue: 4200,
-        frequency: "biweekly",
-        categories: ["logement", "epicerie"],
-        objective: null,
-      });
-      expect(result.success).toBe(true);
-    });
-
-    it("accepts zero revenue", () => {
-      const result = CompleteOnboardingSchema.safeParse({
-        monthlyRevenue: 0,
-        frequency: "monthly",
-        categories: [],
-        objective: null,
-      });
-      expect(result.success).toBe(true);
-    });
-
-    it("rejects invalid frequency", () => {
-      const result = CompleteOnboardingSchema.safeParse({
-        monthlyRevenue: 4200,
-        frequency: "daily",
-        categories: [],
-        objective: null,
       });
       expect(result.success).toBe(false);
     });
