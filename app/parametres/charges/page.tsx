@@ -95,7 +95,7 @@ export default async function ChargesFixesPage() {
           <Breadcrumb
             items={[
               { label: "Réglages", href: "/parametres" },
-              { label: "Mes charges fixes" },
+              { label: "Mes charges récurrentes" },
             ]}
           />
 
@@ -111,7 +111,7 @@ export default async function ChargesFixesPage() {
               marginTop: "16px",
             }}
           >
-            Charges fixes
+            Charges récurrentes
           </p>
 
           {/* Monument amount */}

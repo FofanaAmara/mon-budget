@@ -88,7 +88,7 @@ const MANAGEMENT_ITEMS = [
   },
   {
     href: "/parametres/charges",
-    label: "Mes charges fixes",
+    label: "Mes charges récurrentes",
     icon: (
       <svg
         width="16"
@@ -144,7 +144,7 @@ const MANAGEMENT_ITEMS = [
   },
   {
     href: "/sections",
-    label: "Mes sections",
+    label: "Mes catégories de dépenses",
     icon: (
       <svg
         width="16"
