@@ -19,9 +19,8 @@ export default function OnboardingCarouselWrapper() {
   const handleDone = useCallback(async () => {
     try {
       await markOnboardingSeen();
-    } catch {
-      // Best effort — edge case: no network after first load.
-      // User reaches dashboard; carousel may reappear next visit.
+    } catch (e) {
+      console.error("markOnboardingSeen failed:", e);
     }
     router.refresh();
   }, [router]);

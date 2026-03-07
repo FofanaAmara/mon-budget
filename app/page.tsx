@@ -37,14 +37,14 @@ export default async function AccueilPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const month = params.month ?? currentMonth();
 
-  // Ensure new users have default sections
-  await ensureDefaultSections();
-
-  // Onboarding carousel: check if user has seen it (DB-based, not localStorage)
+  // Onboarding carousel: check before any data setup (carousel doesn't need sections)
   const onboardingSeen = await hasSeenOnboarding();
   if (!onboardingSeen) {
     return <OnboardingCarouselWrapper />;
   }
+
+  // Ensure new users have default sections
+  await ensureDefaultSections();
 
   // Check for orphaned data (pre-auth migration)
   const showClaimBanner = await hasOrphanedData();
