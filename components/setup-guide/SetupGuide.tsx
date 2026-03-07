@@ -116,7 +116,7 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const shouldAutoOpen = searchParams.get("guide") === "open";
-  const [isExpanded, setIsExpanded] = useState(shouldAutoOpen);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
   const [, startTransition] = useTransition();
   const hasTriggeredCompletion = useRef(false);
@@ -133,9 +133,10 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
   const nextStep = steps.find((s) => s.state !== "completed");
   const nextStepTitle = nextStep?.title ?? "Terminer la configuration";
 
-  // Clean up ?guide=open from URL after auto-expanding
+  // Auto-expand when arriving from onboarding carousel (?guide=open)
   useEffect(() => {
     if (shouldAutoOpen) {
+      setIsExpanded(true);
       window.history.replaceState({}, "", "/");
     }
   }, [shouldAutoOpen]);
