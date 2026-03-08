@@ -1,8 +1,8 @@
 # Backlog — Mes Finances
 
 Generated: 2026-03-04 by af-bootstrap-backlog
-Updated: 2026-03-06 by af-pm (refonte onboarding decomposee en 3 stories ONBOARD-001/002/003)
-Features: 21 existing (20 + guide-configuration) | Stories: 15 FIX + 15 AUDIT + 3 ONBOARD | Status: READY
+Updated: 2026-03-07 by af-pm (feature coherence-design creee avec 6 stories DESIGN-001 a 006)
+Features: 22 existing (20 + guide-configuration + coherence-design) | Stories: 15 FIX + 15 AUDIT + 3 ONBOARD + 6 DESIGN | Status: READY
 
 ## Priorite P0 — Features transversales actives
 
@@ -27,6 +27,20 @@ Groupees par ACTION, pas par domaine. Zero regression comme contrainte #1.
 
 Brief: `epics/stabilisation/features/audit-remediation/FEATURE.md`
 Audit: `.app-factory/docs/audits/2026-03-05-full-audit.md`
+
+### stabilisation / coherence-design (6 stories) — A FAIRE
+
+Corrections d'incoherences visuelles inter-pages identifiees lors de l'audit design du 2026-03-07.
+Scope purement frontend. Zero regression fonctionnelle.
+
+| Bloc | Stories | Taille | Statut |
+|------|---------|--------|--------|
+| 1 — Haute priorite | DESIGN-001 (M), DESIGN-002 (S) | M+S | A faire |
+| 2 — Moyenne priorite | DESIGN-003 (S), DESIGN-004 (S), DESIGN-005 (XS) | 2S+XS | A faire |
+| 3 — Basse priorite | DESIGN-006 (S) | S | A faire |
+
+Brief: `epics/stabilisation/features/coherence-design/FEATURE.md`
+Audit: `.tmp/audit-design/AUDIT-REPORT.md`
 
 ## Priorite P1 — Nouvelles features
 
@@ -66,7 +80,7 @@ See: [feature-map.md](feature-map.md)
 | onboarding-auth | 5 (4 existing + guide-configuration) | MIN-006, MIN-007 |
 | notifications | 1 | MIN-008 |
 | pwa | 1 | MIN-009 |
-| **stabilisation** | 2 (fiabilite-calculs, audit-remediation) | fiabilite-calculs: 12 FIX, audit-remediation: 15 AUDIT |
+| **stabilisation** | 3 (fiabilite-calculs, audit-remediation, coherence-design) | fiabilite-calculs: 12 FIX, audit-remediation: 15 AUDIT, coherence-design: 6 DESIGN |
 
 ## Stories completees (hors feature)
 
@@ -79,13 +93,15 @@ See: [feature-map.md](feature-map.md)
 ## Implementation Order
 
 1. **Immediat** : Feature `audit-remediation` (Waves 1-6 ci-dessus)
-2. **Ensuite** : Feature `guide-configuration` (decomposer en stories puis implementer)
-3. **Ensuite** : Refonte onboarding (ONBOARD-001 → 002 → 003) — 3 stories, 11 pts
-4. **Plus tard** : Nouvelles features par epic
+2. **Ensuite** : Feature `coherence-design` (6 stories DESIGN, scope frontend) — peut etre intercale avec audit-remediation
+3. **Ensuite** : Feature `guide-configuration` (decomposer en stories puis implementer)
+4. **Ensuite** : Refonte onboarding (ONBOARD-001 -> 002 -> 003) — 3 stories, 11 pts
+5. **Plus tard** : Nouvelles features par epic
 
 ## Quick Reference
 
 - Feature brief audit-remediation: `epics/stabilisation/features/audit-remediation/FEATURE.md`
+- Feature brief coherence-design: `epics/stabilisation/features/coherence-design/FEATURE.md`
 - Feature brief fiabilite-calculs: `epics/stabilisation/features/fiabilite-calculs/FEATURE.md`
 - Feature briefs existants: `epics/[epic]/features/[feature]/feature-brief.md`
 - Stories: `epics/[epic]/features/[feature]/stories/*.md`

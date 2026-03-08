@@ -1414,3 +1414,48 @@ Palettes de status:
 - Slide 4 CTA: scale-in 500ms spring cubic-bezier(0.34, 1.56, 0.64, 1), delay 500ms
 - Dots: width + background 350ms
 - Nav background: 580ms color transition synced with track
+
+### Coherence design (harmonisation patterns)
+
+**Pattern: Section header (uniforme sur toutes les pages)**
+- Label : teal-700, uppercase, 11px, font-weight 700, letter-spacing 0.08em
+- Compteur : toujours present entre parentheses `LABEL (N)`, affiche `(0)` si vide
+- Layout : flexbox, align-items center, justify-content space-between
+- Bouton d'ajout (desktop only) : filled teal a droite dans le meme flex container
+
+**Pattern: Bouton d'ajout / FAB**
+- Desktop (>= 768px) : bouton `+ Label` filled teal dans le header de section (bg #0F766E, text white, radius 8px, padding 8px 16px, font-size 13px, font-weight 600). Jamais de FAB sur desktop.
+- Mobile (< 768px) : FAB rond 52px, bg #0F766E, color white, box-shadow `0 4px 14px rgba(15, 118, 110, 0.35)`, position fixed bottom 20px right 20px, z-index 40. Jamais de pill full-width.
+
+**Pattern: Conteneur groupe avec separateurs (pattern dominant pour les listes)**
+- Container : white bg, border 1px slate-200, border-radius 18px, shadow-sm, overflow hidden
+- Row : padding 14px 16px, separator = border-top 1px solid slate-200 (sauf premiere)
+- Layout row : flex, align-items center, gap 12px
+- Ce pattern remplace les cards individuelles avec bordure laterale
+
+**Pattern: Distinction visuelle par icone coloree (remplace la bordure laterale)**
+- Conteneur icone : 36x36px, border-radius 10px
+- Epargne : bg teal-50 (#F0FDFA), icone stroke teal-700
+- Dettes : bg error-light (#FEF2F2), icone stroke error (#DC2626)
+
+**Pattern: Badge de statut (systeme unifie)**
+- Forme : pill (border-radius 100px)
+- Specs : padding 3px 10px, font-size 11px, font-weight 600, letter-spacing 0.01em
+- Capitalisation : premiere lettre majuscule, reste en minuscules (jamais TOUT EN MAJUSCULES)
+- Palette semantique :
+  - Vert (actif/complete) : bg #ECFDF5, text #059669
+  - Gris (en attente) : bg #F1F5F9, text #64748B
+  - Orange (temporaire) : bg #FEF3C7, text #92400E
+  - Rouge (alerte/dette) : bg #FEF2F2, text #DC2626
+
+**Pattern: Format monetaire fr-CA**
+- Format : `N NNN,NN $` (espace insecable milliers, virgule decimale, toujours 2 decimales, dollar apres)
+- Helper : `formatCAD(amount)` base sur `Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' })`
+- Zero : `0,00 $`, negatif : `-125,00 $`, grand : `125 000,00 $`
+- Espace insecable (`\u00A0`) entre montant et `$`
+
+**Pattern: Breadcrumb (sous-pages Reglages)**
+- Style : lien parent teal-700 600 weight + `>` slate-300 + page courante slate-500 500 weight
+- Font-size : 13px
+- Position : au-dessus du hero header
+- Toutes les sous-pages de Reglages doivent avoir un breadcrumb
