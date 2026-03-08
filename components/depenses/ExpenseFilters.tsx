@@ -29,44 +29,52 @@ export default function ExpenseFilters({
       <div
         style={{
           display: "flex",
-          gap: "4px",
-          background: "var(--slate-100)",
-          borderRadius: "var(--radius-md)",
-          padding: "4px",
-          margin: "20px 20px 0",
+          margin: "0 20px",
+          borderBottom: "2px solid var(--slate-100, #F1F5F9)",
+          marginBottom: "20px",
         }}
       >
         {[
-          { key: "all" as const, label: "Tout" },
-          { key: "planned" as const, label: `Charges (${plannedCount})` },
-          {
-            key: "unplanned" as const,
-            label: `Imprévus (${unplannedCount})`,
-          },
+          { key: "all" as const, label: "Toutes" },
+          { key: "planned" as const, label: "Récurrentes" },
+          { key: "unplanned" as const, label: "Ponctuelles" },
         ].map(({ key, label }) => (
           <button
             key={key}
             onClick={() => onTypeFilterChange(key)}
             style={{
-              flex: key === "all" ? "0 0 auto" : 1,
-              padding: "9px 12px",
-              whiteSpace: "nowrap",
-              borderRadius: "var(--radius-sm)",
-              fontSize: "13px",
-              fontWeight: 650,
-              cursor: "pointer",
-              background: typeFilter === key ? "var(--white)" : "transparent",
+              flex: 1,
+              padding: "12px 16px",
+              textAlign: "center" as const,
+              fontSize: "14px",
+              fontWeight: 600,
               color:
-                typeFilter === key ? "var(--slate-900)" : "var(--slate-500)",
+                typeFilter === key
+                  ? "var(--teal-700, #0F766E)"
+                  : "var(--slate-400, #94A3B8)",
+              cursor: "pointer",
               border: "none",
-              boxShadow:
-                typeFilter === key ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
-              transition: "all 0.2s ease",
-              textAlign: "center",
-              fontFamily: "var(--font)",
+              background: "none",
+              position: "relative" as const,
+              transition: "color 0.2s ease",
+              letterSpacing: "-0.01em",
             }}
           >
             {label}
+            {typeFilter === key && (
+              <span
+                style={{
+                  position: "absolute" as const,
+                  bottom: "-2px",
+                  left: "16px",
+                  right: "16px",
+                  height: "2px",
+                  background: "var(--teal-700, #0F766E)",
+                  borderRadius: "1px 1px 0 0",
+                  display: "block",
+                }}
+              />
+            )}
           </button>
         ))}
       </div>
