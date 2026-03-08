@@ -447,38 +447,6 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
               Ajoute tes cartes pour associer tes dépenses et prélèvements
               automatiques
             </p>
-            <button
-              onClick={openCreate}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "12px 24px",
-                background: "var(--accent)",
-                color: "white",
-                border: "none",
-                borderRadius: "var(--radius-md)",
-                fontSize: "15px",
-                fontWeight: 600,
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-              }}
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-              Ajouter ma première carte
-            </button>
           </div>
         ) : (
           initial.map((card) => (
@@ -741,11 +709,6 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
         onClick={openCreate}
         className="fab fab-mobile-only"
         aria-label="Ajouter une carte"
-        style={{
-          width: "52px",
-          height: "52px",
-          borderRadius: "50%",
-        }}
       >
         <svg
           width="24"
