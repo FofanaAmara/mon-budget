@@ -22,10 +22,11 @@ export default function DettesSection({
 }: Props) {
   return (
     <div style={{ margin: "0 20px 32px" }}>
+      {/* Section header */}
       <div
         style={{
           display: "flex",
-          alignItems: "baseline",
+          alignItems: "center",
           justifyContent: "space-between",
           marginBottom: "14px",
         }}
@@ -54,6 +55,7 @@ export default function DettesSection({
             border: "none",
             cursor: "pointer",
             letterSpacing: "-0.01em",
+            display: "inline-flex",
             alignItems: "center",
             gap: "6px",
           }}
@@ -75,9 +77,16 @@ export default function DettesSection({
       </div>
 
       {debts.length === 0 ? (
+        /* Empty state — standalone container */
         <div
-          className="card"
-          style={{ padding: "32px 20px", textAlign: "center" }}
+          style={{
+            background: "white",
+            border: "1px solid #E2E8F0",
+            borderRadius: "18px",
+            boxShadow: "0 1px 2px rgba(15, 118, 110, 0.05)",
+            padding: "32px 20px",
+            textAlign: "center",
+          }}
         >
           <div style={{ fontSize: "2rem", marginBottom: "8px", opacity: 0.5 }}>
             &#128201;
@@ -103,11 +112,21 @@ export default function DettesSection({
           </p>
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-          {debts.map((debt) => (
+        /* GroupedContainer */
+        <div
+          style={{
+            background: "white",
+            border: "1px solid #E2E8F0",
+            borderRadius: "18px",
+            boxShadow: "0 1px 2px rgba(15, 118, 110, 0.05)",
+            overflow: "hidden",
+          }}
+        >
+          {debts.map((debt, index) => (
             <DebtCard
               key={debt.id}
               debt={debt}
+              isFirst={index === 0}
               onPay={() => onPay(debt)}
               onCharge={() => onCharge(debt)}
               onEdit={() => onEdit(debt)}

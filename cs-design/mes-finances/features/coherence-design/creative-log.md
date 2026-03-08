@@ -214,3 +214,43 @@
 **Screenshots validation :** `.tmp/screenshots/DESIGN-005/`
 - sections-desktop.png, sections-mobile.png
 - cartes-desktop.png, cartes-mobile.png
+
+---
+
+### 2026-03-07 -- DESIGN-002 : Harmoniser le style des cards de la page Patrimoine
+
+**Mode :** Feature (story DESIGN-002 dans la feature coherence-design)
+
+**Fichiers modifies :**
+
+| Fichier | Type de changement |
+|---------|-------------------|
+| `components/projets/SavingsProjectCard.tsx` | Suppression `borderLeft: 4px solid teal`, ajout icone 36x36 bg #F0FDFA, prop `isFirst` pour supprimer le border-top de la premiere row, hover state background |
+| `components/projets/DebtCard.tsx` | Suppression `borderLeft: 4px solid error`, ajout icone 36x36 bg #FEF2F2, prop `isFirst`, hover state background |
+| `components/projets/EpargneSection.tsx` | Suppression `gap: 12px` sur les cards individuelles, ajout GroupedContainer (white bg, border #E2E8F0, border-radius 18px, shadow 0 1px 2px rgba(15,118,110,0.05), overflow hidden) |
+| `components/projets/DettesSection.tsx` | Meme transformation : GroupedContainer pour la liste, container standalone pour l'empty state |
+
+**Decisions d'integration :**
+
+| Decision | Choix | Raison |
+|----------|-------|--------|
+| Structure du GroupedContainer | Container unique, rows avec `borderTop: isFirst ? none : 1px solid #E2E8F0` | Pattern exact du handoff. Equivalent visuel des sections Depenses/Revenus. |
+| Icone epargne | Clock icon (SVG circle + hands) | Semantique "suivi dans le temps / progression vers un objectif". Handoff ne specifie pas l'icone, seulement la couleur du conteneur. |
+| Icone dette | Dollar sign icon (SVG ligne + path) | Semantique "finances/argent/paiement". Handoff ne specifie pas l'icone. |
+| Hover state | `onMouseEnter/Leave` avec background #F8FAFC (slate-50) | Spec dit "background row → slate-50, transition 150ms". Pas de classe Tailwind disponible (pas de CSS module). Inline event handlers suffisants. |
+| Active/tap (scale 0.99) | Non implemente | Le tap cible les boutons action (icon-btn) a l'interieur, pas la row entiere. Scale sur la row entiere craserait les boutons. |
+| Empty state (epargne) | Conserve dans le GroupedContainer, apres freeSavings | L'epargne libre est TOUJOURS presente, donc le container n'est jamais vide. Le message "Aucun projet" est une row speciale sous freeSavings. |
+| Empty state (dettes) | Container standalone (pas a l'interieur d'un GroupedContainer) | Quand 0 dettes, pas de container "fantome" avec juste un message. Container propre avec le message vide. |
+
+**Ecarts mockup → code :**
+- Aucun ecart structurel. Tous les contenus (nom, badges, montants colores, progress bars, suggestion mensuelle, boutons action) sont preserves.
+- La progression a 100% utilise amber-500 pour la barre (spec "barre pleine, couleur amber-500"). Deja implemente dans la logique existante.
+
+**Known gaps :**
+- Aucun. Changement purement visuel, aucune logique metier touchee.
+
+**Screenshots validation :** `cs-design/mes-finances/features/coherence-design/screenshots/`
+- before/patrimoine-desktop-DESIGN-002.png
+- before/patrimoine-mobile-DESIGN-002.png
+- after/patrimoine-desktop.png
+- after/patrimoine-mobile.png

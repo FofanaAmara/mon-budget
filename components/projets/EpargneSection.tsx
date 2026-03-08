@@ -22,12 +22,15 @@ export default function EpargneSection({
   onHistory,
   onDeleteProject,
 }: Props) {
+  const totalCount = 1 + projets.length;
+
   return (
     <div style={{ margin: "0 20px 32px" }}>
+      {/* Section header */}
       <div
         style={{
           display: "flex",
-          alignItems: "baseline",
+          alignItems: "center",
           justifyContent: "space-between",
           marginBottom: "14px",
         }}
@@ -41,7 +44,7 @@ export default function EpargneSection({
             color: "var(--teal-700)",
           }}
         >
-          ÉPARGNE ({1 + projets.length})
+          ÉPARGNE ({totalCount})
         </h2>
         <button
           onClick={onCreateProject}
@@ -56,6 +59,7 @@ export default function EpargneSection({
             border: "none",
             cursor: "pointer",
             letterSpacing: "-0.01em",
+            display: "inline-flex",
             alignItems: "center",
             gap: "6px",
           }}
@@ -76,11 +80,21 @@ export default function EpargneSection({
         </button>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        {/* Épargne libre -- permanent */}
+      {/* GroupedContainer */}
+      <div
+        style={{
+          background: "white",
+          border: "1px solid #E2E8F0",
+          borderRadius: "18px",
+          boxShadow: "0 1px 2px rgba(15, 118, 110, 0.05)",
+          overflow: "hidden",
+        }}
+      >
+        {/* Épargne libre — permanent, always first */}
         <SavingsProjectCard
           projet={freeSavings}
           isFreeSavings
+          isFirst={true}
           onAddSavings={() => onAddSavings(freeSavings)}
           onTransfer={() => onTransfer(freeSavings)}
           onHistory={() => onHistory(freeSavings)}
@@ -90,11 +104,14 @@ export default function EpargneSection({
         {/* Project pots */}
         {projets.length === 0 ? (
           <div
-            className="card"
-            style={{ padding: "32px 20px", textAlign: "center" }}
+            style={{
+              padding: "24px 16px",
+              textAlign: "center",
+              borderTop: "1px solid #E2E8F0",
+            }}
           >
             <div
-              style={{ fontSize: "2rem", marginBottom: "8px", opacity: 0.5 }}
+              style={{ fontSize: "1.5rem", marginBottom: "8px", opacity: 0.5 }}
             >
               &#127919;
             </div>
@@ -123,6 +140,7 @@ export default function EpargneSection({
             <SavingsProjectCard
               key={projet.id}
               projet={projet}
+              isFirst={false}
               onAddSavings={() => onAddSavings(projet)}
               onTransfer={() => onTransfer(projet)}
               onHistory={() => onHistory(projet)}
