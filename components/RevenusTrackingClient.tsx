@@ -1,14 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { currentMonthKey } from "@/lib/month-utils";
 import MonthNavigator from "@/components/MonthNavigator";
 import RevenusMonument from "@/components/revenus/RevenusMonument";
 import IncomeTrackingTab from "@/components/revenus/IncomeTrackingTab";
 import AllocationTrackingTab from "@/components/revenus/AllocationTrackingTab";
-import AdhocIncomeModal from "@/components/AdhocIncomeModal";
-import AdhocAllocationModal from "@/components/AdhocAllocationModal";
 import type {
   MonthlyIncome,
   Income,
@@ -40,12 +37,9 @@ export default function RevenusTrackingClient({
   projects,
   initialTab = "revenus",
 }: Props) {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"revenus" | "allocation">(
     initialTab,
   );
-  const [adhocIncomeOpen, setAdhocIncomeOpen] = useState(false);
-  const [adhocAllocOpen, setAdhocAllocOpen] = useState(false);
 
   const today = currentMonthKey();
   const isCurrentMonth = month === today;
@@ -129,71 +123,6 @@ export default function RevenusTrackingClient({
         ))}
       </div>
 
-      {/* Section header with desktop-only add button */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 20px",
-          margin: "0 0 12px",
-        }}
-      >
-        <p
-          style={{
-            fontSize: "11px",
-            fontWeight: 700,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: "var(--teal-700)",
-          }}
-        >
-          {activeTab === "revenus"
-            ? `REVENUS (${monthlyIncomes.length})`
-            : `ALLOCATIONS (${monthlyAllocations.length})`}
-        </p>
-        {isCurrentMonth && (
-          <button
-            onClick={() =>
-              activeTab === "revenus"
-                ? setAdhocIncomeOpen(true)
-                : setAdhocAllocOpen(true)
-            }
-            className="btn-desktop-only"
-            style={{
-              alignItems: "center",
-              gap: "6px",
-              padding: "8px 16px",
-              background: "#0F766E",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "13px",
-              fontWeight: 600,
-              cursor: "pointer",
-              letterSpacing: "-0.01em",
-              display: "inline-flex",
-            }}
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-            >
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            {activeTab === "revenus"
-              ? "Revenu ponctuel"
-              : "Allocation ponctuelle"}
-          </button>
-        )}
-      </div>
-
       {/* Tab content */}
       <div style={{ padding: "0 20px" }}>
         {activeTab === "revenus" && (
@@ -219,28 +148,6 @@ export default function RevenusTrackingClient({
           />
         )}
       </div>
-
-      {/* Desktop adhoc modals (opened by header button) */}
-      {adhocIncomeOpen && (
-        <AdhocIncomeModal
-          month={month}
-          onClose={() => {
-            setAdhocIncomeOpen(false);
-            router.refresh();
-          }}
-        />
-      )}
-      {adhocAllocOpen && (
-        <AdhocAllocationModal
-          month={month}
-          sections={sections}
-          projects={projects}
-          onClose={() => {
-            setAdhocAllocOpen(false);
-            router.refresh();
-          }}
-        />
-      )}
     </div>
   );
 }
