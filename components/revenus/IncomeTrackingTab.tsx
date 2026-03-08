@@ -127,6 +127,63 @@ export default function IncomeTrackingTab({
   if (totalCount === 0)
     return (
       <>
+        {/* Section header with desktop-only add button — even in empty state */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: "10px",
+          }}
+        >
+          <p
+            style={{
+              fontSize: "11px",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase" as const,
+              color: "var(--teal-700, #0F766E)",
+              paddingLeft: "4px",
+            }}
+          >
+            Revenus (0)
+          </p>
+          {isCurrentMonth && (
+            <button
+              onClick={() => setAdhocModal(true)}
+              className="btn-desktop-only"
+              style={{
+                alignItems: "center",
+                gap: "6px",
+                padding: "8px 16px",
+                background: "#0F766E",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                fontSize: "13px",
+                fontWeight: 600,
+                cursor: "pointer",
+                letterSpacing: "-0.01em",
+                display: "inline-flex",
+              }}
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              >
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Revenu ponctuel
+            </button>
+          )}
+        </div>
+
         <div
           style={{
             display: "flex",
