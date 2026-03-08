@@ -10,6 +10,7 @@ import {
 } from "@/lib/utils";
 import type { Income, IncomeFrequency, IncomeSource } from "@/lib/types";
 import IncomeModal from "./IncomeModal";
+import StatusBadge from "@/components/StatusBadge";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -492,17 +493,8 @@ function SourceCard({
                 flexWrap: "wrap",
               }}
             >
-              <span
-                style={{
-                  fontSize: "11px",
-                  fontWeight: 700,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  color: "var(--slate-400)",
-                }}
-              >
-                {srcMeta.label}
-              </span>
+              {/* Source type badge — Emploi/Business/etc. (DESIGN-006: success variant) */}
+              <StatusBadge label={srcMeta.label} variant="success" />
               <span
                 style={{
                   width: "3px",
@@ -622,55 +614,9 @@ function SourceCard({
           }}
         >
           {inc.auto_deposit && !isVariable && (
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "4px",
-                padding: "4px 10px",
-                borderRadius: "100px",
-                fontSize: "11px",
-                fontWeight: 700,
-                letterSpacing: "0.02em",
-                background: "var(--teal-50)",
-                color: "var(--teal-700)",
-                border: "1px solid rgba(15, 118, 110, 0.1)",
-              }}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                width="12"
-                height="12"
-              >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              Depot auto
-            </span>
+            <StatusBadge label="Depot auto" variant="success" />
           )}
-          {isVariable && (
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "4px",
-                padding: "4px 10px",
-                borderRadius: "100px",
-                fontSize: "11px",
-                fontWeight: 700,
-                letterSpacing: "0.02em",
-                background: "var(--warning-light)",
-                color: "var(--amber-600)",
-                border: "1px solid rgba(245, 158, 11, 0.15)",
-              }}
-            >
-              Variable
-            </span>
-          )}
+          {isVariable && <StatusBadge label="Variable" variant="warning" />}
         </div>
       </div>
     </div>

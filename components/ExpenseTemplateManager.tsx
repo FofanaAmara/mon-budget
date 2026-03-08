@@ -12,6 +12,7 @@ import {
 } from "@/lib/utils";
 import ExpenseModal from "@/components/ExpenseModal";
 import type { Expense, Section, Card, RecurrenceFrequency } from "@/lib/types";
+import StatusBadge from "@/components/StatusBadge";
 
 type Props = {
   expenses: Expense[];
@@ -619,78 +620,18 @@ function ExpenseRow({
 
           {/* Frequency badge (RECURRING) */}
           {expense.type === "RECURRING" && expense.recurrence_frequency && (
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                padding: "2px 8px",
-                background: "var(--surface-sunken)",
-                borderRadius: "100px",
-                fontSize: "11px",
-                fontWeight: 600,
-                color: "var(--text-tertiary)",
-                letterSpacing: "-0.01em",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {FREQ_LABELS[expense.recurrence_frequency]}
-            </span>
+            <StatusBadge
+              label={FREQ_LABELS[expense.recurrence_frequency]}
+              variant="neutral"
+            />
           )}
 
           {/* Auto-debit badge */}
-          {expense.auto_debit && (
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "3px",
-                padding: "2px 8px",
-                background: "var(--positive-subtle)",
-                borderRadius: "100px",
-                fontSize: "11px",
-                fontWeight: 600,
-                color: "var(--positive)",
-                letterSpacing: "-0.01em",
-                whiteSpace: "nowrap",
-              }}
-            >
-              <svg
-                width="11"
-                height="11"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                <path d="M21 3v5h-5" />
-                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                <path d="M8 16H3v5" />
-              </svg>
-              auto
-            </span>
-          )}
+          {expense.auto_debit && <StatusBadge label="Auto" variant="success" />}
 
           {/* One-time badge */}
           {expense.type === "ONE_TIME" && (
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                padding: "2px 8px",
-                background: "var(--amber-subtle)",
-                borderRadius: "100px",
-                fontSize: "11px",
-                fontWeight: 600,
-                color: "var(--amber-hover)",
-                letterSpacing: "-0.01em",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Ponctuel
-            </span>
+            <StatusBadge label="Ponctuel" variant="warning" />
           )}
         </div>
 

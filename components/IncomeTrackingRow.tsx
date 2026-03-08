@@ -8,6 +8,8 @@ import {
 } from "@/lib/utils";
 import { SOURCE_META } from "@/lib/constants";
 import type { MonthlyIncome, Income, IncomeSource } from "@/lib/types";
+import StatusBadge from "@/components/StatusBadge";
+import type { StatusBadgeVariant } from "@/components/StatusBadge";
 
 // ─── Fixed income instance row (from monthly_incomes) ───────────────────────
 
@@ -34,22 +36,7 @@ export function IncomeInstanceRow({
   const srcMeta = SOURCE_META[(mi.income_source ?? "OTHER") as IncomeSource];
   const isReceived = mi.status === "RECEIVED" || mi.status === "PARTIAL";
 
-  const statusBg =
-    mi.status === "RECEIVED"
-      ? "var(--positive-subtle)"
-      : mi.status === "PARTIAL"
-        ? "var(--warning-subtle)"
-        : mi.status === "MISSED"
-          ? "var(--negative-subtle)"
-          : "var(--surface-sunken)";
-  const statusColor =
-    mi.status === "RECEIVED"
-      ? "var(--positive-text)"
-      : mi.status === "PARTIAL"
-        ? "var(--warning-text)"
-        : mi.status === "MISSED"
-          ? "var(--negative-text)"
-          : "var(--text-tertiary)";
+  // DESIGN-006: semantic badge variant mapping
   const statusLabel =
     mi.status === "RECEIVED"
       ? "Reçu"
@@ -58,6 +45,15 @@ export function IncomeInstanceRow({
         : mi.status === "MISSED"
           ? "Manqué"
           : "Attendu";
+
+  const statusVariant: StatusBadgeVariant =
+    mi.status === "RECEIVED"
+      ? "success"
+      : mi.status === "PARTIAL"
+        ? "warning"
+        : mi.status === "MISSED"
+          ? "danger"
+          : "neutral";
 
   return (
     <div
@@ -114,41 +110,9 @@ export function IncomeInstanceRow({
                 letterSpacing: "0.02em",
               }}
             >
-              <span
-                style={{
-                  padding: "1px 6px",
-                  borderRadius: "999px",
-                  background: statusBg,
-                  color: statusColor,
-                  fontSize: "10px",
-                  fontWeight: 700,
-                  letterSpacing: "0.02em",
-                }}
-              >
-                {statusLabel}
-              </span>
+              <StatusBadge label={statusLabel} variant={statusVariant} />
               {mi.is_auto_deposited && (
-                <>
-                  <span
-                    style={{
-                      width: "3px",
-                      height: "3px",
-                      borderRadius: "50%",
-                      background: "var(--slate-300)",
-                      display: "inline-block",
-                      flexShrink: 0,
-                    }}
-                  />
-                  <span
-                    style={{
-                      textTransform: "uppercase",
-                      letterSpacing: "0.06em",
-                      fontWeight: 700,
-                    }}
-                  >
-                    Auto
-                  </span>
-                </>
+                <StatusBadge label="Auto" variant="success" />
               )}
               {isReceived && mi.received_at && (
                 <>
@@ -398,19 +362,7 @@ export function VariableIncomeRow({
                 letterSpacing: "0.02em",
               }}
             >
-              <span
-                style={{
-                  padding: "1px 6px",
-                  borderRadius: "999px",
-                  background: "var(--surface-sunken)",
-                  color: "var(--text-tertiary)",
-                  fontSize: "10px",
-                  fontWeight: 700,
-                  letterSpacing: "0.02em",
-                }}
-              >
-                Variable
-              </span>
+              <StatusBadge label="Variable" variant="warning" />
             </div>
           </div>
 

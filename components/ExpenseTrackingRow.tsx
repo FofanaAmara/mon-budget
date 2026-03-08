@@ -11,6 +11,8 @@ import {
   getStatusLabel,
   type ExpenseIconVariant,
 } from "@/lib/expense-display-utils";
+import StatusBadge from "@/components/StatusBadge";
+import type { StatusBadgeVariant } from "@/components/StatusBadge";
 
 type Props = {
   expense: MonthlyExpense;
@@ -172,35 +174,20 @@ export default function ExpenseTrackingRow({
           >
             Charge
           </span>
-          <span
-            style={{
-              fontSize: "10px",
-              fontWeight: 700,
-              letterSpacing: "0.04em",
-              textTransform: "uppercase",
-              padding: "2px 8px",
-              borderRadius: "4px",
-              background: badge.bg,
-              color: badge.color,
-            }}
-          >
-            {badge.label}
-          </span>
+          <StatusBadge
+            label={badge.label}
+            variant={
+              (displayStatus === "PAID" || displayStatus === "IN_PROGRESS"
+                ? "success"
+                : displayStatus === "OVERDUE" || displayStatus === "DEFERRED"
+                  ? displayStatus === "OVERDUE"
+                    ? "danger"
+                    : "warning"
+                  : "neutral") as StatusBadgeVariant
+            }
+          />
           {!expense.is_planned && (
-            <span
-              style={{
-                fontSize: "10px",
-                fontWeight: 700,
-                letterSpacing: "0.04em",
-                textTransform: "uppercase",
-                padding: "2px 8px",
-                borderRadius: "4px",
-                background: "var(--amber-100)",
-                color: "var(--amber-600)",
-              }}
-            >
-              Imprévu
-            </span>
+            <StatusBadge label="Imprévu" variant="warning" />
           )}
         </div>
       </div>

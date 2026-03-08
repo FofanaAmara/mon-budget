@@ -11,6 +11,8 @@ import {
   getTimelineAmountColor,
   type TimelineIconVariant,
 } from "@/lib/expense-display-utils";
+import StatusBadge from "@/components/StatusBadge";
+import type { StatusBadgeVariant } from "@/components/StatusBadge";
 
 type Props = {
   expenses: MonthlyExpense[];
@@ -302,20 +304,16 @@ export default function TabTimeline({ expenses, monthlyIncomes }: Props) {
                     >
                       {ev.type === "income" ? "Revenu" : "Charge"}
                     </span>
-                    <span
-                      style={{
-                        fontSize: "10px",
-                        fontWeight: 700,
-                        letterSpacing: "0.04em",
-                        textTransform: "uppercase",
-                        padding: "2px 8px",
-                        borderRadius: "4px",
-                        background: badgeCfg.bg,
-                        color: badgeCfg.color,
-                      }}
-                    >
-                      {badgeCfg.label}
-                    </span>
+                    <StatusBadge
+                      label={badgeCfg.label}
+                      variant={
+                        (badge === "received" || badge === "paid"
+                          ? "success"
+                          : badge === "late"
+                            ? "danger"
+                            : "neutral") as StatusBadgeVariant
+                      }
+                    />
                   </div>
                 </div>
 

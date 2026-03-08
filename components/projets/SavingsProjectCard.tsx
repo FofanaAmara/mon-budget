@@ -3,6 +3,7 @@
 import React from "react";
 import { formatCAD, calcMonthlySuggested, formatDate } from "@/lib/utils";
 import type { Expense } from "@/lib/types";
+import StatusBadge from "@/components/StatusBadge";
 
 type SavingsProjectCardProps = {
   projet: Expense;
@@ -63,20 +64,7 @@ function SavingsProjectCardComponent({
           >
             {isFreeSavings ? "Épargne libre" : projet.name}
             {isFreeSavings && (
-              <span
-                style={{
-                  fontSize: "10px",
-                  fontWeight: 700,
-                  padding: "2px 7px",
-                  background: "var(--teal-50)",
-                  color: "var(--teal-700)",
-                  borderRadius: "100px",
-                  letterSpacing: "0.04em",
-                  textTransform: "uppercase",
-                }}
-              >
-                Permanent
-              </span>
+              <StatusBadge label="Permanent" variant="success" />
             )}
           </p>
           <div
@@ -88,17 +76,10 @@ function SavingsProjectCardComponent({
               flexWrap: "wrap",
             }}
           >
-            <span
-              style={{
-                fontSize: "11px",
-                fontWeight: 700,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                color: "var(--slate-400)",
-              }}
-            >
-              {isFreeSavings ? "Pot libre" : "Projet"}
-            </span>
+            <StatusBadge
+              label={isFreeSavings ? "Pot libre" : "Projet"}
+              variant="neutral"
+            />
             {!isFreeSavings && projet.target_date && (
               <>
                 <span

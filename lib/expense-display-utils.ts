@@ -78,19 +78,21 @@ export type BadgeVariant =
   | "late"
   | "expected";
 
+// DESIGN-006: Semantic palette — pill badges
+// success=#ECFDF5/#059669  neutral=#F1F5F9/#64748B  warning=#FEF3C7/#92400E  danger=#FEF2F2/#DC2626
 export const BADGE_STYLES: Record<
   BadgeVariant,
   { bg: string; color: string; label: string }
 > = {
   received: {
-    bg: "var(--success-light)",
-    color: "var(--positive)",
+    bg: "#ECFDF5",
+    color: "#059669",
     label: "Reçu",
   },
-  paid: { bg: "var(--teal-50)", color: "var(--teal-700)", label: "Payé" },
+  paid: { bg: "#ECFDF5", color: "#059669", label: "Payé" },
   upcoming: {
-    bg: "var(--slate-100)",
-    color: "var(--slate-500)",
+    bg: "#F1F5F9",
+    color: "#64748B",
     label: "Prévu",
   },
   late: {
@@ -99,8 +101,8 @@ export const BADGE_STYLES: Record<
     label: "En retard",
   },
   expected: {
-    bg: "var(--slate-100)",
-    color: "var(--slate-500)",
+    bg: "#F1F5F9",
+    color: "#64748B",
     label: "Attendu",
   },
 };
@@ -119,13 +121,14 @@ export function getBadgeVariant(event: {
 
 // ── Status badge (ExpenseTrackingRow) ──
 
+// DESIGN-006: updated to use semantic pill palette
 export function getStatusBadge(status: string): {
   bg: string;
   color: string;
   label: string;
 } {
   if (status === "PAID")
-    return { bg: "var(--teal-50)", color: "var(--teal-700)", label: "Payé" };
+    return { bg: "#ECFDF5", color: "#059669", label: "Payé" };
   if (status === "OVERDUE")
     return {
       bg: "var(--error-light)",
@@ -139,12 +142,8 @@ export function getStatusBadge(status: string): {
       label: "Reporté",
     };
   if (status === "IN_PROGRESS")
-    return {
-      bg: "var(--teal-50)",
-      color: "var(--teal-700)",
-      label: "En cours",
-    };
-  return { bg: "var(--slate-100)", color: "var(--slate-500)", label: "Prévu" };
+    return { bg: "#ECFDF5", color: "#059669", label: "En cours" };
+  return { bg: "#F1F5F9", color: "#64748B", label: "Prévu" };
 }
 
 // ── Amount color ──
@@ -173,7 +172,7 @@ export function getStatusLabel(status: string): string {
   if (status === "OVERDUE") return "En retard";
   if (status === "DEFERRED") return "Reporté";
   if (status === "IN_PROGRESS") return "En cours";
-  return "Prévu";
+  return "Prévu"; // DESIGN-006: first letter uppercase, rest lowercase
 }
 
 // ── Display group derivation (progressive expense logic) ──

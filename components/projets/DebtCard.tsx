@@ -3,6 +3,7 @@
 import React from "react";
 import { formatCAD } from "@/lib/utils";
 import type { Debt } from "@/lib/types";
+import StatusBadge from "@/components/StatusBadge";
 
 const FREQ_LABELS: Record<string, string> = {
   WEEKLY: "/sem",
@@ -81,19 +82,8 @@ function DebtCardComponent({
                 {debt.section.icon} {debt.section.name}
               </span>
             )}
-            {!debt.section && (
-              <span
-                style={{
-                  fontSize: "11px",
-                  fontWeight: 700,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  color: "var(--slate-400)",
-                }}
-              >
-                Dette
-              </span>
-            )}
+            {/* DESIGN-006: "DETTE" → "Dette" danger badge */}
+            {!debt.section && <StatusBadge label="Dette" variant="danger" />}
             {debt.interest_rate != null && (
               <>
                 <span
