@@ -194,7 +194,7 @@ export default function SectionsClient({
         <Breadcrumb
           items={[
             { label: "Reglages", href: "/parametres" },
-            { label: "Mes sections" },
+            { label: "Catégories de dépenses" },
           ]}
         />
       </nav>
@@ -217,7 +217,7 @@ export default function SectionsClient({
             marginBottom: "8px",
           }}
         >
-          MES SECTIONS
+          MES CATÉGORIES
         </p>
         <div>
           <span
@@ -240,7 +240,7 @@ export default function SectionsClient({
               marginLeft: "6px",
             }}
           >
-            {sections.length === 1 ? "section" : "sections"}
+            {sections.length === 1 ? "catégorie" : "catégories"}
           </span>
         </div>
         <p
@@ -252,7 +252,7 @@ export default function SectionsClient({
           }}
         >
           {sections.length === 0
-            ? "Crée ta première section pour organiser tes dépenses"
+            ? "Crée ta première catégorie pour organiser tes dépenses"
             : "Glisse pour réordonner · Appuie pour modifier"}
         </p>
       </div>
@@ -279,7 +279,7 @@ export default function SectionsClient({
             color: "var(--teal-700)",
           }}
         >
-          LISTE ({sections.length})
+          CATÉGORIES ({sections.length})
         </p>
         {/* Desktop-only add button */}
         <button
@@ -327,7 +327,7 @@ export default function SectionsClient({
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
-          Nouvelle section
+          Nouvelle catégorie
         </button>
       </div>
 
@@ -373,7 +373,7 @@ export default function SectionsClient({
                 marginBottom: "8px",
               }}
             >
-              Aucune section
+              Aucune catégorie
             </p>
             <p
               style={{
@@ -384,8 +384,8 @@ export default function SectionsClient({
                 margin: "0 auto 24px",
               }}
             >
-              Les sections organisent tes dépenses par catégorie (Maison,
-              Transport, Loisirs…)
+              Les catégories organisent tes dépenses (Maison, Transport,
+              Loisirs…)
             </p>
             <button
               onClick={openCreate}
@@ -417,7 +417,7 @@ export default function SectionsClient({
                 <line x1="12" y1="5" x2="12" y2="19" />
                 <line x1="5" y1="12" x2="19" y2="12" />
               </svg>
-              Créer ma première section
+              Créer ma première catégorie
             </button>
           </div>
         ) : (
@@ -540,7 +540,7 @@ export default function SectionsClient({
                       }}
                     >
                       {deleteExpenseCount > 0
-                        ? `${deleteExpenseCount} charge(s) seront sans section. Supprimer ?`
+                        ? `${deleteExpenseCount} charge(s) seront sans catégorie. Supprimer ?`
                         : "Supprimer ?"}
                     </span>
                     <button
@@ -622,7 +622,7 @@ export default function SectionsClient({
       <button
         onClick={openCreate}
         className="fab fab-mobile-only"
-        aria-label="Nouvelle section"
+        aria-label="Nouvelle catégorie"
         style={{
           width: "52px",
           height: "52px",
@@ -700,8 +700,8 @@ export default function SectionsClient({
                   }}
                 >
                   {modal.mode === "create"
-                    ? "Nouvelle section"
-                    : "Modifier la section"}
+                    ? "Nouvelle catégorie"
+                    : "Modifier la catégorie"}
                 </h3>
               </div>
               <button

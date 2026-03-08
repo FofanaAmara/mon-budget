@@ -367,7 +367,7 @@ export default function BottomNav() {
           top: 0,
           left: 0,
           width: "260px",
-          height: "100vh",
+          height: "100dvh",
           flexDirection: "column",
           overflow: "hidden",
           background: "var(--surface-raised)",
