@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   markIncomeReceived,
   markIncomeAsExpected,
@@ -45,13 +46,15 @@ export default function IncomeTrackingTab({
     useState<MonthlyIncome | null>(null);
   const [updateAmount, setUpdateAmount] = useState("");
 
-  const expectedIncomes = monthlyIncomes.filter(
+  // Split incomes into recurring (expected > 0 or variable) vs adhoc (expected = 0)
+  const recurringIncomes = monthlyIncomes.filter(
     (mi) => Number(mi.expected_amount ?? 0) > 0,
   );
   const adhocIncomes = monthlyIncomes.filter(
     (mi) => Number(mi.expected_amount ?? 0) === 0,
   );
-  const totalCount = monthlyIncomes.length + unregisteredVariables.length;
+  const recurringCount = recurringIncomes.length + unregisteredVariables.length;
+  const adhocCount = adhocIncomes.length;
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
@@ -122,49 +125,191 @@ export default function IncomeTrackingTab({
     });
   }
 
-  // ── Empty state ─────────────────────────────────────────────────────────
+  // ── Render ─────────────────────────────────────────────────────────────────
 
-  if (totalCount === 0)
-    return (
-      <>
-        {/* Section header with desktop-only add button — even in empty state */}
+  return (
+    <>
+      {/* ═══════ SECTION 1: Revenus récurrents ═══════ */}
+      <div style={{ marginBottom: "24px" }}>
+        {/* Section header — no add button, link to settings */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            marginBottom: "10px",
+            marginBottom: "14px",
           }}
         >
-          <p
+          <h2
             style={{
               fontSize: "11px",
               fontWeight: 700,
               letterSpacing: "0.08em",
-              textTransform: "uppercase" as const,
+              textTransform: "uppercase",
               color: "var(--teal-700, #0F766E)",
-              paddingLeft: "4px",
             }}
           >
-            Revenus (0)
-          </p>
+            REVENUS RÉCURRENTS ({recurringCount})
+          </h2>
+          <Link
+            href="/parametres"
+            style={{
+              fontSize: "12px",
+              fontWeight: 500,
+              color: "var(--slate-400, #94A3B8)",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "4px",
+            }}
+          >
+            Gérer dans Réglages
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </Link>
+        </div>
+
+        {/* Recurring items container */}
+        {recurringCount > 0 ? (
+          <div
+            style={{
+              background: "white",
+              border: "1px solid var(--slate-200, #E2E8F0)",
+              borderRadius: "var(--radius-lg, 18px)",
+              boxShadow: "0 1px 2px rgba(15, 118, 110, 0.05)",
+              overflow: "hidden",
+            }}
+          >
+            {recurringIncomes.map((mi, i) => (
+              <IncomeInstanceRow
+                key={mi.id}
+                mi={mi}
+                index={i}
+                isCurrentMonth={isCurrentMonth}
+                onMarkReceived={() => openReceiveFixed(mi)}
+                onMarkExpected={() => handleMarkExpected(mi.id)}
+                onUpdateAmount={() => openUpdateAmount(mi)}
+              />
+            ))}
+            {unregisteredVariables.map((inc, i) => (
+              <VariableIncomeRow
+                key={inc.id}
+                inc={inc}
+                index={recurringIncomes.length + i}
+                isCurrentMonth={isCurrentMonth}
+                onMarkReceived={() => openReceiveVariable(inc)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div
+            style={{
+              background: "white",
+              border: "1px solid var(--slate-200, #E2E8F0)",
+              borderRadius: "var(--radius-lg, 18px)",
+              padding: "24px 16px",
+              textAlign: "center",
+            }}
+          >
+            <div
+              style={{ fontSize: "1.5rem", marginBottom: "8px", opacity: 0.5 }}
+            >
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{ color: "var(--slate-300, #CBD5E1)" }}
+              >
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>
+            </div>
+            <p
+              style={{
+                color: "var(--slate-400, #94A3B8)",
+                fontSize: "14px",
+                fontWeight: 500,
+                marginBottom: "4px",
+              }}
+            >
+              Aucun revenu récurrent
+            </p>
+            <p
+              style={{
+                color: "var(--slate-300, #CBD5E1)",
+                fontSize: "12px",
+              }}
+            >
+              Ajoutez vos sources de revenus dans les{" "}
+              <Link
+                href="/parametres"
+                style={{
+                  color: "var(--teal-600, #0D9488)",
+                  textDecoration: "underline",
+                  textUnderlineOffset: "2px",
+                }}
+              >
+                réglages
+              </Link>
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* ═══════ SECTION 2: Revenus ponctuels ═══════ */}
+      <div style={{ marginBottom: "20px" }}>
+        {/* Section header — with add button */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: "14px",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "11px",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "var(--teal-700, #0F766E)",
+            }}
+          >
+            REVENUS PONCTUELS ({adhocCount})
+          </h2>
           {isCurrentMonth && (
             <button
               onClick={() => setAdhocModal(true)}
               className="btn-desktop-only"
               style={{
-                alignItems: "center",
-                gap: "6px",
                 padding: "8px 16px",
-                background: "#0F766E",
-                color: "white",
-                border: "none",
                 borderRadius: "8px",
                 fontSize: "13px",
                 fontWeight: 600,
+                color: "white",
+                background: "#0F766E",
+                border: "none",
                 cursor: "pointer",
                 letterSpacing: "-0.01em",
                 display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
               }}
             >
               <svg
@@ -184,204 +329,14 @@ export default function IncomeTrackingTab({
           )}
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column" as const,
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center" as const,
-            padding: "80px 0",
-          }}
-        >
-          <div
-            style={{ fontSize: "2.5rem", marginBottom: "12px", opacity: 0.5 }}
-          >
-            <svg
-              width="48"
-              height="48"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ color: "var(--slate-300, #CBD5E1)" }}
-            >
-              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-              <polyline points="17 6 23 6 23 12" />
-            </svg>
-          </div>
-          <p
-            style={{
-              color: "var(--slate-400, #94A3B8)",
-              fontSize: "14px",
-              fontWeight: 500,
-              marginBottom: "4px",
-            }}
-          >
-            Aucun revenu ce mois
-          </p>
-          <p
-            style={{
-              color: "var(--slate-300, #CBD5E1)",
-              fontSize: "12px",
-            }}
-          >
-            Les revenus récurrents apparaissent automatiquement
-          </p>
-        </div>
-
-        {/* FAB — even in empty state */}
-        {isCurrentMonth && (
-          <button
-            onClick={() => setAdhocModal(true)}
-            className="fab fab-mobile-only"
-            aria-label="Ajouter un revenu ponctuel"
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-            >
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-          </button>
-        )}
-
-        {adhocModal && (
-          <AdhocIncomeModal
-            month={month}
-            onClose={() => {
-              setAdhocModal(false);
-              router.refresh();
-            }}
-          />
-        )}
-      </>
-    );
-
-  // ── Main render ─────────────────────────────────────────────────────────
-
-  return (
-    <>
-      {/* Expected incomes section */}
-      {(expectedIncomes.length > 0 || unregisteredVariables.length > 0) && (
-        <div style={{ marginBottom: "20px" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: "10px",
-            }}
-          >
-            <p
-              style={{
-                fontSize: "11px",
-                fontWeight: 700,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase" as const,
-                color: "var(--teal-700, #0F766E)",
-                paddingLeft: "4px",
-              }}
-            >
-              Revenus attendus (
-              {expectedIncomes.length + unregisteredVariables.length})
-            </p>
-            {isCurrentMonth && (
-              <button
-                onClick={() => setAdhocModal(true)}
-                className="btn-desktop-only"
-                style={{
-                  alignItems: "center",
-                  gap: "6px",
-                  padding: "8px 16px",
-                  background: "#0F766E",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "8px",
-                  fontSize: "13px",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  letterSpacing: "-0.01em",
-                  display: "inline-flex",
-                }}
-              >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                >
-                  <line x1="12" y1="5" x2="12" y2="19" />
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                </svg>
-                Revenu ponctuel
-              </button>
-            )}
-          </div>
+        {/* Adhoc items container */}
+        {adhocCount > 0 ? (
           <div
             style={{
               background: "white",
               border: "1px solid var(--slate-200, #E2E8F0)",
               borderRadius: "var(--radius-lg, 18px)",
-              overflow: "hidden",
-            }}
-          >
-            {expectedIncomes.map((mi, i) => (
-              <IncomeInstanceRow
-                key={mi.id}
-                mi={mi}
-                index={i}
-                isCurrentMonth={isCurrentMonth}
-                onMarkReceived={() => openReceiveFixed(mi)}
-                onMarkExpected={() => handleMarkExpected(mi.id)}
-                onUpdateAmount={() => openUpdateAmount(mi)}
-              />
-            ))}
-            {unregisteredVariables.map((inc, i) => (
-              <VariableIncomeRow
-                key={inc.id}
-                inc={inc}
-                index={expectedIncomes.length + i}
-                isCurrentMonth={isCurrentMonth}
-                onMarkReceived={() => openReceiveVariable(inc)}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Adhoc / ponctuel incomes section */}
-      {adhocIncomes.length > 0 && (
-        <div style={{ marginBottom: "20px" }}>
-          <p
-            style={{
-              fontSize: "11px",
-              fontWeight: 700,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase" as const,
-              color: "var(--teal-700, #0F766E)",
-              marginBottom: "10px",
-              paddingLeft: "4px",
-            }}
-          >
-            Revenus ponctuels ({adhocIncomes.length})
-          </p>
-          <div
-            style={{
-              background: "white",
-              border: "1px solid var(--slate-200, #E2E8F0)",
-              borderRadius: "var(--radius-lg, 18px)",
+              boxShadow: "0 1px 2px rgba(15, 118, 110, 0.05)",
               overflow: "hidden",
             }}
           >
@@ -397,8 +352,42 @@ export default function IncomeTrackingTab({
               />
             ))}
           </div>
-        </div>
-      )}
+        ) : (
+          <div
+            style={{
+              background: "white",
+              border: "1px solid var(--slate-200, #E2E8F0)",
+              borderRadius: "var(--radius-lg, 18px)",
+              padding: "24px 16px",
+              textAlign: "center",
+            }}
+          >
+            <div
+              style={{ fontSize: "1.5rem", marginBottom: "8px", opacity: 0.5 }}
+            >
+              💰
+            </div>
+            <p
+              style={{
+                color: "var(--slate-400, #94A3B8)",
+                fontSize: "14px",
+                fontWeight: 500,
+                marginBottom: "4px",
+              }}
+            >
+              Aucun revenu ponctuel
+            </p>
+            <p
+              style={{
+                color: "var(--slate-300, #CBD5E1)",
+                fontSize: "12px",
+              }}
+            >
+              Bonus, remboursement, vente... ajoutez-les ici
+            </p>
+          </div>
+        )}
+      </div>
 
       {/* Adhoc FAB — mobile only, current month only */}
       {isCurrentMonth && (
