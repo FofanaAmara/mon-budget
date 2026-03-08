@@ -261,13 +261,19 @@ export default function TabTableauDeBord({
           </CardIcon>
           <CardLabel>Revenus</CardLabel>
           <CardAmount>
-            {Math.round(incomeSummary.actualTotal).toLocaleString("fr-CA")}
+            {incomeSummary.actualTotal.toLocaleString("fr-CA", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
             <Dollar color="var(--teal-700)" />
           </CardAmount>
           <CardSub>
             /{" "}
             <strong style={{ fontWeight: 700, color: "var(--slate-500)" }}>
-              {Math.round(incomeSummary.expectedTotal).toLocaleString("fr-CA")}{" "}
+              {incomeSummary.expectedTotal.toLocaleString("fr-CA", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}{" "}
               $
             </strong>{" "}
             attendus
@@ -293,13 +299,20 @@ export default function TabTableauDeBord({
           </CardIcon>
           <CardLabel>Dépenses</CardLabel>
           <CardAmount>
-            {Math.round(summary.paid_total).toLocaleString("fr-CA")}
+            {summary.paid_total.toLocaleString("fr-CA", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
             <Dollar color="var(--teal-700)" />
           </CardAmount>
           <CardSub>
             /{" "}
             <strong style={{ fontWeight: 700, color: "var(--slate-500)" }}>
-              {Math.round(summary.planned_total).toLocaleString("fr-CA")} $
+              {summary.planned_total.toLocaleString("fr-CA", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}{" "}
+              $
             </strong>{" "}
             prévus
           </CardSub>
@@ -323,7 +336,10 @@ export default function TabTableauDeBord({
           </CardIcon>
           <CardLabel>Épargne</CardLabel>
           <CardAmount>
-            {Math.round(totalEpargne).toLocaleString("fr-CA")}
+            {totalEpargne.toLocaleString("fr-CA", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
             <Dollar color="var(--teal-700)" />
           </CardAmount>
           {/* Progress bar */}
@@ -388,16 +404,11 @@ export default function TabTableauDeBord({
           </CardIcon>
           <CardLabel>Dettes</CardLabel>
           <CardAmount color="var(--error)">
-            {Math.round(totalDebtBalance).toLocaleString("fr-CA")}
-            <span
-              style={{
-                fontSize: "0.5em",
-                fontWeight: 600,
-                verticalAlign: "super",
-              }}
-            >
-              $
-            </span>
+            {totalDebtBalance.toLocaleString("fr-CA", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+            <Dollar color="var(--error)" />
           </CardAmount>
           <CardSub>
             {debtSummary.totalPayments > 0
@@ -491,12 +502,15 @@ export default function TabTableauDeBord({
             }}
           >
             {valeurNette >= 0 ? "+" : "-"}
-            {Math.round(Math.abs(valeurNette)).toLocaleString("fr-CA")}
+            {Math.abs(valeurNette).toLocaleString("fr-CA", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
             <span
               style={{
                 fontSize: "0.5em",
                 fontWeight: 600,
-                verticalAlign: "super",
+                marginLeft: "3px",
               }}
             >
               $

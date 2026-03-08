@@ -750,15 +750,14 @@ export default function AllocationTrackingTab({
           }}
         >
           {Math.abs(disponibleAttendu).toLocaleString("fr-CA", {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
           })}
           <span
             style={{
               fontSize: "0.5em",
               fontWeight: 600,
-              verticalAlign: "super",
-              marginLeft: "1px",
+              marginLeft: "3px",
             }}
           >
             $

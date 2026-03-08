@@ -1,5 +1,6 @@
 "use client";
 
+import { formatCAD } from "@/lib/utils";
 import type { MonthSummary } from "@/lib/types";
 
 type Props = {
@@ -46,23 +47,23 @@ export default function ExpenseMonument({ summary }: Props) {
               fontWeight: 800,
               letterSpacing: "-0.04em",
               color: "var(--slate-900)",
+              fontVariantNumeric: "tabular-nums",
             }}
           >
+            {Math.abs(paidTotal).toLocaleString("fr-CA", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
             <span
               style={{
                 fontSize: "0.4em",
                 fontWeight: 600,
                 color: "var(--teal-700)",
-                verticalAlign: "super",
-                marginLeft: "2px",
+                marginLeft: "4px",
               }}
             >
               $
             </span>
-            {Math.abs(paidTotal).toLocaleString("fr-CA", {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            })}
           </span>
           <span
             style={{
@@ -80,22 +81,23 @@ export default function ExpenseMonument({ summary }: Props) {
               fontWeight: 600,
               color: "var(--slate-400)",
               letterSpacing: "-0.02em",
+              fontVariantNumeric: "tabular-nums",
             }}
           >
+            {chargesFixes.toLocaleString("fr-CA", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
             <span
               style={{
                 fontSize: "0.6em",
                 fontWeight: 500,
                 color: "var(--slate-300)",
-                verticalAlign: "super",
+                marginLeft: "3px",
               }}
             >
               $
             </span>
-            {chargesFixes.toLocaleString("fr-CA", {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            })}
           </span>
         </div>
       </div>
@@ -164,8 +166,8 @@ export default function ExpenseMonument({ summary }: Props) {
           <span>{Math.round(progressPct)}% dépensé</span>
           <span>
             {isOverBudget
-              ? `+$${overAmount.toLocaleString("fr-CA", { minimumFractionDigits: 0, maximumFractionDigits: 0 })} au-dessus`
-              : `$${restAPayer.toLocaleString("fr-CA", { minimumFractionDigits: 0, maximumFractionDigits: 0 })} restant`}
+              ? `+${formatCAD(overAmount)} au-dessus`
+              : `${formatCAD(restAPayer)} restant`}
           </span>
         </div>
       </div>
@@ -183,8 +185,7 @@ export default function ExpenseMonument({ summary }: Props) {
       >
         {isOverBudget && (
           <StatusBadge bg="var(--error-light)" color="var(--error)">
-            <WarningIcon />
-            +${overAmount.toLocaleString("fr-CA")} au-dessus
+            <WarningIcon />+{formatCAD(overAmount)} au-dessus
           </StatusBadge>
         )}
         {summary.overdue_count > 0 && (
@@ -195,12 +196,13 @@ export default function ExpenseMonument({ summary }: Props) {
         )}
         {!isOverBudget && progressPct < 90 && chargesFixes > 0 && (
           <StatusBadge bg="var(--success-light)" color="var(--positive)">
-            <CheckIcon />${restAPayer.toLocaleString("fr-CA")} restant
+            <CheckIcon />
+            {formatCAD(restAPayer)} restant
           </StatusBadge>
         )}
         {summary.total > 0 && summary.unplanned_total > 0 && (
           <StatusBadge bg="var(--warning-light)" color="var(--amber-600)">
-            ${summary.unplanned_total.toLocaleString("fr-CA")} imprévus
+            {formatCAD(summary.unplanned_total)} imprévus
           </StatusBadge>
         )}
       </div>

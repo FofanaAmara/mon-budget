@@ -61,8 +61,8 @@ export default function AccueilClient({
 
   const isPositive = availableAmount >= 0;
   const amountFormatted = Math.abs(availableAmount).toLocaleString("fr-CA", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   });
 
   return (
@@ -109,8 +109,7 @@ export default function AccueilClient({
               fontSize: "0.4em",
               fontWeight: 600,
               color: "inherit",
-              verticalAlign: "super",
-              marginLeft: "2px",
+              marginLeft: "4px",
             }}
           >
             $

@@ -10,6 +10,7 @@ import {
   WEEKLY_MONTHLY_MULTIPLIER,
   BIWEEKLY_MONTHLY_MULTIPLIER,
 } from "@/lib/constants";
+import { formatCAD } from "@/lib/utils";
 
 function normalizeToMonthly(
   amount: number,
@@ -54,14 +55,11 @@ export default async function ChargesFixesPage() {
     totalMonthly >= 1000
       ? `${(totalMonthly / 1000).toLocaleString("fr-CA", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}k`
       : totalMonthly.toLocaleString("fr-CA", {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
         });
 
-  const monthlyLabel = totalMonthly.toLocaleString("fr-CA", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
+  const monthlyLabel = formatCAD(totalMonthly);
 
   return (
     <>
@@ -150,7 +148,7 @@ export default async function ChargesFixesPage() {
           >
             {count} charge{count !== 1 ? "s" : ""} ·{" "}
             <strong style={{ fontWeight: 700, color: "var(--text-secondary)" }}>
-              {monthlyLabel} $
+              {monthlyLabel}
             </strong>{" "}
             / mois
           </p>

@@ -143,19 +143,20 @@ function SavingsProjectCardComponent({
               whiteSpace: "nowrap",
             }}
           >
+            {saved.toLocaleString("fr-CA", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
             <span
               style={{
                 fontSize: "0.5em",
                 fontWeight: 600,
                 color: "var(--teal-800)",
+                marginLeft: "3px",
               }}
             >
               $
             </span>
-            {saved.toLocaleString("fr-CA", {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            })}
           </p>
           <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
             <button

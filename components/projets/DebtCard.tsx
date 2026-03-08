@@ -139,19 +139,20 @@ function DebtCardComponent({
               whiteSpace: "nowrap",
             }}
           >
+            {remaining.toLocaleString("fr-CA", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
             <span
               style={{
                 fontSize: "0.5em",
                 fontWeight: 600,
                 color: "var(--error)",
+                marginLeft: "3px",
               }}
             >
               $
             </span>
-            {remaining.toLocaleString("fr-CA", {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            })}
           </p>
           <div
             style={{

@@ -29,10 +29,7 @@ const FREQ_LABELS: Record<RecurrenceFrequency, string> = {
 };
 
 function formatSectionTotal(amount: number): string {
-  return amount.toLocaleString("fr-CA", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
+  return formatCAD(amount);
 }
 
 export default function ExpenseTemplateManager({
@@ -156,15 +153,6 @@ export default function ExpenseTemplateManager({
                 whiteSpace: "nowrap",
               }}
             >
-              <span
-                style={{
-                  fontSize: "0.65em",
-                  fontWeight: 600,
-                  color: "var(--accent)",
-                }}
-              >
-                $
-              </span>
               {formatSectionTotal(sectionTotal)}
             </span>
             <div
@@ -387,15 +375,6 @@ export default function ExpenseTemplateManager({
                     fontVariantNumeric: "tabular-nums",
                   }}
                 >
-                  <span
-                    style={{
-                      fontSize: "0.65em",
-                      fontWeight: 600,
-                      color: "var(--accent)",
-                    }}
-                  >
-                    $
-                  </span>
                   {formatSectionTotal(
                     unsectioned.reduce((s, e) => s + calcMonthlyCost(e), 0),
                   )}
@@ -792,19 +771,7 @@ function ExpenseRow({
               whiteSpace: "nowrap",
             }}
           >
-            <span
-              style={{
-                fontSize: "0.7em",
-                fontWeight: 600,
-                color: "var(--accent)",
-              }}
-            >
-              $
-            </span>
-            {(monthly ?? Number(expense.amount)).toLocaleString("fr-CA", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
+            {formatCAD(monthly ?? Number(expense.amount))}
           </span>
           {monthly != null && (
             <>
@@ -828,11 +795,8 @@ function ExpenseRow({
                   whiteSpace: "nowrap",
                 }}
               >
-                {Number(expense.amount).toLocaleString("fr-CA", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
-                ${" /"}
+                {formatCAD(Number(expense.amount))}
+                {"/"}
                 {expense.recurrence_frequency === "YEARLY"
                   ? "an"
                   : FREQ_LABELS[expense.recurrence_frequency!]?.toLowerCase()}

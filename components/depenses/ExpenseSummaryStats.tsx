@@ -1,5 +1,6 @@
 "use client";
 
+import { formatCAD } from "@/lib/utils";
 import type { MonthSummary } from "@/lib/types";
 
 type Props = {
@@ -32,7 +33,7 @@ export default function ExpenseSummaryStats({ summary }: Props) {
         label={isOverBudget ? "Au-dessus" : "Restant"}
         amount={isOverBudget ? overAmount : restAPayer}
         color={isOverBudget ? "var(--error)" : "var(--teal-700)"}
-        detail={`sur $${chargesFixes.toLocaleString("fr-CA")} prévu`}
+        detail={`sur ${formatCAD(chargesFixes)} prévu`}
       />
     </div>
   );
@@ -80,20 +81,11 @@ function StatCard({
           lineHeight: 1,
         }}
       >
-        <span
-          style={{
-            fontSize: "0.55em",
-            fontWeight: 600,
-            color: "inherit",
-            verticalAlign: "super",
-          }}
-        >
-          $
-        </span>
         {amount.toLocaleString("fr-CA", {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
         })}
+        \u00A0$
       </p>
       <p
         style={{

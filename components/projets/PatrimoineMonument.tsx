@@ -61,21 +61,20 @@ export default function PatrimoineMonument({
           >
             {isPositive ? "+" : "-"}
           </span>
+          {Math.abs(valeurNette).toLocaleString("fr-CA", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
           <span
             style={{
               fontSize: "0.4em",
               fontWeight: 600,
-              verticalAlign: "super",
-              marginLeft: "2px",
+              marginLeft: "4px",
               color: isPositive ? "var(--teal-800)" : "var(--error)",
             }}
           >
             $
           </span>
-          {Math.abs(valeurNette).toLocaleString("fr-CA", {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-          })}
         </p>
 
         <p
@@ -181,19 +180,20 @@ export default function PatrimoineMonument({
               color: "var(--teal-700)",
             }}
           >
+            {totalEpargne.toLocaleString("fr-CA", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
             <span
               style={{
                 fontSize: "0.5em",
                 fontWeight: 600,
                 color: "var(--teal-800)",
+                marginLeft: "3px",
               }}
             >
               $
             </span>
-            {totalEpargne.toLocaleString("fr-CA", {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            })}
           </p>
           <p
             style={{
@@ -236,19 +236,20 @@ export default function PatrimoineMonument({
               color: debtsCount > 0 ? "var(--error)" : "var(--slate-400)",
             }}
           >
+            {totalDebtBalance.toLocaleString("fr-CA", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
             <span
               style={{
                 fontSize: "0.5em",
                 fontWeight: 600,
                 color: debtsCount > 0 ? "var(--error)" : "var(--slate-400)",
+                marginLeft: "3px",
               }}
             >
               $
             </span>
-            {totalDebtBalance.toLocaleString("fr-CA", {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            })}
           </p>
           <p
             style={{

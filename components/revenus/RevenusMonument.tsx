@@ -81,16 +81,15 @@ export default function RevenusMonument({ actualTotal, expectedTotal }: Props) {
           }}
         >
           {actualTotal.toLocaleString("fr-CA", {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
           })}
           <span
             style={{
               fontSize: "0.4em",
               fontWeight: 600,
               color: "var(--teal-700, #0F766E)",
-              verticalAlign: "super",
-              marginLeft: "2px",
+              marginLeft: "4px",
             }}
           >
             $
@@ -120,16 +119,15 @@ export default function RevenusMonument({ actualTotal, expectedTotal }: Props) {
           }}
         >
           {expectedTotal.toLocaleString("fr-CA", {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
           })}
           <span
             style={{
               fontSize: "0.4em",
               fontWeight: 600,
               color: "var(--teal-700, #0F766E)",
-              verticalAlign: "super",
-              marginLeft: "2px",
+              marginLeft: "4px",
             }}
           >
             $

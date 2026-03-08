@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { formatCAD } from "@/lib/utils";
 import { GROUP_LABELS } from "@/lib/constants";
 import ExpenseTrackingRow from "@/components/ExpenseTrackingRow";
 import type { MonthlyExpense, ExpenseGroupKey } from "@/lib/types";
@@ -81,11 +82,7 @@ export default function StatusGroupSection({
                 style={{ display: "flex", alignItems: "center", gap: "8px" }}
               >
                 <span style={{ fontVariantNumeric: "tabular-nums" }}>
-                  $
-                  {groupTotal.toLocaleString("fr-CA", {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                  })}
+                  {formatCAD(groupTotal)}
                 </span>
                 <svg
                   width="16"

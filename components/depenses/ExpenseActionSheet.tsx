@@ -400,7 +400,7 @@ export default function ExpenseActionSheet({
             <div>
               <p style={expenseNameStyle}>{expense.name}</p>
               <p style={expenseMetaStyle}>
-                ${Number(expense.amount).toLocaleString("fr-CA")} ·{" "}
+                {formatCAD(Number(expense.amount))} ·{" "}
                 {expense.section?.name ?? "—"}
               </p>
             </div>
@@ -525,8 +525,7 @@ export default function ExpenseActionSheet({
             <div>
               <p style={expenseNameStyle}>{expense.name}</p>
               <p style={expenseMetaStyle}>
-                Montant actuel: $
-                {Number(expense.amount).toLocaleString("fr-CA")} ·{" "}
+                Montant actuel: {formatCAD(Number(expense.amount))} ·{" "}
                 {expense.section?.name ?? "—"}
               </p>
             </div>
@@ -569,8 +568,7 @@ export default function ExpenseActionSheet({
             />
             <p style={hintStyle}>
               Modification pour {currentMonthLabel} uniquement. Le modèle
-              récurrent restera à $
-              {Number(expense.amount).toLocaleString("fr-CA")}.
+              récurrent restera à {formatCAD(Number(expense.amount))}.
             </p>
           </div>
         </div>
@@ -640,7 +638,7 @@ export default function ExpenseActionSheet({
             }}
           >
             <strong style={{ fontWeight: 700, color: "var(--slate-700)" }}>
-              {expense.name} — ${Number(expense.amount).toLocaleString("fr-CA")}
+              {expense.name} — {formatCAD(Number(expense.amount))}
             </strong>{" "}
             sera retiré de tes dépenses de {currentMonthLabel}. Cette action est
             irréversible.
@@ -739,20 +737,7 @@ export default function ExpenseActionSheet({
             flexShrink: 0,
           }}
         >
-          <span
-            style={{
-              fontSize: "0.55em",
-              fontWeight: 600,
-              color: "var(--teal-700)",
-              verticalAlign: "super",
-            }}
-          >
-            $
-          </span>
-          {Number(expense.amount).toLocaleString("fr-CA", {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-          })}
+          {formatCAD(Number(expense.amount))}
         </span>
       </div>
 

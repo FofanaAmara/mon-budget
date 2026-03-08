@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 
 import { IconClose } from "@/components/icons";
+import { formatCAD } from "@/lib/utils";
 import type { Section, Card, Debt, DebtFrequency } from "@/lib/types";
 
 const FREQUENCIES: { value: DebtFrequency; label: string }[] = [
@@ -638,7 +639,7 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
                           fontVariantNumeric: "tabular-nums",
                         }}
                       >
-                        ~{Math.round(totalInterest).toLocaleString("fr-CA")} $
+                        ~{formatCAD(Math.round(totalInterest))}
                       </span>
                     </div>
                   )}

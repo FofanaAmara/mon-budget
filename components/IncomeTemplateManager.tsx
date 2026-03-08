@@ -4,6 +4,7 @@ import { useState } from "react";
 import { deleteIncome } from "@/lib/actions/incomes";
 import {
   calcMonthlyIncome,
+  formatCAD,
   formatShortDate,
   getNextBiweeklyPayDate,
 } from "@/lib/utils";
@@ -54,10 +55,7 @@ const SOURCE_META: Record<
 
 /** Format monthly amount for display on source card. */
 function formatMonthlyDisplay(amount: number): string {
-  return amount.toLocaleString("fr-CA", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
+  return formatCAD(amount);
 }
 
 /** Compute next pay date label for a given income. */
@@ -545,15 +543,6 @@ function SourceCard({
         >
           {isVariable ? "~" : ""}
           {formatMonthlyDisplay(monthly)}
-          <span
-            style={{
-              fontSize: "0.5em",
-              fontWeight: 600,
-              color: "var(--teal-700)",
-            }}
-          >
-            $
-          </span>
           <span
             style={{
               fontSize: "0.4em",

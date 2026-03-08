@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 
 import { IconClose } from "@/components/icons";
-import { calcMonthlySuggested } from "@/lib/utils";
+import { calcMonthlySuggested, formatCAD } from "@/lib/utils";
 import type { Section } from "@/lib/types";
 
 type Props = {
@@ -407,8 +407,7 @@ export default function ProjectModal({ sections, onClose }: Props) {
                       fontVariantNumeric: "tabular-nums",
                     }}
                   >
-                    ~{Math.ceil(monthlySuggested).toLocaleString("fr-CA")} $ /
-                    mois
+                    ~{formatCAD(Math.ceil(monthlySuggested))} / mois
                   </span>
                 </div>
                 {monthsRemaining !== null && (

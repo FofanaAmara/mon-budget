@@ -4,7 +4,7 @@ import { getAllocations } from "@/lib/actions/allocations";
 import { getSections } from "@/lib/actions/sections";
 import { getPlannedExpenses } from "@/lib/actions/savings";
 import { getMonthlyIncomeSummary } from "@/lib/actions/monthly-incomes";
-import { currentMonth } from "@/lib/utils";
+import { currentMonth, formatCAD } from "@/lib/utils";
 import Breadcrumb from "@/components/Breadcrumb";
 import AllocationsManager from "@/components/AllocationsManager";
 
@@ -22,13 +22,10 @@ export default async function AllocationPage() {
     expectedTotal >= 1000
       ? `${(expectedTotal / 1000).toLocaleString("fr-CA", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}k`
       : expectedTotal.toLocaleString("fr-CA", {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
         });
-  const monthlyLabel = expectedTotal.toLocaleString("fr-CA", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
+  const monthlyLabel = formatCAD(expectedTotal);
 
   return (
     <div style={{ padding: "0 0 96px", minHeight: "100vh" }}>
@@ -104,7 +101,7 @@ export default async function AllocationPage() {
               fontWeight: 600,
             }}
           >
-            {monthlyLabel} $ / mois attendus
+            {monthlyLabel} / mois attendus
           </span>
         </div>
       </div>
