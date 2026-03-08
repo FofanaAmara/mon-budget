@@ -85,7 +85,7 @@ function StatCard({
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         })}
-        \u00A0$
+        {"\u00A0$"}
       </p>
       <p
         style={{
