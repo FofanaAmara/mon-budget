@@ -185,8 +185,17 @@ export default function BottomNav() {
     window.location.href = "/auth/sign-in";
   }
 
+  // Routes that belong to "Reglages" but don't start with /parametres
+  const settingsAliases = ["/sections", "/cartes", "/account/settings"];
+
   function isActive(href: string) {
     if (href === "/") return pathname === "/";
+    if (
+      href === "/parametres" &&
+      settingsAliases.some((alias) => pathname.startsWith(alias))
+    ) {
+      return true;
+    }
     return pathname.startsWith(href);
   }
 
