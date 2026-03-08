@@ -82,67 +82,6 @@ export default function DepensesTrackingClient({
     <div style={{ padding: "0 0 120px", minHeight: "100vh" }}>
       <MonthNavigator month={month} basePath="/depenses" />
 
-      {/* Desktop-only add button */}
-      {isCurrentMonth && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            padding: "0 20px",
-            marginBottom: "4px",
-          }}
-        >
-          <button
-            onClick={() => setAdhocModal(true)}
-            className="btn-desktop-only"
-            style={{
-              alignItems: "center",
-              gap: "6px",
-              padding: "9px 18px",
-              background: "var(--accent)",
-              color: "white",
-              border: "none",
-              borderRadius: "var(--radius-md)",
-              fontSize: "13px",
-              fontWeight: 600,
-              cursor: "pointer",
-              letterSpacing: "-0.01em",
-              transition: "all 0.2s ease",
-              whiteSpace: "nowrap",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.background =
-                "var(--accent-hover)";
-              (e.currentTarget as HTMLElement).style.transform =
-                "translateY(-1px)";
-              (e.currentTarget as HTMLElement).style.boxShadow =
-                "var(--shadow-md)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background =
-                "var(--accent)";
-              (e.currentTarget as HTMLElement).style.transform = "";
-              (e.currentTarget as HTMLElement).style.boxShadow = "";
-            }}
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            Nouvelle dépense
-          </button>
-        </div>
-      )}
-
       <ExpenseMonument summary={summary} />
 
       <ExpenseFilters
@@ -154,6 +93,63 @@ export default function DepensesTrackingClient({
         unplannedCount={unplannedCount}
         sections={sections}
       />
+
+      {/* Section header with desktop-only add button */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 20px",
+          margin: "16px 0 12px",
+        }}
+      >
+        <p
+          style={{
+            fontSize: "11px",
+            fontWeight: 700,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "var(--teal-700)",
+          }}
+        >
+          DÉPENSES ({expenses.length})
+        </p>
+        {isCurrentMonth && (
+          <button
+            onClick={() => setAdhocModal(true)}
+            className="btn-desktop-only"
+            style={{
+              alignItems: "center",
+              gap: "6px",
+              padding: "8px 16px",
+              background: "#0F766E",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              fontSize: "13px",
+              fontWeight: 600,
+              cursor: "pointer",
+              letterSpacing: "-0.01em",
+              display: "inline-flex",
+            }}
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            >
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Nouvelle dépense
+          </button>
+        )}
+      </div>
 
       {/* ====== EMPTY STATE ====== */}
       {expenses.length === 0 && (
