@@ -75,7 +75,7 @@ export default function EpargneSection({
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
-          Nouveau projet d&apos;épargne
+          Nouvel objectif
         </button>
       </div>
 
@@ -122,7 +122,7 @@ export default function EpargneSection({
                 marginBottom: "4px",
               }}
             >
-              Aucun projet d&apos;épargne
+              Aucun objectif d&apos;épargne
             </p>
             <p
               style={{
@@ -131,7 +131,7 @@ export default function EpargneSection({
                 opacity: 0.7,
               }}
             >
-              Créez un projet avec un objectif et une date cible
+              Créez un objectif avec un montant et une date cible
             </p>
           </div>
         ) : (

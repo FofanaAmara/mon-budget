@@ -140,7 +140,7 @@ export default function ProjectModal({ sections, onClose }: Props) {
                 letterSpacing: "-0.02em",
               }}
             >
-              Nouveau projet
+              Nouvel objectif
             </h3>
           </div>
           <button
@@ -185,7 +185,7 @@ export default function ProjectModal({ sections, onClose }: Props) {
                 }}
                 htmlFor="project-name"
               >
-                Nom du projet
+                Nom de l&apos;objectif
               </label>
               <input
                 id="project-name"
@@ -500,7 +500,7 @@ export default function ProjectModal({ sections, onClose }: Props) {
               transition: "all 0.2s ease",
             }}
           >
-            {loading ? "Création..." : "Créer le projet"}
+            {loading ? "Création..." : "Créer l'objectif"}
           </button>
         </div>
       </div>

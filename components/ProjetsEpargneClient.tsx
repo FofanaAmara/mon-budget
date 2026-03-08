@@ -54,7 +54,7 @@ export default function ProjetsEpargneClient({
   const totalEpargne = freeSaved + projectsSaved;
 
   function handleDeleteProject(id: string) {
-    if (confirm("Supprimer ce projet ?")) {
+    if (confirm("Supprimer cet objectif ?")) {
       startTransition(async () => {
         await deleteExpense(id);
         router.refresh();

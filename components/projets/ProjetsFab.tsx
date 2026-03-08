@@ -103,7 +103,7 @@ export default function ProjetsFab({ onCreateProject, onCreateDebt }: Props) {
                 <line x1="8" y1="12" x2="16" y2="12" />
               </svg>
             </span>
-            Nouveau projet
+            Nouvel objectif
           </button>
           <button
             onClick={() => {

@@ -121,7 +121,7 @@ function SavingsProjectCardComponent({
                 }}
               >
                 <StatusBadge
-                  label={isFreeSavings ? "Pot libre" : "Projet"}
+                  label={isFreeSavings ? "Pot libre" : "Objectif"}
                   variant="neutral"
                 />
                 {!isFreeSavings && projet.target_date && (

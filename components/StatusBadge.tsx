@@ -3,7 +3,7 @@
  *
  * Palette:
  *   success  → vert   (#ECFDF5 / #059669) — Paye, Recu, Permanent, Auto, Emploi, Business
- *   neutral  → gris   (#F1F5F9 / #64748B) — Prevu, Attendu, Mensuel, Projet
+ *   neutral  → gris   (#F1F5F9 / #64748B) — Prevu, Attendu, Mensuel, Objectif
  *   warning  → orange (#FEF3C7 / #92400E) — Ponctuel, Variable
  *   danger   → rouge  (#FEF2F2 / #DC2626) — Dette
  */

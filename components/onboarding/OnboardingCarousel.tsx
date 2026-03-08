@@ -326,12 +326,12 @@ function SlideDepenses({
 
 const PATRIMOINE_BLOCKS = [
   {
-    name: "Projets d'epargne",
+    name: "Objectifs d'épargne",
     desc: "Definis un objectif, vois ta progression en temps reel.",
   },
   {
     name: "Epargne libre",
-    desc: "Pas de projet precis? Mets de cote quand meme.",
+    desc: "Pas d'objectif précis? Mets de côté quand même.",
   },
   {
     name: "Suivi des dettes",

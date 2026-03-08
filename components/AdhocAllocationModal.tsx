@@ -165,7 +165,7 @@ export default function AdhocAllocationModal({
                   {
                     key: "savings",
                     label: "💰 Épargne",
-                    desc: "Projet d'épargne",
+                    desc: "Objectif d'épargne",
                   },
                   { key: "free", label: "🔖 Autre", desc: "Sans suivi" },
                 ] as { key: LinkType; label: string; desc: string }[]
@@ -288,7 +288,7 @@ export default function AdhocAllocationModal({
           {/* Project picker */}
           {linkType === "savings" && (
             <div style={{ marginBottom: "20px" }}>
-              <label className="field-label">Projet d&apos;épargne</label>
+              <label className="field-label">Objectif d&apos;épargne</label>
               <div
                 style={{
                   display: "flex",
@@ -365,7 +365,7 @@ export default function AdhocAllocationModal({
                       color: "var(--text-tertiary)",
                     }}
                   >
-                    Aucun projet d&apos;épargne configuré
+                    Aucun objectif d&apos;épargne configuré
                   </p>
                 )}
               </div>

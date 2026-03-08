@@ -85,6 +85,62 @@ export default function AllocationsManager({
 
   return (
     <>
+      {/* Section header: label + add button (desktop) */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "16px",
+        }}
+      >
+        <span
+          style={{
+            fontSize: "11px",
+            fontWeight: 700,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "var(--teal-700)",
+          }}
+        >
+          ENVELOPPES ({allocations.length})
+        </span>
+        <button
+          onClick={openAdd}
+          className="btn-desktop-only"
+          style={{
+            alignItems: "center",
+            gap: "6px",
+            padding: "9px 18px",
+            background: "var(--teal-700)",
+            color: "white",
+            border: "none",
+            borderRadius: "var(--radius-md)",
+            fontSize: "13px",
+            fontWeight: 600,
+            cursor: "pointer",
+            letterSpacing: "-0.01em",
+            transition: "all 0.2s ease",
+            whiteSpace: "nowrap",
+          }}
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Ajouter une enveloppe
+        </button>
+      </div>
+
       {/* Hero summary card */}
       <div className="card" style={{ padding: "20px", marginBottom: "16px" }}>
         <div
@@ -585,13 +641,25 @@ export default function AllocationsManager({
         </>
       )}
 
-      {/* Add button */}
+      {/* FAB (mobile only) */}
       <button
         onClick={openAdd}
-        className="btn-secondary"
-        style={{ width: "100%", padding: "14px", fontSize: "var(--text-sm)" }}
+        className="fab fab-mobile-only"
+        aria-label="Ajouter une enveloppe"
       >
-        + Ajouter une enveloppe
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
       </button>
 
       {/* Create / Edit modal */}

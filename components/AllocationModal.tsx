@@ -194,7 +194,7 @@ export default function AllocationModal({
                   {
                     key: "savings",
                     label: "💰 Épargne",
-                    desc: "Lié à un projet",
+                    desc: "Objectif d'épargne",
                   },
                   { key: "free", label: "🔖 Autre", desc: "Sans suivi" },
                 ] as { key: LinkType; label: string; desc: string }[]
@@ -317,7 +317,7 @@ export default function AllocationModal({
           {/* Savings → project picker */}
           {linkType === "savings" && (
             <div style={{ marginBottom: "20px" }}>
-              <label className="field-label">Projet d&apos;épargne</label>
+              <label className="field-label">Objectif d&apos;épargne</label>
               <div
                 style={{
                   display: "flex",
@@ -405,7 +405,7 @@ export default function AllocationModal({
                       color: "var(--text-tertiary)",
                     }}
                   >
-                    Aucun projet d&apos;épargne configuré
+                    Aucun objectif d&apos;épargne configuré
                   </p>
                 )}
               </div>
