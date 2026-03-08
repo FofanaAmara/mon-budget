@@ -20,6 +20,34 @@
 
 6. **Badges (DESIGN-006)** -- Le systeme actuel melange `TOUT EN MAJUSCULES` et `Capitalize`. La capitalisation uniforme est "Premiere lettre majuscule" -- plus lisible, moins criard que le full uppercase. La palette semantique (vert/gris/orange/rouge) est deja partiellement en place, juste a systematiser.
 
+---
+
+## @design-integrator
+
+### 2026-03-07 — DESIGN-006 Integration
+
+**Mode :** Feature — integration d'une story specifique
+
+**Fichiers modifies/crees :** 9 fichiers (1 cree, 8 modifies)
+
+**Decisions d'integration :**
+
+| Decision | Choix | Raison |
+|----------|-------|--------|
+| Composant reutilisable | `components/StatusBadge.tsx` cree | 9 endroits avec badges, duplication eliminee |
+| Palette hardcodee | `#ECFDF5`, `#F1F5F9`, `#FEF3C7`, `#FEF2F2` | CSS vars existantes ne correspondent pas exactement aux specs handoff |
+| Source type (Emploi/Business) → badge | `success` variant | Handoff les liste dans la palette success |
+| "Projet"/"Pot libre" → badge | `neutral` variant | Handoff inclut "Projet" dans le tableau |
+| "Imprévu" badge conserve | `warning` variant | Semantiquement coherent, non modifie |
+
+**Ecarts mockup → code :** Labels avec accents conserves (Reçu, Prévu, etc.). Badges "En retard" et "Reporté" non dans le handoff — conserves avec variants logiques.
+
+**Known gaps :** Aucun. Changement purement visuel.
+
+**Cross-reference :** `feature-integration-report-DESIGN-006.md` pour le detail complet.
+
+---
+
 **Patterns reutilises de features precedentes :**
 - Conteneur groupe avec separateurs (expense-tracking, income-tracking)
 - FAB rond mobile (expense-tracking)
@@ -117,3 +145,40 @@
 
 **Screenshots validation :** `.tmp/screenshots/after-design-003/`
 - depenses-desktop.png, sections-desktop.png, cartes-desktop.png, projets-desktop.png, params-revenus-desktop.png, params-charges-desktop.png
+
+---
+
+### 2026-03-07 -- DESIGN-001 : Uniformiser les boutons d'ajout et le FAB mobile
+
+**Mode :** Feature (story DESIGN-001 dans la feature coherence-design)
+
+**Fichiers modifies :**
+
+| Fichier | Type de changement |
+|---------|-------------------|
+| `components/projets/EpargneSection.tsx` | Bouton outlined teal → filled teal (#0F766E, bg blanc → bg teal, border supprimee, padding 8px 16px, border-radius 8px) |
+| `components/projets/DettesSection.tsx` | Bouton outlined rouge → filled teal (meme transformation — spec dit teal uniform pour les boutons d'ajout) |
+| `components/SectionsClient.tsx` | FAB pill (border-radius 100px, texte + icone, 52px height) → FAB rond (52x52, border-radius 50%, icone seule) |
+| `components/CartesClient.tsx` | FAB pill (meme issue) → FAB rond (52x52, border-radius 50%, icone seule) |
+| `components/revenus/IncomeTrackingTab.tsx` | FAB `class="fab"` → `class="fab fab-mobile-only"` (cache sur desktop). Bouton desktop `display: none` style inline + class custom → `class="btn-desktop-only"` style inline conforme. |
+
+**Decisions d'integration :**
+
+| Decision | Choix | Raison |
+|----------|-------|--------|
+| Dettes button : outlined rouge → filled teal | Teal uniforme | Le handoff dit "Jamais de bouton outlined pour l'ajout". La couleur rouge (Dettes) est portee par le badge/montant, pas par le bouton d'action. Uniformite du CTA = meilleure experience. |
+| FAB width/height en inline style | 52x52 via style, border-radius 50% via style | La class `.fab` impose 56x56. L'inline override proprement pour respecter la spec 52px du handoff sans modifier le CSS global. |
+| FAB bottom : ne pas override | Supprime le `bottom: 20px` inline | Le CSS `.fab` gere deja `bottom: max(72px, ...)` pour passer au-dessus du BottomNav. Override a 20px cassait le positionnement mobile. |
+| Desktop button Revenus | Classe `btn-desktop-only` + style inline | Remplace le `display: none` dans le style inline par la classe semantique. Cohérent avec les autres pages. |
+
+**Ecarts mockup → code :**
+- Aucun ecart : les 4 changements (Patrimoine desktop, Sections mobile, Cartes mobile, Revenus desktop/mobile) sont conformes aux specs du handoff.
+
+**Known gaps :**
+- Aucun. Changement purement visuel.
+
+**Screenshots validation :** `cs-design/mes-finances/features/coherence-design/screenshots/after/`
+- patrimoine-desktop.png, patrimoine-mobile.png
+- sections-desktop.png, sections-mobile.png
+- cartes-desktop.png, cartes-mobile.png
+- revenus-desktop.png, revenus-mobile.png

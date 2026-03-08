@@ -731,21 +731,14 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
         className="fab fab-mobile-only"
         aria-label="Ajouter une carte"
         style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
+          width: "52px",
           height: "52px",
-          padding: "0 20px",
-          borderRadius: "100px",
-          fontSize: "14px",
-          fontWeight: 600,
-          letterSpacing: "-0.01em",
-          width: "auto",
+          borderRadius: "50%",
         }}
       >
         <svg
-          width="20"
-          height="20"
+          width="24"
+          height="24"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -756,7 +749,6 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
           <line x1="12" y1="5" x2="12" y2="19" />
           <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
-        Ajouter une carte
       </button>
 
       {/* ── Bottom sheet ── */}

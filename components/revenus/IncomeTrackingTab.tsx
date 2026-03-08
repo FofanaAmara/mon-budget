@@ -205,21 +205,20 @@ export default function IncomeTrackingTab({
             {isCurrentMonth && (
               <button
                 onClick={() => setAdhocModal(true)}
+                className="btn-desktop-only"
                 style={{
-                  display: "none",
                   alignItems: "center",
                   gap: "8px",
                   padding: "8px 16px",
-                  background: "var(--teal-700, #0F766E)",
+                  background: "#0F766E",
                   color: "white",
                   border: "none",
-                  borderRadius: "var(--radius-md, 12px)",
+                  borderRadius: "8px",
                   fontSize: "13px",
                   fontWeight: 600,
                   cursor: "pointer",
                   letterSpacing: "-0.01em",
                 }}
-                className="desktop-add-income-btn"
               >
                 <svg
                   width="14"
@@ -308,11 +307,11 @@ export default function IncomeTrackingTab({
         </div>
       )}
 
-      {/* Adhoc FAB — mobile, current month only */}
+      {/* Adhoc FAB — mobile only, current month only */}
       {isCurrentMonth && (
         <button
           onClick={() => setAdhocModal(true)}
-          className="fab"
+          className="fab fab-mobile-only"
           aria-label="Ajouter un revenu ponctuel"
         >
           <svg

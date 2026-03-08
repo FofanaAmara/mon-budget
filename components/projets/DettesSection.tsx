@@ -45,16 +45,15 @@ export default function DettesSection({
           onClick={onCreateDebt}
           className="btn-desktop-only"
           style={{
-            padding: "8px 14px",
-            borderRadius: "var(--radius-md)",
+            padding: "8px 16px",
+            borderRadius: "8px",
             fontSize: "13px",
             fontWeight: 600,
-            color: "var(--error)",
-            background: "transparent",
-            border: "1.5px solid var(--error)",
+            color: "white",
+            background: "#0F766E",
+            border: "none",
             cursor: "pointer",
             letterSpacing: "-0.01em",
-            display: "flex",
             alignItems: "center",
             gap: "6px",
           }}
