@@ -126,51 +126,87 @@ export default function IncomeTrackingTab({
 
   if (totalCount === 0)
     return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column" as const,
-          alignItems: "center",
-          justifyContent: "center",
-          textAlign: "center" as const,
-          padding: "80px 0",
-        }}
-      >
-        <div style={{ fontSize: "2.5rem", marginBottom: "12px", opacity: 0.5 }}>
-          <svg
-            width="48"
-            height="48"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            style={{ color: "var(--slate-300, #CBD5E1)" }}
+      <>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column" as const,
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center" as const,
+            padding: "80px 0",
+          }}
+        >
+          <div
+            style={{ fontSize: "2.5rem", marginBottom: "12px", opacity: 0.5 }}
           >
-            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-            <polyline points="17 6 23 6 23 12" />
-          </svg>
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ color: "var(--slate-300, #CBD5E1)" }}
+            >
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+              <polyline points="17 6 23 6 23 12" />
+            </svg>
+          </div>
+          <p
+            style={{
+              color: "var(--slate-400, #94A3B8)",
+              fontSize: "14px",
+              fontWeight: 500,
+              marginBottom: "4px",
+            }}
+          >
+            Aucun revenu ce mois
+          </p>
+          <p
+            style={{
+              color: "var(--slate-300, #CBD5E1)",
+              fontSize: "12px",
+            }}
+          >
+            Les revenus récurrents apparaissent automatiquement
+          </p>
         </div>
-        <p
-          style={{
-            color: "var(--slate-400, #94A3B8)",
-            fontSize: "14px",
-            fontWeight: 500,
-            marginBottom: "4px",
-          }}
-        >
-          Aucun revenu ce mois
-        </p>
-        <p
-          style={{
-            color: "var(--slate-300, #CBD5E1)",
-            fontSize: "12px",
-          }}
-        >
-          Les revenus récurrents apparaissent automatiquement
-        </p>
-      </div>
+
+        {/* FAB — even in empty state */}
+        {isCurrentMonth && (
+          <button
+            onClick={() => setAdhocModal(true)}
+            className="fab fab-mobile-only"
+            aria-label="Ajouter un revenu ponctuel"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            >
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+          </button>
+        )}
+
+        {adhocModal && (
+          <AdhocIncomeModal
+            month={month}
+            onClose={() => {
+              setAdhocModal(false);
+              router.refresh();
+            }}
+          />
+        )}
+      </>
     );
 
   // ── Main render ─────────────────────────────────────────────────────────
@@ -335,6 +371,7 @@ export default function IncomeTrackingTab({
       {receiveModal && (
         <div
           className="sheet-backdrop"
+          style={{ zIndex: 110 }}
           onClick={(e) => e.target === e.currentTarget && setReceiveModal(null)}
           role="presentation"
         >
@@ -418,6 +455,7 @@ export default function IncomeTrackingTab({
       {deleteModal && (
         <div
           className="sheet-backdrop"
+          style={{ zIndex: 110 }}
           onClick={(e) => e.target === e.currentTarget && setDeleteModal(null)}
           role="presentation"
         >
@@ -489,6 +527,7 @@ export default function IncomeTrackingTab({
       {updateAmountModal && (
         <div
           className="sheet-backdrop"
+          style={{ zIndex: 110 }}
           onClick={(e) =>
             e.target === e.currentTarget && setUpdateAmountModal(null)
           }

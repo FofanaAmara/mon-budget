@@ -414,6 +414,7 @@ export default function ExpenseTemplateManager({
       {sectionModal && (
         <div
           className="sheet-backdrop"
+          style={{ zIndex: 110 }}
           onClick={(e) => e.target === e.currentTarget && setSectionModal(null)}
         >
           <div className="sheet">

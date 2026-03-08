@@ -55,6 +55,7 @@ export default function AddSavingsModal({
   return (
     <div
       className="sheet-backdrop"
+      style={{ zIndex: 110 }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
       role="presentation"
     >

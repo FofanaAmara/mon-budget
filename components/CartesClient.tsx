@@ -766,6 +766,7 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
       {modal.mode !== "closed" && (
         <div
           className="sheet-backdrop"
+          style={{ zIndex: 110 }}
           onClick={(e) =>
             e.target === e.currentTarget && setModal({ mode: "closed" })
           }

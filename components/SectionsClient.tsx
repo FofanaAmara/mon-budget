@@ -648,6 +648,7 @@ export default function SectionsClient({
       {modal.mode !== "closed" && (
         <div
           className="sheet-backdrop"
+          style={{ zIndex: 110 }}
           onClick={(e) => e.target === e.currentTarget && closeModal()}
           role="presentation"
         >
