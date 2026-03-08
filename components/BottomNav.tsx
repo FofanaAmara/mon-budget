@@ -369,6 +369,7 @@ export default function BottomNav() {
           width: "260px",
           height: "100vh",
           flexDirection: "column",
+          overflow: "hidden",
           background: "var(--surface-raised)",
           borderRight: "1px solid var(--border-default)",
           zIndex: 50,
@@ -415,6 +416,8 @@ export default function BottomNav() {
         <nav
           style={{
             flex: 1,
+            minHeight: 0,
+            overflowY: "auto",
             padding: "16px 12px",
             display: "flex",
             flexDirection: "column",
@@ -483,7 +486,8 @@ export default function BottomNav() {
           ref={desktopMenuRef}
           style={{
             marginTop: "auto",
-            padding: "16px 20px",
+            flexShrink: 0,
+            padding: "12px",
             borderTop: "1px solid var(--border-default)",
             position: "relative",
           }}
@@ -495,8 +499,7 @@ export default function BottomNav() {
               display: "flex",
               alignItems: "center",
               gap: "10px",
-              padding: "8px",
-              margin: "-8px",
+              padding: "8px 10px",
               background: desktopMenuOpen
                 ? "var(--accent-subtle)"
                 : "transparent",
