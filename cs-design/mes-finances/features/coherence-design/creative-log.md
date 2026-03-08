@@ -182,3 +182,35 @@
 - sections-desktop.png, sections-mobile.png
 - cartes-desktop.png, cartes-mobile.png
 - revenus-desktop.png, revenus-mobile.png
+
+---
+
+### 2026-03-07 -- DESIGN-005 : Ajouter les breadcrumbs manquants sur Sections et Cartes
+
+**Mode :** Feature (story DESIGN-005 dans la feature coherence-design)
+
+**Fichiers modifies :**
+
+| Fichier | Type de changement |
+|---------|-------------------|
+| `components/SectionsClient.tsx` | Import `Breadcrumb` + ajout `<nav>` wrapper avec breadcrumb au-dessus du monument hero |
+| `components/CartesClient.tsx` | Import `Breadcrumb` + ajout `<nav>` wrapper avec breadcrumb au-dessus du monument hero |
+
+**Decisions d'integration :**
+
+| Decision | Choix | Raison |
+|----------|-------|--------|
+| Composant reutilise | `Breadcrumb` existant (pas de nouveau composant) | Le composant existe deja, utilise sur revenus et charges. XS story = zero duplication. |
+| Lien "Reglages" → `/parametres` | `/parametres` (pas `/settings`) | Le handoff mentionne `/settings` mais les pages existantes (revenus, charges) utilisent `/parametres`. La route reelle est `/parametres`. Coherence avec l'existant. |
+| Pattern : `<nav>` wrapper | `padding: "14px 20px 0"` | Meme pattern que `parametres/revenus/page.tsx`. Pas de `<nav>` sur charges (breadcrumb inline dans le monument) -- on suit le pattern revenus car plus propre semantiquement. |
+| Placement dans SectionsClient et CartesClient | Dans les client components (pas dans les server pages) | Les pages server (`app/sections/page.tsx`, `app/cartes/page.tsx`) sont des thin wrappers qui deleguent au client component. Le rendu visuel est entierement dans le client component. |
+
+**Ecarts mockup -> code :**
+- Aucun ecart : le `Breadcrumb` existant correspond aux specs du handoff (font-size 13px via `var(--text-xs)`, teal-700 pour le lien, slate-500 pour la page courante, separateur chevron SVG).
+
+**Known gaps :**
+- Aucun. DESIGN-005 est purement visuel, aucune logique metier touchee.
+
+**Screenshots validation :** `.tmp/screenshots/DESIGN-005/`
+- sections-desktop.png, sections-mobile.png
+- cartes-desktop.png, cartes-mobile.png

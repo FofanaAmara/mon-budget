@@ -6,6 +6,7 @@ import SheetCloseButton from "@/components/SheetCloseButton";
 import { createCard, updateCard, deleteCard } from "@/lib/actions/cards";
 import type { Card } from "@/lib/types";
 import Link from "next/link";
+import Breadcrumb from "@/components/Breadcrumb";
 
 /* ─── Constants ──────────────────────────────────────── */
 
@@ -245,6 +246,16 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
 
   return (
     <div style={{ paddingBottom: "120px" }}>
+      {/* ── Breadcrumb ── */}
+      <nav style={{ padding: "14px 20px 0" }}>
+        <Breadcrumb
+          items={[
+            { label: "Reglages", href: "/parametres" },
+            { label: "Mes cartes" },
+          ]}
+        />
+      </nav>
+
       {/* ── Monument: card count ── */}
       <div
         style={{

@@ -3,6 +3,7 @@
 import { useState, useTransition, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import SheetCloseButton from "@/components/SheetCloseButton";
+import Breadcrumb from "@/components/Breadcrumb";
 import {
   createSection,
   updateSection,
@@ -188,6 +189,16 @@ export default function SectionsClient({
 
   return (
     <div style={{ paddingBottom: "120px" }}>
+      {/* ── Breadcrumb ── */}
+      <nav style={{ padding: "14px 20px 0" }}>
+        <Breadcrumb
+          items={[
+            { label: "Reglages", href: "/parametres" },
+            { label: "Mes sections" },
+          ]}
+        />
+      </nav>
+
       {/* ── Monument: section count ── */}
       <div
         style={{
