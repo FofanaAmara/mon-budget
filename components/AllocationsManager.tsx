@@ -156,7 +156,7 @@ export default function AllocationsManager({
                 marginBottom: "4px",
               }}
             >
-              Revenu mensuel
+              Revenu
             </p>
             <p
               className="amount"
