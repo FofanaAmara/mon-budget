@@ -34,14 +34,14 @@ export default function EpargneSection({
       >
         <h2
           style={{
-            fontSize: "13px",
+            fontSize: "11px",
             fontWeight: 700,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
             color: "var(--teal-700)",
           }}
         >
-          Épargne
+          ÉPARGNE ({1 + projets.length})
         </h2>
         <button
           onClick={onCreateProject}

@@ -261,14 +261,14 @@ export default function SectionsClient({
       >
         <p
           style={{
-            fontSize: "12px",
+            fontSize: "11px",
             fontWeight: 700,
-            letterSpacing: "0.1em",
+            letterSpacing: "0.08em",
             textTransform: "uppercase",
-            color: "var(--text-tertiary)",
+            color: "var(--teal-700)",
           }}
         >
-          LISTE
+          LISTE ({sections.length})
         </p>
         {/* Desktop-only add button */}
         <button

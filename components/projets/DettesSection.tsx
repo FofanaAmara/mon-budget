@@ -32,14 +32,14 @@ export default function DettesSection({
       >
         <h2
           style={{
-            fontSize: "13px",
+            fontSize: "11px",
             fontWeight: 700,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
-            color: "var(--error)",
+            color: "var(--teal-700)",
           }}
         >
-          Dettes
+          DETTES ({debts.length})
         </h2>
         <button
           onClick={onCreateDebt}

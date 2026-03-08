@@ -80,3 +80,40 @@
 
 **Screenshots validation :** `.tmp/screenshots/DESIGN-004/`
 - accueil.png, depenses.png, revenus.png, projets.png, charges.png, revenus-params.png
+
+---
+
+### 2026-03-07 -- DESIGN-003 : Uniformiser les headers de section
+
+**Mode :** Feature (story DESIGN-003 dans la feature coherence-design)
+
+**Fichiers modifies :**
+
+| Fichier | Type de changement |
+|---------|-------------------|
+| `components/depenses/StatusGroupSection.tsx` | Couleur `slate-400` → `teal-700` ; font-size 12px → 11px. Compteur deja present. |
+| `components/SectionsClient.tsx` | Couleur `text-tertiary` → `teal-700` ; font-size 12px → 11px ; letter-spacing 0.1em → 0.08em ; ajout `(N)` = `sections.length` |
+| `components/CartesClient.tsx` | Couleur `text-tertiary` → `teal-700` ; font-size 12px → 11px ; letter-spacing 0.1em → 0.08em ; ajout `(N)` = `initial.length` |
+| `components/IncomeTemplateManager.tsx` | Couleur `slate-400` → `teal-700` ; font-size 12px → 11px ; letter-spacing 0.1em → 0.08em ; label uppercase ; ajout `(N)` = `incomes.length` |
+| `components/ExpenseTemplateManager.tsx` | Couleur `text-tertiary` → `teal-700` ; font-size 12px → 11px ; letter-spacing 0.1em → 0.08em ; label uppercase ; ajout `(N)` = `templateExpenses.length` |
+| `components/projets/EpargneSection.tsx` | Couleur deja teal-700 ; font-size 13px → 11px ; ajout `(N)` = `1 + projets.length` (épargne libre + projets) |
+| `components/projets/DettesSection.tsx` | Couleur `error` → `teal-700` (uniformisation per spec) ; font-size 13px → 11px ; ajout `(N)` = `debts.length` |
+
+**Decisions d'integration :**
+
+| Decision | Choix | Raison |
+|----------|-------|--------|
+| DettesSection : couleur rouge → teal | Changement effectue | Le handoff dit "toujours vert, jamais gris". La couleur rouge etait semantique mais le patron SectionLabel est uniforme teal. La semantique erreur est portee par les montants et badges (rouges), pas par le label de section. |
+| EpargneSection compteur | `1 + projets.length` | FreeSavings (épargne libre) est toujours 1 pot, plus les N projets = total réel de la section |
+| Labels en UPPERCASE | Uniformises | Certains etaient en title case ("Mes revenus récurrents"). Spec dit uppercase. |
+| `templateExpenses.length` pour charges | Correct | Ce sont les dépenses affichées dans la liste, filtrees par type != PLANNED |
+
+**Ecarts mockup -> code :**
+- `DettesSection` bouton reste outlined red (DESIGN-001, hors scope)
+- `EpargneSection` bouton reste outlined teal (DESIGN-001, hors scope)
+
+**Known gaps :**
+- Aucun. DESIGN-003 est purement display (CSS color + counter), aucune logique metier touchee.
+
+**Screenshots validation :** `.tmp/screenshots/after-design-003/`
+- depenses-desktop.png, sections-desktop.png, cartes-desktop.png, projets-desktop.png, params-revenus-desktop.png, params-charges-desktop.png
