@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { currentMonthKey } from "@/lib/month-utils";
 import MonthNavigator from "@/components/MonthNavigator";
 import RevenusMonument from "@/components/revenus/RevenusMonument";
 import IncomeTrackingTab from "@/components/revenus/IncomeTrackingTab";
 import AllocationTrackingTab from "@/components/revenus/AllocationTrackingTab";
+import AdhocIncomeModal from "@/components/AdhocIncomeModal";
+import AdhocAllocationModal from "@/components/AdhocAllocationModal";
 import type {
   MonthlyIncome,
   Income,
@@ -37,9 +40,12 @@ export default function RevenusTrackingClient({
   projects,
   initialTab = "revenus",
 }: Props) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"revenus" | "allocation">(
     initialTab,
   );
+  const [adhocIncomeOpen, setAdhocIncomeOpen] = useState(false);
+  const [adhocAllocOpen, setAdhocAllocOpen] = useState(false);
 
   const today = currentMonthKey();
   const isCurrentMonth = month === today;
@@ -66,6 +72,73 @@ export default function RevenusTrackingClient({
     <div style={{ paddingBottom: "96px", minHeight: "100vh" }}>
       {/* Month navigator */}
       <MonthNavigator month={month} basePath="/revenus" />
+
+      {/* Desktop-only header with add button */}
+      {isCurrentMonth && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            padding: "0 20px",
+            marginBottom: "4px",
+          }}
+        >
+          <button
+            onClick={() =>
+              activeTab === "revenus"
+                ? setAdhocIncomeOpen(true)
+                : setAdhocAllocOpen(true)
+            }
+            className="btn-desktop-only"
+            style={{
+              alignItems: "center",
+              gap: "6px",
+              padding: "9px 18px",
+              background: "var(--accent)",
+              color: "white",
+              border: "none",
+              borderRadius: "var(--radius-md)",
+              fontSize: "13px",
+              fontWeight: 600,
+              cursor: "pointer",
+              letterSpacing: "-0.01em",
+              transition: "all 0.2s ease",
+              whiteSpace: "nowrap",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.background =
+                "var(--accent-hover)";
+              (e.currentTarget as HTMLElement).style.transform =
+                "translateY(-1px)";
+              (e.currentTarget as HTMLElement).style.boxShadow =
+                "var(--shadow-md)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.background =
+                "var(--accent)";
+              (e.currentTarget as HTMLElement).style.transform = "";
+              (e.currentTarget as HTMLElement).style.boxShadow = "";
+            }}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            {activeTab === "revenus"
+              ? "Revenu ponctuel"
+              : "Allocation ponctuelle"}
+          </button>
+        </div>
+      )}
 
       {/* Monument: the scoreboard */}
       <RevenusMonument
@@ -148,6 +221,28 @@ export default function RevenusTrackingClient({
           />
         )}
       </div>
+
+      {/* Desktop adhoc modals (opened by header button) */}
+      {adhocIncomeOpen && (
+        <AdhocIncomeModal
+          month={month}
+          onClose={() => {
+            setAdhocIncomeOpen(false);
+            router.refresh();
+          }}
+        />
+      )}
+      {adhocAllocOpen && (
+        <AdhocAllocationModal
+          month={month}
+          sections={sections}
+          projects={projects}
+          onClose={() => {
+            setAdhocAllocOpen(false);
+            router.refresh();
+          }}
+        />
+      )}
     </div>
   );
 }
