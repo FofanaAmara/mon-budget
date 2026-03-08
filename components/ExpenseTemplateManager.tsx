@@ -244,12 +244,12 @@ export default function ExpenseTemplateManager({
               setEditingExpense(undefined);
               setShowModal(true);
             }}
+            className="btn-desktop-only"
             style={{
-              display: "inline-flex",
               alignItems: "center",
               gap: "6px",
               padding: "9px 18px",
-              background: "var(--accent)",
+              background: "var(--teal-700)",
               color: "white",
               border: "none",
               borderRadius: "var(--radius-md)",
@@ -260,7 +260,6 @@ export default function ExpenseTemplateManager({
               transition: "all 0.2s ease",
               whiteSpace: "nowrap",
             }}
-            className="btn-desktop-only"
           >
             <svg
               width="16"

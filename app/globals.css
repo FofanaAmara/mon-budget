@@ -341,11 +341,11 @@ body {
 
 /* ── Desktop-only buttons (hidden on < 768px) ─────────── */
 .btn-desktop-only {
-  display: none;
+  display: none !important;
 }
 @media (min-width: 768px) {
   .btn-desktop-only {
-    display: inline-flex;
+    display: inline-flex !important;
   }
 }
 

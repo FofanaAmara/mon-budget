@@ -44,7 +44,6 @@ export default function DettesSection({
         </h2>
         <button
           onClick={onCreateDebt}
-          className="btn-desktop-only"
           style={{
             padding: "8px 16px",
             borderRadius: "8px",

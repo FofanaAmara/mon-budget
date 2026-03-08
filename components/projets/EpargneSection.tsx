@@ -48,7 +48,6 @@ export default function EpargneSection({
         </h2>
         <button
           onClick={onCreateProject}
-          className="btn-desktop-only"
           style={{
             padding: "8px 16px",
             borderRadius: "8px",

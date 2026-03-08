@@ -14,7 +14,6 @@ import EpargneSection from "@/components/projets/EpargneSection";
 import DettesSection from "@/components/projets/DettesSection";
 import ExtraPaymentSheet from "@/components/projets/ExtraPaymentSheet";
 import ChargeDebtSheet from "@/components/projets/ChargeDebtSheet";
-import ProjetsFab from "@/components/projets/ProjetsFab";
 import type { Expense, Section, Card, Debt } from "@/lib/types";
 
 type Props = {
@@ -113,11 +112,6 @@ export default function ProjetsEpargneClient({
         onCharge={(debt) => setChargeDebt(debt)}
         onEdit={handleEditDebt}
         onDelete={handleDeleteDebt}
-      />
-
-      <ProjetsFab
-        onCreateProject={() => setCreateModal(true)}
-        onCreateDebt={handleCreateDebt}
       />
 
       {/* -- MODALS -- */}
