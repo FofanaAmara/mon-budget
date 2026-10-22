@@ -34,7 +34,11 @@ Confirmation humaine : « oui exact espace financier c'est le bon ». Un espace 
 
 ### Plusieurs espaces indépendants pour une même personne
 
-L'humain décrit un choix à la connexion entre finances personnelles, de couple ou de famille, et confirme que toute l'application reflète l'espace choisi. La bascule entre espaces doit aussi être possible dans l'application. Pourquoi : une personne participe à plusieurs ensembles de finances sans les mélanger. Le placement exact du choix et la reprise automatique éventuelle restent ouverts.
+L'humain décrit un choix à la connexion entre finances personnelles, de couple ou de famille, et confirme que toute l'application reflète l'espace choisi. La bascule entre espaces doit aussi être possible dans l'application. Pourquoi : une personne participe à plusieurs ensembles de finances sans les mélanger. La reprise automatique éventuelle reste ouverte ; l'emplacement du sélecteur est décidé ci-dessous.
+
+### Sélecteur d'espace dans la sidebar
+
+Décision humaine complémentaire : « le switch entre les espaces doit se faire dans le sidebar » ; « si on a un seul espace la dropwnlist en contient un seul et on peut pas changer ». Le sélecteur est une liste déroulante dans la sidebar, contenant les espaces accessibles. Avec une seule appartenance, il reste présent avec cette unique option et aucune bascule n'est possible. Pourquoi : conserver un point d'accès stable au contexte financier, même avant la création d'un deuxième espace. La déclinaison pour la navigation mobile, qui utilise actuellement une barre basse, reste à concevoir.
 
 ### Même application et mêmes fonctions dans l'espace partagé
 
@@ -116,7 +120,7 @@ N/A — aucune maquette, aucun template d'interface ni liste de livrables techni
 
 ## Ce qui reste génuinement ouvert
 
-- Présentation du sélecteur, choix systématique à la connexion ou reprise du dernier espace, cas d'une seule appartenance, comportement sur plusieurs appareils et onglets.
+- Déclinaison mobile du sélecteur de la sidebar, détails visuels et interaction quand il n'a qu'une option (ouverture ou contrôle désactivé), choix systématique à la connexion ou reprise du dernier espace, comportement sur plusieurs appareils et onglets. L'emplacement dans la sidebar et l'option unique sans bascule sont déjà décidés.
 - Canal et destinataire de l'invitation, lien éventuel, notification dans l'application, expiration, renvoi, annulation et refus. Visibilité après connexion et acceptation après inscription sont décidées, transport non tranché.
 - Articulation entre inscription via invitation, création obligatoire du premier espace et accès à l'espace invité. Ne pas en déduire une obligation de créer d'abord un espace personnel supplémentaire non désiré.
 - Nom proposé, règles de nommage et nom attribué au premier espace des utilisateurs existants.
@@ -139,7 +143,7 @@ N/A — aucune maquette, aucun template d'interface ni liste de livrables techni
 
 Au niveau de l'intention, le résultat doit permettre de constater :
 
-- Une personne nomme et crée son premier espace pendant l'onboarding, peut y lancer une invitation, puis créer un autre espace et basculer entre des finances distinctes dans toute l'application.
+- Une personne nomme et crée son premier espace pendant l'onboarding, peut y lancer une invitation, puis créer un autre espace et basculer depuis la liste déroulante de la sidebar entre des finances distinctes dans toute l'application ; avec un seul espace, cette liste ne contient que lui et ne permet aucune bascule.
 - Deux personnes, dont l'une peut s'inscrire après invitation, rejoignent le même espace après acceptation et y utilisent les fonctions existantes avec des droits égaux ; un compte non-membre n'y accède pas.
 - Les finances existantes sont conservées dans un premier espace après migration, sans perte ni mélange, avec les fonctions existantes vérifiées.
 
