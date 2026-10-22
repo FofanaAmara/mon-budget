@@ -1,0 +1,68 @@
+# Feature Brief — Espaces financiers personnels et partagés
+
+> Statut : REFINED — NOT READY pour implémentation complète ; premier incrément prêt à concevoir.
+> Priorité : prochaine priorité produit, avant les autres fonctionnalités, instruction humaine du 2026-10-22.
+> Source : `.Codex/inputs/espaces-financiers/input.md` (sidebar incluse).
+
+## Intention et décisions acquises
+
+Permettre à une personne de gérer séparément ses finances personnelles et celles de son couple avec la même application. Un espace solo devient partagé à l’acceptation d’un autre membre. Aucun rôle différencié ni privilège du créateur. Nom du premier espace demandé pendant l’onboarding ; invitation optionnelle dès ce parcours ; autres espaces créables ensuite. Les comptes existants conservent leurs données. La liste déroulante est dans la sidebar, même si elle n’a qu’une option ; aucune bascule dans ce cas.
+
+Hypothèse : un contexte complet commun permettra au couple de contribuer sans exposer les finances personnelles. Recette : les deux conjoints réalisent le parcours complet, retrouvent leurs modifications communes et n’accèdent jamais aux autres espaces de l’autre.
+
+## Critères de recette de la feature
+
+1. Démarrer avec un espace nommé, seul ou en lançant une invitation pendant l’onboarding.
+2. Créer un autre espace et basculer depuis la sidebar ; toutes les pages et opérations reflètent cet espace.
+3. Rejoindre après connexion ou après inscription et acceptation explicite ; invitation en attente sans accès.
+4. Les membres utilisent les mêmes fonctions et droits ; leurs autres espaces restent privés.
+5. Retrouver les finances existantes sans perte, duplication ou changement des montants et relations.
+
+## Ordre des stories et dépendances
+
+| Ordre | Story | Capacité | Dépendances |
+|-------|-------|----------|-------------|
+| 1 | [ESP-001](stories/ESP-001.md) | Nommer et utiliser mon premier espace | aucune nouvelle story |
+| 2 | [ESP-002](stories/ESP-002.md) | Retrouver mes finances existantes dans mon espace | ESP-001 |
+| 3 | [ESP-003](stories/ESP-003.md) | Créer un autre espace et choisir mes finances dans la sidebar | ESP-001, ESP-002 |
+| 4 | [ESP-004](stories/ESP-004.md) | Inviter et rejoindre avec un compte existant | ESP-003 |
+| 5 | [ESP-005](stories/ESP-005.md) | Créer mon compte pour rejoindre l’espace invité | ESP-004 |
+| 6 | [ESP-006](stories/ESP-006.md) | Inviter mon conjoint pendant la création de mon premier espace | ESP-004, ESP-005 |
+
+Chemin critique : 001 → 002 → 003 → 004 → 005 → 006. Chaque story traverse les couches nécessaires à son parcours ; aucune story « migration », « API » ou « UI » séparée. Les entités sont introduites à leur premier usage. Le premier incrément est ESP-001 : un nouveau compte nomme son espace et y utilise l’application en solo. Ce n’est pas encore la promesse de partage livrée.
+
+## Invariants communs à toutes les stories
+
+- Seuls les membres accèdent aux données ; masquer un élément ne constitue pas une preuve d’isolation.
+- Fonctions concernées : dashboard et synthèses, dépenses et transactions progressives, revenus, allocations, épargne/projets/contributions, dettes/paiements, catégories, cartes, configuration financière, génération mensuelle et traitements automatiques. Aucun retour implicite aux finances du compte lorsqu’un espace est choisi.
+- L’authentification et le compte restent individuels. Les préférences ambiguës sont à classifier avant la livraison multiespace.
+- Aucun rafraîchissement temps réel n’a été demandé. Proposition PM pour la version initiale : rendre les changements visibles à la prochaine consultation/recharge, à confirmer lors de la conception.
+- Aucun échec de création, de bascule ou d’acceptation ne doit annoncer une réussite ni donner un accès partiel non autorisé.
+- Tests d’isolation avec deux comptes membres, un troisième non-membre et au moins deux espaces aux données volontairement distinctes ; essais de références d’objets croisées.
+- Vérifications visuelles desktop/mobile, clavier, nom très court et très long ; inspection de la page entière. Playwright MCP reste requis par le protocole humain, pas remplacé par l’inspection du code.
+
+## Propositions PM à valider — ne sont pas des décisions humaines
+
+| Sujet | Proposition recommandée | Pourquoi / dépendance |
+|-------|-------------------------|-----------------------|
+| Invitation | Adresse courriel du compte, notification après connexion et courriel avec lien ; seul le compte dont l’adresse est vérifiée peut accepter | Parcours compréhensible même avant inscription, destinataire identifiable. Arbitrage nécessaire pour ESP-004/005 ; faisabilité/coût à vérifier par le Builder. |
+| Cycle d’invitation | Validité 7 jours ; renvoi et annulation possibles à tout membre ; refus possible au destinataire ; doublon en attente signalé sans multiplier les invitations | Éviter accès durable non désiré et confusion. Proposition à valider avant critères détaillés d’expiration/renvoi/annulation/refus ; pas ajoutée silencieusement aux stories. |
+| Inscription sur invitation | Accepter peut établir le premier espace de l’utilisateur ; pas de création forcée d’un espace personnel vide avant de rejoindre | Respecte le premier espace obligatoire sans détour artificiel. Arbitrage nécessaire pour ESP-005. |
+| Nom / reprise existants | Saisie obligatoire non vide, espaces seuls refusés ; préremplir « Mes finances » pour les nouveaux, attribuer « Mes finances » aux comptes existants | Réduit la friction. La validation exacte relève de la conception ; nom initial des comptes existants à confirmer avant ESP-002. |
+| Connexion / onglets | Reprendre le dernier espace valide ; changement limité à l’onglet courant, les autres gardent leur contexte affiché | Évite bascule surprise pendant une saisie. Proposition de comportement avant ESP-003, stockage non prescrit. |
+| Mobile | Sidebar accessible depuis un bouton du menu mobile contenant le même sélecteur | Préserve le lieu décidé et rend l’action disponible sur petit écran. Détail de conception, pas blocage produit du premier incrément. |
+| Formulaire ouvert | Demander de terminer ou abandonner une saisie avant de basculer ; ne jamais la déplacer vers l’autre espace | Empêche les erreurs d’affectation. Interaction précise à concevoir dans ESP-003. |
+| Préférences et guide | Compte, sécurité, appareil et consentement push individuels ; configuration financière et progression du guide propres à l’espace ; un nouvel arrivant ne réinitialise pas le guide d’un espace déjà configuré | Évite qu’une préférence individuelle modifie les finances communes. À confirmer avant ESP-003/005. |
+| Cycle de vie destructeur | Ne pas ajouter départ, exclusion ou suppression d’espace dans cette première livraison ; les définir ensuite avec droits strictement égaux | Ces parcours n’ont pas été demandés et impliquent données/invitations/dernier membre. Périmètre recommandé à valider ; aucun rôle propriétaire caché. |
+
+Attribution visible des écritures, historique utilisateur, édition en temps réel et résolution sophistiquée des conflits : non demandés. L’intégrité face aux écritures simultanées reste obligatoire.
+
+## Risques et préparation technique attendue
+
+Le PM ne prescrit ni schéma, ni mécanisme de contexte, ni transport technique. La conception doit inventorier les chemins financiers, traitements automatiques, caches et relations ; examiner DISC-PROG-002-001 et DISC-003 sans supposer leur état actuel ; démontrer conservation et isolation sur base réelle. Le Builder classifie l’assurance (tenancy/finances appellent les preuves Reinforced AF), chaque changement de schéma et la stratégie de reprise. Tout plan UNSAFE doit être accepté avant exécution. L’échec de test préexistant décrit dans l’input doit être recontrôlé et traité explicitement.
+
+Plan technique dans `.Codex/plans/`, validation humaine avant implémentation. Cette préparation backlog ne lance aucun cycle AWM, ne migre aucune donnée, n’envoie aucune invitation réelle et ne vaut pas preuve de fonctionnement.
+
+## Readiness
+
+Voir [examen de readiness](readiness.md) et [exigences](requirements.md). Les 6 stories sont rédigées avec 5 AC chacune. Aucune estimation de l’équipe n’a été obtenue : le PM n’invente ni points ni dates. ESP-002 et surtout ESP-003 présentent un risque de taille ; conception et estimation doivent confirmer une session ou conduire à un redécoupage par capacités utilisateur avant build.

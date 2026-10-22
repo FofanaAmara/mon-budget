@@ -14,3 +14,5 @@ Pour les details, voir les sous-dossiers par feature dans `.app-factory/log/`.
 | 2026-03-03 | FIX-MIN-003 | Update data-model.md with manually_edited column | Done |
 | 2026-03-02 | FIX-BLQ-006 | Fix charges fixes recurrence calculations | Done |
 | 2026-03-01 | FIX-BLQ-002 | Fix suivi depenses tracking bugs | Done |
+
+| 2026-10-22 | espaces-financiers / PM | Priorité humaine immédiate ; 6 stories verticales, exigences/couverture, propositions produit et readiness distincte premier incrément/feature | Backlog raffiné ; ESP-001 prêt à concevoir ; feature NOT READY pour build |

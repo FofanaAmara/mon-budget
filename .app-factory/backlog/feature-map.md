@@ -4,6 +4,10 @@
 > Source: App Discovery (codebase reverse-engineering)
 > Status: All features EXISTING (implemented in current codebase)
 
+## Ajout priorisé — 2026-10-22
+
+La carte ci-dessous est le snapshot de découverte du 2026-03-04, pas une certification actuelle (notamment « 0 tests »). Nouvelle feature **planifiée, non implémentée** : [Espaces financiers](epics/finances-partagees/features/espaces-financiers/feature-brief.md), epic `finances-partagees`, 6 stories ESP. Prochaine priorité humaine : premier espace, conservation existants, création/bascule sidebar, invitations et contribution commune. Le contexte financier impacte toutes les fonctions ; il dépend de l’authentification existante. Ordre et readiness actuels dans le [dashboard](README.md).
+
 ---
 
 ## Summary
