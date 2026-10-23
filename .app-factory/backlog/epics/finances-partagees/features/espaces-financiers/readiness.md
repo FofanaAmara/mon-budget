@@ -1,24 +1,29 @@
-# Examen de readiness — actualisé le 2026-10-22 après validation des maquettes
+# État de préparation et de recette — 2026-10-23
 
-Portée : backlog et préparation de la prochaine priorité. Aucune implémentation métier déclarée.
+> Statut : IN_PROGRESS — implémentation locale présente, livraison complète non démontrée.
 
-## Verdicts distincts
+Le précédent état du22octobre décrivait uniquement la préparation. Il est remplacé par ce relevé après exécution directe autorisée par l’humain, sans AWM. Les six stories sont en cours ; aucune n’est DONE. Ni le code présent, ni les maquettes, ni un test simulé ne suffisent à valider leur Definition of Done.
 
-- **Design : APPROUVÉ par l’humain**, après test et corrections du prototype React, commit `7aaec6d` : « ok c’est parfait ça me va ». Référence et limites dans le [brief](feature-brief.md#design-approuvé-après-test-humain--2026-10-22).
-- **ESP-001 : READY pour préparation du plan technique**, design disponible ; pas READY pour build tant que le plan et les preuves de sûreté nécessaires ne sont pas préparés/validés.
-- **Feature complète : NOT READY pour build**. Le design n’est plus un blocage. Dimensionnement, architecture de contexte, conservation/migration, isolation et points produit restants doivent être traités avant les parcours concernés.
-- Les six stories restent REFINED, prochaine priorité immédiate ; aucune n’est DONE ou en cours de développement.
+## État vérifié
 
-## Résultats des contrôles AF
+| Sujet | Acquis | Reste à prouver |
+|-------|--------|----------------|
+| Design | Maquettes React essai-02 approuvées, commit7aaec6d | Conformité finale sur toutes pages, clavier et PlaywrightMCP |
+| Plan | Plan global approuvé, exécution directe autorisée ; décisions techniques documentées | Respect des gates restants, sans nouvelle approbation implicite pour push ou production |
+| Conservation | Copie PostgreSQL17 restaurée,703lignes/18tables/175colonnes conservées avant recette, migrations001–006 | Validation globale de release ; aucune migration de production réalisée |
+| Espaces | Création/gestion/bascule et78actions financières contextualisées, servicesPG | Parcours Auth réels et toutes familles en E2E, cache/offline/BFCache |
+| Persistance | Revenus distincts125.25personnel/987.65couple saisis via vraieUI, rechargés et certifiés en lecture SQL | Contributions de deux membres réels ; les deux espaces ont encore un seul membre chacun |
+| Invitations | Réception Mailpit, landing explicite et liens vers Auth ; vérification OTP raccordée, retour entre vues corrigé | Réception externe Resend, compte vérifié, acceptation réelle existant/nouveau compte |
+| Qualité |260unitaires au code5101fa5, build/types/lint et7gardes verts ;99PG/13casChromium du socle précédent | CI distante SHAexact, revue globale indépendante et visuel PlaywrightMCP |
 
-| Contrôle | Résultat | Conclusion |
-|----------|----------|------------|
-| Couverture | 10 FR, 3 NFR, 2 UXR et 2 TR associés aux stories | PASS documentaire ; 17 exigences, aucune preuve d’implémentation |
-| Dépendances | 6 stories, uniquement vers des numéros précédents | PASS, aucun cycle ni découpage par couche |
-| Critères | 5 AC Given/When/Then par story, 30 au total | PASS documentaire ; nominal, erreurs et limites maintenus |
-| Design | Maquettes React corrigées approuvées par le sponsor | ACQUIS pour l’expérience ; simulation locale seulement |
-| Taille | Conservation globale002 et contextualisation003 à risque | NON ÉTABLI : estimation/dimensionnement requis, aucun point ni date inventé |
-| Technique | Plan, assurance et sûreté migration pas encore validés | NON ACQUIS : à préparer avant build |
+Recette locale : http://localhost:3002 ; boîtes locales : http://localhost:8025. Aucune donnée financière source modifiée, aucun push ou déploiement effectué. La recette est sur une copie privée isolée ; l’authentification utilise le service Neon existant.
+
+## Preuves et statuts
+
+- [Matrice17exigences/30AC](../../../../../../.Codex/plans/espaces-financiers-evidence/acceptance-matrix.md) : correspondance exhaustive et limites de chaque preuve ; tous les critères non prouvés restent ouverts.
+- [Audit courant](../../../../../../.Codex/plans/espaces-financiers-evidence/delivery-current-audit.md) : état au code `5101fa50a7c827ff3b508836a51af39d46e8a2a0`, conditions externes vérifiées et prochains contrôles nécessaires.
+- Plan : `.Codex/plans/espaces-financiers-implementation.md`, compléments de session et décisions dans `.Codex/adhoc/decisions/`.
+- Pas de points ni de dates inventés rétrospectivement. Estimations par tranches tracées dans plans/journaux ; coût monétaire indisponible, aucun nouveau service payant engagé.
 
 ## Décisions produit et UX acquises
 
@@ -32,15 +37,11 @@ Portée : backlog et préparation de la prochaine priorité. Aucune implémentat
 
 Ces décisions et l’approbation du design ne doivent pas être redemandées.
 
-## Points restants avant implémentation des parcours concernés
+## Conditions de clôture restantes
 
-- Inventorier tous les chemins de données/traitements/caches et concevoir le contexte ; classifier préférences individuelles vs financières et progression du guide, onglets/appareils et repli si un espace devient inaccessible.
-- Concevoir une migration conservant montants, relations et unicité des instances ; stratégie de reprise, classification de sûreté/assurance et tests réels d’isolation à deux membres et un non-membre. Examiner les discoveries et l’échec de test cités dans l’input, sans les supposer résolus.
-- Garantir le bon destinataire et la continuité de l’invitation entre page publique, auth et acceptation. Vérification du courriel, durée de sept jours, modalités de renvoi/annulation/refus restent des propositions ; un bouton simulé ne les valide pas.
-- Dimensionner ESP-002/003 et redécouper par capacité utilisateur si nécessaire, sans stories DB/API/UI. Préparer le plan technique et le faire valider avant exécution.
+1. Une boîte de recette contrôlée, une adresse Auth réellement vérifiée et des sessions accessibles doivent permettre réception Resend puis acceptation distincte, contribution et recharge à deux. Configuration expéditeur Resend vérifiée en lecture le23octobre ; cela ne prouve aucune réception. Gmail n’est pas connecté. EMAIL_TO n’impose pas le destinataire.
+2. Inscription réelle puis vérification et retour invitation sans espace personnel forcé. Aucun compte créé ou statutemailVerified fabriqué pour remplacer cette preuve.
+3. Recette financière complète, onglets/saisies/réponses tardives/offline/BFCache et clavier/visuel exigé. ChromeDevTools actuel est anonyme ; anciennes sessions de recette non disponibles dans cet outil. PlaywrightMCP absent.
+4. CI distante verte sur le commit exact et revue globale indépendante. Aucun push n’est autorisé par le seul goal ; aucun run actuel au5101fa5.
 
-Le report des actions de départ/exclusion/suppression reste une proposition de périmètre ; aucune action destructrice ni rôle propriétaire ne s’ajoute tacitement.
-
-## Prochaine action
-
-Préparer le plan technique d’ESP-001 et la stratégie d’ensemble de conservation/isolation, avec migration introduite dans la story qui en a besoin. Le mandat de cette mise à jour reste documentaire : pas de migration, d’envoi réel, de développement applicatif ou de push.
+Les actions de départ/exclusion/suppression et les rôles différenciés ne s’ajoutent pas à cette livraison. La reprise vise les conditions manquantes, sans réduire les30AC pour déclarer DONE.

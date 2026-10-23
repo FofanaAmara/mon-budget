@@ -1,6 +1,6 @@
 # Gérer ses finances personnelles et communes sans les mélanger
 
-> Statut : PLANNED — priorité produit immédiate, décision humaine du 2026-10-22.
+> Statut : IN_PROGRESS — implémentation locale des espaces financiers, recette et livraison complètes non démontrées.
 > Champion : propriétaire du produit.
 
 ## Contexte et objectif

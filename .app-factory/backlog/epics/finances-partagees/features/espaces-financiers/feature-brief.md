@@ -1,8 +1,10 @@
 # Feature Brief — Espaces financiers personnels et partagés
 
-> Statut : REFINED — DESIGN APPROUVÉ ; NOT READY pour build, préparation technique à réaliser.
+> Statut : IN_PROGRESS — DESIGN APPROUVÉ ; implémentation locale réalisée, recette complète et livraison non démontrées.
 > Priorité : prochaine priorité produit, avant les autres fonctionnalités, instruction humaine du 2026-10-22.
 > Source : `.Codex/inputs/espaces-financiers/input.md` (sidebar incluse).
+
+État courant et limites : [readiness](readiness.md). Les propositions de préparation conservées plus bas sont historiques ; décisions techniques exécutées et preuves sont référencées dans cet état. Aucun critère d’acceptation n’est réduit.
 
 ## Intention et décisions acquises
 

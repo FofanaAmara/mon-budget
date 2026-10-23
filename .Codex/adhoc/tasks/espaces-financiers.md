@@ -7,11 +7,11 @@ Plan : .Codex/plans/espaces-financiers-implementation.md. Méthode directe impos
 | P0 Baseline, registre et DB isolée/restauration | Objectif lu | COMPLETED | Unitaires/types/lint/build verts, registre86exports, copie et restore sans écrireDBsource |
 | ESP-001 Premier espace | P0 | IN_PROGRESS | Création/unique option/reprise |
 | ESP-002 Conservation | ESP-001 | IN_PROGRESS | Avant/après/rejeu/reprise |
-| ESP-003 Multiespace complet | ESP-002 | TODO | Tous chemins, contraintes, concurrence, caches, réglages |
-| ESP-004 Invitation compte existant | ESP-003 | TODO | Resend réellement reçu et acceptation, droits égaux |
-| ESP-005 Inscription invitée | ESP-004 | TODO | Retour auth/verify sans espacepersonnelforcé |
-| ESP-006 Onboarding partagé | ESP-005 | TODO | Oui/non, erreurenvoi/retry |
-| Recette globale et revue | Toutes | TODO | 17exigences/30AC, visuelMCP, CI et URLtestable |
+| ESP-003 Multiespace complet | ESP-002 | IN_PROGRESS | Tous chemins, contraintes, concurrence, caches, réglages |
+| ESP-004 Invitation compte existant | ESP-003 | IN_PROGRESS | Resend réellement reçu et acceptation, droits égaux |
+| ESP-005 Inscription invitée | ESP-004 | IN_PROGRESS | Retour auth/verify sans espacepersonnelforcé |
+| ESP-006 Onboarding partagé | ESP-005 | IN_PROGRESS | Oui/non, erreurenvoi/retry |
+| Recette globale et revue | Toutes | IN_PROGRESS | 17exigences/30AC, visuelMCP, CI et URLtestable |
 
 Ne pas déclarer fini sur la base d’une tranche verte. Le goal reste actif jusqu’à preuve de tous ses critères. Aucun push ni déploiement production automatique.
 
@@ -84,3 +84,7 @@ Réservation navigation desktop : IN_PROGRESS — capture avant réelle DevTools
 Réservation navigation : COMPLETED pour le correctif borné et son rendu Auth375/1280 ; build/types/lint/7gardes verts. Finances mobile authentifiées et PlaywrightMCP restent ouverts. Isolation réelle125.25/987.65 persistante prouvée, membres1+1. DISC-ESP-009 retour Auth : IN_PROGRESS, lien Connexion interne perd redirectTo après inscription ouverte depuis invitation.
 
 DISC-ESP-009 : COMPLETED pour le correctif de conservation des liens — vraie régression SSR RED/vert,260unit/qualité verts, clics/recharges DevTools conservant invitation. Réception Auth et adhésion complètes restent IN_PROGRESS.
+
+Audit de livraison au5101fa5 et synchronisation backlog : IN_PROGRESS — relecture17/30, preuve CI SHAcomplet, domaineResend/accèsoutils, statutsdocumentaires à aligner sans DONE. PlanparentP7.1.
+
+Audit courant et synchronisation backlog : COMPLETED pour la tranche documentaire - SHA5101fa5/APIResend/CI/outils confirmes,6storiesIN_PROGRESS,30AC identiques,38liens existants. Goalglobal IN_PROGRESS ; reception/authreel/MCP/CI non prouves. Prochaine preuve exige surface/session/connexion ou publication autorisee ; ne pas boucler sur audits equivalents.

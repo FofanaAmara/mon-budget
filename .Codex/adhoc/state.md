@@ -676,3 +676,27 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Décisions prises :** adapter seulement le Link public et contexte local de page, pas de patch fournisseur/stockage. Test SSR réel avant hydratation nécessaire.
 **Prochaine étape :** staging/check/commit, puis reprendre les conditions Auth réelles et surfaces de recette authentifiée disponibles.
 **Contexte pour reprise :** HEAD5c07240 avantcommitAuth. Nouveaucorrectif validé260unit/19fichiers (69662exit0) et build/types/lint0warning/7gardes (10609exit0). ChromeDevToolspage1sessionanonyme à375x812 surforgot avec retourinvitationconservé, aucune soumission. Sourceidentitaire et empreinteMailpit privées, pas à recopier dansGit. Runtime81598 prêt3002 ; sourceDB/Resend/inscription/OTP/push/CI inchangés. Deuxcomptesexistants précédentsnonvérifiés toujourspasadhérents ; anciennesjarCUA non accessibles dans nouvellecollectiond’outils. DevToolsdisponible/MCPPlaywrightabsent. Goalglobal incomplet ; prochain audit doit garder réceptionexterne,2membres,nouveausignup,offline/BFCache,CI/revueindépendante/MCPouverts. Ce tour a produit deuxcorrectifsréels etpreuves, compteurimpasse0.
+
+---
+## [2026-10-23] — Audit courant et vérité du backlog
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md`, P7.1.
+**Tâche en cours :** auditer5101fa5 et aligner statutsbacklog encoreREFINED/aucuneimplémentation.
+**Objectif :** traces17/30 à jour, conditions réelles de livraison maintenues.
+**État :** IN_PROGRESS
+**Fichiers touchés :** état/tasks puis audit et backlog.
+**Décisions prises :** aucun travailcode spéculatif pour contourner manqueAuth. RecherchePlaywright ne retourne aucunplugin, CUAindisponible ; sessionChromeanon. Gmailnoninstallé/nonconnecté, propositionunique faite, pasdisponibletantqueconfirmé. Ce contrôle ne modifie aucune permission.
+**Prochaine étape :** finaliser audit courant et statutsIN_PROGRESS des6stories, conserverAC inchangés ; contrôleliens/diff/commitlocal.
+**Contexte pour reprise :** derniergoalturn=progrès5101fa5+5c07240. Runtime81598pollvivant. Resend13:37Z200/verified/sendingenabled, pasemailenvoyé ; APP_ORIGIN/testrecipient nonconfigurés ; EMAIL_TO pasautorisation de recette. CI REST SHAcomplet5101fa50a7c827ff3b508836a51af39d46e8a2a0total0. Résultatsprécédents260unit/99PG/13bancChromium/types/lint/build+7gardes ; requiertvraiAuth2membres/nouveau/Resend/MCP/revueglobale/CI. Aucunpush/déploiement/DBsource.
+
+---
+## [2026-10-23] - Backlog aligne et preconditions verifiees
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md`, P7.1.
+**Tache en cours :** commit documentaire apres controlestaging ; goal incomplet.
+**Objectif :** vraiefeature a deux membres, gateemail/Auth/MCP/CI conserve.
+**Etat :** IN_PROGRESS
+**Fichiers touches :** session2026-10-23-delivery-backlog-audit.md.
+**Decisions prises :** sixstories/feature/epic IN_PROGRESS ;30AC inchanges. Aucune fausse session, inscription, OTP ou reception externe.
+**Prochaine etape :** staging/check/commitlocal ; revalider une eventuelle nouvelle surface Auth/boite/outillage/publication, sinon compter impasse reelle sans creer de nouveaux audits identiques.
+**Contexte pour reprise :** HEAD5101fa5 code avantcommitdoc ;260unit/build/types/lint/7gardes acquis dernier tour,99PG/13Chromium du socle precedent. Rapportcanonique delivery-current-audit.md et matrice17/30. Resend13:37Zverified/sendingenabled,0email ; receivingenabled nonnecessaire. GitHub SHAcomplet5101fa5total0. ChromeDevTools anonymepage1,81598runtimepolledvivant. PlaywrightMCP/CUAabsents ; Gmailnonconnecte, suggestionunique23octobre a nepasrepeter7jours. Aucunpush/dispatch/permissionschange/DBsource. Dernierturnprogresfonctionnel ; ce turn auditexterne etstatutsverifies, pasdeprogresadhesion. Aucune autre correctioncode reproductible actuellement identifiee. Si impasse identique3toursreels, marquerblocked sans fauxDone.

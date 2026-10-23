@@ -94,7 +94,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 
 URL de recette locale : http://localhost:3002. Source et baseline privée ne sont pas migrées en production. Les stories restent en cours, sans changement artificiel de leurs critères.
 
-Audit de livraison actualise : delivery-audit.md. API GitHub sur SHA29913ffa95c0687d7593398fb10ccabf130595fe :0run. Qualite locale apres nettoyage :226unit,types0,lint0warning,buildWebpack0 ; aucune preuve produit globale ajoutee.
+Audit courant : [delivery-current-audit.md](delivery-current-audit.md), code5101fa5. CI distante SHAcomplet :0run ;260unit/build/types/lint0warning/7gardes locaux verts. Ancien delivery-audit.md conservé comme historique. Aucune preuve de réception externe, adhésion ou PlaywrightMCP ajoutée.
 
 Recette locale actuelle du23octobre : voir UI-CURRENT. Le refus de l’ancien onglet data: ne constitue plus un blocage general du navigateur ; nouvel onglet HTTP utilise avec autorisation humaine.
 
