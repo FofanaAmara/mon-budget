@@ -604,3 +604,27 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Décisions prises :** supprimer padding-bottom68px réservé à la nav absente sur.space-onboarding. Capture précédente338x732 n’est pas une preuve375 ; nouvellecapture exacte375x812 aprèsreload, body/main/viewport sanspadding, bandesdisparues. Revue visuelleclôturée ; desktop1280x900 aussi scanné.
 **Prochaine étape :** session52318 build/types déjà0, attendrelint puis staging/check/commitlocal.
 **Contexte pour reprise :**233unit/97PG/7delivery/auditprod0 ; CSSseul ajouté ensuite, build/typesrerun0. Images.local/session-current/foreign-space-mobile-no-nav-padding.png etdesktop-no-nav-padding.png. Runtime98404 vivant, IAB21invitationnonvérifiée et22Mailpitmarqués à conserver,23refusmarquéhandoff, viewportreset. Ne pas reprendre les captures anciennes comme verdict375. Pasdepush ouAuthconfigmutation. Revue du retraittwoFactor confirmée, aucunfindingrestant de cette tranche.
+
+---
+## [2026-10-23 08:35] — Parcours de vérification du destinataire
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension OTP dédiée.
+**Tâche en cours :** tests et implémentation du renvoi/vérification via API Neon dédiée.
+**Objectif :** débloquer le parcours réel d'invitation en conservant la confirmation Auth et l'acceptation explicite.
+**État :** IN_PROGRESS
+**Fichiers touchés :** plan/state/tasks ; code et tests à venir.
+**Décisions prises :** utiliser emailOtp typeemail-verification documenté officiellement, sans changer méthode globale d'inscription inconnue. Ne pas envoyer de mail externe pendant cette tranche. ConsoleNeon afficheLogin, aucune session de gestion/APIkey disponible, aucune configuration modifiée.
+**Prochaine étape :** tests RED des gardes et transport, actions serveur et UI ciblée.
+**Contexte pour reprise :**HEAD15ae38f vérifié commitlocal du refus404/providers/CSS.233unit/97PG/build/types/lint0warning/7delivery/auditprod0 ; précédenttour=progrès concret, compteurimpasse0. Runtime98404 local3002, IAB21destinataireA nonvérifié,22Mailpit. Pasderôles, pasdechangementducontratacceptation. Source https://neon.com/docs/auth/guides/plugins/email-otp : endpoints dédiés disponibles, génération/livraison gérées par Neon ; pasderéceptionréelleprouvée. Nouvelletranche12–20kjetonscoûtindisponible.
+
+---
+## [2026-10-23 08:43] — Parcours OTP vérifié, recette hébergée restante
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension OTP ; DEC-004.
+**Tâche en cours :** commit local de la tranche technique vérifiée.
+**Objectif :** goal complet conservé, réception/adhésion hébergées non prouvées.
+**État :** IN_PROGRESS
+**Fichiers touchés :** session2026-10-23-invitation-verification.md etpreuve invitation-verification-execution.md.
+**Décisions prises :** OTP dédié email-verification avec adresse dérivée de session fraîche et acteur de départ ; invitation pending/nonexpirée contrôlée. Aucune appartenance/bitAuth écrit par app, réponseprovider non sérialisée. Vérification fraîche après succès et acceptation séparée. Réponse UI tardive gardée par acteur/montage.
+**Prochaine étape :** staging explicite/diffcachedcheck/commit ; poursuivre inter-onglets/offline/autres finances et conditions de recette externe du goal.
+**Contexte pour reprise :**HEAD15ae38f avantcommitcourant ; runtime98404 vivant3002clonework17.246unit/99PG/7nouveauxcasChromium/6ancienscas verts. BuildWebpack/types/lint0warning/7gardesworkflow finaux session42370terminée0. Dépendances inchangées, auditprod0socle conservé. Revueindépendante source/nouveauCI/captures sansfinding. CUA21invitationnonvérifiée afficheformulaire, aucunsend/verify soumis ; codefictifvidé, Tabskippeddisabled, viewportrestauré.22Mailpitconservé. Preuves.local/financial-spaces/verification-current etverification-harness. CritèreMCPdistinctnonfermé, aucunpush/runCI/Resend/OTPexterne/DBsource. Source officNeonAPIOTP disponible sanschangerglobalconfig ; consoleNeonLogin, aucuneconfighébergéelue oumodifiée. DefautCSShoverprimaireblancsurpâle résolu et revu (DISC-ESP-007). PremièrefixturePGdeclinedinvalide corrigée enappelantvraieactiondecline ; suite99repassée. Tour=progrès concret, compteurimpasse0. Préexistantsserena/next-env/anciensCSàpréserver.

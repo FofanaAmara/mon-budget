@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getPublicInvitation } from "@/lib/actions/invitations";
 import InvitationResponse from "@/components/spaces/InvitationResponse";
+import InvitationVerification from "@/components/spaces/InvitationVerification";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -79,20 +80,7 @@ export default async function InvitationPage({
                     </Link>
                   </>
                 ) : !invitation.verified ? (
-                  <>
-                    <p className="space-info">
-                      Vérifie l’adresse courriel de ton compte à l’aide du
-                      message de confirmation, puis reviens accepter cette
-                      invitation.
-                    </p>
-                    <Link
-                      className="space-btn secondary"
-                      href={`/invitation/${token}`}
-                      prefetch={false}
-                    >
-                      J’ai vérifié mon adresse
-                    </Link>
-                  </>
+                  <InvitationVerification key={invitation.actorId} token={token} actorId={invitation.actorId ?? ""} />
                 ) : (
                   <InvitationResponse id={invitation.id} />
                 )}

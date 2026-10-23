@@ -13,6 +13,7 @@
     "test:spaces:db": "node --test __tests__/integration/financial-spaces-migration.test.mjs __tests__/integration/synthetic-baseline.test.mjs __tests__/integration/delivery-reconciliation.test.mjs",
     "test:spaces:services": "vitest run --config vitest.spaces.config.mts",
     "test:spaces:navigation": "node __tests__/browser/space-navigation-fixture/check.mjs",
+    "test:spaces:verification": "node __tests__/browser/space-navigation-fixture/check-verification.mjs",
     "test:delivery": "node --test __tests__/delivery/*.test.mjs",
     "test:spaces:prepare": "node scripts/financial-spaces/prepare-synthetic.mjs"
   },

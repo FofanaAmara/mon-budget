@@ -24,6 +24,10 @@ export default defineConfig({
       name: "fake-space-action",
       enforce: "pre",
       resolveId(id) {
+        if (id === "@/lib/actions/invitation-verification" || id === path.join(root, "lib/actions/invitation-verification"))
+          return path.join(here, "verification-services.js");
+        if (id === "@/lib/auth/client" || id === path.join(root, "lib/auth/client"))
+          return path.join(here, "verification-auth.jsx");
         if (
           id === "@/lib/actions/invitations" ||
           id === path.join(root, "lib/actions/invitations") ||

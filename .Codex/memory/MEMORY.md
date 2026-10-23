@@ -27,3 +27,5 @@
 - [Actions et montants mobiles](feedback_fixed_action_layout.md) - interaction FAB/guide et rails de controles variables a verifier sur les listes financieres.
 
 - [Contrat du fournisseur Auth UI](feedback_auth_ui_provider.md) — effets du wrapper, script de thème au repli, options publiques et contrôles SSR/types/navigateur.
+
+- [Styles des actions dans les listes](feedback_list_action_styles.md) — cibler la ligne prévue, vérifier primaire/hover/focus/disabled après changement de contenu.

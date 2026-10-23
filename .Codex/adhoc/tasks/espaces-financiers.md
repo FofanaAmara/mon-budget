@@ -69,3 +69,9 @@ RefusRSC500 : IN_PROGRESS - sous-type sessionabsente et traductionpage404/authsa
 
 
 Refus RSC500 et script de thème : COMPLETED pour cette tranche bornée — refus générique dans les deux sens, retour autorisé, scan desktop/mobile375,233unit/97PG/build/types/lint0warning/7gardes/auditprod0 et revue source indépendante. Commit local à effectuer. Goal global IN_PROGRESS ; deux comptes réels restent non vérifiés et aucune adhésion n'est prouvée (DISC-ESP-006).
+
+
+DISC-ESP-006 vérification du destinataire : IN_PROGRESS — dépend du socle15ae38f ; API OTP dédiée documentée, session/acteur/invitation gardés, UI envoi/saisie/reprise puis acceptation distincte. Tests et transport simulés ne fermeront pas réception Auth réelle ou adhésion.
+
+
+DISC-ESP-006 tranche technique : COMPLETED — actions OTP et UI,246unit/99PG, nouveau banc7cas et ancien6cas, build/types/lint0warning/7gardesworkflow verts, revue source/captures fermée. Réception/confirmation OTP réelle et adhésion toujours IN_PROGRESS. Défaut hover DISC-ESP-007 corrigé et revu.

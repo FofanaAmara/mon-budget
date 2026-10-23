@@ -29,6 +29,8 @@ const state = vi.hoisted(() => ({
   sessionRequests: [] as unknown[],
   fail: false,
   handler: null as null | ((message: InvitationMail) => Promise<string>),
+  verificationRequests: [] as unknown[],
+  verificationError: false,
 }));
 vi.mock("@/lib/auth/server", () => ({
   authSessionReader: {
@@ -37,6 +39,18 @@ vi.mock("@/lib/auth/server", () => ({
     }),
   },
   auth: {
+    emailOtp: {
+      sendVerificationOtp: async (input: unknown) => {
+        state.verificationRequests.push({ send: input });
+        return { data: { success: true }, error: null };
+      },
+      verifyEmail: async (input: unknown) => {
+        state.verificationRequests.push({ verify: input });
+        if (state.verificationError) return { data: null, error: { code: "INVALID_OTP" } };
+        if (state.identity) state.identity = { ...state.identity, emailVerified: true };
+        return { data: { status: true }, error: null };
+      },
+    },
     getSession: async (options: unknown) => {
       state.sessionRequests.push(options);
       return {
@@ -66,6 +80,7 @@ vi.mock("@/lib/invitations/mail", () => ({
   },
 }));
 import * as invitations from "@/lib/actions/invitations";
+import { requestInvitationVerification, verifyInvitationEmail } from "@/lib/actions/invitation-verification";
 import { createSpace, getSpaces, getLastSpace } from "@/lib/actions/spaces";
 import { createCard, getCards } from "@/lib/actions/financial/cards";
 import { requireSpace } from "@/lib/spaces/context";
@@ -167,6 +182,8 @@ describe("space invitations — real PostgreSQL, Auth/transport edges simulated"
     state.identity = a;
     state.fail = false;
     state.handler = null;
+    state.verificationRequests = [];
+    state.verificationError = false;
   });
   afterAll(async () => {
     if (adapter) await adapter.close();
@@ -517,5 +534,55 @@ describe("space invitations — real PostgreSQL, Auth/transport edges simulated"
       emailVerified: false,
     };
     expect(await invitations.getInvitationResponse(id)).toBeNull();
+  });
+  test("verifies only the invited email and still requires a separate acceptance — real SQL, simulated Auth OTP", async () => {
+    state.identity = { ...a, id: "fixture-verification-owner" };
+    const target = await space("Verification fixture");
+    const recipient = { ...b, id: "fixture-verification-recipient", email: "verification@example.test", emailVerified: false };
+    const invited = await invite(recipient.email, target);
+    const token = state.messages.at(-1)!.token;
+    state.identity = recipient;
+    const before = (await native.query("SELECT count(*) FROM financial_spaces")).rows[0].count;
+    const input = { token, expectedActorId: recipient.id };
+    expect(await invitations.getPublicInvitation(token)).toMatchObject({ actorId: recipient.id, recipientMatches: true, verified: false });
+    expect(await requestInvitationVerification(input)).toEqual({ ok: true, status: "sent" });
+    expect(state.verificationRequests).toEqual([{ send: { email: recipient.email, type: "email-verification" } }]);
+    expect((await row(invited.id)).status).toBe("pending");
+    state.verificationError = true;
+    expect(await verifyInvitationEmail({ ...input, code: "123456" })).toMatchObject({ ok: false });
+    state.verificationError = false;
+    expect(await verifyInvitationEmail({ ...input, code: "123456" })).toEqual({ ok: true, status: "verified" });
+    expect((await native.query("SELECT 1 FROM space_memberships WHERE space_id=$1 AND user_id=$2", [target, recipient.id])).rowCount).toBe(0);
+    expect((await row(invited.id)).status).toBe("pending");
+    expect((await native.query("SELECT count(*) FROM financial_spaces")).rows[0].count).toBe(before);
+    expect(await invitations.respondToInvitation(invited.id, "accept")).toMatchObject({ ok: true });
+    expect((await native.query("SELECT 1 FROM space_memberships WHERE space_id=$1 AND user_id=$2", [target, recipient.id])).rowCount).toBe(1);
+    const calls = state.verificationRequests.length;
+    expect(await requestInvitationVerification(input)).toMatchObject({ ok: false });
+    expect(state.verificationRequests).toHaveLength(calls);
+  });
+  test("OTP requests cannot use a foreign, expired, answered or forged invitation or a stale actor", async () => {
+    state.identity = { ...a, id: "fixture-verification-guard-owner" };
+    const target = await space("Verification guard fixture");
+    const recipient = { ...b, id: "fixture-verification-guard-recipient", email: "verification-guard@example.test", emailVerified: false };
+    const invited = await invite(recipient.email, target);
+    const token = state.messages.at(-1)!.token;
+    const input = { token, expectedActorId: recipient.id };
+    state.identity = { ...c, emailVerified: false };
+    expect(await requestInvitationVerification({ ...input, expectedActorId: c.id })).toMatchObject({ ok: false });
+    state.identity = recipient;
+    expect(await requestInvitationVerification({ ...input, expectedActorId: a.id })).toMatchObject({ ok: false });
+    expect(await requestInvitationVerification({ ...input, token: randomUUID() + "." + "a".repeat(43) })).toMatchObject({ ok: false });
+    await native.query("UPDATE space_invitations SET expires_at=now()-interval '1 second' WHERE id=$1", [invited.id]);
+    expect(await requestInvitationVerification(input)).toMatchObject({ ok: false });
+    expect(await verifyInvitationEmail({ ...input, code: "123456" })).toMatchObject({ ok: false });
+    await native.query("UPDATE space_invitations SET expires_at=now()+interval '1 day' WHERE id=$1", [invited.id]);
+    state.identity = { ...recipient, emailVerified: true };
+    expect(await invitations.respondToInvitation(invited.id, "decline")).toMatchObject({ ok: true });
+    state.identity = recipient;
+    expect(await requestInvitationVerification(input)).toMatchObject({ ok: false });
+    state.identity = null;
+    expect(await requestInvitationVerification(input)).toMatchObject({ ok: false });
+    expect(state.verificationRequests).toEqual([]);
   });
 });

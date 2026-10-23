@@ -81,6 +81,7 @@ export async function getPublicInvitation(token: string): Promise<{
   recipientMatches: boolean;
   verified: boolean;
   authenticated: boolean;
+  actorId: string | null;
 } | null> {
   if (!/^[a-f0-9-]{36}\.[A-Za-z0-9_-]{43}$/.test(token)) return null;
   await requireSpacesReady();
@@ -109,6 +110,7 @@ export async function getPublicInvitation(token: string): Promise<{
     ),
     verified: identity?.emailVerified === true,
     authenticated: Boolean(identity),
+    actorId: identity?.id ?? null,
   };
 }
 

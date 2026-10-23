@@ -33,6 +33,7 @@ jobs:
       - run: npx vitest run
       - run: npx playwright install --with-deps chromium
       - run: npm run test:spaces:navigation
+      - run: npm run test:spaces:verification
       - run: npx next typegen
       - run: npx tsc --noEmit
       - run: npm run lint

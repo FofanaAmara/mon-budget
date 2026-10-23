@@ -7,5 +7,6 @@ export function usePathname() {
   return useContext(Navigation).pathname;
 }
 export default function Link({ href, ...props }) {
+  delete props.prefetch;
   return <a {...props} href={href} />;
 }
