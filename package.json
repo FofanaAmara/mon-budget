@@ -10,9 +10,11 @@
     "lint": "eslint",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:spaces:db": "node --test __tests__/integration/financial-spaces-migration.test.mjs",
+    "test:spaces:db": "node --test __tests__/integration/financial-spaces-migration.test.mjs __tests__/integration/synthetic-baseline.test.mjs",
     "test:spaces:services": "vitest run --config vitest.spaces.config.mts",
-    "test:spaces:navigation": "node __tests__/browser/space-navigation-fixture/check.mjs"
+    "test:spaces:navigation": "node __tests__/browser/space-navigation-fixture/check.mjs",
+    "test:delivery": "node --test __tests__/delivery/*.test.mjs",
+    "test:spaces:prepare": "node scripts/financial-spaces/prepare-synthetic.mjs"
   },
   "dependencies": {
     "@neondatabase/auth": "0.6.0-beta",
@@ -39,6 +41,7 @@
     "dotenv": "^17.3.1",
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
+    "js-yaml": "4.3.2",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "4.1.12"

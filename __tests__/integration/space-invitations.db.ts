@@ -11,7 +11,7 @@ import { randomUUID, randomBytes } from "node:crypto";
 import { setTimeout as delay } from "node:timers/promises";
 import type { DatabaseSql } from "@/lib/database/types";
 import { createLocalDatabase } from "@/lib/database/local";
-import { localConnection } from "../../scripts/financial-spaces/local-fixture.mjs";
+import { localConnection, testBaseline } from "../../scripts/financial-spaces/local-fixture.mjs";
 import {
   runMigrations,
   legacyFingerprint,
@@ -124,7 +124,7 @@ describe("space invitations — real PostgreSQL, Auth/transport edges simulated"
     const admin = await localConnection();
     try {
       await admin.query(
-        `CREATE DATABASE "${database}" TEMPLATE spaces_baseline17`,
+        `CREATE DATABASE "${database}" TEMPLATE "${testBaseline()}"`,
       );
     } finally {
       await admin.end();

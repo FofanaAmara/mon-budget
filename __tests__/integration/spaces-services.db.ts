@@ -2,7 +2,7 @@ import { beforeAll, afterAll, describe, test, expect, vi } from "vitest";
 import { randomUUID, randomBytes } from "node:crypto";
 import type { DatabaseSql } from "@/lib/database/types";
 import { createLocalDatabase } from "@/lib/database/local";
-import { localConnection } from "../../scripts/financial-spaces/local-fixture.mjs";
+import { localConnection, testBaseline } from "../../scripts/financial-spaces/local-fixture.mjs";
 import { runMigrations } from "../../scripts/financial-spaces/migrate.mjs";
 
 type Identity = { id: string; name: string; email: string };
@@ -41,7 +41,7 @@ async function count(table: string, space: string) {
 describe("space services and local SQL — real PostgreSQL, server session stubbed", () => {
   beforeAll(async () => {
     const admin = await localConnection();
-    try { await admin.query(`CREATE DATABASE "${database}" TEMPLATE spaces_baseline17`); }
+    try { await admin.query(`CREATE DATABASE "${database}" TEMPLATE "${testBaseline()}"`); }
     finally { await admin.end(); }
     native = await localConnection(database);
     await runMigrations(native, { through: "006", dryRun: false, allowCutover: true });

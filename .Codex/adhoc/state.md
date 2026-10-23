@@ -360,3 +360,29 @@ Checkpoint sécurité : Next16.4.2/Vitest4.1.12/Neon0.6Beta BetterAuth1.7.6 ; ru
 Checkpoint final Auth : lecteur sans mutation devenu le défaut requireIdentity pour toutes les pages et actions ; le carrousel RSC hasSeenOnboarding a aussi été corrigé après finding indépendant. 206 unitaires et95PG verts sur ce dernier code ; types/lint/build relancés. Première relance build a échoué par accès GoogleFonts restreint, nouvelle relance réseau session68798 en cours. Aucun contournement navigateur.
 
 Checkpoint avant commit : 206unit/95PG verts, types0, lint0erreur15warnings ; build Webpack16.4.2 sortie0 sur dernier code. Turbopack final reste BLOQUÉ par EPERM lors du bind du worker CSS (après accès GoogleFonts) : rapport conservé, aucun faux vert. Revue indépendante a fermé dernierP1 carrousel. Build concurrent avait arrêté le runtime par le garde strict (comportement attendu) ; configurations restaurées, recette redémarrée session50892, runtime-final.log. Séquencer build/typegen etdev. Diffnext-envexactpréexistant ettsconfigHEAD conservés. Aucun nouveau navigateur/mail/push/prod.
+
+---
+## [2026-10-23] — Recette reproductible et matrice
+
+**Plan :** `.Codex/plans/espaces-financiers-verification.md`, parent approuvé P7.1.
+**Tâche en cours :** template synthétique pour rejouer les suites sans sauvegarde privée.
+**Objectif :** preuves du feature complet ; pas de réduction de portée.
+**État :** IN_PROGRESS
+**Fichiers touchés :** à suivre.
+**Décisions prises :** tour précédent = progrès vérifié e990b5d ; runtime50892 confirmé vivant. Aucun AWM ni question. Estimation15–25k jetons, coût indisponible. Préserver copie privée et source ; nouvelle base synthétique distincte, mêmes gardes.
+**Prochaine étape :** schéma sans données, seed fictif, choix strict du template de test ; mêmes suites PG/migrations.
+**Contexte pour reprise :** 206unit/95PG/21migration/6banc verts, build Webpack16.4.2 vert ; Turbopack build refus bindCSS, navigateur refusé ne pas contourner, PlaywrightMCP absent. Derniers points source/baseline/archive intacts. ResendKey/EMAIL_FROM présents, APP_ORIGIN et destinataire de recette explicite absents ; aucune valeur de secret affichée. Pas d’email externe/CI/push/prod. Dirtyserena/next-env/anciensCS préservés.
+
+---
+## [2026-10-23] — Recette portable et matrice vérifiées
+
+**Plan :** `.Codex/plans/espaces-financiers-verification.md`, parent P7.1.
+**Tâche en cours :** commit de la tranche portable ; goal global IN_PROGRESS.
+**Objectif :** feature complète avec réception externe et deux sessions, sans questions ni AWM.
+**État :** IN_PROGRESS
+**Fichiers touchés :** voir verification-execution.md et session verification du jour.
+**Décisions prises :** baseline synthétique distincte42lignes/18tables/175colonnes ; schéma réel certifié avec lignes. Anciennes fixtures de préparation archivées, aucune recertification silencieuse. CI locale préparée, aucun push. Matrice17/30 tousstatutspartiels/nonprouvés honnêtes.
+**Prochaine étape :** vérifier sorties finales et commit exact ; puis réconciliation uncertain, caches/onglets/offline, Auth/réception externe et PlaywrightMCP dès autorité disponible, CI distante après push autorisé.
+**Contexte pour reprise :** source et baseline privée703lignes intactes (empreinte relue), work17ready006 et recette3002session50892 conservés. Synthetic template spaces_ci_baseline17 certifié/rejoué ; archives spaces_ci_baseline17_failed_seed_20261023 et spaces_ci_baseline17_before_schema_guard préservées.95PGsynthetic/26migration-certificat/210unit/7gardes verts ; freshnpmci puisqualitydans.local/financial-spaces/ci-quality-rehearsal sans.env/secrets/backup : types/lint/buildWebpack/auditprod0verts. Banc navigateur nonrelancé (refuspolitiquene pascontourner), sixpreuvesanciennes seulement ; CIpréparéeNode22, localNode24.9, aucunrunGitHub. Revue P2schémafermée. ResendGETmetadata200domaineverifiedsendingenabledreceivingdisabled ; APP_ORIGINpubliqueetdestinatairerecetteexpliciteabsents, aucunmailenvoyé. ProfilDevOps/docspublisher/checkPASS ; Matrice acceptancematrix17exigences30AC connuepartielle. Dirtyserena/next-env/anciensCSàpréserver, aucunpush/prod/AWM.
+
+Checkpoint rectification du commit : diffcheck après staging a signalé un blanc final SQL mais le shell a poursuivi ; correction et mémoire de propagation des codes d’échec ajoutées. Ancienne fixture synthétique vérifiée puis archivée spaces_ci_baseline17_before_format_cleanup avant nettoyage/checksum ; préparation/rejeu et26tests relancés session99182. Avant commit rectifié : contrôler diffcached dans une opération distincte, puis commit seulement si sortie0. Source/baselineprivée/work inchangés.

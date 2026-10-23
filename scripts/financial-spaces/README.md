@@ -158,3 +158,50 @@ Fixed income generation and automatic receipt calculate from locked current
 templates, preserve monthly overrides, and never rewrite received amounts.
 Concurrent writer tests observe real PostgreSQL lock waits before committing;
 the observer refreshes statistics snapshots inside its transaction.
+
+## Portable synthetic verification
+
+The private restore certificate and the synthetic CI fixture are separate proofs.
+The synthetic fixture uses the historical schema (18 tables / 175 columns), with
+42 entirely invented rows. It never loads `.env.local`, a source URL or a backup.
+It shares the existing owned Docker fixture, but creates only
+`spaces_ci_baseline17`. The private baseline and recipe remain unchanged.
+
+```sh
+npm run test:spaces:prepare
+MES_FINANCES_TEST_BASELINE=synthetic npm run test:spaces:services
+MES_FINANCES_TEST_BASELINE=synthetic npm run test:spaces:db
+npm run test:delivery
+```
+
+Preparation is repeatable only if both the inputs and the recorded rows/schema
+still match. A changed CHECK, default, enum or index causes a visible refusal;
+preparation never resets or silently repairs an existing database. Preserve a
+failed/changed fixture for diagnosis before deliberately creating another one.
+The test suites clone their selected baseline into randomly named owned test
+DBs, then delete only their own clones. CI requires the literal `synthetic`
+profile. Arbitrary template names or connection URLs are refused.
+
+`.github/workflows/financial-spaces.yml` prepares two independent validation jobs:
+quality (including the isolated navigation component tests) and real synthetic
+PostgreSQL tests. `Financial spaces required` succeeds only if both jobs report
+success. It always materializes; failure, cancellation, skips and missing results
+fail the aggregation. Only superseded pull requests may cancel. The workflow
+has no deployment, migration of an external database, real mail or private
+artifact upload. It uses placeholder Auth/database settings during build.
+
+The quality build uses Next's supported Webpack compiler. Local Turbopack build
+was blocked by the environment's CSS-worker port binding restriction; this does
+not count as a passing Turbopack build. Google Fonts still requires network
+access. No source font or security rule was changed to bypass that requirement.
+
+Run `npm ci`, unit tests, delivery guards, `next typegen`, types, lint and build
+from a clean checkout without `.env.local` to rehearse the quality job. Do not
+run generating commands concurrently with the recipe: they share next-env and
+tsconfig even with different output directories. A durable isolated checkout
+under `.local/` can keep the active recipe undisturbed.
+
+Prepared workflow files and local rehearsals do not prove GitHub CI is green.
+No push was authorized. Branch protection, a run on the exact SHA, actual
+multi-session Auth and Playwright MCP remain separate release requirements.
+The runtime profile is `.app-factory/docs/infra/financial-spaces-validation-profile.json`.

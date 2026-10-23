@@ -2,7 +2,7 @@ import { describe, test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import { setTimeout as delay } from 'node:timers/promises';
-import { localConnection } from '../../scripts/financial-spaces/local-fixture.mjs';
+import { localConnection, testBaseline } from '../../scripts/financial-spaces/local-fixture.mjs';
 import { runMigrations, preflight, legacyFingerprint, financialTables } from '../../scripts/financial-spaces/migrate.mjs';
 
 const database = 'spaces_migration_test_' + crypto.randomBytes(4).toString('hex');
@@ -47,7 +47,7 @@ async function seedSpace(actor, month = '2099-01') {
 describe('financial spaces migration — real isolated PostgreSQL', { concurrency: false }, () => {
   before(async () => {
     const admin = await localConnection();
-    try { await admin.query(`CREATE DATABASE ${q(database)} TEMPLATE spaces_baseline17`); }
+    try { await admin.query(`CREATE DATABASE ${q(database)} TEMPLATE "${testBaseline()}"`); }
     finally { await admin.end(); }
     client = await localConnection(database);
     // Explicit fixtures with deleted/absent templates: backfill must use the

@@ -15,6 +15,14 @@ export const password = 'local-fixture-only';
 export const databaseNames = ['spaces_baseline17', 'spaces_work17'];
 const verifiedClients = new WeakMap();
 
+/** Test templates are fixed names; an arbitrary database/URL is never accepted. */
+export function testBaseline() {
+  const profile = process.env.MES_FINANCES_TEST_BASELINE ?? 'private';
+  if (!['private', 'synthetic'].includes(profile)) throw new Error('Unknown test baseline profile.');
+  if (process.env.CI && profile !== 'synthetic') throw new Error('CI requires the synthetic test baseline.');
+  return profile === 'synthetic' ? 'spaces_ci_baseline17' : 'spaces_baseline17';
+}
+
 export function assertLocalFixtureClient(client) {
   const database = verifiedClients.get(client);
   if (!database) throw new Error('Refusing a SQL client not verified against the owned local fixture.');

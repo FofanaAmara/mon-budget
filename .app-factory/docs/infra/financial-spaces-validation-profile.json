@@ -1,0 +1,55 @@
+{
+  "name": "financial-spaces-local-and-prepared-ci",
+  "requiredFiles": [
+    "package.json",
+    "package-lock.json",
+    "vitest.config.mts",
+    "vitest.spaces.config.mts",
+    ".github/workflows/financial-spaces.yml",
+    "scripts/financial-spaces/prepare-synthetic.mjs",
+    "scripts/financial-spaces/synthetic-certificate.mjs",
+    "__tests__/fixtures/financial-spaces/legacy-schema.sql",
+    ".Codex/plans/espaces-financiers-evidence/acceptance-matrix.md"
+  ],
+  "requiredScripts": [
+    "test:delivery",
+    "test:spaces:prepare",
+    "test:spaces:services",
+    "test:spaces:db",
+    "test:spaces:navigation",
+    "lint",
+    "build"
+  ],
+  "repository": "FofanaAmara/mon-budget",
+  "remoteEvidence": "NOT_RUN_NO_PUSH_AUTHORIZATION",
+  "requiredCheckPrepared": "Financial spaces required",
+  "branchProtection": "NOT_VERIFIED",
+  "deployment": "NOT_CONFIGURED_BY_THIS_WORKFLOW",
+  "proofOwners": {
+    "quality": [
+      "delivery-guards",
+      "unit",
+      "navigation-fixture",
+      "typegen",
+      "types",
+      "lint",
+      "webpack-build",
+      "production-audit"
+    ],
+    "postgres": [
+      "synthetic-template",
+      "services",
+      "migration-and-schema-certificate"
+    ]
+  },
+  "localHooks": "No hooks changed; explicit commands remain available.",
+  "pathSelection": "All paths run the full workflow; no classifier or skip.",
+  "concurrency": "Only superseded pull requests cancel; main run_id gives each run a distinct group.",
+  "metrics": {
+    "remoteSampleSize": 0,
+    "p50": null,
+    "p95": null,
+    "status": "insufficient-sample"
+  },
+  "release": "No release health, migration target or production approval inferred."
+}

@@ -3,7 +3,7 @@ import {randomUUID,randomBytes} from "node:crypto";
 import {setTimeout as delay} from "node:timers/promises";
 import type {DatabaseSql} from "@/lib/database/types";
 import {createLocalDatabase} from "@/lib/database/local";
-import {localConnection} from "../../scripts/financial-spaces/local-fixture.mjs";
+import {localConnection, testBaseline} from "../../scripts/financial-spaces/local-fixture.mjs";
 import {runMigrations,legacyFingerprint} from "../../scripts/financial-spaces/migrate.mjs";
 
 const state=vi.hoisted(()=>({userId:"fixture-expenses-a" as string|null,sql:null as DatabaseSql|null}));
@@ -52,7 +52,7 @@ async function waitForLock(fragment:string) {
 
 describe("expenses and allocations — real PostgreSQL, Auth/cache stubbed",()=>{
   beforeAll(async()=>{
-    const admin=await localConnection();try{await admin.query(`CREATE DATABASE "${database}" TEMPLATE spaces_baseline17`);}finally{await admin.end();}
+    const admin=await localConnection();try{await admin.query(`CREATE DATABASE "${database}" TEMPLATE "${testBaseline()}"`);}finally{await admin.end();}
     native=await localConnection(database);
     const before=await legacyFingerprint(native);
     await runMigrations(native,{through:"006",dryRun:false,allowCutover:true});

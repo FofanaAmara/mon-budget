@@ -34,3 +34,7 @@ P1.3 raccordement : 78/78exports et appelants explicites,15anciensmodules suppri
 Création/gestion/invitations : IN_PROGRESS global. UI réelle et services006 implémentés ;95PG/193unit/21migrations/6bancChrome. ESP001/003/004/005/006 restent IN_PROGRESS tant que leurs AC réels ne sont pas prouvés. Recette3002 active sur nouveau clone, ancienwork archivé. Mailpit reçu, pasResendexterne ; Auth2sessions/nouveau/CI/PlaywrightMCP/revueglobale et réparation sécurité restent ouverts. Voir invitations-management-execution.md.
 
 Réparation sécurité : COMPLETED pour la tranche bornée DEC-002 (206 unitaires, installation propre, graphe sans problème, audit production zéro, types/lint/build verts, revue fermée). Les cinq alertes lint sans patch restent suivies dans DISC-ESP-002. La recette globale reste IN_PROGRESS ; navigateur refusé, aucun nouveau verdict UI/Auth externe.
+
+P7.1 préparation reproductible : IN_PROGRESS — template historique synthétique distinct de la copie privée, mêmes suites PostgreSQL puis workflow et matrice. Dépend du socle e990b5d vérifié ; CI distante, Auth réel et MCP toujours ouverts.
+
+P7.1 préparation reproductible : COMPLETED pour la tranche bornée (fixture42lignes/18tables,95PG/26migration-certificat,210unit,7gardes, qualité sans secrets et profil/docs). Matrice17/30 complète mais aucun verdict global acquis. CI distante/PlaywrightMCP/Authréel/réception externe/caches restent IN_PROGRESS. Voir verification-execution.md.

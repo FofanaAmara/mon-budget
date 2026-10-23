@@ -17,3 +17,7 @@
 - [Déduplication des courriels](feedback_email_idempotency_window.md) — fenêtre fournisseur, payload figé et état incertain.
 
 - [Sessions Auth en rendu serveur](feedback_auth_rsc_session.md) — tester les effets réels du SDK et séparer lecture RSC de renouvellement mutable.
+
+- [Certificat des fixtures et schéma réel](feedback_fixture_schema_certification.md) — lignes seules insuffisantes ; prouver le refus des dérives de contraintes/index/defaults.
+
+- [Propagation des échecs de gates](feedback_gate_exit_codes.md) — contrôler le diff après staging puis conditionner réellement le commit au succès.

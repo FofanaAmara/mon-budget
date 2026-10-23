@@ -2,7 +2,7 @@ import { beforeAll, beforeEach, afterAll, describe, test, expect, vi } from "vit
 import { randomUUID, randomBytes } from "node:crypto";
 import type { DatabaseSql } from "@/lib/database/types";
 import { createLocalDatabase } from "@/lib/database/local";
-import { localConnection } from "../../scripts/financial-spaces/local-fixture.mjs";
+import { localConnection, testBaseline } from "../../scripts/financial-spaces/local-fixture.mjs";
 import { runMigrations } from "../../scripts/financial-spaces/migrate.mjs";
 
 const state = vi.hoisted(() => ({ userId: "fixture-settings-a" as string | null, sql: null as DatabaseSql | null }));
@@ -46,7 +46,7 @@ describe("space settings and guide — shared finances, individual account", () 
   beforeEach(() => { state.userId = a; });
   beforeAll(async () => {
     const admin = await localConnection();
-    try { await admin.query(`CREATE DATABASE "${database}" TEMPLATE spaces_baseline17`); } finally { await admin.end(); }
+    try { await admin.query(`CREATE DATABASE "${database}" TEMPLATE "${testBaseline()}"`); } finally { await admin.end(); }
     native = await localConnection(database);
     await runMigrations(native, { through: "006", dryRun: false, allowCutover: true });
     const identifier = (await native.query("SELECT system_identifier::text FROM pg_control_system()")).rows[0].system_identifier;
