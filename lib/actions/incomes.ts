@@ -9,6 +9,7 @@ import { validateInput } from "@/lib/schemas/validate";
 import { idSchema } from "@/lib/schemas/common";
 import {
   CreateIncomeSchema,
+  UpdateIncomeDataSchema,
   type CreateIncomeInput,
   CreateAdhocIncomeSchema,
 } from "@/lib/schemas/income";
@@ -62,7 +63,7 @@ export async function updateIncome(
   data: Partial<CreateIncomeInput>,
 ): Promise<Income> {
   validateInput(idSchema, id);
-  validateInput(CreateIncomeSchema.partial(), data);
+  validateInput(UpdateIncomeDataSchema, data);
   const userId = await requireAuth();
   const rows = await sql`
     UPDATE incomes SET

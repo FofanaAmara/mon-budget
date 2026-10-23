@@ -4,6 +4,7 @@ import {
   nameSchema,
   nonNegativeAmountSchema,
   positiveAmountSchema,
+  monetaryAmountSchema,
   currencySchema,
   expenseTypeSchema,
   recurrenceFrequencySchema,
@@ -56,7 +57,7 @@ export type UpdateExpenseInput = z.infer<typeof UpdateExpenseSchema>;
 // amount can be negative (corrections/reversals), so we only reject zero.
 export const AddSavingsContributionSchema = z.object({
   expenseId: idSchema,
-  amount: z.number().refine((n) => n !== 0, "Le montant ne peut pas etre zero"),
+  amount: monetaryAmountSchema.refine((n) => n !== 0, "Le montant ne peut pas etre zero"),
   note: z.string().max(500).nullable().optional(),
 });
 

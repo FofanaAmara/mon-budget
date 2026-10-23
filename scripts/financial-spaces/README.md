@@ -99,6 +99,14 @@ delete only the database created by that test run. No source credentials or
 hosted database are used by the tests. The current suite is local infrastructure;
 portable CI fixtures and the app's full browser/auth tests remain to be added.
 
+`004` aligns variable incomes with the existing form contract: their fixed
+amount can be null, while a conditional CHECK still requires a positive amount
+for every fixed income. It changes no existing value. The integration suite
+proves failure rollback, replay and conservation. It is applied only to fresh
+disposable clones at this stage; the named work fixture remains at `002`.
+The eventual local cutover must include `--through=004 --allow-cutover`, after
+all financial callers have been converted.
+
 If a transaction fails, preserve the work database and read the ledger/phase.
 The failed transaction rolls back; earlier committed expansion remains. Retry
 unchanged SQL after resolving the reported cause. Never reset the baseline or
@@ -133,3 +141,20 @@ not prove real authentication or the invitation journey. The work fixture is
 still in the backfilled phase: space services deliberately refuse activation
 until financial actions and navigation have all been converted and cutover is
 approved for local recipe testing.
+
+## Financial action conversion in progress
+
+`lib/actions/financial/` contains the explicit-space implementations under
+conversion. Every exported action receives a space ID and checks membership.
+The historical action modules still serve the historical UI temporarily;
+they must be removed when canonical callers are connected, before activation.
+The existence of both paths is not evidence that the feature is delivered.
+
+The current tests additionally cover shared cards/categories/debts/savings and
+income generation/receipt. Money validation rejects fractional cents and
+normalizes binary floating-point noise before SQL. Transfer locks follow a
+stable project order; balance checks and both journal entries are atomic.
+Fixed income generation and automatic receipt calculate from locked current
+templates, preserve monthly overrides, and never rewrite received amounts.
+Concurrent writer tests observe real PostgreSQL lock waits before committing;
+the observer refreshes statistics snapshots inside its transaction.

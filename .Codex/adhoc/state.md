@@ -208,3 +208,25 @@
 **Décisions prises :** PostgreSQL pg est une dépendance runtime pour recette ; Neon reste le pilote par défaut. Aucune URL brute passée au pool local. Rejeu de création ne remplace pas la préférence plus récente. Plusieurs espaces sans préférence nécessitent un choix explicite.
 **Prochaine étape :** convertir les 86 exports de l’inventaire, leurs appelants et la navigation canonique par espace ; conserver le gate ready fermé sur work jusqu’à conversion complète.
 **Contexte pour reprise :** tests services15/15 PG réels (auth/cache simulés), unit177/177, types0, lint0erreur17warnings, build0 ; trois constats reviewer clos. Live Next session44028 sur localhost3002, copie work17 toujours backfilled ; services refusent ready absent. Configs tsconfig/next-env restaurées aux octets antérieurs après build. CUA page existante observée seulement, pas validation des nouveaux parcours ni PlaywrightMCP. Source/baseline intactes, aucun email/push/AWM. Préserver .serena/project.yml, next-env.d.ts et anciensCS non suivis. Logs privés .local/financial-spaces/services-*.log. Voir services-execution.md et session du jour.
+
+---
+## [2026-10-23] — Conversion des actions financières
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** P1.3, actions métier explicitement bornées à un espace.
+**Objectif :** toutes les fonctions communes persistantes, avant activation et intégration des maquettes.
+**État :** IN_PROGRESS
+**Fichiers touchés :** lib/actions/financial, tests SQL et suivi à venir.
+**Décisions prises :** tour précédent = progrès vérifié, commit47bc8ca. Tranche estimée20–35kjetons, coût monétaire indisponible. Migration progressive des implémentations vers lib/actions/financial ; les anciennes entrées restent disponibles pour l’app historique jusqu’au raccordement canonique, puis seront supprimées. Aucun appel nouveau ne déduira son espace d’un auteur ou d’une préférence.
+**Prochaine étape :** cartes/catégories/dettes/épargne, tests multi-membres et IDs croisés, puis autres familles et raccordement global.
+**Contexte pour reprise :** work17 toujours backfilled et gate003 fermé, source intacte. Adaptateur local et services testés. Les nouvelles actions ne seront utilisées que par les routes contextualisées ; copies legacy transitoires ne constituent pas la solution finale. Exiger retrait des anciens chemins avant DONE. Pas AWM/push/mail.
+
+---
+## [2026-10-23 01:15] — Six familles financières vérifiées, goal actif
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** P1.3 : 38/78 exports financiers convertis, autres familles et appelants à poursuivre.
+**Objectif :** livrer toute la feature espaces et invitations ; elle n’est pas encore exposée dans les écrans.
+**État :** IN_PROGRESS
+**Fichiers touchés :** six modules lib/actions/financial, helpers/types/schémas, migration004/runner, tests, guide et configuration Next, preuves/registre/suivi/découverte.
+**Décisions prises :** toutes les nouvelles actions prennent spaceId explicite, auth membre et provenance acteur. Centimes validés, transferts/journaux atomiques, génération/réception des revenus calculées sous mêmes verrous. Anciennes actions transitoires à supprimer avant activation. Aucun AWM.
+**Prochaine étape :** convertir expenses/monthly-expenses/expense-transactions/debt-transactions/allocations, puis settings/setup-guide/user/demo ; raccorder routes canoniques et maquettes, supprimer chemins legacy, avant bascule locale003+004. Compléter invitations/Auth/email, caches/offline, CI et Playwright MCP.
+**Contexte pour reprise :** voir financial-actions-execution.md et action-conversion.json. Services40/40 (25 finance+15 espaces), migrations19/19, unit181/181, types0, lint0erreur17warnings, build0 ; revue indépendante a fermé tous ses constats ciblés. Important : vérification stricte work a échoué, ne pas la déclarer verte. Une seule date dismissed_at d’un guide déjà fermé a été rafraîchie lors du smoke test précédent (effet invisible), sans perte ni nouvelle ligne ; les17autres tables et tous les montants/relations sont identiques par empreinte,703lignes. Cause corrigée (effet visible seulement et UPDATEdismiss NULL), nouvelle observation >200secondes sans mutation. Work conservé, baseline/source intactes ; conservation-report.json privé porte preserved:false. Les19tests migration prouvent conservation sur clones propres, pas par exclusion du guide. Diagnostic privé work-runtime-guide-drift.json et work-runtime-integrity-report.json. Runtime session44028 arrêté proprement après contrôle du PID et de sa filiation ; relancer npm run dev:spaces quand nécessaire, nouveau lanceur restaure aussi configs après Ready de restart. Next dev badge recouvrait Passer : devIndicators:false, images avant/après observées CUA ; capture privée guide-after.png. CUA complémentaire, aucun gate Playwright MCP satisfait. work17 toujours backfilled ;004 uniquement clones, corrige amountNULL VARIABLE et CHECK fixe positif, préflight0incompatible. Aucun mail/push/déploiement. Préserver .serena/project.yml, next-env.d.ts et anciens CS non suivis.

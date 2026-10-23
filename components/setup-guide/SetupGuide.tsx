@@ -180,7 +180,7 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
   // When all steps are done, the guide first shows all 4 steps checked
   // for 15 seconds, then switches to the celebration view.
   useEffect(() => {
-    if (isAllComplete) {
+    if (isAllComplete && guideData?.isVisible && !isDismissed) {
       startTransition(async () => {
         await completeSetupGuide();
       });
@@ -196,7 +196,7 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
 
       return () => clearTimeout(timer);
     }
-  }, [isAllComplete, startTransition]);
+  }, [isAllComplete, guideData?.isVisible, isDismissed, startTransition]);
 
   // Collapse on Escape key
   useEffect(() => {

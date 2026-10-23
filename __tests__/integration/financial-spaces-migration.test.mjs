@@ -289,4 +289,19 @@ describe('financial spaces migration — real isolated PostgreSQL', { concurrenc
     assert.deepEqual(await legacyFingerprint(client), before);
     assert.equal((await client.query('SELECT space_id FROM savings_contributions WHERE id=$1',[a.savings_contributions])).rows[0].space_id,a.space);
   });
+
+  test('variable-income schema repair rolls back, preserves every value and replays safely', async () => {
+    const nullable = async () => (await client.query("SELECT is_nullable FROM information_schema.columns WHERE table_schema='public' AND table_name='incomes' AND column_name='amount'")).rows[0].is_nullable;
+    assert.equal(await nullable(),'NO');
+    const before = await legacyFingerprint(client);
+    await assert.rejects(runMigrations(client,{through:'004',dryRun:false}),/allowCutover/);
+    await assert.rejects(runMigrations(client,{through:'004',dryRun:false,allowCutover:true,failAfter:'004-variable-income.sql'}),/Injected migration interruption/);
+    assert.equal(await nullable(),'NO');
+    assert.equal((await client.query("SELECT count(*)::integer AS count FROM financial_space_migrations WHERE name='004-variable-income.sql'")).rows[0].count,0);
+    await runMigrations(client,{through:'004',dryRun:false,allowCutover:true});
+    assert.equal(await nullable(),'YES');
+    assert.deepEqual(await legacyFingerprint(client),before);
+    await runMigrations(client,{through:'004',dryRun:false,allowCutover:true});
+    assert.deepEqual(await legacyFingerprint(client),before);
+  });
 });

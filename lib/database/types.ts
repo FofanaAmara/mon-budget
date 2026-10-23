@@ -7,10 +7,11 @@ export type DatabaseTag = (
   strings: TemplateStringsArray,
   ...values: unknown[]
 ) => DatabaseQuery;
+export type DatabaseTransactionTag = (
+  strings: TemplateStringsArray, ...values: unknown[]
+) => NeonQueryInTransaction;
 
 /** The SQL surface used by the app, shared by Neon HTTP and local PostgreSQL. */
 export type DatabaseSql = DatabaseTag & {
-  transaction: (queries: (transaction: (
-    strings: TemplateStringsArray, ...values: unknown[]
-  ) => NeonQueryInTransaction) => NeonQueryInTransaction[]) => Promise<DatabaseRows[]>;
+  transaction: (queries: (transaction: DatabaseTransactionTag) => NeonQueryInTransaction[]) => Promise<DatabaseRows[]>;
 };

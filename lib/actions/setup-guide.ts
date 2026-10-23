@@ -165,7 +165,7 @@ export async function dismissSetupGuide(): Promise<void> {
   await sql`
     UPDATE setup_guide
     SET dismissed_at = NOW()
-    WHERE user_id = ${userId}
+    WHERE user_id = ${userId} AND dismissed_at IS NULL
   `;
   revalidatePath("/", "layout");
 }

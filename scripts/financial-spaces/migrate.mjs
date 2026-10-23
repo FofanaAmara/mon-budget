@@ -51,7 +51,7 @@ export async function preflight(client) {
 }
 
 function migrationFiles(through) {
-  const names = ['001-expand.sql', '002-backfill.sql', '003-isolation.sql'];
+  const names = ['001-expand.sql', '002-backfill.sql', '003-isolation.sql', '004-variable-income.sql'];
   const last = names.findIndex(name => name.startsWith(through + '-'));
   if (last < 0) throw new Error('Unknown migration target.');
   return names.slice(0, last + 1).map(name => {
@@ -63,7 +63,7 @@ function migrationFiles(through) {
 export async function runMigrations(client, { through = '002', dryRun = true, allowCutover = false, failAfter = null, onBeforeCutover = null } = {}) {
   const database = assertLocalFixtureClient(client);
   if (database !== 'spaces_work17' && !/^spaces_migration_test_[a-f0-9]{8}$/.test(database)) throw new Error('Refusing migrations outside the named local work/test databases.');
-  if (through === '003' && !allowCutover) throw new Error('Cutover requires explicit allowCutover on the isolated fixture.');
+  if (['003', '004'].includes(through) && !allowCutover) throw new Error('Cutover requires explicit allowCutover on the isolated fixture.');
   const files = migrationFiles(through);
   await client.query('BEGIN READ ONLY ISOLATION LEVEL REPEATABLE READ');
   let issues, before, applied;
@@ -126,7 +126,7 @@ export async function runMigrations(client, { through = '002', dryRun = true, al
 
 async function main() {
   const args = process.argv.slice(2);
-  const valid = new Set(['--apply', '--dry-run', '--through=001', '--through=002', '--through=003', '--allow-cutover']);
+  const valid = new Set(['--apply', '--dry-run', '--through=001', '--through=002', '--through=003', '--through=004', '--allow-cutover']);
   if (args.some(arg => !valid.has(arg))) throw new Error('Unknown migration argument.');
   const through = args.find(arg => arg.startsWith('--through='))?.split('=')[1] ?? '002';
   const client = await localConnection('spaces_work17');

@@ -4,6 +4,8 @@ import path from "path";
 const nextConfig: NextConfig = {
   // Keep verification builds separate from an already-running local dev server.
   distDir: process.env.MES_FINANCES_BUILD_DIR ?? ".next",
+  // The development badge overlaps the carousel's bottom-left skip control.
+  devIndicators: false,
   turbopack: {
     root: path.resolve(__dirname),
   },

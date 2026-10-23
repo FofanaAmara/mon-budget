@@ -8,3 +8,5 @@
 - [Backfill rejouable et copies dérivées](feedback_repeatable_backfill_copies.md) — reprendre la dernière configuration avant bascule, pas seulement conserver les originaux.
 
 - [Destination PostgreSQL effective](feedback_effective_database_target.md) — vérifier les paramètres réellement interprétés par le pilote avant connexion.
+
+- [Montants exacts et état courant](feedback_money_and_current_state.md) — centimes, génération/réception atomique et tests de concurrence réels.

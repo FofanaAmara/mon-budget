@@ -48,6 +48,8 @@ child.stdout.on('data', chunk => {
   process.stdout.write(chunk);
   if (/Ready in/.test(chunk.toString().replace(/\x1b\[[0-9;]*m/g, ''))) {
     try {
+      // Next can announce Ready again after a config-triggered restart.
+      restored = false;
       restoreGeneratedFiles();
       console.log('Local fixture verified; .env.local and generated compiler files preserved. App: http://localhost:3002');
     } catch (error) { console.error(error.message); child.kill('SIGTERM'); process.exitCode = 1; }

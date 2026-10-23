@@ -187,7 +187,7 @@ export type MonthlyIncomeStatus =
 export type MonthlyIncome = {
   id: string;
   user_id: string;
-  income_id: string;
+  income_id: string | null;
   month: string; // "YYYY-MM"
   expected_amount: number | null;
   actual_amount: number | null;
