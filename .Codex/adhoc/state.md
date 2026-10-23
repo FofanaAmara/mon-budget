@@ -274,3 +274,25 @@
 **Décisions prises :** commun = devise/rappels/guide ; individuel = contacts/consentements. Refus des champs croisés. CAD/USD/EUR comme UI existante ; contrat rappels positifs conservé. Ancien delta de versement invérifiable : refus explicite d'annulation automatique, zéro recalcul de l'historique, décidé selon consigne humaine d'autonomie ; plus de question à poser.
 **Prochaine étape :** fermer demo/reset/claim et assurer defaults historiques ; raccorder routes/appelants/maquettes puis supprimer legacy avant cutover local. Invitations/Auth/Resend reçu, caches/offline, CI/Playwright MCP toujours requis.
 **Contexte pour reprise :** settings-guide-execution.md ;70services PG réels dont10nouveaux,181unit,types0,lint0erreur17warnings,build0,revue indépendante fermée. Auth/cache simulés donc aucune preuve invitation/sessionréelle. Pas de nouveau SQLmigratoire ni mutation source/baseline/work ; workbackfilled et certificatfalseguide connu. Runtime3002 arrêté. Préserver dirtyserena,next-env/CS. Goal actif nonlivré. Aucun AWM/push/prod/mail.
+
+---
+## [2026-10-23] — Démo/reset et raccordement
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** conversion sûre des derniers chemins legacy et des écrans.
+**Objectif :** vraie app entièrement contextualisée avant activation du multiespace.
+**État :** IN_PROGRESS
+**Fichiers touchés :** à suivre.
+**Décisions prises :** dernier tour = progrès vérifié f282ad4. Préserver le jeu fictif de démo existant, extraction uniquement des lignes d'un utilisateur synthétique dans clone jetable. Tranche estimée20–35kjetons, coût indisponible. Aucun AWM ni question durant absence.
+**Prochaine étape :** démo/reset transactionnels ciblés, tests ; routes canoniques et appelants ensuite.
+**Contexte pour reprise :** 76/78exports,70services20migrations181unit,tests/types/lint/buildverts. Runtimearrêté, source/baseline/workintactsdepuisderniercheckpoint ; workbackfilled, certificatfalsepourdateguideconnue. Pas deprod/push/mail.
+
+---
+## [2026-10-23 01:50] — Maintenance contextualisée vérifiée
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** raccordement UI, tous78exportsfinanciers implémentés, anciensappelants encoreactifs.
+**Objectif :** featurecomplète toujoursactive, pasencorelivrée.
+**État :** IN_PROGRESS
+**Fichiers touchés :** démo/claimfinanciers,helpersmaintenance/dataset,testsetpreuves.
+**Décisions prises :** conserver116exemples synthétiques,remapperIDs ; resetconservecompte/push/onboard/membres/autresespaces etdevise/rappels. Locks tablesrare courtssérialisentwritersordinary,5sattente10sinstruction15stransaction ; NO KEY UPDATE évitecycleparentFK. Autonomie sansquestions,aucunAWM.
+**Prochaine étape :** routescanoniques/espaces/[spaceId],contexteclientetserveur,appelsfinanciers explicitesetnavigation,maquettes ; supprimerlegacyavantcutoverlocal003+004+005, puisauth/invitations/emails/caches/CI/PlaywrightMCP.
+**Contexte pour reprise :** maintenance-execution.md ;80servicesréels,181unit,types0,lint0erreur17warnings,build0,diffcheck0,revueindépendantefermée. Auth/cachesimulés ; aucuneinvitationprouvée. Work17backfilled/runtimearrêté,source/baselineintactes,certificatstrictfalsepourdatedeguideconnue. Extractionprivée .local/financial-spaces/extraction conservée ; publicdata.json exclusivementlignescrééesparancienloaderpouracteurfixture,aucunvraicomptedansfixture. Préserverdirtyserena,next-env/CS ; aucunpush/prod/mail.

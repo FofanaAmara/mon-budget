@@ -26,3 +26,5 @@ P1.3 progression : 38/78 exports financiers convertis et testés dans six famill
 P1.3 progression : 72/78 exports financiers convertis ; services60/60, migrations20/20 et unitaires181/181. Appelants et UI toujours non raccordés. Traitement des anciennes annulations non approuvé, garde non raccordé ; voir expenses-allocations-execution.md.
 
 P1.3 progression : 76/78 exports financiers et partition des réglages communs/individuels ;70services/181unit, types/lint verts. Appelants encore pending ; autonomie explicitement demandée pendant absence, décisions documentées sans question.
+
+P1.3 progression : 78/78exports financiers implémentés ; maintenance transactionnelle ciblée et116exemples conservés. 80services/181unit/types/lint/buildverts. Raccordement des appelants, suppression legacy et parcoursproduit restent à faire.

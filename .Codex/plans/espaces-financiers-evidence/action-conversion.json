@@ -1,7 +1,7 @@
 {
   "date": "2026-10-23",
   "meaning": "Implementation registry; no UI or end-to-end delivery implied. All legacy financial entry points must be removed at cutover.",
-  "converted": 76,
+  "converted": 78,
   "baselineExports": 86,
   "baselineFinancialExports": 78,
   "actions": [
@@ -173,8 +173,8 @@
       "legacyFile": "lib/actions/claim.ts",
       "export": "ensureDefaultSections",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/claim.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/page.tsx"
       ]
@@ -268,8 +268,8 @@
       "legacyFile": "lib/actions/demo-data.ts",
       "export": "hasUserData",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/demo-data.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/parametres/page.tsx"
       ]
@@ -278,8 +278,8 @@
       "legacyFile": "lib/actions/demo-data.ts",
       "export": "loadDemoData",
       "scope": "mixed",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/demo-data.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/ParametresClient.tsx"
       ]
@@ -288,8 +288,8 @@
       "legacyFile": "lib/actions/demo-data.ts",
       "export": "clearAllUserData",
       "scope": "mixed",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/demo-data.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/ParametresClient.tsx"
       ]

@@ -1,0 +1,135 @@
+// Trusted identifiers for the bundled synthetic examples; never client input.
+export const demoColumns = {
+  "sections": [
+    "id",
+    "name",
+    "icon",
+    "color",
+    "position"
+  ],
+  "cards": [
+    "id",
+    "name",
+    "last_four",
+    "bank",
+    "color"
+  ],
+  "incomes": [
+    "id",
+    "name",
+    "amount",
+    "frequency",
+    "is_active",
+    "source",
+    "estimated_amount",
+    "notes",
+    "pay_anchor_date",
+    "auto_deposit"
+  ],
+  "expenses": [
+    "id",
+    "name",
+    "amount",
+    "currency",
+    "type",
+    "section_id",
+    "card_id",
+    "recurrence_frequency",
+    "recurrence_day",
+    "auto_debit",
+    "due_date",
+    "next_due_date",
+    "reminder_offsets",
+    "notify_push",
+    "notify_email",
+    "notify_sms",
+    "notes",
+    "is_active",
+    "target_amount",
+    "target_date",
+    "saved_amount",
+    "spread_monthly",
+    "is_progressive",
+    "system_kind"
+  ],
+  "debts": [
+    "id",
+    "name",
+    "original_amount",
+    "remaining_balance",
+    "interest_rate",
+    "payment_amount",
+    "payment_frequency",
+    "payment_day",
+    "auto_debit",
+    "card_id",
+    "section_id",
+    "notes",
+    "is_active"
+  ],
+  "savings_contributions": [
+    "id",
+    "expense_id",
+    "amount",
+    "note",
+    "created_at"
+  ],
+  "debt_transactions": [
+    "id",
+    "debt_id",
+    "type",
+    "amount",
+    "month",
+    "note",
+    "source",
+    "created_at"
+  ],
+  "monthly_expenses": [
+    "id",
+    "expense_id",
+    "month",
+    "name",
+    "amount",
+    "due_date",
+    "status",
+    "paid_at",
+    "section_id",
+    "card_id",
+    "is_auto_charged",
+    "notes",
+    "is_planned",
+    "debt_id",
+    "paid_amount",
+    "debt_paid_amount"
+  ],
+  "monthly_incomes": [
+    "id",
+    "income_id",
+    "month",
+    "expected_amount",
+    "actual_amount",
+    "status",
+    "received_at",
+    "notes",
+    "is_auto_deposited",
+    "manually_edited"
+  ],
+  "income_allocations": [
+    "id",
+    "label",
+    "amount",
+    "section_id",
+    "project_id",
+    "end_month",
+    "color",
+    "position",
+    "is_active"
+  ],
+  "monthly_allocations": [
+    "id",
+    "allocation_id",
+    "month",
+    "allocated_amount",
+    "notes"
+  ]
+} as const;
