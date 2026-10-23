@@ -57,6 +57,16 @@ describe("space services and local SQL — real PostgreSQL, server session stubb
     finally { await admin.end(); }
   });
 
+  test("does not create for a changed or missing actor context", async () => {
+    state.identity = identities.b;
+    const before = (await native.query("SELECT count(*) FROM financial_spaces")).rows[0].count;
+    for (const expectedActorId of [identities.a.id, "", undefined]) {
+      const input = { name: "Alice stale draft", creationKey: randomUUID(), expectedActorId };
+      expect(await createSpace(input as Parameters<typeof createSpace>[0])).toMatchObject({ ok: false });
+    }
+    expect((await native.query("SELECT count(*) FROM financial_spaces")).rows[0].count).toBe(before);
+  });
+
   test("local adapter rejects remote targets and production mode before connecting", () => {
     expect(() => createLocalDatabase("postgresql://budget_test:local-fixture-only@example.invalid:55437/spaces_work17", identifier)).toThrow(/verified project fixture/);
     for (const suffix of ["?host=example.invalid", "?port=5432&user=other", "?dbname=other", "#fragment"]) {
@@ -88,7 +98,7 @@ describe("space services and local SQL — real PostgreSQL, server session stubb
   test("unauthenticated operations cannot read or create an owned space", async () => {
     state.identity = null;
     await expect(getSpaces()).rejects.toThrow(/Connecte-toi/);
-    expect(await createSpace({ name: "Unauthenticated", creationKey: randomUUID() })).toMatchObject({ ok: false });
+    expect(await createSpace({ expectedActorId: "signed-out", name: "Unauthenticated", creationKey: randomUUID() })).toMatchObject({ ok: false });
     expect((await native.query("SELECT 1 FROM financial_spaces WHERE name='Unauthenticated'")).rowCount).toBe(0);
   });
 
@@ -101,14 +111,14 @@ describe("space services and local SQL — real PostgreSQL, server session stubb
 
   test("invalid names and request keys cause no partial provisioning", async () => {
     for (const name of ["   ", "a".repeat(81), "A\u0000B"]) {
-      expect(await createSpace({ name, creationKey: randomUUID() })).toMatchObject({ ok: false });
+      expect(await createSpace({ expectedActorId: state.identity?.id || "signed-out", name, creationKey: randomUUID() })).toMatchObject({ ok: false });
     }
-    expect(await createSpace({ name: "Valid", creationKey: "invalid" })).toMatchObject({ ok: false });
+    expect(await createSpace({ expectedActorId: state.identity?.id || "signed-out", name: "Valid", creationKey: "invalid" })).toMatchObject({ ok: false });
     expect((await native.query("SELECT 1 FROM financial_spaces WHERE created_by=$1", [identities.a.id])).rowCount).toBe(0);
   });
 
   test("creation provisions membership, defaults, guide and profile atomically", async () => {
-    const result = await createSpace({ name: "  Nos finances  ", creationKey: keyA });
+    const result = await createSpace({ expectedActorId: state.identity?.id || "signed-out", name: "  Nos finances  ", creationKey: keyA });
     expect(result.ok).toBe(true);
     if (!result.ok) throw new Error(result.error);
     spaceA = result.data.id;
@@ -122,12 +132,12 @@ describe("space services and local SQL — real PostgreSQL, server session stubb
   });
 
   test("four concurrent same-key creations return one space and six categories", async () => {
-    const results = await Promise.all(Array.from({ length: 4 }, () => createSpace({ name: "Nos finances", creationKey: keyA })));
+    const results = await Promise.all(Array.from({ length: 4 }, () => createSpace({ expectedActorId: state.identity?.id || "signed-out", name: "Nos finances", creationKey: keyA })));
     expect(results.every(result => result.ok && result.data.id === spaceA)).toBe(true);
     expect(await count("sections", spaceA)).toBe(6);
     expect(await count("space_memberships", spaceA)).toBe(1);
     const freshKey = randomUUID();
-    const fresh = await Promise.all(Array.from({ length: 4 }, () => createSpace({ name: "Concurrent new space", creationKey: freshKey })));
+    const fresh = await Promise.all(Array.from({ length: 4 }, () => createSpace({ expectedActorId: state.identity?.id || "signed-out", name: "Concurrent new space", creationKey: freshKey })));
     const ids = fresh.flatMap(result => result.ok ? [result.data.id] : []);
     expect(ids).toHaveLength(4);
     expect(new Set(ids).size).toBe(1);
@@ -135,14 +145,14 @@ describe("space services and local SQL — real PostgreSQL, server session stubb
   });
 
   test("reusing a creation key with a different payload does not change an existing space", async () => {
-    expect(await createSpace({ name: "Other request", creationKey: keyA })).toMatchObject({ ok: false });
+    expect(await createSpace({ expectedActorId: state.identity?.id || "signed-out", name: "Other request", creationKey: keyA })).toMatchObject({ ok: false });
     expect((await native.query("SELECT name FROM financial_spaces WHERE id=$1", [spaceA])).rows[0].name).toBe("Nos finances");
     expect(await count("sections", spaceA)).toBe(6);
   });
 
   test("a second account sees only its spaces and cannot access or remember the first", async () => {
     state.identity = identities.b;
-    const result = await createSpace({ name: "Bob personnel", creationKey: randomUUID() });
+    const result = await createSpace({ expectedActorId: state.identity?.id || "signed-out", name: "Bob personnel", creationKey: randomUUID() });
     if (!result.ok) throw new Error(result.error);
     spaceB = result.data.id;
     expect((await getSpaces()).map(space => space.id)).toEqual([spaceB]);
@@ -177,7 +187,7 @@ describe("space services and local SQL — real PostgreSQL, server session stubb
     expect((await requireSpace(spaceA)).spaceId).toBe(spaceA);
     expect(await renameSpace(spaceA, "Toujours le premier onglet")).toMatchObject({ ok: true });
     expect((await native.query("SELECT name FROM financial_spaces WHERE id=$1", [spaceB])).rows[0].name).toBe("Autre espace renommé");
-    const replay = await createSpace({ name: "Nos finances", creationKey: keyA });
+    const replay = await createSpace({ expectedActorId: state.identity?.id || "signed-out", name: "Nos finances", creationKey: keyA });
     expect(replay).toMatchObject({ ok: true, data: { id: spaceA, name: "Toujours le premier onglet", memberCount: 2 } });
     expect((await getLastSpace())?.id).toBe(spaceB);
     await native.query("UPDATE user_space_preferences SET last_space_id=NULL WHERE user_id=$1", [identities.a.id]);
@@ -213,7 +223,7 @@ describe("space services and local SQL — real PostgreSQL, server session stubb
     try {
       await expect(getSpaces()).rejects.toThrow(/préparation/);
       await expect(getLastSpace()).rejects.toThrow(/préparation/);
-      expect(await createSpace({ name: "Not ready", creationKey: randomUUID() })).toMatchObject({ ok: false });
+      expect(await createSpace({ expectedActorId: state.identity?.id || "signed-out", name: "Not ready", creationKey: randomUUID() })).toMatchObject({ ok: false });
       expect((await native.query("SELECT 1 FROM financial_spaces WHERE name='Not ready'")).rowCount).toBe(0);
     } finally { await native.query("UPDATE financial_space_rollout SET phase='ready'"); }
   });

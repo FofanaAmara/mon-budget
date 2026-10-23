@@ -42,3 +42,7 @@ P7.1 préparation reproductible : COMPLETED pour la tranche bornée (fixture42li
 P3.4 sessions et affichage privé : IN_PROGRESS — identité serveur au layout, invalidation de session/onglets/offline/BFCache et centralisation signout ; tests bornés puis vraie recette toujours à faire. Dépend du socleAuth e990b5d ; plan session-and-delivery.
 
 P3.4 sessions / P4.2 uncertain : COMPLETED pour la tranche technique bornée DEC-003 et runbook (222unit/95PG/29natifs, types/lint/buildWebpacken copie verts, revuefermée). Validation réelle onglets/offline/historique, Auth2comptes/email/MCP/CI distante toujours IN_PROGRESS.
+
+P3.4 extension revue globale : IN_PROGRESS — onboarding/choix/invitations privées sous garde ; acteur attendu création et invitation, tests/revue à venir.
+
+P3.4 extension revue globale : COMPLETED pour le correctif technique ;226unit/97PG/7gardes,types0/lint0/14warnings/buildWebpack0,revueP1closed. Recette globale IN_PROGRESS.

@@ -35,7 +35,7 @@ const sectionInput = { name: "Maison", icon: "home", color: "#112233" };
 const debtInput = { name: "Prêt", original_amount: 1000, remaining_balance: 100, payment_amount: 10, payment_frequency: "MONTHLY" as const };
 
 async function space(name: string) {
-  const result = await createSpace({ name, creationKey: randomUUID() });
+  const result = await createSpace({ expectedActorId: state.userId || "signed-out", name, creationKey: randomUUID() });
   if (!result.ok) throw new Error(result.error);
   return result.data.id;
 }

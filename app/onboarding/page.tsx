@@ -1,3 +1,4 @@
+import FinancialSessionBoundary from "@/components/auth/FinancialSessionBoundary";
 import { getReceivedInvitations } from "@/lib/actions/invitations";
 import { redirect } from "next/navigation";
 import { getSpaces } from "@/lib/actions/spaces";
@@ -10,5 +11,9 @@ export default async function Onboarding() {
   if ((await getReceivedInvitations()).invitations.length)
     redirect("/invitations");
   const identity = await requireIdentity();
-  return <FirstSpace actorKey={identity.id} />;
+  return (
+    <FinancialSessionBoundary userId={identity.id}>
+      <FirstSpace actorKey={identity.id} />
+    </FinancialSessionBoundary>
+  );
 }

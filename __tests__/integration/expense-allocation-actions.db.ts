@@ -31,7 +31,7 @@ const database="spaces_migration_test_"+randomBytes(4).toString("hex");
 const a="fixture-expenses-a",b="fixture-expenses-b",c="fixture-expenses-c";
 let native:Awaited<ReturnType<typeof localConnection>>,adapter:ReturnType<typeof createLocalDatabase>;
 let common:string,personal:string,card:string,section:string,section2:string,foreignCard:string,foreignSection:string;
-async function newSpace(name:string) {const result=await createSpace({name,creationKey:randomUUID()});if(!result.ok)throw new Error(result.error);return result.data.id;}
+async function newSpace(name:string) {const result=await createSpace({ expectedActorId: state.userId || "signed-out",name,creationKey:randomUUID()});if(!result.ok)throw new Error(result.error);return result.data.id;}
 async function template(data:Partial<CreateExpenseInput>={},spaceId=common) {
   return expenses.createExpense(spaceId,{name:"Charge",amount:100,type:"RECURRING",recurrence_frequency:"MONTHLY",recurrence_day:10,...data});
 }

@@ -1,6 +1,6 @@
 # Matrice de recette — 17 exigences et 30 critères
 
-État au 2026-10-23, après e990b5d, 1c9bef8 et tranche sessions privées/livraison incertaine. **Le goal n’est pas atteint.**
+État au 2026-10-23, après e990b5d, 1c9bef8, de4115e et extension des entrées privées. **Le goal n’est pas atteint.**
 
 Sources : requirements.md et six stories dans `.app-factory/backlog/epics/finances-partagees/features/espaces-financiers/`. Maquettes approuvées : `cs-design/mes-finances/features/espaces-financiers-essai-02/`, commit 7aaec6d.
 
@@ -9,13 +9,13 @@ PARTIEL signifie code et preuves bornées présents, mais preuve de bout en bout
 ## Références des preuves
 
 - **MIG** : migration-execution.md ; conservation stricte du nouveau clone avant UI dans invitations-management-execution.md. 703 lignes, 18 tables, 175 colonnes inchangées. Ancien certificat invalide conservé, jamais réécrit en succès.
-- **PG** : suites `__tests__/integration/*.db.ts`, six familles, 95 tests réels sur PostgreSQL ; Auth et transport simulés. Désormais les mêmes suites passent aussi sur 42 lignes entièrement fictives.
+- **PG** : suites `__tests__/integration/*.db.ts`, six familles, 97 tests réels sur PostgreSQL ; Auth et transport simulés. Désormais les mêmes suites passent aussi sur 42 lignes entièrement fictives.
 - **SQL** : `__tests__/integration/financial-spaces-migration.test.mjs`, 21 tests ; restauration/rejeu/gel/relations et refus d’ambiguïtés. Cinq tests supplémentaires protègent le certificat synthétique contre CHECK/index/default/enum altérés.
 - **NAV** : ui-context-execution.md et six scénarios du banc `__tests__/browser/space-navigation-fixture/` ; vrais composants, services et routeur simulés.
 - **UI** : invitations-management-execution.md ; parcours CUA dans la vraie app avant mise à niveau des dépendances. Création solo/couple, réglages ciblés, Mailpit et mauvais compte observés ; captures privées. Cela ne constitue pas une validation Playwright MCP ni une recette actuelle complète.
 - **AUTH** : dependency-repair-execution.md ; sept tests de contrat du véritable adaptateur, transport simulé. Lecture serveur sans mutation, fraîcheur explicite des décisions d’invitation. Aucune preuve de nouvel utilisateur ou de deux sessions hébergées.
 - **MAIL** : DEC-001, tests invitation/mail, réception Mailpit observée. Lecture Resend du 2026-10-23 : domaine expéditeur vérifié, sending enabled, receiving disabled ; origine publique et boîte de recette explicite absentes. Aucun email externe envoyé/reçu.
-- **SESSION** : session-delivery-execution.md et DEC-003 ; garde du vrai layout avec identité serveur, signout contrôlé (y compris retour invitation), invalidation/expiration/historique/offline ; douze tests sans navigateur. Runbook de réconciliation et trois tests PG de sa mutation minimale, aucune preuve fournisseur ou réception réelle ajoutée.
+- **SESSION** : session-delivery-execution.md et DEC-003 ; garde du vrai layout avec identité serveur, signout contrôlé (y compris retour invitation), invalidation/expiration/historique/offline ; douze tests sans navigateur. Extension private-entry-session-execution.md : vraies entrées privées gardées et refus serveur de changement d’acteur (quatre tests de rendu, deux tests PG). Runbook de réconciliation et trois tests PG de sa mutation minimale, aucune preuve fournisseur ou réception réelle ajoutée.
 - **CI** : workflow local `.github/workflows/financial-spaces.yml` ; gardes RED puis vert, résultat final testé contre échec/annulation/skip/absence. Aucun run GitHub sur ce SHA ni protection distante prouvés.
 
 Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-001 dans `.Codex/adhoc/decisions/`. Les journaux privés restent sous `.local/financial-spaces/` ; aucun jeton, contenu de boîte ou adresse réelle dans cette matrice.

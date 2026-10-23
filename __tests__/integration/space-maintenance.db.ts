@@ -28,7 +28,7 @@ let adapter: ReturnType<typeof createLocalDatabase>;
 let common: string, personal: string;
 const a = "fixture-maintenance-a", b = "fixture-maintenance-b", outsider = "fixture-maintenance-outsider";
 async function space(name: string) {
-  const result = await createSpace({ name, creationKey: randomUUID() });
+  const result = await createSpace({ expectedActorId: state.userId || "signed-out", name, creationKey: randomUUID() });
   if (!result.ok) throw new Error(result.error);
   return result.data.id;
 }

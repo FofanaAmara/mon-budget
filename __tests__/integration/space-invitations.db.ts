@@ -92,12 +92,12 @@ let native: Awaited<ReturnType<typeof localConnection>>,
   adapter: ReturnType<typeof createLocalDatabase>;
 let common: string, personal: string;
 async function space(name: string) {
-  const result = await createSpace({ name, creationKey: randomUUID() });
+  const result = await createSpace({ expectedActorId: state.identity?.id || "signed-out", name, creationKey: randomUUID() });
   if (!result.ok) throw Error(result.error);
   return result.data.id;
 }
 async function invite(email: string, spaceId = common) {
-  const result = await invitations.inviteToSpace(spaceId, email);
+  const result = await invitations.inviteToSpace(spaceId, email, state.identity?.id || "signed-out");
   if (!result.ok) throw Error(result.error);
   return result.data;
 }
@@ -151,6 +151,18 @@ describe("space invitations — real PostgreSQL, Auth/transport edges simulated"
     common = await space("Notre couple");
     personal = await space("Personnel Alice");
   });
+  test("rejects a stale actor before invitation persistence or delivery, even for a shared member", async () => {
+    state.identity = b;
+    await native.query("INSERT INTO space_memberships(space_id,user_id) VALUES($1,$2) ON CONFLICT DO NOTHING", [common,b.id]);
+    const before = (await native.query("SELECT count(*) FROM space_invitations")).rows[0].count;
+    const messages = state.messages.length;
+    const result = await invitations.inviteToSpace(common, "stale-actor@example.test", a.id);
+    expect(result).toMatchObject({ ok: false });
+    expect((await native.query("SELECT count(*) FROM space_invitations")).rows[0].count).toBe(before);
+    expect(state.messages.length).toBe(messages);
+    await native.query("DELETE FROM space_memberships WHERE space_id=$1 AND user_id=$2", [common,b.id]);
+  });
+
   beforeEach(() => {
     state.identity = a;
     state.fail = false;
@@ -375,7 +387,7 @@ describe("space invitations — real PostgreSQL, Auth/transport edges simulated"
     const id = state.messages.find((x) => x.to === "retry@example.test")!.id;
     state.identity = c;
     for (const call of [
-      () => invitations.inviteToSpace(common, "other@example.test"),
+      () => invitations.inviteToSpace(common, "other@example.test", state.identity?.id || "signed-out"),
       () => invitations.getSentInvitations(common),
       () => invitations.retryInvitationDelivery(common, id),
     ])

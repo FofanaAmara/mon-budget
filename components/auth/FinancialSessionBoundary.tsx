@@ -36,7 +36,7 @@ export default function FinancialSessionBoundary({ userId, children }: {
     return () => window.removeEventListener('pagehide', conceal);
   }, []);
   if (!lock && !isPending && !error && userId && session?.user?.id === userId) {
-    return <div ref={privateView} style={{ display: 'contents' }}>{children}</div>;
+    return <div key={userId} ref={privateView} style={{ display: 'contents' }}>{children}</div>;
   }
   const checking = !lock && isPending;
   let message = 'La session a changé ou cette page vient de l’historique. Recharge pour ouvrir les finances du compte connecté. Les saisies non enregistrées ne sont pas conservées.';

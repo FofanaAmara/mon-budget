@@ -115,9 +115,12 @@ export async function getPublicInvitation(token: string): Promise<{
 export async function inviteToSpace(
   spaceId: string,
   emailInput: string,
+  expectedActorId: string,
 ): Promise<InvitationResult<InvitationView>> {
   const context = await requireSpace(spaceId);
   const identity = await requireIdentity({ fresh: true });
+  if (!expectedActorId || identity.id !== expectedActorId || context.userId !== identity.id)
+    return { ok: false, error: "La session a changé. Recharge tes espaces avant de continuer." };
   const parsed = InvitationEmail.safeParse(emailInput);
   if (!parsed.success)
     return { ok: false, error: parsed.error.issues[0].message };

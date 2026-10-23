@@ -20,6 +20,7 @@ export default function SpaceDetail({
   invitations: InvitationView[];
 }) {
   const router = useFinancialRouter();
+  const actorId = members.find((member) => member.isCurrentUser)?.userId || "";
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(space.name);
   const [email, setEmail] = useState("");
@@ -141,7 +142,7 @@ export default function SpaceDetail({
             setFeedback("");
             start(async () => {
               try {
-                const result = await inviteToSpace(space.id, email);
+                const result = await inviteToSpace(space.id, email, actorId);
                 if (!result.ok) {
                   setError(result.error);
                   return;

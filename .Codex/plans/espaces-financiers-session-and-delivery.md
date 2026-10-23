@@ -21,3 +21,13 @@ L’envoi uncertain après23h reste volontairement sans retry ; il faut une proc
 Les tests sans navigateur prouvent les états et le masquage rendu, pas un événement multi-onglets réel ou l’absence de flash à l’écran. Ce gate reste ouvert jusqu’à l’accès autorisé et PlaywrightMCP. La page de revalidation réutilise le style existant, aucun design system/Storybook. Toute interruption de brouillon liée à une invalidation de session est explicitement affichée ; la confidentialité prime en l’absence de session vérifiée.
 
 Estimation :10–20kjetons, coût monétaire indisponible ; réévaluer après le garde. Aucun email/service payant/push/DBsource.
+
+## Extension issue de la revue globale — 2026-10-23
+
+État vérifié au commit de4115e : seul le layout financier contient le garde. Onboarding, choix des espaces et invitations privées gardent leur contenu après changement de compte ; la création vérifie la session courante mais pas l’acteur de la saisie. Écart P1 confirmé par revue indépendante.
+
+Cible : appliquer le même garde aux trois entrées privées, y compris la confirmation ; refuser une création ou invitation de formulaire quand l’acteur attendu diffère de la session serveur, avant toute écriture/envoi. Le jeton public reste public. L’acteur attendu est un témoin de contexte, jamais une autorité remplaçant la session ou l’appartenance.
+
+Séquence : (1) reproduire le refus manquant avec tests PG ; (2) étendre le contrat création/invitation et arrêter les continuations de formulaire démonté avant toute nouvelle requête ; (3) gardes privés et tests de rendu des vraies pages ; (4) types, unités, services PG, lint/build en copie isolée, revue et commit.
+
+Pré-mortem : une option acteur facultative laisserait les anciens appelants exposés → champ obligatoire ; une création résolue après démontage pourrait lancer son email → vérifier le montage après chaque await. Mise à jour des appelants et fixtures sans changer les finances ou le schéma. Revenir par revert du commit isolé si nécessaire, aucune migration. Hypothèse : garde existant réutilisable hors layout, validée par tests de rendu. Preuve réelle multi-onglets/MCP toujours ouverte, aucun contournement du refus navigateur. Estimation6–10kjetons, coût indisponible. Autorisation d’exécution : plan parent accepté et consigne humaine de décider sans questions.

@@ -412,3 +412,27 @@ Checkpoint rectification du commit : diffcheck après staging a signalé un blan
 **Contexte pour reprise :**222unit/95PGsynthetic/29natifs verts,types0,lint0erreur15warnings,7gardes ; buildWebpackcopiecleanpremierfinalvert puisnouveaubuildmarkupespacement23001encours,sourceconfigsintacts. RevueP2Authroutefermée,expiry/SQLsansnouveaufinding. Recette3002session50892conservée ; source/baseline703/workaucunemutationdeces tests. Vérificationvisuelle/timingréel/manipongletsnonprouvée (navigateurrefusé nepascontourner). Aucunmail/boîteResend/push/CI/prod. Fichierspréexistantsserena/next-env/CSnonstage.
 
 Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout compilés dans copie sans.env.95PG60768 terminé0 ;29natifs/222unit/7gardes verts,types0lint0erreur15warnings. Runtime50892 confirmé vivant maintenant ; aucune nouvelle action navigateur ni mutation source/work. Revue de tranche fermée, gate visuel/réel toujours ouvert.
+
+---
+## [2026-10-23] — Garde des entrées privées et acteur de saisie
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension revue globale P3.4/P7.1.
+**Tâche en cours :** corriger le P1 onboarding hors garde et changement d’acteur entre saisie et action.
+**Objectif :** goal complet inchangé, aucune question/AWM/push.
+**État :** IN_PROGRESS
+**Fichiers touchés :** à suivre dans session.
+**Décisions prises :** acteur attendu obligatoire création/invitation, vérifié contre Auth ; garde existant réutilisé entrées privées, page bearer publique inchangée.
+**Prochaine étape :** tests PG rouges puis correction et contrôles.
+**Contexte pour reprise :** HEADde4115e,222unit/95PG/29natifs/7gardes verts avanttranche. Navigateurrefusé, nepascontourner ; auth2sessions/Resendreçu/CI/MCP ouverts. Recette3002session50892 et copiesdurables préservées ; aucunemail niDBsource. Dirtyserena/next-env/CSàpréserver. Estimation6–10kjetons coûtindisponible.
+
+---
+## [2026-10-23] - Private entries verified
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension revue globale.
+**Tache en cours :** commit local du correctif P1 ; goal global IN_PROGRESS.
+**Objectif :** feature complete conforme backlog/maquettes ; aucune question/AWM.
+**Etat :** IN_PROGRESS
+**Fichiers touches :** voir session 2026-10-23-private-entry-session.md.
+**Decisions prises :** garde des entrees privees, acteur attendu obligatoire creation/invitation, keyuserId et interruption des continuations ; aucune migration.
+**Prochaine etape :** commit apres diffcachedcheck sortie0 ; preuves reelles toujours ouvertes.
+**Contexte pour reprise :**226unit/97PGsynthetic/7gardes verts ; typegen/types/lint0erreur14warnings/buildWebpack70972sortie0danscopieclean. RevueglobaleP1ferme, pasautrefindingconcret. Recette3002PID21358enecoute,50892preservee.29natifs precedents inchanges. Aucunmail/push/DBsource/workmute ; aucuneactionnavigateurapresrefus, nepascontourner. Auth2sessions/nouveaucompte/Resendrecu/mobile/desktop/MCP/CI toujoursnonprouves. Dirtyserena/next-env/anciensCSexclusdustage. Ce touraproduitunprogresverifie, pas3toursimpasse.

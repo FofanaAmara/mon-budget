@@ -50,11 +50,13 @@ export async function getLastSpace(): Promise<FinancialSpace | null> {
   return chosen ? { id: chosen.id, name: chosen.name, createdAt: timestamp(chosen.created_at), memberCount: Number(chosen.member_count) } : null;
 }
 
-export async function createSpace(input: { name: string; creationKey: string }): Promise<SpaceMutationResult<FinancialSpace>> {
+export async function createSpace(input: { name: string; creationKey: string; expectedActorId: string }): Promise<SpaceMutationResult<FinancialSpace>> {
   return mutation(async () => {
     const identity = await requireIdentity();
     const parsed = CreateSpaceSchema.safeParse(input);
     if (!parsed.success) throw new SpaceAccessError(parsed.error.issues[0].message);
+    if (parsed.data.expectedActorId !== identity.id)
+      throw new SpaceAccessError("La session a changé. Recharge tes espaces avant de continuer.");
     await requireSpacesReady();
     const { name, creationKey } = parsed.data;
     const fingerprint = createHash("sha256").update(JSON.stringify({ name })).digest("hex");

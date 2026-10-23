@@ -47,11 +47,14 @@ export default function SpaceForm({
     let space = created;
     try {
       intent.current ??= await creationIntent(actorKey, context, name);
+      if (!mounted.current) return;
       if (!space) {
         const result = await createSpace({
+          expectedActorId: actorKey,
           name: name.trim(),
           creationKey: intent.current.key,
         });
+        if (!mounted.current) return;
         if (!result.ok) {
           setError(result.error);
           return;
@@ -60,7 +63,8 @@ export default function SpaceForm({
         setCreated(space);
       }
       if (shared && email.trim()) {
-        const invitation = await inviteToSpace(space.id, email);
+        const invitation = await inviteToSpace(space.id, email, actorKey);
+        if (!mounted.current) return;
         if (!invitation.ok) {
           setError(`Ton espace est créé. ${invitation.error}`);
           return;
