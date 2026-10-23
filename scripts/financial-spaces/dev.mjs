@@ -7,7 +7,10 @@ import { restoreGeneratedConfigs } from './generated-config.mjs';
 import { root, localConnection, port, username, password } from './local-fixture.mjs';
 import { localHttpsCertificate, recipeHttpsOrigin, startRecipeHttpRedirect } from './local-https.mjs';
 
-if (process.argv.length > 2) throw new Error('This recipe accepts no database URL or arbitrary arguments.');
+const args = process.argv.slice(2);
+if (args.length && !(args.length === 1 && args[0] === '--resend'))
+  throw new Error('Only --resend is accepted; no database URL or arbitrary arguments.');
+const mailTransport = args[0] === '--resend' ? 'resend' : 'mailpit';
 const client = await localConnection('spaces_work17');
 let identifier;
 try { identifier = (await client.query('SELECT system_identifier::text FROM pg_control_system()')).rows[0].system_identifier; }
@@ -21,9 +24,11 @@ const localUrl = `postgresql://${username}:${password}@127.0.0.1:${port}/spaces_
 Object.assign(environment, {
   POSTGRES_URL: localUrl, POSTGRES_URL_NON_POOLING: localUrl,
   MES_FINANCES_DB_DRIVER: 'local-fixture', MES_FINANCES_LOCAL_SYSTEM_ID: identifier,
-  MES_FINANCES_BUILD_DIR: '.next-spaces-dev', MES_FINANCES_MAIL_TRANSPORT: 'mailpit',
+  MES_FINANCES_BUILD_DIR: '.next-spaces-dev', MES_FINANCES_MAIL_TRANSPORT: mailTransport,
   APP_ORIGIN: recipeHttpsOrigin,
 });
+if (mailTransport === 'resend' && !environment.RESEND_API_KEY)
+  throw new Error('Explicit Resend recipe requires RESEND_API_KEY in the server environment.');
 
 const originals = new Map(['tsconfig.json', 'next-env.d.ts'].map(file => [file, fs.readFileSync(path.join(root, file))]));
 function restoreGeneratedFiles() {
@@ -49,6 +54,7 @@ child.stdout.on('data', chunk => {
         process.exitCode = 1;
       });
       console.log(`Local fixture verified; .env.local and generated compiler files preserved. App: ${recipeHttpsOrigin}`);
+      console.log(`Invitation transport: ${mailTransport}. Sending requires an explicit invitation in the app.`);
       console.log('HTTP localhost:3002 redirects to HTTPS. On first visit, approve the project-only localhost certificate in your browser.');
     } catch (error) { console.error(error.message); child.kill('SIGTERM'); process.exitCode = 1; }
   }

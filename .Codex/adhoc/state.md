@@ -776,3 +776,26 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Decisions :** Secure cookies stay protected; localHTTPS3443 plusHTTP3002redirect, projectcertificate only. No global CA install; browser user must approve certificate on first visit. LocalHSTS omitted while production retains it. Reactcache only perrender, fresh mutations unchanged; no identity/failure retained across requests. Numericstatusonly diagnostic; historical statusunknown. Error retry reloads sameURL after actual production test exposed ineffective reset.
 **Next :** stagedcheck/localcommit; user tests https://localhost:3443 . No push or hosted credentials.
 **Resume context :** old81598 stopped deliberately, new32915 servingHTTPS3443/HTTP3002redirect. Runtimehealth.json verifiedTLSwithprojectcert andHTTP200/noHSTS.265unit/99PG/9delivery and finalbuild/types/lint0warning allgreen. TrueNextRSCproductionprobe16196exit0:1readperrequest, A/Bisolated, newrequestfresh,503thenrecovery, actualretryworks. EarlierRED10!=1 and resetfailure retainedprivately, no falsified proof. ImagesWebKit/Chromiumloginanderror375/1280scanned; tests syntheticexceptrealappanonymeloginpage. RealSafariinstalled26.6.2, no hostedpasswordsubmitted. Privatecerts/evidenceunder.local ignored. Preexistingserena/next-env/CS untouched. Featureglobalgoalnotcomplete, statusnotchangedbythisbugfix.
+
+---
+## [2026-10-23] — Recette réelle Resend reprise
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension recette externe.
+**Tâche en cours :** bascule explicite du runner local vers Resend.
+**Objectif :** réception Gmail puis adhésion/contribution à deux identités réelles.
+**État :** IN_PROGRESS
+**Décisions prises :** dernier tour goal ancien bloqué ; nouveau contexte apporte progrès vérifié : boîte Gmail contrôlée accessible et session créateur Chrome réelle. Reprise auditblocked à zéro. Aucune adresse/token en Git, pas de DBsource/push. Préserver données utilisateur existantes.
+**Prochaine étape :** option CLI runner et tests, redémarrage possédé, création UI espace dédié et invitation autorisée.
+**Contexte pour reprise :** HEAD96425cf, session32915 vivante HTTPS3443, forceMailpit actuellement. CUA Chrome1, financeTab1730267667 créateur, testMailTab1730267669 boîte autorisée ; handles persistants si sessionCUA présente. Garder le créateur connecté. Preuves privées.local/resend-recipe. Certautosigné bloqueSW ; ne pas prétendre validationoffline, handoff pour sécurité/motdepasse/accord si nécessaire. Objectif intégral17/30 demeure incomplet.
+
+---
+## [2026-10-23] — Invitation Resend reçue, inscription préparée
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`, recette externe.
+**Tâche en cours :** handoff inscription, pas d’adhésion encore.
+**Objectif :** goal intégral17/30, réceptionexterne maintenant prouvée.
+**État :** IN_PROGRESS
+**Fichiers touchés :** runnerdev/README, plan/tasks/session/state, matrice/audit/preuve, discovery012.
+**Décisions prises :** Resend explicite --resend, défautMailpit conservé ; aucunecritureDBsource. Uneinvitationnouvelle viaUI dansespacevide. Gmailréceptionréelle(spam) etResenddelivered ; pasderetry. Credentialnouveau/conditions exigenthandoffhumain selonpolitiqueoutil, pasdecontournementAPI.
+**Prochaine étape :** utilisateur saisit motdepasse et soumetinscription surIAB6prérempli ; ensuite vérifierGmail/Neon, acceptationdistincte etcontributionsdeuxsessions. AutresgatesCI/MCP/revue/offline ouverts.
+**Contexte pour reprise :** session68803 activeHTTPS3443/redirect3002/Resend,32915terminéevolontairement. CUAfinanceTabChrome1730267667 créateur, testMailTab1730267669 courrielautoriséuniquement, recipientTabIAB6formulaireprérempli/motdepassevide ; nepasnavigueretperdresaisie. EspaceprivéIDdanspreuves.local/resend-recipe etURLsUI, pasdejetondansGit.1invitationpending/1attemptsent/1member, checked2026-10-23T21:03Z.9delivery/3CLIgardes/syntaxevalides, scriptignoredparESLintnormal. Derniertourprogrèsconcretpasimpasse ; aucunblocked/complete. Préexistantsserena/next-env/CSpréservés. CertautosignéempêcheSW, autresongletsprivésnonrecettés. Demanderuniquementactionhumaineobligatoire puiscontinuer.

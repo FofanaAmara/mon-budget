@@ -21,11 +21,13 @@ PARTIEL signifie code et preuves bornées présents, mais preuve de bout en bout
 - **AUTH-RETURN** : auth-invitation-return-execution.md ; test RED sur vrai rendu serveur AuthPage/AuthProviders/AuthView puis14nouveaux tests,260unit/qualité verts. Liens signup→signin et forgot conservent invitation après clic/recharge DevTools ; retour externe non propagé. Aucun formulaire Auth soumis, pas de preuve d’inscription/adhésion.
 - **AUTH-LOCAL** : `.Codex/adhoc/sessions/2026-10-23-safari-auth.md` ; cookie Secure rejeté HTTPWebKit/accepté HTTPS, vraie page login via redirection ; dix lectures RSC deviennent une, identités/requêtes/pannes isolées dans vrai Next de production et bouton reprise vérifié.265unit/99PG/9delivery/build/types/lint verts. Pas de login hébergé Safari ni de réception externe prouvés.
 - **AUTH** : dependency-repair-execution.md ; sept tests de contrat du véritable adaptateur, transport simulé. Lecture serveur sans mutation, fraîcheur explicite des décisions d’invitation. UI-ACCESS prouve deux sessions hébergées distinctes préexistantes ; aucune adhésion ni nouvel utilisateur vérifié prouvés.
-- **MAIL** : DEC-001, tests invitation/mail, réception Mailpit observée. Lecture Resend du 2026-10-23 : domaine expéditeur vérifié, sending enabled, receiving disabled ; origine publique et boîte de recette explicite absentes. Aucun email externe envoyé/reçu.
+- **MAIL** (historique avant recette externe) : DEC-001, tests invitation/mail, réception Mailpit observée. Lecture Resend du 2026-10-23 : domaine expéditeur vérifié, sending enabled, receiving disabled ; origine publique et boîte de recette explicite absentes. Aucun email externe envoyé/reçu.
 - **SESSION** : session-delivery-execution.md et DEC-003 ; garde du vrai layout avec identité serveur, signout contrôlé (y compris retour invitation), invalidation/expiration/historique/offline ; douze tests sans navigateur. Extension private-entry-session-execution.md : vraies entrées privées gardées et refus serveur de changement d’acteur (quatre tests de rendu, deux tests PG). Runbook de réconciliation et trois tests PG de sa mutation minimale, aucune preuve fournisseur ou réception réelle ajoutée.
 - **CI** : workflow local `.github/workflows/financial-spaces.yml` ; gardes RED puis vert, résultat final testé contre échec/annulation/skip/absence. Aucun run GitHub sur ce SHA ni protection distante prouvés.
 
 Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-001 dans `.Codex/adhoc/decisions/`. Les journaux privés restent sous `.local/financial-spaces/` ; aucun jeton, contenu de boîte ou adresse réelle dans cette matrice.
+
+- **MAIL-REAL** : resend-real-execution.md ; invitation soumise depuis la fiche dans un espace vide dédié, réception externe Gmail observée (indésirables), lien réellement reçu ouvert en session anonyme et inscription avec retour conservé. DB locale en lecture seule :1invitationpending/1tentativesent/1membre avant acceptation ; GETResend200/last_eventdelivered. Mauvais compte refusé et accès anonyme aux finances renvoyé verslanding. Inscription non soumise : mot de passe/conditions demandent handoff humain. Aucune preuve d’adhésion ni contribution à deux ajoutée.
 
 ## Exigences
 
@@ -36,7 +38,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | FR-003 | PARTIEL | PG espaces distincts ; UI personnel puis couple vide | Deux espaces sur toutes les pages avec recharge, vrai compte |
 | FR-004 | PARTIEL | NAV sélecteur seul et préférence ; PG dernier espace | UI-ACCESS prouve option unique désactivée et création mobile ; connexion/reconnexion reste ouverte |
 | FR-005 | PARTIEL | 78 actions contextualisées, PG toutes familles ; configurations communes | Tour E2E de toutes fonctions et automatismes sur deux contextes |
-| FR-006 | PARTIEL | MAIL local, PG acceptation ; UI landing explicite et mauvais compte | UI-VERIFY parcours de vérification raccordé ; réception OTP/externe, acceptation et contribution à deux sessions restent à prouver |
+| FR-006 | PARTIEL | MAIL local, MAIL-REAL réception externe et lien, PG acceptation ; UI landing explicite et mauvais compte | UI-VERIFY parcours de vérification raccordé ; réception OTP/externe, acceptation et contribution à deux sessions restent à prouver |
 | FR-007 | À PROUVER | Routes publiques/auth/confirmation implémentées ; AUTH et PG bornés | Inscription réelle, réception/confirmation OTP, retour et acceptation sans espace imposé ; UI-VERIFY ne couvre que le raccordement et les tests bornés |
 | FR-008 | PARTIEL | UI Non saute et Oui propose invitation ; même service | Nouveau compte réel, report d’envoi et reprise mobile/desktop |
 | FR-009 | PARTIEL | PG membre B modifie/renomme/invite sans rôle créateur | Deux sessions réelles contribuent et gèrent après recharge |
@@ -68,7 +70,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | ESP-003/AC-3 | PARTIEL | UI renommage B sous A ; PG membre sans privilège | Sélecteur actualisé et données conservées sur sessions réelles |
 | ESP-003/AC-4 | PARTIEL | NAV brouillon, confirmation refusée et réponse tardive ; SESSION verrouille le document | Multi-onglets/late-RSC sur vraie app et échec réseau |
 | ESP-003/AC-5 | PARTIEL | PG refus tiers/objets croisés et SQL FK | Tests directs HTTP/UI puis accès valide |
-| ESP-004/AC-1 | PARTIEL | UI-CURRENT invitation Mailpit recue et persistante, lien fonctionnel/mauvais compte refuse ; aucun acces avant acceptation PG | Courriel externe réellement reçu et invitation visible chez destinataire |
+| ESP-004/AC-1 | PARTIEL | UI-CURRENT Mailpit et MAIL-REAL réception externe/lien fonctionnel/mauvais compte refusé ; aucun accès avant acceptation PG | Courriel externe reçu ; liste privée chez destinataire après authentification reste à prouver |
 | ESP-004/AC-2 | À PROUVER | Landing/auth/retour/confirmation implémentés ; PG | Connexion existante puis acceptation réelle et sélecteur |
 | ESP-004/AC-3 | PARTIEL | PG contribution, renommage, invitation par B | Deux sessions membres réelles et persistance après recharge |
 | ESP-004/AC-4 | PARTIEL | PG mauvais compte/non vérifié/préacceptation ; UI mauvais compte | Tiers et invité réel via routes/actions avant adhésion |
@@ -86,7 +88,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 
 ## Gates globaux ouverts
 
-1. Réception externe Resend et lien utilisable depuis la boîte contrôlée ; origine publique/callback autorisée, quota/coût connu. Ne pas déduire l’autorisation du destinataire de EMAIL_TO.
+1. Réception externe Resend et lien local prouvés par MAIL-REAL ; classement Gmailspam à examiner. Origine publique/callback production restent à vérifier avant release. Destinataire explicitement autorisé par l’humain, jamais déduit de EMAIL_TO.
 2. Deux sessions Auth réelles : compte existant, nouveau compte/vérification, retour conservé, acceptation distincte et contribution persistante. Aucune session simulée ne clôt ce gate.
 3. Vraie app : onglets, réponses tardives, caches RSC et navigation offline/déconnexion. Le refus de navigateur antérieur n’est pas contourné.
 4. Playwright MCP : outil requis absent ; acces HTTP navigateur maintenant autorise et recette UI-CURRENT reussie. Captures CUA/locators Playwright et banc CLI gardent leur nom et leur portee.
@@ -100,3 +102,6 @@ Audit courant : [delivery-current-audit.md](delivery-current-audit.md), code5101
 Recette locale actuelle du23octobre : voir UI-CURRENT. Le refus de l’ancien onglet data: ne constitue plus un blocage general du navigateur ; nouvel onglet HTTP utilise avec autorisation humaine.
 
 RecetteUI-RESP : deux depenses ponctuelles fictives creees/rechargees dans le couple seulement, personnel vide, guide et dernierespace controles. Captures375/1280 et deux corrections visuelles ; aucune cloture globale ou preuve multisession ajoutee.
+
+
+Recette externe du23octobre21:03UTC : MAIL-REAL lève l’ancien manque de boîte/réception. Le runner68803 sert HTTPS3443 avec option explicite `--resend`, Mailpit reste le défaut hors option. Session destinataire IAB préparée, mot de passe vide, aucune inscription/acceptation automatique. Les gates de contribution réelle, nouveau compte, CI et PlaywrightMCP restent ouverts. Cette preuve CUA n’est pas renommée PlaywrightMCP.

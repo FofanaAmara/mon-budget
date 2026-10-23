@@ -121,6 +121,15 @@ npm run dev:spaces
 npm run test:spaces:services
 ```
 
+Mailpit remains the recipe default. For an explicitly authorized external
+invitation test, start `npm run dev:spaces -- --resend` instead. This selects
+the existing server-only Resend configuration without editing `.env.local`
+or changing the local database guards. Startup sends no mail: a member must
+submit an invitation in the app. Use a dedicated test space and an explicitly
+authorized recipient; keep delivery evidence private. Stop that runner and
+restart the default command to return to Mailpit. Do not blindly retry an
+uncertain delivery or reuse an old Mailpit invitation as proof of Resend receipt.
+
 The dev command verifies the owned fixture before starting Next on
 `https://localhost:3443` (the former `http://localhost:3002` redirects there). It preserves `.env.local`, removes inherited database
 targets, and supplies only the dummy local credentials to the app process.

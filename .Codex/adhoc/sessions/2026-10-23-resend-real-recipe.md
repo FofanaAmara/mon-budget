@@ -1,0 +1,20 @@
+# Session — 2026-10-23 — Recette Resend réelle
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`.
+
+## Objectif
+Réception externe, inscription depuis invitation et contribution à deux comptes réels dans la copie locale.
+
+## Journal
+
+### Reprise
+Boîte contrôlée et compte créateur accessibles dans Chrome CUA, autorisation humaine explicite. Runner Mailpit confirmé vivant32915. Nouvelle option Resend explicite prévue, sans changement des secrets ni de cible DB. Ancien blocage ressources changé, pas de clôture globale.
+
+### Réception externe et retour vers inscription
+Option explicite --resend ajoutée au runner, aucun changement d’environnement persisté. Ancien32915 arrêté volontairement,68803ReadyHTTPS3443/redirect3002/Resend.9deliveryverts,3refusCLI etsyntaxevérifiés. Nouvelespace vide partagé créé par vraieUI ; uneinvitation depuisfiche. Gmailréceptionspam vue et screenshotconservé, GETResenddelivered et DB1tentative/1membreavantacceptation. Lienreçu ouvert dansIABséparé, inscriptionconserveretour ; mauvaiscompte refuse, accèsfinancieranonyme verslanding. Aucun autrespace modifié.
+
+### Handoff et limites
+Nom/emailpréremplis, motdepassevide, aucunecréationcompte/acceptation. OutilCUA imposehandoffcredential et accordlégal ; faire agirhumain sur ongletIAB6 puisreprendre vérification/adhésion/contributions. Capturesréelles vues, pasdedéfautvisuelconnu surpagesinspectées. Gmailspametlienslégaux# documentésDISC-ESP-012. Certautosigné bloqueSW : pasdevalidationoffline. Goalnonatteint, anciensgatesinchangés sauf réceptionexterne effectivementlevée.
+
+## Fichiers modifiés
+scripts/financial-spaces/dev.mjs etREADME.md ; plan/session/tasks/state adhoc ; matrice/audit/preuveResend ; discovery012. Aucunsecret/adresse/token dansGit. Preexistantsserena/next-env/CSexclusducommit.
