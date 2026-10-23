@@ -164,3 +164,25 @@
 **Décisions prises :** aucun AWM conformément à l’humain. Outil natif PostgreSQL isolé dans projet choisi par humain ; Homebrew global non réparé. Copie PostgreSQL17.11, extension uuid-ossp1.1, contraintes CHECK comparées après reparsage TEMP, données intégrales hashées. Tous les writes de ce travail ciblent le conteneur local possédé, aucune mutation source.
 **Prochaine étape :** commit préparation vérifiée puis migration expand/backfill sur spaces_work17 avec tests de conservation/isolation/reprise ; ne pas modifier baseline17.
 **Contexte pour reprise :** evidence baseline-execution.md : 177 tests, types/lint0erreurs17warnings/build0 ; 18tables703lignes identiques,175colonnes49indexes50contraintes. Registre86exports16modules dans action-inventory.json ;78finance2individuels4mixtes2legacy. Script test-database.mjs prepare/snapshot/restore/verify protégé label+port+montage+systemid ; dump/manifest SHA+schema+markers exigés, ne jamais écraser base peuplée. Répertoire privé .local/financial-spaces ; fixture mon-budget-spaces-test-01a165b5 sur127.0.0.1:55437, userbudget_test/passwordlocal-fixture-only (dummy local), DB spaces_baseline17 / spaces_work17. Anciens essais PG18/DBvides conservés. Nativeclient .local/tools/libpq@17/17.11/bin/pg_dump ; pas de secrets Docker/arguments/stdout. Readme décrit le setup. Reviewer indépendant a clos3findings. CUA carrousel4slides observé mais aucun substitut au gatePlaywrightMCP encore indisponible. Aucun mailResend/CI/E2E/espacefonctionnel prouvé. Préserver .serena/project.yml,next-env.d.ts et fichiers CS non suivis préexistants ; paspush.
+
+---
+## [2026-10-23] — Modèle et migration locale en cours
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** ESP-001/002, expansion puis backfill sur copie locale uniquement.
+**Objectif :** fondations des espaces et conservation exacte, avant conversion financière globale.
+**État :** IN_PROGRESS
+**Fichiers touchés :** scripts migrations/runner/tests, lib/spaces et suivi selon besoin.
+**Décisions prises :** tour précédent = progrès vérifié (86c5394, restauration703lignes). Budget tranche15–25kjetons estimatif, coût monétaire inconnu ; aucune dépense de service engagée. Pas de SQLsource mutateur ni AWM.
+**Prochaine étape :** fichiers SQL versionnés, préflight relationnel, dry-run vérifié, application contrôlée et tests de conservation/reprise/isolation.
+**Contexte pour reprise :** baseline17 intacte et work17identique ; fixture localhost55437 possédée, client17.11 local. Réutiliser gardepropriété+systemid. Préserverdirty.serena,next-env et anciensCS. Ne pas exposer fonctionnalités partielles aux données réelles.
+
+---
+## [2026-10-23 00:30] — Fondations SQL et conservation vérifiées
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** P1.1terminée, ESP001/002toujoursen cours, prochainraccordementserveur/UI.
+**Objectif :** featurecompletspaces+invitations, encoreactif et nonlivré.
+**État :** IN_PROGRESS
+**Fichiers touchés :** 3SQLversionnés,scriptslocal-fixture/migrate/verify-conservation,testintégration,packageetREADME,preuves/suivi.
+**Décisions prises :** clientsSQLbrandésaprèsvérificationDocker+systemid ;runnerfixtureseulement ;backfillatomiquerejouablejusqu’àready,checksumimmuable. 003resteinactivesurworkavantconversionapp.
+**Prochaine étape :** implémentergarded’appartenance,servicescréation/lecture/renommage/préférenceetprofils, puisruntimeNextsurDBisoléepourraccorderonboardingetnavigationcanonique ;convertirles86actionsavantactivationmultiespace.
+**Contexte pour reprise :** evidence migration-execution.md. 001/002appliquéesetdoublepassée13espaces703lignesconservées,175colonnes18tables comparéesbaseline17 ;workphasebackfilled. Olddraftconservédansspaces_work17_draft_20261023aaprèsrefuschecksumattendu, pasdebypassledger. 18testsintégrationPostgreSQLdontvraiwriterbloquépuisrejeté18FKexactes,replay,rollback,lateconfig ;177unit,tsc0,lint0/17warnings. RevueP1lateconfigclose. NativeNode testcmdnpmruntest:spaces:dbclonelocalbaseline,puisdropuniquesabasejetable. PasdeTSappchangé,pasUIfunctionalencore. Ne pasrejouertest-databaseverifyinitialsurworkmigré(schémaattendudedifférent) ;utiliserverify-conservationavantnouvellescontributions. SQL003testémaisgateavecappnonconvertie,nepasactiverworkavantdécisiontechniquederecette. Prochainecontrainteconcrète :lib/db.tsutiliseneonHTTP,pasencorenatifPGlocal ;prévoirunadaptateurderecetteexplicitementisolé pourtester lavraieappavecAuthNeonactuel,sanschanger.env.localhumainniécrireDBsource. Routescibles/espaces/[spaceId],nécessitéIDexpliciteactions. Sourceetbaselineintactes,aucunmail/push/AWM. Préserverdirtyserena,next-envetuntrackedCS.

@@ -4,3 +4,5 @@
 - [Périmètre du runtime des mockups](feedback_mockup_runtime_scope.md) — React demandé ne signifie pas Storybook autorisé.
 
 - [Copies PostgreSQL vérifiées](feedback_postgres_restore_verification.md) — dépendances de schéma, CHECK normalisés, identité de cible et preuve de restauration.
+
+- [Backfill rejouable et copies dérivées](feedback_repeatable_backfill_copies.md) — reprendre la dernière configuration avant bascule, pas seulement conserver les originaux.

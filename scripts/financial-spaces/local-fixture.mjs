@@ -1,0 +1,55 @@
+/** All SQL writes from migration tooling must pass this local-server identity guard. */
+import { spawnSync } from 'node:child_process';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import pg from 'pg';
+
+export const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+export const directory = path.join(root, '.local/financial-spaces');
+export const container = 'mon-budget-spaces-test-01a165b5';
+export const owner = 'financial-spaces-01a165b5';
+export const image = 'postgres:17-alpine';
+export const port = 55437;
+export const username = 'budget_test';
+export const password = 'local-fixture-only';
+export const databaseNames = ['spaces_baseline17', 'spaces_work17'];
+const verifiedClients = new WeakMap();
+
+export function assertLocalFixtureClient(client) {
+  const database = verifiedClients.get(client);
+  if (!database) throw new Error('Refusing a SQL client not verified against the owned local fixture.');
+  return database;
+}
+
+export function docker(args, options = {}) {
+  const result = spawnSync('docker', args, { encoding: 'utf8', ...options });
+  if (result.error || result.status !== 0) throw new Error('Docker operation failed; no source credentials printed.');
+  return result.stdout?.trim() ?? '';
+}
+
+export function assertOwned() {
+  const [value] = JSON.parse(docker(['inspect', container]));
+  const bindings = value.HostConfig?.PortBindings?.['5432/tcp'];
+  const mount = value.Mounts?.find(item => item.Destination === '/fixture');
+  if (value.Config?.Labels?.['codex.task'] !== owner
+    || bindings?.length !== 1 || bindings[0].HostIp !== '127.0.0.1'
+    || bindings[0].HostPort !== String(port)
+    || mount?.Type !== 'bind' || path.resolve(mount.Source) !== directory) {
+    throw new Error('Refusing a fixture with unexpected ownership, port or mount.');
+  }
+}
+
+export async function localConnection(database = 'postgres') {
+  assertOwned();
+  const client = new pg.Client({ host: '127.0.0.1', port, user: username, password, database });
+  await client.connect();
+  try {
+    const expected = docker(['exec', container, 'psql', '-U', username, '-d', 'postgres', '-Atc',
+      'SELECT system_identifier::text FROM pg_control_system()']);
+    const actual = await client.query('SELECT system_identifier::text FROM pg_control_system()');
+    if (actual.rows[0]?.system_identifier !== expected) throw new Error('Refusing a different PostgreSQL server.');
+    await client.query("SET TIME ZONE 'UTC'");
+    verifiedClients.set(client, database);
+  } catch (error) { await client.end(); throw error; }
+  return client;
+}

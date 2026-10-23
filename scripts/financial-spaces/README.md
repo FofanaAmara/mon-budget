@@ -60,3 +60,48 @@ and use separate migration conservation checks rather than resetting work data.
 Earlier failed attempts and the PostgreSQL 18 archive remain private for
 diagnosis. No cleanup of unrelated containers, databases or Homebrew installs
 is performed by these commands.
+
+## Space migrations (local fixture only)
+
+```sh
+node scripts/financial-spaces/migrate.mjs --dry-run
+node scripts/financial-spaces/migrate.mjs --apply --through=002
+node scripts/financial-spaces/verify-conservation.mjs
+npm run test:spaces:db
+```
+
+`001` expands without enabling the new app; `002` backfills/repeats under table
+locks while legacy writers are still the only source of truth. Changes to
+settings and guide state are refreshed on every pass, including nulls/absence.
+Every historical column is fingerprinted before and after each transaction.
+An ambiguous owner, cross-owner relationship or duplicate free savings stops
+the migration instead of claiming or merging records.
+
+The runner accepts only clients verified by `localConnection`, and only the
+named work fixture or a freshly named integration-test database. It has no
+production URL override. A dry-run uses a read-only transaction and creates no
+ledger or schema objects. Applied SQL checksums are immutable: changed drafts
+must be tried on a fresh copy, never by editing the ledger to bypass refusal.
+
+`003` enforces non-null space IDs, same-space composite foreign keys and stable
+free-savings uniqueness. It is exercised on disposable test clones; it remains
+unapplied to the work fixture until the app is converted. A controlled local
+cutover requires both `--through=003` and `--allow-cutover`. The final backfill
+and constraints share a transaction. Old writers must be stopped for release;
+the test actually observes a concurrent unscoped writer waiting on the table
+lock and being rejected after cutover. Optional-reference deletion sets only
+the reference to null, preserving the space, as supported by
+[PostgreSQL composite foreign keys](https://www.postgresql.org/docs/17/ddl-constraints.html).
+
+Integration tests clone the untouched local baseline into a unique database,
+exercise rollback/replay/concurrency and all 18 parent relationships, then
+delete only the database created by that test run. No source credentials or
+hosted database are used by the tests. The current suite is local infrastructure;
+portable CI fixtures and the app's full browser/auth tests remain to be added.
+
+If a transaction fails, preserve the work database and read the ledger/phase.
+The failed transaction rolls back; earlier committed expansion remains. Retry
+unchanged SQL after resolving the reported cause. Never reset the baseline or
+restore over a populated work database. After phase `ready`, backfill cannot
+reattribute shared data to its author and rollback to the old user-only app is
+forbidden. No automatic destructive down migration is supplied.

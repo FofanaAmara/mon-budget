@@ -11,60 +11,18 @@
 import { spawn, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
 import { setTimeout as delay } from 'node:timers/promises';
 import dotenv from 'dotenv';
 import pg from 'pg';
-
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-const directory = path.join(root, '.local/financial-spaces');
-const container = 'mon-budget-spaces-test-01a165b5';
-const owner = 'financial-spaces-01a165b5';
-const image = 'postgres:17-alpine';
-const port = 55437;
-const username = 'budget_test';
-const password = 'local-fixture-only';
-const databaseNames = ['spaces_baseline17', 'spaces_work17'];
+import { root, directory, container, owner, image, port, username, password, databaseNames,
+  docker, assertOwned, localConnection } from './local-fixture.mjs';
 const dumpFile = path.join(directory, 'source-public-pg17.dump');
 const manifestFile = path.join(directory, 'source-public-pg17.manifest.json');
 const env = dotenv.parse(fs.readFileSync(path.join(root, '.env.local')));
 const command = process.argv[2];
 
 fs.mkdirSync(directory, { recursive: true, mode: 0o700 });
-
-function docker(args, options = {}) {
-  const result = spawnSync('docker', args, { encoding: 'utf8', ...options });
-  if (result.error || result.status !== 0) {
-    throw new Error('Docker operation failed; no source credentials printed.');
-  }
-  return result.stdout?.trim() ?? '';
-}
-
-function assertOwned() {
-  const [value] = JSON.parse(docker(['inspect', container]));
-  const bindings = value.HostConfig?.PortBindings?.['5432/tcp'];
-  const mount = value.Mounts?.find(item => item.Destination === '/fixture');
-  if (value.Config?.Labels?.['codex.task'] !== owner
-    || bindings?.length !== 1 || bindings[0].HostIp !== '127.0.0.1'
-    || bindings[0].HostPort !== String(port)
-    || mount?.Type !== 'bind' || path.resolve(mount.Source) !== directory) {
-    throw new Error('Refusing a fixture with unexpected ownership, port or mount.');
-  }
-}
-
-async function localConnection(database = 'postgres') {
-  assertOwned();
-  const client = new pg.Client({ host: '127.0.0.1', port, user: username, password, database });
-  await client.connect();
-  try {
-    const expected = docker(['exec', container, 'psql', '-U', username, '-d', 'postgres', '-Atc',
-      'SELECT system_identifier::text FROM pg_control_system()']);
-    const actual = await client.query('SELECT system_identifier::text FROM pg_control_system()');
-    if (actual.rows[0]?.system_identifier !== expected) throw new Error('Refusing a different PostgreSQL server.');
-  } catch (error) { await client.end(); throw error; }
-  return client;
-}
 
 function verifiedBackup() {
   if (!fs.existsSync(manifestFile) || !fs.existsSync(dumpFile)) {
