@@ -21,3 +21,5 @@
 - [Certificat des fixtures et schéma réel](feedback_fixture_schema_certification.md) — lignes seules insuffisantes ; prouver le refus des dérives de contraintes/index/defaults.
 
 - [Propagation des échecs de gates](feedback_gate_exit_codes.md) — contrôler le diff après staging puis conditionner réellement le commit au succès.
+
+- [Protocole de page navigateur](feedback_browser_url_protocol.md) - distinguer ancien onglet interne refuse et vraie page HTTP autorisee ; Mailpit reste une preuve locale distincte.

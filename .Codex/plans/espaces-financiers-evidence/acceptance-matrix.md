@@ -13,6 +13,7 @@ PARTIEL signifie code et preuves bornées présents, mais preuve de bout en bout
 - **SQL** : `__tests__/integration/financial-spaces-migration.test.mjs`, 21 tests ; restauration/rejeu/gel/relations et refus d’ambiguïtés. Cinq tests supplémentaires protègent le certificat synthétique contre CHECK/index/default/enum altérés.
 - **NAV** : ui-context-execution.md et six scénarios du banc `__tests__/browser/space-navigation-fixture/` ; vrais composants, services et routeur simulés.
 - **UI** : invitations-management-execution.md ; parcours CUA dans la vraie app avant mise à niveau des dépendances. Création solo/couple, réglages ciblés, Mailpit et mauvais compte observés ; captures privées. Cela ne constitue pas une validation Playwright MCP ni une recette actuelle complète.
+- **UI-CURRENT** : mailpit-current-execution.md ; vraie app au c704c80, invitation depuis fiche, reception SMTP Mailpit observee, lien ouvert/mauvais compte refuse, recharge et seconde soumission sans doublon. CUA avec locators Playwright, distinct de PlaywrightMCP ; aucune acceptation/nouveau compte reelle prouvee.
 - **AUTH** : dependency-repair-execution.md ; sept tests de contrat du véritable adaptateur, transport simulé. Lecture serveur sans mutation, fraîcheur explicite des décisions d’invitation. Aucune preuve de nouvel utilisateur ou de deux sessions hébergées.
 - **MAIL** : DEC-001, tests invitation/mail, réception Mailpit observée. Lecture Resend du 2026-10-23 : domaine expéditeur vérifié, sending enabled, receiving disabled ; origine publique et boîte de recette explicite absentes. Aucun email externe envoyé/reçu.
 - **SESSION** : session-delivery-execution.md et DEC-003 ; garde du vrai layout avec identité serveur, signout contrôlé (y compris retour invitation), invalidation/expiration/historique/offline ; douze tests sans navigateur. Extension private-entry-session-execution.md : vraies entrées privées gardées et refus serveur de changement d’acteur (quatre tests de rendu, deux tests PG). Runbook de réconciliation et trois tests PG de sa mutation minimale, aucune preuve fournisseur ou réception réelle ajoutée.
@@ -61,7 +62,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | ESP-003/AC-3 | PARTIEL | UI renommage B sous A ; PG membre sans privilège | Sélecteur actualisé et données conservées sur sessions réelles |
 | ESP-003/AC-4 | PARTIEL | NAV brouillon, confirmation refusée et réponse tardive ; SESSION verrouille le document | Multi-onglets/late-RSC sur vraie app et échec réseau |
 | ESP-003/AC-5 | PARTIEL | PG refus tiers/objets croisés et SQL FK | Tests directs HTTP/UI puis accès valide |
-| ESP-004/AC-1 | PARTIEL | UI invitation Mailpit persistée ; aucun accès avant acceptation PG | Courriel externe réellement reçu et invitation visible chez destinataire |
+| ESP-004/AC-1 | PARTIEL | UI-CURRENT invitation Mailpit recue et persistante, lien fonctionnel/mauvais compte refuse ; aucun acces avant acceptation PG | Courriel externe réellement reçu et invitation visible chez destinataire |
 | ESP-004/AC-2 | À PROUVER | Landing/auth/retour/confirmation implémentés ; PG | Connexion existante puis acceptation réelle et sélecteur |
 | ESP-004/AC-3 | PARTIEL | PG contribution, renommage, invitation par B | Deux sessions membres réelles et persistance après recharge |
 | ESP-004/AC-4 | PARTIEL | PG mauvais compte/non vérifié/préacceptation ; UI mauvais compte | Tiers et invité réel via routes/actions avant adhésion |
@@ -74,7 +75,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | ESP-006/AC-1 | PARTIEL | UI Oui propose email facultatif, création espace réutilisée | Véritable premier onboarding, report et émission externe |
 | ESP-006/AC-2 | PARTIEL | Formulaire continue sans attendre ; espace durable PG | Utilisation réelle pendant invitation en attente |
 | ESP-006/AC-3 | PARTIEL | UI Non saute invitation et espace personnel créé | Rejeu actuel depuis nouveau compte, réglages ultérieurs |
-| ESP-006/AC-4 | PARTIEL | PG panne/retry même invitation/token ; intent durable ; UI message | Panne SMTP/Resend injectée dans vraie app, correction/recharge sans doublon |
+| ESP-006/AC-4 | PARTIEL | PG panne/retry meme invitation/token ; UI-CURRENT seconde soumission sans doublon de mail ; intent durable | Panne SMTP/Resend injectée dans vraie app, correction/recharge sans doublon |
 | ESP-006/AC-5 | À PROUVER | PG guide/config communs ; acceptation ne provisionne rien | Conjoint existant et nouveau rejoignent l’espace déjà configuré |
 
 ## Gates globaux ouverts
@@ -82,10 +83,12 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 1. Réception externe Resend et lien utilisable depuis la boîte contrôlée ; origine publique/callback autorisée, quota/coût connu. Ne pas déduire l’autorisation du destinataire de EMAIL_TO.
 2. Deux sessions Auth réelles : compte existant, nouveau compte/vérification, retour conservé, acceptation distincte et contribution persistante. Aucune session simulée ne clôt ce gate.
 3. Vraie app : onglets, réponses tardives, caches RSC et navigation offline/déconnexion. Le refus de navigateur antérieur n’est pas contourné.
-4. Playwright MCP : outil requis absent/refus d’accès ; captures CUA et banc CLI gardent leur nom et leur portée.
+4. Playwright MCP : outil requis absent ; acces HTTP navigateur maintenant autorise et recette UI-CURRENT reussie. Captures CUA/locators Playwright et banc CLI gardent leur nom et leur portee.
 5. CI distante verte sur le SHA exact et revue globale ; aucun push/déploiement autorisé. Workflow local préparé ne prouve pas les réglages de branche ni un run distant.
 6. Réconciliation opérationnelle d’un envoi incertain : après 23 h, aucune reprise aveugle ; vérifier l’événement fournisseur et la réception, puis intervention autorisée. Runbook et statement testés sur clone synthétique ; aucune intervention réelle requise sans incident et autorisation ; réception externe du goal toujours non acquise.
 
 URL de recette locale : http://localhost:3002. Source et baseline privée ne sont pas migrées en production. Les stories restent en cours, sans changement artificiel de leurs critères.
 
 Audit de livraison actualise : delivery-audit.md. API GitHub sur SHA29913ffa95c0687d7593398fb10ccabf130595fe :0run. Qualite locale apres nettoyage :226unit,types0,lint0warning,buildWebpack0 ; aucune preuve produit globale ajoutee.
+
+Recette locale actuelle du23octobre : voir UI-CURRENT. Le refus de l’ancien onglet data: ne constitue plus un blocage general du navigateur ; nouvel onglet HTTP utilise avec autorisation humaine.

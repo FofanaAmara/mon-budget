@@ -460,3 +460,63 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Decisions prises :** plus de reexecution speculative pour remplacer les gates reellement externes ; aucun push/mail/navigation.
 **Prochaine etape :** apres commit, revalider une possibilite nouvelle de recette ; si meme impasse sans progres sur3tours, marquerblocked.
 **Contexte pour reprise :**nettoyage6fichiers14bindings,226unit/types0/lint0warning/buildWebpack66195sortie0,revueclosed ;97PG/29natifs precedents inchanges. Auditdelivery-audit.md confronte6conditions+S1-S12+matrice17/30. GithubRESTexact29913ffa95c0687d7593398fb10ccabf130595fe total0,origindistantmain d0980ec8. APP_ORIGIN et MES_FINANCES_TEST_RECIPIENT absents ; Resend/EMAIL_FROM presents,EMAIL_TO pasdestinataireautorise. PlaywrightMCPabsent et refusbrowser anterieur toujours applicable,nepascontourner. Auth2sessions/nouveau/verification/receptionexterne/UIactuelle/CI nonprouves. Ce tour=progresnettoyageverifie+evidenceCI ; compteurimpasse nepeutpasatteindre3surcetour. Pasdeproduction/push ; dirtyserena/next-env/CSpreexistants preserves.
+
+---
+## [2026-10-23] - Impasse de recette revalidee, tour1
+
+**Plan :** espaces-financiers-implementation.md P7, delivery-audit.md.
+**Tache en cours :** validations reelles encore manquantes ; aucune correction concrete restante identifiee par revue.
+**Objectif :** goal complet intact, NON ATTEINT.
+**Etat :** IN_PROGRESS
+**Fichiers touches :** state.md seulement, aucun changement de code ni nouveau commit.
+**Decisions prises :** precedent tour=progresc704c80 ; ce tour=sansprogres, premiere impasse consecutive. Pas de tests repetes ou de travail speculatif pour masquer le blocage.
+**Prochaine etape :** verifier si autorite navigateur/outils, destinataire/origine ou publication autorisee changent ; si meme impasse persiste durant3tours, update_goal blocked.
+**Contexte pour reprise :** objectif relu, HEADc704c80. CataloguePlaywrightMCPtoujoursvide. Envlocal relu sansvaleurs : ResendKey/EMAIL_FROM configures, APP_ORIGIN/MES_FINANCES_TEST_RECIPIENT toujoursabsents. Aucune nouvelleautorisationbrowser apresrefus, doncaucuncontournement. Aucunpushautorise ;CI29913ff0runverifieautourprecedent. Aucunmail/boitecompte/Authreel valide. Le serveurlocal seul ne constituepasuneattenteprouveed'unjobdelivraison. Les alternatives Mailpit/mock/CLI/CUA/localCI ne satisferaientpaslesgatesreels.226unit/97PG/29natifs/7gardes ettypes/lint/buildvertsprecedents conserves ;aucunreruninutile. Userabsent, aucunequestion. Ne pasmarquercomplete oublockedsurcepremiertourimpasse.
+
+---
+## [2026-10-23] - Impasse de recette revalidee, tour2
+
+**Plan :** espaces-financiers-implementation.md P7, delivery-audit.md.
+**Tache en cours :** validations reelles impossibles avec preconditions actuelles.
+**Objectif :** goal complet inchange, NON ATTEINT.
+**Etat :** IN_PROGRESS
+**Fichiers touches :** state.md seulement ; pas de nouveau code/commit.
+**Decisions prises :** tourprecedent=sansprogres1 ; cetour=sansprogres2 surmemeimpasse, aucune attente de job revendiquee.
+**Prochaine etape :** si prochaine continuation revalide les memes preconditions, seuil3atteint : update_goal blocked.
+**Contexte pour reprise :**objectifrelus ; HEADc704c80stable. CataloguePlaywrightMCPvide ; APP_ORIGIN/MES_FINANCES_TEST_RECIPIENT absents a la lecture actuelle. Pasdenouvelleautorisationbrowser/push/boiteexterne. Lespreuvesrequises Auth2sessions/signup/reception/MCP/CI nepeuventpasetreremplaceespar testsLocaux/CUA/CLI. Revue n'identifieplusdefixconcretindependant ; aucun nettoyage/testspeculatif supplementaire. Testsvertsducommitprecedentpreserves. Userabsent,aucunequestion.
+
+---
+## [2026-10-23] - Troisieme impasse consecutive, goal bloque
+
+**Plan :** espaces-financiers-implementation.md P7 ; delivery-audit.md et acceptance-matrix.md.
+**Tache en cours :** recette reelle externe et visuelle, pas de nouveau travail local concret independant.
+**Objectif :** goal complet conserve, NON ATTEINT.
+**Etat :** BLOCKED
+**Fichiers touches :** state.md seulement ; code au commitc704c80.
+**Decisions prises :** tourprecedent=sansprogres2 ; verificationactuelle=sansprogres3. Seuil3tours atteint, update_goal blocked demande ensuite. Aucune attente active ou completion revendiquee.
+**Prochaine etape :** reprise quand acces navigateur autorise/PlaywrightMCP disponible, origine/callback et destinataire externe controles configures, et publication du SHA autorisee pour CI. Refaire alors les vrais parcours existant/nouveau et les preuves actuelles, sans remplacer les gates.
+**Contexte pour reprise :** objectifrelus ; HEADc704c80. PlaywrightMCPtoujoursabsent, APP_ORIGIN/MES_FINANCES_TEST_RECIPIENT toujoursabsents a la lecture actuelle ;pasdenouvelleautorisationbrowser/push. Le refusbrowseranterieur nepeutpasetrecontourne parCDP/CLI/CUA/fetchUI. EMAIL_TO neconstituepasautorisationdestinataire. Alternatives reeval : Mailpit/mock/localCI/capturesanciennes neprouventpasreceptionexterne/Auth2sessions/MCP/CIdistante ; pas de nouveau service/deploiement/push pourfabriquer unvert.226unit/97PG/29natifs/7gardes ettypes/lint0warning/buildWebpackvertsconserves ;29natifsdeleurtrancheinchangee. Code/revue/migrations/clonesdurablesconserves,aucuneDBsourceouworkmuteeparcesaudits. Userabsent,aucunequestion. Aucuncommitdecompletion pourcetteimpasse.
+
+---
+## [2026-10-23] - Reprise autorisee navigateur et Mailpit
+
+**Plan :** espaces-financiers-implementation.md P4-P7 ; recette locale invitation existante.
+**Tache en cours :** relancer runtime local arrete, inviter via vraie fiche, verifier Mailpit et ouvrir le lien.
+**Objectif :** goal complet conserve ; avancer recette locale sans confondre Mailpit et reception externe.
+**Etat :** IN_PROGRESS
+**Fichiers touches :** suivi et preuves a venir.
+**Decisions prises :** humain autorise explicitement navigateur/Playwright et demande testMailpit, ne pas redemander. Nouvelle autorisation leve le refus precedent pour ces actions ; catalogue sans PlaywrightMCPdistingue toujours les outils. CUAgetState fonctionne.
+**Prochaine etape :** npmrun dev:spaces puis onglet3002 et boiteMailpit.
+**Contexte pour reprise :**HEADc704c80 ; MailpitPID70680 ports1025/8025 actifs ; runtime3002absent,ancienonglet20connectionrefused, nepasnaviguerdataURL. CopiePGspaces_work17 et sessionAuth navigateur existants a verifier. Aucunmail externe/push/production. Estimation6-12kjetons pour recette et corrections si necessaires,coutindisponible. Preuveslocalesanterieures restent valides mais actuellesa refaire.
+
+---
+## [2026-10-23] - Recette Mailpit actuelle reussie
+
+**Plan :** espaces-financiers-implementation.md P4/P7, mailpit-current-execution.md.
+**Tache en cours :** commit des preuves de recette locale ; goal complet reste IN_PROGRESS.
+**Objectif :** feature avec partage reel, scope inchange.
+**Etat :** IN_PROGRESS
+**Fichiers touches :** session mailpit-current, preuve/matrice/memoire/tasks/state ; aucun codeproduit.
+**Decisions prises :** autorisation navigateur/Playwright deja donnee, aucune question ; nouvel ongletHTTP21reel autorise distinct de l'ancien data refuse. CUA+locatorsPlaywright sans renommerMCP.
+**Prochaine etape :** commit du rapport, poursuivre recette sessions/utilisateurs et UI actuelle selon preuves ; externeResend/CI ne sont pas clos.
+**Contexte pour reprise :**runtime98404npmdevspaces3002surspaces_work17,SMTPMailpit1025etUI8025. HEADproduitc704c80. Fichecouple13603cc1souspersonnelactifb99e9a9e ; envoi UI fictif recette-conjoint-20261023@example.test. Mailpitexact1message, lienbonespace+mauvaiscompterefuse ; reloadpersiste et secondsendexact1mail. SQLlecturereadonly1invitationpending/sent/1membre. Captures privees.local/financial-spaces/mailpit-current etpersistence-proof.json. Aucunbearerversionne/Resend/push/DBsource. LesdeuxsurfacesIABetChromevoyaientunmauvaiscompte,paspreuve2membres. PasdecritereMCP/acceptationnouveau/receptionexterne/CI ferme. Ce tour=progresconcret, compteurimpasse remisazero.\.serena/next-env/anciensCSpreexistants a exclure ducommit.
