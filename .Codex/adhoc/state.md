@@ -87,3 +87,25 @@
 **Décisions prises :** design approuvé lié à prototype7aaec6d ;17 exigences et6 stories/30 AC ; build non prêt tant que plan/dimensionnement/sûreté non validés, priorité immédiate maintenue.
 **Prochaine étape :** sur mandat humain, préparer plan technique ESP-001 et stratégie de conservation/isolation/migration.
 **Contexte pour reprise :** toutes décisions UX validées intégrées. Référence .app-factory/backlog/epics/finances-partagees/features/espaces-financiers/feature-brief.md et readiness.md. Contrôles de couverture, GWT, dépendances et liens locaux passés ; diff-check propre. Aucun code ou migration exécuté. Préserver .serena/project.yml/next-env.d.ts préexistants ; aucun push.
+
+---
+## [2026-10-22] — Plan technique du chantier espaces financiers
+**Plan :** .Codex/plans/espaces-financiers-implementation.md (en préparation).
+**Tâche en cours :** planning-methodology, analyse factuelle puis plan complet et relecture des huit questions.
+**Objectif :** passer du backlog/design approuvé aux six stories implémentables avec sûreté de migration et preuve d’isolation.
+**État :** IN_PROGRESS
+**Fichiers touchés :** plan, preuves de contexte, état/journal uniquement.
+**Décisions prises :** aucune implémentation ni migration ; requêtes métadonnées PostgreSQL en transaction readOnly uniquement. Schéma réel18 tables/175colonnes/49index/50contraintes ; preuve schema-live.json. Vitest :176pass/1échec préexistant badgeIN_PROGRESS.
+**Prochaine étape :** rédiger12sections, modèle cible, contexte explicite, migration/rollback, phases et tests reliés aux17exigences ; relecture avant remise pour validation humaine.
+**Contexte pour reprise :** auth/session utilisateurseule ;86actionsserveur, generationautomatique en GET pages,13tablesfinancières dont jonction sansuser_id, settingsmélangecompte/finance, guideparuser, SWcachepages authentifiées. Pas de codeemailinvitation ni clésprovider repérées ; transportàvalider. Données métier non lues/modifiées. Préserver .serena/project.yml/next-env.d.ts ; paspush. TaskCreate/TaskUpdate non exposés : suivi phases via commentary et fichiers. Plan demandé pour chantier complet ; ne pas repartir dans CS/Storybook ni revalider UX acquise.
+
+---
+## [2026-10-22] — Plan du chantier rédigé et relu
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** remise du plan complet pour validation humaine.
+**Objectif :** préparer une implémentation sûre des six stories, sans exécuter la migration.
+**État :** DONE (livrable de planification ; exécution non commencée).
+**Fichiers touchés :** plan, preuves schema-live.json/baseline.md, state et session2026-10-22-plan-espaces-financiers.md.
+**Décisions prises :** propositions documentées, pas encore acceptées : espace explicite dans URL/actions, garde centralisé+FK même espace, frontière préférences/finance, migration progressive et rollback v2 après partage ; D2/D4 à fermer pour invitations réelles.
+**Prochaine étape :** l’humain valide le plan puis gate0 ; ne pas lancer du code ou une migration sur la seule remise du document.
+**Contexte pour reprise :** design7aaec6d validé et backlog61dc09e existant. Schéma réel18tables175colonnes49index50contraintes lu enreadOnly ; correction de l’inventaire précédent :16modules d’actions,86exports. Vitest baseline176pass/1fail (palette badgeIN_PROGRESS), aucun build/lint ni test DB financier exécuté. Plan12sections/17exigences/12critères/8questions vérifiés. Pas de transportmail applicatif configuré trouvé ; coût/domaine/retourauth à prouver. PlaywrightMCP absent, gatevisuel explicite non substitué parCLI/CUA. Sourceapp inchangée, .serena/project.yml/next-env.d.ts préexistants préservés. Pas de push.
