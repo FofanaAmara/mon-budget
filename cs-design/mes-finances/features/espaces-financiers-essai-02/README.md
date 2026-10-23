@@ -39,3 +39,23 @@ Preuves locales dans `proofs/` (ignorées par Git, certaines baseline contiennen
 Le vrai `RevenusMonument` déborde à375px avec3 400,00$/3 400,00$ : minimum typographique48px et28,8px pour les deux termes. La preview propose UNIQUEMENT sur Revenus à≤420px un ajustement local des tailles, sans masquer ni tronquer les montants ni déplacer les données. Avant : `proofs/after-allocation-375.png` ; après, mêmes données et onglet : `proofs/after-revenus-fit-375.png`. Source application inchangée : correctif réel à prévoir séparément. Les autres monuments conservent les tailles de l’application.
 
 Correction après regard neuf : la cible mobile du compteur d’invitation passe de26×26 à44×44px ; le badge intérieur reste26×26. Validation visuelle avec nom long et rejouage invitation→acceptation→compteur0 ; mesures et captures dans proofs/. Voir correction.md ; review.md conserve le finding historique.
+
+## Liens directs
+
+Un lien avec `scenario` ouvre une copie initiale du parcours demandé, même si une autre démo était sauvegardée. Les interactions suivantes restent locales. Sans paramètre, la dernière vue est reprise.
+
+- [Couple + personnel](http://localhost:4301/?scenario=couple)
+- [Un seul espace](http://localhost:4301/?scenario=solo)
+- [Compte existant vide](http://localhost:4301/?scenario=empty)
+- [Premier espace / onboarding](http://localhost:4301/?scenario=onboarding)
+- [Invitation — compte existant](http://localhost:4301/?scenario=invite)
+- [Invitation — nouveau compte](http://localhost:4301/?scenario=signup)
+- [Nom long](http://localhost:4301/?scenario=long)
+- [Créer un autre espace](http://localhost:4301/?scenario=couple&dialog=create)
+- [Espace et membres / inviter](http://localhost:4301/parametres/espace?scenario=couple)
+- [Dépenses du couple](http://localhost:4301/depenses?scenario=couple)
+- [Revenus du couple](http://localhost:4301/revenus?scenario=couple)
+- [Patrimoine du couple](http://localhost:4301/projets?scenario=couple)
+- [Réglages du couple](http://localhost:4301/parametres?scenario=couple)
+
+Vérification : les13 adresses ont été ouvertes dans le navigateur et leur écran initial contrôlé. Build Vite exécuté avec succès.

@@ -37,3 +37,7 @@ Fichiers : cs-design/mes-finances/features/espaces-financiers-essai-02/ ; backlo
 
 ## Résultat de cette passe
 Maquettes prêtes pour test humain sur http://localhost:4301. Aucune approbation humaine du design final ni implémentation métier déclarée. Anciennes pistes conservées. Aucun push.
+
+### Liens directs des maquettes
+Correction demandée par l’humain : chaque parcours doit être ouvrable directement. Ajout du paramètre scenario prioritaire au stockage local, du chemin initial et du dialogue création ;13 liens documentés et ouverts dans le navigateur. Sans paramètre, reprise locale conservée. Build Vite sortie0. Changement limité au démarrage du prototype, sans changement UI ni application métier.
+Fichiers : essai-02/src/App.jsx et README.md.

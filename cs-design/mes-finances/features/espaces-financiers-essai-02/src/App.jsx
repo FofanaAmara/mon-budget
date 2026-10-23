@@ -27,6 +27,18 @@ const zeroSavings={totalContributions:0,contributionCount:0,byProject:[]};
 const zeroDebt={totalPayments:0,totalCharges:0,netMovement:0,paymentCount:0,chargeCount:0};
 const scenarioNames={couple:'Couple + personnel',solo:'Un seul espace',empty:'Compte existant vide',onboarding:'Premier espace',invite:'Invitation — compte existant',signup:'Invitation — nouveau compte',long:'Nom long'};
 function readStart(){try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved)return saved;}catch{}return initialState();}
+function readEntry(){
+ const params=new URLSearchParams(window.location.search);
+ const requested=params.get('scenario');
+ if(requested&&Object.hasOwn(scenarioNames,requested))return {
+  state:initialState(requested),scene:requested,
+  url:requested==='invite'?'/invitations':window.location.pathname,
+  mode:requested==='onboarding'?'onboarding':requested==='signup'?'signup':'app',
+  overlay:params.get('dialog')==='create'?'create':null,
+ };
+ let view={};try{view=JSON.parse(localStorage.getItem(KEY+'-view'))||{};}catch{}
+ return {state:readStart(),scene:view.scene||'couple',url:view.url||'/',mode:view.mode||'app',overlay:null};
+}
 function groupIncome(space){return {expectedTotal:space.incomes.reduce((n,x)=>n+Number(x.expected_amount||0),0),actualTotal:space.incomes.reduce((n,x)=>n+Number(x.actual_amount||0),0)};}
 
 function Sheet({title,children,onClose}){
@@ -64,7 +76,8 @@ function Management({space,state,onRename,onInvite,onBack}){
 }
 
 export default function App(){
- const [state,setState]=useState(readStart);const [url,setUrl]=useState(()=>{try{return JSON.parse(localStorage.getItem(KEY+'-view'))?.url||'/';}catch{return '/';}});const [scene,setScene]=useState(()=>{try{return JSON.parse(localStorage.getItem(KEY+'-view'))?.scene||'couple';}catch{return 'couple';}});const [overlay,setOverlay]=useState(null);const [mode,setMode]=useState(()=>{try{return JSON.parse(localStorage.getItem(KEY+'-view'))?.mode||'app';}catch{return 'app';}});const [toast,setToast]=useState('');const [previewMenu,setPreviewMenu]=useState(false);const [revision,setRevision]=useState(0);
+ const [entry]=useState(readEntry);
+ const [state,setState]=useState(entry.state);const [url,setUrl]=useState(entry.url);const [scene,setScene]=useState(entry.scene);const [overlay,setOverlay]=useState(entry.overlay);const [mode,setMode]=useState(entry.mode);const [toast,setToast]=useState('');const [previewMenu,setPreviewMenu]=useState(false);const [revision,setRevision]=useState(0);
  const toastTimer=useRef(null);
  function notify(text){setToast(text);clearTimeout(toastTimer.current);toastTimer.current=setTimeout(()=>setToast(''),5000);}
  const active=state.spaces.find(s=>s.id===state.active&&s.members.includes(state.user));
