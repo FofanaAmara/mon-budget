@@ -46,3 +46,7 @@ P3.4 sessions / P4.2 uncertain : COMPLETED pour la tranche technique bornée DEC
 P3.4 extension revue globale : IN_PROGRESS — onboarding/choix/invitations privées sous garde ; acteur attendu création et invitation, tests/revue à venir.
 
 P3.4 extension revue globale : COMPLETED pour le correctif technique ;226unit/97PG/7gardes,types0/lint0/14warnings/buildWebpack0,revueP1closed. Recette globale IN_PROGRESS.
+
+P7.1 audit final : IN_PROGRESS - preuve CI distante du SHA, preconditions email et outils ; retrait des14bindings inutilises reperes par lint, sans modifier les contrats ou le rendu.
+
+P7.1 audit/clean lint : COMPLETED pour la tranche locale ;226unit,types0,lint0warning,buildWebpack0,revue fermee. Goal global IN_PROGRESS : recette externe/Auth/MCP/CI manquante, voir delivery-audit.md.

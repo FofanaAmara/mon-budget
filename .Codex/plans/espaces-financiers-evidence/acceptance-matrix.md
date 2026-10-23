@@ -84,6 +84,8 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 3. Vraie app : onglets, réponses tardives, caches RSC et navigation offline/déconnexion. Le refus de navigateur antérieur n’est pas contourné.
 4. Playwright MCP : outil requis absent/refus d’accès ; captures CUA et banc CLI gardent leur nom et leur portée.
 5. CI distante verte sur le SHA exact et revue globale ; aucun push/déploiement autorisé. Workflow local préparé ne prouve pas les réglages de branche ni un run distant.
-6. Réconciliation opérationnelle d’un envoi incertain : après 23 h, aucune reprise aveugle ; vérifier l’événement fournisseur et la réception, puis intervention autorisée. Runbook et statement testés sur clone synthétique ; intervention réelle et preuves fournisseur/réception encore non acquises.
+6. Réconciliation opérationnelle d’un envoi incertain : après 23 h, aucune reprise aveugle ; vérifier l’événement fournisseur et la réception, puis intervention autorisée. Runbook et statement testés sur clone synthétique ; aucune intervention réelle requise sans incident et autorisation ; réception externe du goal toujours non acquise.
 
 URL de recette locale : http://localhost:3002. Source et baseline privée ne sont pas migrées en production. Les stories restent en cours, sans changement artificiel de leurs critères.
+
+Audit de livraison actualise : delivery-audit.md. API GitHub sur SHA29913ffa95c0687d7593398fb10ccabf130595fe :0run. Qualite locale apres nettoyage :226unit,types0,lint0warning,buildWebpack0 ; aucune preuve produit globale ajoutee.

@@ -23,7 +23,6 @@ type IncomeInstanceProps = {
 
 export function IncomeInstanceRow({
   mi,
-  index,
   isCurrentMonth,
   onMarkReceived,
   onMarkExpected,
@@ -302,7 +301,6 @@ type VariableIncomeProps = {
 
 export function VariableIncomeRow({
   inc,
-  index,
   isCurrentMonth,
   onMarkReceived,
 }: VariableIncomeProps) {

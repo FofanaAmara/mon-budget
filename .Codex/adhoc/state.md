@@ -436,3 +436,27 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Decisions prises :** garde des entrees privees, acteur attendu obligatoire creation/invitation, keyuserId et interruption des continuations ; aucune migration.
 **Prochaine etape :** commit apres diffcachedcheck sortie0 ; preuves reelles toujours ouvertes.
 **Contexte pour reprise :**226unit/97PGsynthetic/7gardes verts ; typegen/types/lint0erreur14warnings/buildWebpack70972sortie0danscopieclean. RevueglobaleP1ferme, pasautrefindingconcret. Recette3002PID21358enecoute,50892preservee.29natifs precedents inchanges. Aucunmail/push/DBsource/workmute ; aucuneactionnavigateurapresrefus, nepascontourner. Auth2sessions/nouveaucompte/Resendrecu/mobile/desktop/MCP/CI toujoursnonprouves. Dirtyserena/next-env/anciensCSexclusdustage. Ce touraproduitunprogresverifie, pas3toursimpasse.
+
+---
+## [2026-10-23] - Audit de livraison au HEAD29913ff
+
+**Plan :** espaces-financiers-implementation.md P7.1, preuve de livraison et hygiene lint.
+**Tache en cours :** retirer14bindings inutilises, verifier puis consolider l'audit.
+**Objectif :** conserver les criteres complets et identifier la vraie frontiere de recette.
+**Etat :** IN_PROGRESS
+**Fichiers touches :** a suivre.
+**Decisions prises :** aucun push/mail/navigation ; pas de nouveau role/contrat.
+**Prochaine etape :** nettoyage puis lint/types/unit/build en copie ; rapport S1-S12 et done1-6.
+**Contexte pour reprise :**precedent tour=progres29913ff. GitHub API exactSHA29913ffa95c0687d7593398fb10ccabf130595fe total_count0 ; lsremote maind0980ec8. Envlocal ResendKey/EMAIL_FROM presents mais APP_ORIGIN/MES_FINANCES_TEST_RECIPIENT absents,EMAIL_TO n'autorise pas le destinataire. Catalogue sans PlaywrightMCP ; refusbrowser precedent toujours applicable, aucun contournement. Estimation2-4kjetons coutindisponible.
+
+---
+## [2026-10-23] - Audit et lint local verifies
+
+**Plan :** espaces-financiers-implementation.md P7.1.
+**Tache en cours :** commit de l'audit et nettoyage sans comportement nouveau.
+**Objectif :** goal complet inchangede, NON ATTEINT.
+**Etat :** IN_PROGRESS
+**Fichiers touches :** voir session2026-10-23-delivery-audit.md.
+**Decisions prises :** plus de reexecution speculative pour remplacer les gates reellement externes ; aucun push/mail/navigation.
+**Prochaine etape :** apres commit, revalider une possibilite nouvelle de recette ; si meme impasse sans progres sur3tours, marquerblocked.
+**Contexte pour reprise :**nettoyage6fichiers14bindings,226unit/types0/lint0warning/buildWebpack66195sortie0,revueclosed ;97PG/29natifs precedents inchanges. Auditdelivery-audit.md confronte6conditions+S1-S12+matrice17/30. GithubRESTexact29913ffa95c0687d7593398fb10ccabf130595fe total0,origindistantmain d0980ec8. APP_ORIGIN et MES_FINANCES_TEST_RECIPIENT absents ; Resend/EMAIL_FROM presents,EMAIL_TO pasdestinataireautorise. PlaywrightMCPabsent et refusbrowser anterieur toujours applicable,nepascontourner. Auth2sessions/nouveau/verification/receptionexterne/UIactuelle/CI nonprouves. Ce tour=progresnettoyageverifie+evidenceCI ; compteurimpasse nepeutpasatteindre3surcetour. Pasdeproduction/push ; dirtyserena/next-env/CSpreexistants preserves.

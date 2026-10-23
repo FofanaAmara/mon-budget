@@ -8,7 +8,7 @@ import { useState, useTransition, useSyncExternalStore } from "react";
 import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
 
 import { deleteExpense } from "@/lib/actions/financial/expenses";
-import {formatShortDate,daysUntil,calcMonthlyCost} from "@/lib/utils";
+import {formatShortDate,calcMonthlyCost} from "@/lib/utils";
 import ExpenseModal from "@/components/ExpenseModal";
 import type { Expense, Section, Card, RecurrenceFrequency } from "@/lib/types";
 import StatusBadge from "@/components/StatusBadge";

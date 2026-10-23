@@ -425,11 +425,9 @@ export default function TabSanteFinanciere({
   summary,
   incomeSummary,
   expenses,
-  monthlyIncomeFromTemplates,
   totalMonthlyExpenses,
   availableAmount,
   totalEpargne,
-  totalDebtBalance,
   valeurNette,
   savingsSummary,
 }: Props) {
