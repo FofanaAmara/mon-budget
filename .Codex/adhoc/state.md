@@ -832,3 +832,25 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Décisions prises :** pas de répétition artificielle des gates ; preuve nouvelle FIN-REAL sur les revenus récurrents et paramètres. Une ligne mensuelle après plusieurs recharges,2345.67attendu/2300.12reçu. Rappels couple1/3/7/14 et personnel1/3/7 ; prime personnelle125.25 inchangée. Tout via UI, contrôle SQL READONLY. Aucun nouveau mail/code/DBsource/push.
 **Prochaine étape :** finalisation humaine du formulaire IAB6 puis vérification réelle/adhésion/contribution B. D’autres familles financières et validations globales restent à recetter ; ne pas considérer ce trajet borné comme toutFR005.
 **Contexte pour reprise :** dernier tour PROGRESS, pas de comptage d’impasse tant que travail indépendant utile. Runtime68803, Chrome créateur sur revenus coupleResend ; IAB6 nom/email préremplis mais motdepasse vide, markHandoff maintenu. Preuves.local/resend-recipe/recurring-settings-proof.json checked21:10:08Z. HEAD3def690 avant commit courant ; anciens preexistantsserena/next-env/CS exclus. Cert/SW, CI, PlaywrightMCP, revueglobale toujoursouverts, aucune inscription/adhésion fabriquée.
+
+---
+## [2026-10-23] — Références et dépenses récurrentes en recette
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md`, P3/P7.
+**Tâche en cours :** carte/catégorie/dépense récurrente fictives dans espaceResend.
+**Objectif :** preuve FR005 réelle plus large, sans réduire le goal.
+**État :** IN_PROGRESS
+**Décisions prises :** dernierturn PROGRESS(FIN-REAL revenu/rappels), autres familles autorisées indépendantes du handoff. Estimation10–20minutes/5–10kjetons, coût exact indisponible, aucun service ou email nouveau. Ne créer que des références de suivi fictives, aucun compte bancaire ni vrai numéro de carte.
+**Prochaine étape :** formulaires réels via créateur, puis recharge/isolation et SQL READONLY. Nouveau compte/handoff/CI/MCP restent ouverts.
+
+---
+## [2026-10-23] — Références et dépense automatique vérifiées
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md` P3/P7, extension visuelle session-and-delivery.
+**Tâche en cours :** suite de recette globale et handoff inscription.
+**Objectif :** intégral17/30, non atteint.
+**État :** IN_PROGRESS
+**Fichiers touchés :** cinq composants retirant helper redondant ; plan, tasks, preuve/matrice, discovery013, mémoire, session/state.
+**Décisions prises :** dernière continuation PROGRESS. Nouvelle preuve REF-REAL : carte/catégorie/abonnement39.99 automatiques persistants et isolés, SQLREADONLY occurrence uniquePAID et références identiques. Double fermeture reproduite cartes/catégories, corrigée même motif cinq composants. Pas de rôle/état/calcul modifié.265unit et build/types/lint/9delivery verts.
+**Prochaine étape :** commit après stagedcheck ; finalisation humaine inscriptionIAB6 puis adhésion/contributionB. Recetter patrimoine pour valider visuellement les trois autres modales et corriger/valider texte4/4 du guide. CI/MCP/revueglobale et offline toujours ouverts.
+**Contexte pour reprise :** runtime68803Resend, Chromecréateur revenu/cartes selon dernièreaction, IABrecipientTab6 formulaire motdepassevide conservé markHandoff. Preuveslocal/resend-recipe : recurring-expense-references-proof.json checked21:15Z, cartes/catégories avant/après ; exportsJPEG372x806 mobile malgré nom.png, CSSviewport375x812 confirmé. Ancienne capture aprèsstale écartée puis vrai reload. Quality20493exit0/unit33834exit0. Source modifiée limitée à cinq imports/instancesSheetCloseButton retirés, boutonsheader conservés. Pasdenouvelleinvitation/DBsource/push/deploiement. Preexistantsserena/next-env/CS préservés. Aucungoalcomplete/blocked, aucune nouvelle identité fabriquée.

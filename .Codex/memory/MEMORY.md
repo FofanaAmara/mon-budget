@@ -36,3 +36,5 @@
 
 - [Safari Secure localhost cookies](feedback_safari_secure_localhost.md) - HTTPS development, no Auth cookie downgrade or silent system CA install.
 - [Auth render deduplication and retry](feedback_auth_render_deduplication.md) - per-render cache, cross-request isolation and real server recovery.
+
+- [Fermetures de feuilles dupliquées](feedback_duplicate_sheet_controls.md) — inventorier les contrôles existants avant ajout transversal, recharger le vrai rendu et vérifier les dimensions des captures.

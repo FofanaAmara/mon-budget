@@ -5,7 +5,6 @@ import { useFinancialSpace } from "@/components/spaces/SpaceContext";
 
 import { useState, useTransition, useRef, useEffect } from "react";
 import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
-import SheetCloseButton from "@/components/SheetCloseButton";
 import Breadcrumb from "@/components/Breadcrumb";
 import {
   createSection,
@@ -672,7 +671,6 @@ export default function SectionsClient({
           >
             {/* Handle */}
             <div className="sheet-handle" />
-            <SheetCloseButton onClose={closeModal} />
 
             {/* Sheet header */}
             <div

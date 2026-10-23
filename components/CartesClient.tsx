@@ -5,7 +5,6 @@ import { useFinancialSpace } from "@/components/spaces/SpaceContext";
 
 import { useState, useTransition } from "react";
 import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
-import SheetCloseButton from "@/components/SheetCloseButton";
 import { createCard, updateCard, deleteCard } from "@/lib/actions/financial/cards";
 import type { Card } from "@/lib/types";
 import Link from "@/components/spaces/navigation";
@@ -756,7 +755,6 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
           >
             {/* Handle */}
             <div className="sheet-handle" />
-            <SheetCloseButton onClose={() => setModal({ mode: "closed" })} />
 
             {/* Sheet header */}
             <div

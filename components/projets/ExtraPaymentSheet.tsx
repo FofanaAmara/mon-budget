@@ -10,7 +10,6 @@ import { useState, useTransition } from "react";
 import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
 import { makeExtraPayment } from "@/lib/actions/financial/debts";
 
-import SheetCloseButton from "@/components/SheetCloseButton";
 import type { Debt } from "@/lib/types";
 
 const FREQ_LABELS: Record<string, string> = {
@@ -68,7 +67,6 @@ export default function ExtraPaymentSheet({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sheet-handle" />
-        <SheetCloseButton onClose={onClose} />
         {/* Sheet header */}
         <div
           style={{

@@ -5,7 +5,6 @@ import { useFinancialSpace } from "@/components/spaces/SpaceContext";
 
 
 import { useEffect, useRef, useState } from "react";
-import SheetCloseButton from "@/components/SheetCloseButton";
 import { IconClose } from "@/components/icons";
 
 import type { SavingsContribution } from "@/lib/types";
@@ -80,7 +79,6 @@ export default function SavingsHistoryModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sheet-handle" />
-        <SheetCloseButton onClose={onClose} />
         <div style={{ padding: "8px 24px 32px" }}>
           {/* Header */}
           <div
