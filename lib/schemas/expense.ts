@@ -44,11 +44,19 @@ export const CreateExpenseSchema = z.object({
 });
 
 export type CreateExpenseInput = z.infer<typeof CreateExpenseSchema>;
+export const UpdateExpenseDataSchema = CreateExpenseSchema.partial().extend({
+  section_id: idSchema.nullable().optional(),
+  card_id: idSchema.nullable().optional(),
+  recurrence_frequency: recurrenceFrequencySchema.nullable().optional(),
+  recurrence_day: dayOfMonthSchema.nullable().optional(),
+  due_date: isoDateSchema.nullable().optional(),
+});
+export type UpdateExpenseData = z.infer<typeof UpdateExpenseDataSchema>;
 
 // ─── UpdateExpense ──────────────────────────────────────────────────────────
 export const UpdateExpenseSchema = z.object({
   id: idSchema,
-  data: CreateExpenseSchema.partial(),
+  data: UpdateExpenseDataSchema,
 });
 
 export type UpdateExpenseInput = z.infer<typeof UpdateExpenseSchema>;

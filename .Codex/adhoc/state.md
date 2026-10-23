@@ -230,3 +230,25 @@
 **Décisions prises :** toutes les nouvelles actions prennent spaceId explicite, auth membre et provenance acteur. Centimes validés, transferts/journaux atomiques, génération/réception des revenus calculées sous mêmes verrous. Anciennes actions transitoires à supprimer avant activation. Aucun AWM.
 **Prochaine étape :** convertir expenses/monthly-expenses/expense-transactions/debt-transactions/allocations, puis settings/setup-guide/user/demo ; raccorder routes canoniques et maquettes, supprimer chemins legacy, avant bascule locale003+004. Compléter invitations/Auth/email, caches/offline, CI et Playwright MCP.
 **Contexte pour reprise :** voir financial-actions-execution.md et action-conversion.json. Services40/40 (25 finance+15 espaces), migrations19/19, unit181/181, types0, lint0erreur17warnings, build0 ; revue indépendante a fermé tous ses constats ciblés. Important : vérification stricte work a échoué, ne pas la déclarer verte. Une seule date dismissed_at d’un guide déjà fermé a été rafraîchie lors du smoke test précédent (effet invisible), sans perte ni nouvelle ligne ; les17autres tables et tous les montants/relations sont identiques par empreinte,703lignes. Cause corrigée (effet visible seulement et UPDATEdismiss NULL), nouvelle observation >200secondes sans mutation. Work conservé, baseline/source intactes ; conservation-report.json privé porte preserved:false. Les19tests migration prouvent conservation sur clones propres, pas par exclusion du guide. Diagnostic privé work-runtime-guide-drift.json et work-runtime-integrity-report.json. Runtime session44028 arrêté proprement après contrôle du PID et de sa filiation ; relancer npm run dev:spaces quand nécessaire, nouveau lanceur restaure aussi configs après Ready de restart. Next dev badge recouvrait Passer : devIndicators:false, images avant/après observées CUA ; capture privée guide-after.png. CUA complémentaire, aucun gate Playwright MCP satisfait. work17 toujours backfilled ;004 uniquement clones, corrige amountNULL VARIABLE et CHECK fixe positif, préflight0incompatible. Aucun mail/push/déploiement. Préserver .serena/project.yml, next-env.d.ts et anciens CS non suivis.
+
+---
+## [2026-10-23] — Dépenses et allocations en cours
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** suite P1.3, dépenses/échéances/transactions/allocations.
+**Objectif :** toutes les actions financières contextualisées avant raccordement UI.
+**État :** IN_PROGRESS
+**Fichiers touchés :** nouveaux modules financiers et tests à venir.
+**Décisions prises :** tour précédent = progrès vérifié, commit9500a24 ; tranche20–35kjetons estimatifs, coût inconnu, aucun AWM.
+**Prochaine étape :** convertir les cinq familles restantes, prouver isolation/rejeu/atomicité et conserver les overrides/historiques.
+**Contexte pour reprise :** work backfilled et activité guide connue, certificat strict false ; ne pas réinitialiser ni attribuer ce delta aux finances. Baseline/source intactes. Tests clones propres via localConnection. Runtime3002 arrêté ; anciennes actions à retirer après raccordement canonique. Aucun push/email.
+
+---
+## [2026-10-23 01:39] — Dépenses et allocations vérifiées, feature encore en cours
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** P1.3,72/78 exports financiers convertis ; raccordement produit à poursuivre.
+**Objectif :** espaces fonctionnels, invitations reçues et acceptées, même app dans chaque contexte.
+**État :** IN_PROGRESS
+**Fichiers touchés :** cinq nouvelles familles financières, dettes, helper paiements, schéma, migration005/runner/tests et suivi.
+**Décisions prises :** opérations et journaux atomiques sous verrous ; montant réel nouveau versement mémorisé, archivage explicite persistant. Aucun montant historique corrigé. Question sur anciens versements contestée par l'humain : réparation séparée, garde d'annulation non raccordé et NON approuvé comme comportement produit.
+**Prochaine étape :** finir réglages/guide/compte et fermeture demo/reset/claim ; raccorder routes canoniques et maquettes, retirer les entrées legacy avant cutover local003+004+005 ; invitations/Auth/email, cache/offline/CI et Playwright MCP restent requis.
+**Contexte pour reprise :** preuves expenses-allocations-execution.md, registre72/78, services60/60 PostgreSQLréel Auth/cache simulés ; migrations20/20, unit181/181, types0, lint0erreur17warnings, build0 et diffcheck0. Revue indépendante ferme allocation ponctuelle, report planifié, archive→solde0→annulation→charge. 005 uniquement clonesjetables ; work17 toujours backfilled et certificat strictfalse (une ancienne datedeguide connue), source/baseline intactes. Pas de nouveau navigateur ni gate visuel. Runtime3002 arrêté. Aucun email/push/AWM. Préserver dirtyserena,next-env et anciens CS. Premier build bloqué accès font réseau, relance autorisée réussie sans changerpolice. Toutes les configurations générées restaurées.

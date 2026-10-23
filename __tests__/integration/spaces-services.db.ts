@@ -41,7 +41,7 @@ describe("space services and local SQL — real PostgreSQL, server session stubb
     try { await admin.query(`CREATE DATABASE "${database}" TEMPLATE spaces_baseline17`); }
     finally { await admin.end(); }
     native = await localConnection(database);
-    await runMigrations(native, { through: "004", dryRun: false, allowCutover: true });
+    await runMigrations(native, { through: "005", dryRun: false, allowCutover: true });
     identifier = (await native.query("SELECT system_identifier::text FROM pg_control_system()")).rows[0].system_identifier;
     adapter = createLocalDatabase(connectionString, identifier);
     state.sql = adapter.sql;

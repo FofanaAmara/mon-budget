@@ -1,7 +1,7 @@
 {
   "date": "2026-10-23",
   "meaning": "Implementation registry; no UI or end-to-end delivery implied. All legacy financial entry points must be removed at cutover.",
-  "converted": 38,
+  "converted": 72,
   "baselineExports": 86,
   "baselineFinancialExports": 78,
   "actions": [
@@ -9,8 +9,8 @@
       "legacyFile": "lib/actions/allocations.ts",
       "export": "getAllocations",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/allocations.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/parametres/allocation/page.tsx"
       ]
@@ -19,8 +19,8 @@
       "legacyFile": "lib/actions/allocations.ts",
       "export": "createAllocation",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/allocations.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/AllocationModal.tsx"
       ]
@@ -29,8 +29,8 @@
       "legacyFile": "lib/actions/allocations.ts",
       "export": "updateAllocation",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/allocations.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/AllocationModal.tsx"
       ]
@@ -39,8 +39,8 @@
       "legacyFile": "lib/actions/allocations.ts",
       "export": "deleteAllocation",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/allocations.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/AllocationsManager.tsx"
       ]
@@ -49,8 +49,8 @@
       "legacyFile": "lib/actions/allocations.ts",
       "export": "reorderAllocations",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/allocations.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/AllocationsManager.tsx"
       ]
@@ -59,8 +59,8 @@
       "legacyFile": "lib/actions/allocations.ts",
       "export": "generateMonthlyAllocations",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/allocations.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/revenus/page.tsx"
       ]
@@ -69,8 +69,8 @@
       "legacyFile": "lib/actions/allocations.ts",
       "export": "getMonthlyAllocations",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/allocations.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/revenus/page.tsx"
       ]
@@ -79,8 +79,8 @@
       "legacyFile": "lib/actions/allocations.ts",
       "export": "createAdhocMonthlyAllocation",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/allocations.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/AdhocAllocationModal.tsx"
       ]
@@ -89,8 +89,8 @@
       "legacyFile": "lib/actions/allocations.ts",
       "export": "updateMonthlyAllocation",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/allocations.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/revenus/AllocationTrackingTab.tsx"
       ]
@@ -183,8 +183,8 @@
       "legacyFile": "lib/actions/debt-transactions.ts",
       "export": "addDebtTransaction",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/debt-transactions.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/projets/ChargeDebtSheet.tsx"
       ]
@@ -193,8 +193,8 @@
       "legacyFile": "lib/actions/debt-transactions.ts",
       "export": "getMonthlyDebtSummary",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/debt-transactions.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/page.tsx"
       ]
@@ -203,8 +203,8 @@
       "legacyFile": "lib/actions/debt-transactions.ts",
       "export": "getDebtTransactions",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/debt-transactions.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": []
     },
     {
@@ -298,8 +298,8 @@
       "legacyFile": "lib/actions/expense-transactions.ts",
       "export": "addExpenseTransaction",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/expense-transactions.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/depenses/ExpenseActionSheet.tsx"
       ]
@@ -308,8 +308,8 @@
       "legacyFile": "lib/actions/expense-transactions.ts",
       "export": "getExpenseTransactions",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/expense-transactions.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/depenses/ExpenseActionSheet.tsx"
       ]
@@ -318,8 +318,8 @@
       "legacyFile": "lib/actions/expenses.ts",
       "export": "getExpenses",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/parametres/charges/page.tsx"
       ]
@@ -328,16 +328,16 @@
       "legacyFile": "lib/actions/expenses.ts",
       "export": "getUpcomingExpenses",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": []
     },
     {
       "legacyFile": "lib/actions/expenses.ts",
       "export": "getExpenseById",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/depenses/[id]/edit/page.tsx"
       ]
@@ -346,8 +346,8 @@
       "legacyFile": "lib/actions/expenses.ts",
       "export": "createExpense",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/ExpenseModal.tsx"
       ]
@@ -356,8 +356,8 @@
       "legacyFile": "lib/actions/expenses.ts",
       "export": "updateExpense",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/ExpenseModal.tsx"
       ]
@@ -366,8 +366,8 @@
       "legacyFile": "lib/actions/expenses.ts",
       "export": "deleteExpense",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/ExpenseTemplateManager.tsx",
         "components/ProjetsEpargneClient.tsx"
@@ -377,8 +377,8 @@
       "legacyFile": "lib/actions/expenses.ts",
       "export": "getExpensesByCard",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/cartes/[id]/page.tsx"
       ]
@@ -387,8 +387,8 @@
       "legacyFile": "lib/actions/expenses.ts",
       "export": "getMonthlySummaryBySection",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/page.tsx"
       ]
@@ -456,8 +456,8 @@
       "legacyFile": "lib/actions/monthly-expenses.ts",
       "export": "generateMonthlyExpenses",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/monthly-expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/depenses/page.tsx",
         "app/page.tsx"
@@ -467,8 +467,8 @@
       "legacyFile": "lib/actions/monthly-expenses.ts",
       "export": "getMonthlyExpenses",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/monthly-expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/depenses/page.tsx",
         "app/page.tsx"
@@ -478,8 +478,8 @@
       "legacyFile": "lib/actions/monthly-expenses.ts",
       "export": "getMonthSummary",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/monthly-expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/depenses/page.tsx",
         "app/page.tsx"
@@ -489,8 +489,8 @@
       "legacyFile": "lib/actions/monthly-expenses.ts",
       "export": "markAsPaid",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/monthly-expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/DepensesTrackingClient.tsx",
         "components/depenses/ExpenseActionSheet.tsx"
@@ -500,8 +500,8 @@
       "legacyFile": "lib/actions/monthly-expenses.ts",
       "export": "deferExpenseToMonth",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/monthly-expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/depenses/ExpenseActionSheet.tsx"
       ]
@@ -510,8 +510,8 @@
       "legacyFile": "lib/actions/monthly-expenses.ts",
       "export": "markAsUpcoming",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/monthly-expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/DepensesTrackingClient.tsx",
         "components/depenses/ExpenseActionSheet.tsx"
@@ -521,8 +521,8 @@
       "legacyFile": "lib/actions/monthly-expenses.ts",
       "export": "deleteMonthlyExpense",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/monthly-expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/depenses/ExpenseActionSheet.tsx"
       ]
@@ -531,8 +531,8 @@
       "legacyFile": "lib/actions/monthly-expenses.ts",
       "export": "updateMonthlyExpenseAmount",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/monthly-expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/depenses/ExpenseActionSheet.tsx"
       ]
@@ -541,8 +541,8 @@
       "legacyFile": "lib/actions/monthly-expenses.ts",
       "export": "autoMarkOverdue",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/monthly-expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/depenses/page.tsx",
         "app/page.tsx"
@@ -552,8 +552,8 @@
       "legacyFile": "lib/actions/monthly-expenses.ts",
       "export": "autoMarkPaidForAutoDebit",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/monthly-expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/depenses/page.tsx",
         "app/page.tsx"
@@ -563,8 +563,8 @@
       "legacyFile": "lib/actions/monthly-expenses.ts",
       "export": "getMonthlyExpenseActualsBySection",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/monthly-expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/revenus/page.tsx"
       ]
@@ -573,8 +573,8 @@
       "legacyFile": "lib/actions/monthly-expenses.ts",
       "export": "createAdhocExpense",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/monthly-expenses.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": []
     },
     {

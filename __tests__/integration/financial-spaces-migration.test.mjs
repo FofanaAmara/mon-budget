@@ -304,4 +304,23 @@ describe('financial spaces migration — real isolated PostgreSQL', { concurrenc
     await runMigrations(client,{through:'004',dryRun:false,allowCutover:true});
     assert.deepEqual(await legacyFingerprint(client),before);
   });
+
+  test('financial operation expansion preserves history, rolls back fully and replays', async () => {
+    const before = await legacyFingerprint(client);
+    const historicalPaid = (await client.query("SELECT count(*)::integer AS count FROM monthly_expenses WHERE debt_id IS NOT NULL AND status='PAID'")).rows[0].count;
+    await assert.rejects(runMigrations(client,{through:'005',dryRun:false}),/allowCutover/);
+    await assert.rejects(runMigrations(client,{through:'005',dryRun:false,allowCutover:true,failAfter:'005-financial-operations.sql'}),/Injected migration interruption/);
+    assert.equal((await client.query("SELECT to_regprocedure('public.space_finance_due_date(text,integer,date,text)') AS function")).rows[0].function,null);
+    assert.equal((await client.query("SELECT count(*)::integer AS count FROM information_schema.columns WHERE table_name='monthly_expenses' AND column_name='debt_paid_amount'")).rows[0].count,0);
+    await runMigrations(client,{through:'005',dryRun:false,allowCutover:true});
+    assert.deepEqual(await legacyFingerprint(client),before);
+    assert.equal((await client.query("SELECT count(*)::integer AS count FROM monthly_expenses WHERE debt_id IS NOT NULL AND status='PAID' AND debt_paid_amount IS NULL")).rows[0].count,historicalPaid);
+    await runMigrations(client,{through:'005',dryRun:false,allowCutover:true});
+    assert.deepEqual(await legacyFingerprint(client),before);
+    await client.query('BEGIN');
+    try {
+      const a=await seedSpace('fixture-report-a'),b=await seedSpace('fixture-report-b');
+      await expectSqlFailure('UPDATE monthly_expenses SET deferred_from_id=$1 WHERE id=$2',[b.monthly_expenses,a.monthly_expenses],'23503','monthly_expenses_deferred_source_space_fk');
+    } finally {await client.query('ROLLBACK');}
+  });
 });

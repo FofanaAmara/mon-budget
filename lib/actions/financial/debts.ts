@@ -91,7 +91,7 @@ export async function deleteDebt(spaceId: string, id: string): Promise<void> {
   validateInput(idSchema, id);
   await requireSpace(spaceId);
   const rows = await sql`
-    UPDATE debts SET is_active = false, updated_at = NOW()
+    UPDATE debts SET is_active = false, reactivation_allowed = false, updated_at = NOW()
     WHERE id = ${id} AND space_id = ${spaceId} RETURNING id
   `;
   requireFinancialRecord(rows[0]);
