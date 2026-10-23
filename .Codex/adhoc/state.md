@@ -810,3 +810,25 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Décisions prises :** utilisateurdemandecontinuer, maisIAB6motdepassevide confirmé. PolitiqueCUA imposehandoffnouveaucredential/soumissionconditions, autorisationgénéralenelecontournepas. Travailindépendantutileeffectué : contributionAfictive12.34, persistancereload, personnelvideetretourcouplevérifiésenUIetSQLreadonly.
 **Prochaine étape :** humainsaisitnouveaumotdepasseetsoumetformulaireIAB6déjàprérempli ; ensuiteverificationGmail/acceptationB/contributionB/reloadA etisolation. Pasdequestiondedécision, seuleactionhumaineobligatoire.
 **Contexte pour reprise :** HEAD2c7776aavantcheckpointcourant, runtime68803Resend3443 ; Chromecréateurrestesurdepensescouple, CUAfinanceTab ; IABrecipientTab6inscriptionenattente, markHandoffposé ; testMailTabcourrielrecette. Preuveslocal/resend-recipe creator-contribution-proof.json checked21:07Z,1ligne12.34UPCOMING1membre. Pasderequêtesecrète/sessionfabriquée/renvoidemail/push/DBsource. DerniertourPROGRESS(carvraiecontributionetpreuves), nouveaucompteetdeuxmembrestoujoursnonprouvés.17/30conservés, pasdegoalcomplete/blocked.
+
+---
+## [2026-10-23] — Validation financière indépendante en cours
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md` P3/P7 etsession-and-delivery recetteexterne.
+**Tâche en cours :** revenu récurrent et paramètres propres au seul espaceResend.
+**Objectif :** élargirpreuveFR005 sans prétendreadhésionnouveaucompte.
+**État :** IN_PROGRESS
+**Décisions prises :** dernierturnPROGRESScontributionA. Validation utile encoreindépendantependanthandoff : modèlefictif/gen/reload/configurationcouple/personnel. Estimation10–20minutes/4–8kjetons, coûtindisponible, pasdenouveaumail/servicepayant. Garder donnéesexistantesintactes et pasdeSWofflinevalidétantcertnonfiable.
+**Prochaine étape :** vérifierdestinataire puis formulairerevenusrécurrentsdanscoupleResend, modèlefictif dédié.
+
+---
+## [2026-10-23] — Revenu récurrent et rappels isolés vérifiés
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md` P3/P7 et extension de recette externe.
+**Tâche en cours :** recette globale, inscription B en attente.
+**Objectif :** espaces persistants et contribution de deux membres réels ; non atteint.
+**État :** IN_PROGRESS
+**Fichiers touchés :** preuve Resend, matrice, tasks/session/state.
+**Décisions prises :** pas de répétition artificielle des gates ; preuve nouvelle FIN-REAL sur les revenus récurrents et paramètres. Une ligne mensuelle après plusieurs recharges,2345.67attendu/2300.12reçu. Rappels couple1/3/7/14 et personnel1/3/7 ; prime personnelle125.25 inchangée. Tout via UI, contrôle SQL READONLY. Aucun nouveau mail/code/DBsource/push.
+**Prochaine étape :** finalisation humaine du formulaire IAB6 puis vérification réelle/adhésion/contribution B. D’autres familles financières et validations globales restent à recetter ; ne pas considérer ce trajet borné comme toutFR005.
+**Contexte pour reprise :** dernier tour PROGRESS, pas de comptage d’impasse tant que travail indépendant utile. Runtime68803, Chrome créateur sur revenus coupleResend ; IAB6 nom/email préremplis mais motdepasse vide, markHandoff maintenu. Preuves.local/resend-recipe/recurring-settings-proof.json checked21:10:08Z. HEAD3def690 avant commit courant ; anciens preexistantsserena/next-env/CS exclus. Cert/SW, CI, PlaywrightMCP, revueglobale toujoursouverts, aucune inscription/adhésion fabriquée.

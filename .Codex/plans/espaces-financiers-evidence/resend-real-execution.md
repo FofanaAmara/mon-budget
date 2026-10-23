@@ -23,3 +23,12 @@ Handoff utilisateur pour saisie du nouveau motdepasse et soumission acceptant le
 
 ## Contribution du créateur avant adhésion — 2026-10-23T21:07UTC
 Utilisateur autorise poursuite ; IAB6 montre motdepasse toujoursvide, aucuneinscriptionsoumise. Avancée indépendante : création via vraieUI d’une dépenseponctuellefictive12.34, statutUPCOMING, dans le seul espace dédié. Reload réel conserve ligne/montant ; sélecteur vers personnel puispageDépenses montre0ligne, retourcouple/pageDépenses retrouvecontribution. LectureSQLread-only confirme une seuleligneamount12.34 dansbonspace et1membre. Preuvesprivéescreator-contribution-proof.json etcapturescreator-contribution-reloaded.png/personal-space-no-contribution.png réellementvues, sansdéfautvisuelobservé. CettepreuveneprouvepascontributiondeB ouaccèsaprèsadhésion. Handoffcredential/conditions toujoursnécessaire ; pasderequêteAuthparAPIpourcontourner. Pasdenouvelenvoi/DBsource/push.
+
+
+## Revenu récurrent et paramètres séparés — 2026-10-23T21:10UTC
+
+Validation indépendante pendant le handoff : un modèle de salaire fictif mensuel de 2 345,67 créé via la vraie UI dans le seul espace Resend. Sa première consultation génère une ligne mensuelle attendue. Réception explicite de 2 300,12 via la modale, puis recharge, aller-retour personnel/couple et nouvelle recharge : statut Reçu et montant conservés. Lecture SQL en transaction READ ONLY : un modèle, une seule ligne mensuelle, expected_amount2345.67 et actual_amount2300.12, même espace. La preuve porte sur cette génération/réception, pas sur tous les automatismes du produit.
+
+Rappels du couple : ajout du14j à1/3/7 via Réglages, sauvegarde puis recharge. Le personnel conserve1/3/7 et ne contient pas le salaire récurrent ; son ancienne prime ponctuelle reste125.25. Ces données personnelles n’ont pas été écrites pendant le test. SQL confirme les deux listes distinctes. Guide couple2/4, personnel0/4 observés ; cela ne remplace pas la recette exhaustive du guide.
+
+Preuves privées : recurring-settings-proof.json et quatre captures recurring-income-received-reloaded.png, shared-reminders-reloaded.png, personal-income-no-shared-salary.png, personal-reminders-unchanged.png. Captures effectivement vues sur viewportChrome1512px ; montant lisible, aucune collision/troncature du contenu financier observée. Ellipse du nom dans le sélecteur étroit prévue par son style, option complète disponible. Aucun PlaywrightMCP/mobile375 revendiqué. Le formulaire destinataire est encore sans mot de passe, aucune soumission ou adhésion.

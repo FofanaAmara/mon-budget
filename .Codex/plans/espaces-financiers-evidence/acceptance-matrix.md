@@ -29,6 +29,8 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 
 - **MAIL-REAL** : resend-real-execution.md ; invitation soumise depuis la fiche dans un espace vide dédié, réception externe Gmail observée (indésirables), lien réellement reçu ouvert en session anonyme et inscription avec retour conservé. DB locale en lecture seule :1invitationpending/1tentativesent/1membre avant acceptation ; GETResend200/last_eventdelivered. Mauvais compte refusé et accès anonyme aux finances renvoyé verslanding. Inscription non soumise : mot de passe/conditions demandent handoff humain. Aucune preuve d’adhésion ni contribution à deux ajoutée.
 
+- **FIN-REAL** : suite de resend-real-execution.md ; vraie UI créateur : revenu récurrent fictif2345.67, génération unique malgré recharges et bascules, réception2300.12 persistante ; rappels partagés1/3/7/14, personnel1/3/7 et absence du modèle. Lecture SQLREADONLY et captures privées vérifient montants/espace/absence de doublon. Une identité seulement, pas de preuve de contributionB ou de tous les automatismes.
+
 ## Exigences
 
 | ID | État | Preuves disponibles | Preuve restante pour clôture |
@@ -37,7 +39,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | FR-002 | PARTIEL | MIG/SQL conservation exacte, backfill Mes finances et map stable | Reconnexion navigateur du compte existant avec toutes pages ; release cible autorisée |
 | FR-003 | PARTIEL | PG espaces distincts ; UI personnel puis couple vide | Deux espaces sur toutes les pages avec recharge, vrai compte |
 | FR-004 | PARTIEL | NAV sélecteur seul et préférence ; PG dernier espace | UI-ACCESS prouve option unique désactivée et création mobile ; connexion/reconnexion reste ouverte |
-| FR-005 | PARTIEL | 78 actions contextualisées, PG toutes familles ; configurations communes | Tour E2E de toutes fonctions et automatismes sur deux contextes |
+| FR-005 | PARTIEL | 78 actions contextualisées, PG toutes familles ; FIN-REAL revenu/rappels isolés en vraie UI | Tour E2E de toutes fonctions et automatismes sur deux contextes |
 | FR-006 | PARTIEL | MAIL local, MAIL-REAL réception externe et lien, PG acceptation ; UI landing explicite et mauvais compte | UI-VERIFY parcours de vérification raccordé ; réception OTP/externe, acceptation et contribution à deux sessions restent à prouver |
 | FR-007 | À PROUVER | Routes publiques/auth/confirmation implémentées ; AUTH et PG bornés | Inscription réelle, réception/confirmation OTP, retour et acceptation sans espace imposé ; UI-VERIFY ne couvre que le raccordement et les tests bornés |
 | FR-008 | PARTIEL | UI Non saute et Oui propose invitation ; même service | Nouveau compte réel, report d’envoi et reprise mobile/desktop |
@@ -63,7 +65,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | ESP-002/AC-1 | PARTIEL | MIG 703 lignes et attribution Mes finances | Reconnexion réelle puis consultation de l’historique |
 | ESP-002/AC-2 | PARTIEL | PG 78 actions/familles ; synthèses/contextes raccordés | Toutes pages et générations dans vraie app |
 | ESP-002/AC-3 | PARTIEL | Préflight ambiguïtés et SQL croisés, gardes membres | Deux comptes existants réels et refus via routes |
-| ESP-002/AC-4 | PARTIEL | SQL backfill rejouable ; PG générations concurrentes | Recharge réelle sur mois déjà généré |
+| ESP-002/AC-4 | PARTIEL | SQL backfill rejouable ; PG générations concurrentes ; FIN-REAL une ligne revenu après plusieurs recharges | Compléter autres familles et reprise globale |
 | ESP-002/AC-5 | PARTIEL | SQL interruption/rollback/checksum/gel ; garde rollout | Erreur visible sur vraie page et reprise valide |
 | ESP-003/AC-1 | PARTIEL | UI liste puis création couple sans copie ; PG | Rejouer liste actuelle, données des deux espaces après recharge |
 | ESP-003/AC-2 | PARTIEL | NAV préférence/contexte ; PG configurations séparées | UI-RESP depenses/reload/racine acquis ; autres pages et prochaine connexion reelles |

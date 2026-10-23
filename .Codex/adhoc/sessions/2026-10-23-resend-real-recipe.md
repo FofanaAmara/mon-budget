@@ -21,3 +21,6 @@ scripts/financial-spaces/dev.mjs etREADME.md ; plan/session/tasks/state adhoc ; 
 
 ### Contribution A et séparation persistante
 Une dépenseponctuellefictive12.34 créée viaUI dansespaceResend, rechargée et retrouvée ; espacepersonnel dépenses0puisretourcouple retrouveligne. SQLread-only confirme1ligneamount12.34/UPCOMING dansseulespacedédié,1membre. Capturesprivéesvues, nomsmontantslisibles etaucunchevauchementobservé. Sélecteur revient audashboarddelacible : naviguerensuiteversDépensespourvaliderlaliste, nepasconclurequ’unwaitForvideprouveuneabsencededonnée. Aucunemodificationdecode/testsrequisenplus ; objectifnonatteint. IAB6motdepassevide, demanderactionhumaineobligatoire.
+
+### Revenu récurrent, génération et rappels isolés
+Modèle mensuel fictif2345.67 créé viaUI ; génération mensuelle consultée, réception explicite2300.12 puis recharges et bascule personnel/couple. SQLREADONLY confirme modèle unique, ligne mensuelle unique et montants exacts. Rappels14j ajoutés seulement au couple, sauvegarde/recharge : couple1/3/7/14, personnel1/3/7. Personnel sans salaire récurrent, prime existante125.25 conservée. Captures vues sans défaut visuel financier observé. Aucun code modifié, aucune autre famille déclarée couverte. Rapport/matrice FIN-REAL enrichis. Inscription encore non soumise, handoff maintenu.
