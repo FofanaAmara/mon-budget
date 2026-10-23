@@ -252,3 +252,25 @@
 **Décisions prises :** opérations et journaux atomiques sous verrous ; montant réel nouveau versement mémorisé, archivage explicite persistant. Aucun montant historique corrigé. Question sur anciens versements contestée par l'humain : réparation séparée, garde d'annulation non raccordé et NON approuvé comme comportement produit.
 **Prochaine étape :** finir réglages/guide/compte et fermeture demo/reset/claim ; raccorder routes canoniques et maquettes, retirer les entrées legacy avant cutover local003+004+005 ; invitations/Auth/email, cache/offline/CI et Playwright MCP restent requis.
 **Contexte pour reprise :** preuves expenses-allocations-execution.md, registre72/78, services60/60 PostgreSQLréel Auth/cache simulés ; migrations20/20, unit181/181, types0, lint0erreur17warnings, build0 et diffcheck0. Revue indépendante ferme allocation ponctuelle, report planifié, archive→solde0→annulation→charge. 005 uniquement clonesjetables ; work17 toujours backfilled et certificat strictfalse (une ancienne datedeguide connue), source/baseline intactes. Pas de nouveau navigateur ni gate visuel. Runtime3002 arrêté. Aucun email/push/AWM. Préserver dirtyserena,next-env et anciens CS. Premier build bloqué accès font réseau, relance autorisée réussie sans changerpolice. Toutes les configurations générées restaurées.
+
+---
+## [2026-10-23] — Poursuite autonome autorisée
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** séparation réglages et guide, puis raccordement des espaces.
+**Objectif :** feature complète durant absence humaine, sans nouvelles questions.
+**État :** IN_PROGRESS
+**Fichiers touchés :** à suivre dans session settings-guide.
+**Décisions prises :** humain demande explicitement de prendre les décisions et ne plus poser de questions. Conserver données historiques ; choisir refus explicite d'une annulation dont delta invérifiable plutôt qu'inventer un montant. Pas de réparation des anciens montants. Aucun AWM/push/prod. Tranche estimée15–25k jetons, coût monétaire indisponible.
+**Prochaine étape :** réglages financiers communs distincts des contacts/consentements individuels ; guide partagé et tests persistants.
+**Contexte pour reprise :** commitf51b1e6,72/78exportsconvertis,60services20migrations181unit,build/types/lintverts. Source/baseline intactes ; workbackfilled ; anciennes actionsUI à fermer avant activation. Autorisation d'autonomie n'autorise pas un push ni une mutation production.
+
+---
+## [2026-10-23 01:44] — Réglages et guide vérifiés
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** P1.3,76/78 exports financiers implémentés, UI et legacy à raccorder/fermer.
+**Objectif :** feature globale toujours en cours, autonomie pendant absence humaine.
+**État :** IN_PROGRESS
+**Fichiers touchés :** financial/settings et setup-guide, account-settings, spaces/settings, test intégration et suivi.
+**Décisions prises :** commun = devise/rappels/guide ; individuel = contacts/consentements. Refus des champs croisés. CAD/USD/EUR comme UI existante ; contrat rappels positifs conservé. Ancien delta de versement invérifiable : refus explicite d'annulation automatique, zéro recalcul de l'historique, décidé selon consigne humaine d'autonomie ; plus de question à poser.
+**Prochaine étape :** fermer demo/reset/claim et assurer defaults historiques ; raccorder routes/appelants/maquettes puis supprimer legacy avant cutover local. Invitations/Auth/Resend reçu, caches/offline, CI/Playwright MCP toujours requis.
+**Contexte pour reprise :** settings-guide-execution.md ;70services PG réels dont10nouveaux,181unit,types0,lint0erreur17warnings,build0,revue indépendante fermée. Auth/cache simulés donc aucune preuve invitation/sessionréelle. Pas de nouveau SQLmigratoire ni mutation source/baseline/work ; workbackfilled et certificatfalseguide connu. Runtime3002 arrêté. Préserver dirtyserena,next-env/CS. Goal actif nonlivré. Aucun AWM/push/prod/mail.

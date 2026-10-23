@@ -1,7 +1,7 @@
 {
   "date": "2026-10-23",
   "meaning": "Implementation registry; no UI or end-to-end delivery implied. All legacy financial entry points must be removed at cutover.",
-  "converted": 72,
+  "converted": 76,
   "baselineExports": 86,
   "baselineFinancialExports": 78,
   "actions": [
@@ -816,8 +816,8 @@
       "legacyFile": "lib/actions/settings.ts",
       "export": "getSettings",
       "scope": "mixed",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/settings.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/parametres/devise/page.tsx",
         "app/parametres/notifications/page.tsx",
@@ -828,8 +828,8 @@
       "legacyFile": "lib/actions/settings.ts",
       "export": "updateSettings",
       "scope": "mixed",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/settings.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/parametres/DeviseClient.tsx",
         "components/parametres/NotificationsClient.tsx",
@@ -840,8 +840,8 @@
       "legacyFile": "lib/actions/setup-guide.ts",
       "export": "getOrInitSetupGuideData",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/setup-guide.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "app/layout.tsx"
       ]
@@ -850,8 +850,8 @@
       "legacyFile": "lib/actions/setup-guide.ts",
       "export": "completeSetupGuide",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/setup-guide.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/setup-guide/SetupGuide.tsx"
       ]
@@ -860,8 +860,8 @@
       "legacyFile": "lib/actions/setup-guide.ts",
       "export": "dismissSetupGuide",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/setup-guide.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/setup-guide/SetupGuide.tsx"
       ]
@@ -870,11 +870,16 @@
       "legacyFile": "lib/actions/setup-guide.ts",
       "export": "resetSetupGuide",
       "scope": "financial",
-      "implementation": null,
-      "status": "pending",
+      "implementation": "lib/actions/financial/setup-guide.ts",
+      "status": "service-tested-callers-pending",
       "callerFiles": [
         "components/ParametresClient.tsx"
       ]
     }
-  ]
+  ],
+  "settingsPartition": {
+    "shared": "lib/actions/financial/settings.ts",
+    "individual": "lib/actions/account-settings.ts",
+    "callerStatus": "pending"
+  }
 }

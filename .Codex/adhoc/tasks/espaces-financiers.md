@@ -24,3 +24,5 @@ P1.3 : IN_PROGRESS — conversion des familles financières vers actions à spac
 P1.3 progression : 38/78 exports financiers convertis et testés dans six familles ; raccordement UI et suppression legacy non faits. Services40, migrations19, unitaires181. Copie work utilisée : une date de guide diffère après activité navigateur, problème corrigé et preuve strictement invalidée ; source/baseline intactes.
 
 P1.3 progression : 72/78 exports financiers convertis ; services60/60, migrations20/20 et unitaires181/181. Appelants et UI toujours non raccordés. Traitement des anciennes annulations non approuvé, garde non raccordé ; voir expenses-allocations-execution.md.
+
+P1.3 progression : 76/78 exports financiers et partition des réglages communs/individuels ;70services/181unit, types/lint verts. Appelants encore pending ; autonomie explicitement demandée pendant absence, décisions documentées sans question.
