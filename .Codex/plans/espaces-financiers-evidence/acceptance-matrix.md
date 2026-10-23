@@ -37,6 +37,8 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 
 - **TRANSFER-GUIDE-REAL** : suite de resend-real-execution.md ; transfert23.45 conserve total123.45/reload et personnel0, deux écritures opposées SQL ; dépassementUI bloqué. Guide4/4 corrigé en texte, faux1/4 du pot technique reproduit puis corrigé ; REDPG puis100services verts, UIpersonnel0/4/couple4/4 et qualité finale. Pas de nouvelle identité réelle ni CI/MCP/revue globale.
 
+- **MULTITAB-REAL** : multitab-current-execution.md ; deux onglets Chrome, même identité, personnel0dépense/couple4, bascule du second et retourSPA, recharge du premier et retourdocumentaire revalidé sans mélange. Captures privées et SQLREADONLY confirment4/1achat contre0/0 ; brouillon non enregistré. Dialogueconfirm déclenché mais annulationUI non vérifiée après panne du pilote. Ni BFCache ni offline ni seconde identité prouvés.
+
 ## Exigences
 
 | ID | État | Preuves disponibles | Preuve restante pour clôture |
@@ -53,7 +55,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | FR-010 | PARTIEL | UI liste/création/détail ; renommer B sous A actif | Rejouer interface actuelle, liste des membres et sélecteur actualisé |
 | NFR-001 | PARTIEL | PG tiers/IDs croisés ; SQL FK composites et space_id obligatoire | UI-ACCESS prouve refus de pages étrangères dans deux sessions réelles ; compléter endpoints et autres familles |
 | NFR-002 | PARTIEL | MIG/SQL exacts ; PG génération et acceptation concurrentes | Recharge navigateur/multisession et reprise réelle sans mélange |
-| NFR-003 | PARTIEL | NAV requêtes tardives et brouillons ; PG concurrence ; SESSION masquage et invalidation | Vraie app multi-onglets, réponses RSC tardives, échec de bascule et offline |
+| NFR-003 | PARTIEL | NAV requêtes tardives et brouillons ; PG concurrence ; SESSION masquage et invalidation | MULTITAB-REAL acquis pour deux onglets mêmeacteur ; réponses RSC tardives, brouillon, échec de bascule et offline restent ouverts |
 | UXR-001 | PARTIEL | NAV et UI sélecteur/sidebar/drawer | UI-RESP fiches/depenses375et1280 acquis ; UI-ACCESS optionunique acquis ; MCP et claviercomplet restent ouverts |
 | UXR-002 | PARTIEL | Maquettes React intégrées à la vraie app ; UI avant mise à niveau | UI-RESP montants3.99/1450etnomlong acquis surdepenses ; MCP et autrespagesentieres restent ouverts |
 | TR-001 | PARTIEL | Stack conservée ; coûts non engagés ; Resend existant vérifié en lecture | Quota/coût applicable à la recette externe et origine publique autorisée |
@@ -76,7 +78,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | ESP-003/AC-1 | PARTIEL | UI liste puis création couple sans copie ; PG | Rejouer liste actuelle, données des deux espaces après recharge |
 | ESP-003/AC-2 | PARTIEL | NAV préférence/contexte ; PG configurations séparées | UI-RESP depenses/reload/racine acquis ; autres pages et prochaine connexion reelles |
 | ESP-003/AC-3 | PARTIEL | UI renommage B sous A ; PG membre sans privilège | Sélecteur actualisé et données conservées sur sessions réelles |
-| ESP-003/AC-4 | PARTIEL | NAV brouillon, confirmation refusée et réponse tardive ; SESSION verrouille le document | Multi-onglets/late-RSC sur vraie app et échec réseau |
+| ESP-003/AC-4 | PARTIEL | NAV brouillon, confirmation refusée et réponse tardive ; SESSION verrouille le document | MULTITAB-REAL acquis pour contexts/recharge ; brouillon, late-RSC et échec réseau ouverts |
 | ESP-003/AC-5 | PARTIEL | PG refus tiers/objets croisés et SQL FK | Tests directs HTTP/UI puis accès valide |
 | ESP-004/AC-1 | PARTIEL | UI-CURRENT Mailpit et MAIL-REAL réception externe/lien fonctionnel/mauvais compte refusé ; aucun accès avant acceptation PG | Courriel externe reçu ; liste privée chez destinataire après authentification reste à prouver |
 | ESP-004/AC-2 | À PROUVER | Landing/auth/retour/confirmation implémentés ; PG | Connexion existante puis acceptation réelle et sélecteur |

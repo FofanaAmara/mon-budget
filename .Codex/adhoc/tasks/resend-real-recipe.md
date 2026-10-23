@@ -88,3 +88,13 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Budget progressif et consommation fictive | catégorie dédiée | COMPLETED :200prévu/3.99achat unique |
 | Recharges/isolation/SQL et captures | saisies | COMPLETED :SQLREADONLY +UIpersonnel0, mobilecorrigé |
 | Journal/matrice/commit local | validation | COMPLETED :qualité26788verte, correctif et preuves commitées localement |
+
+
+## Contextes financiers dans deux onglets réels
+
+| Tâche | Dépendance | État |
+|---|---|---|
+| Ouvrir personnel et couple dans la même session réelle | Auth créateur | COMPLETED :deux vrais onglets mêmeacteur |
+| Bascule, recharge et historique sans mélange | deux onglets | COMPLETED :personnel0/couple4, revalidationdocumentaire ; pasdepreuveBFCache |
+| Preuves et limites | observations | COMPLETED :preuveMULTITAB-REAL etSQLREADONLY,9deliveryverts |
+| Annulation puis confirmation de bascule avec brouillon | piloteChrome | IN_PROGRESS :confirmobservé, contrôleDOMperdu avantvérification ; aucune sauvegarde |

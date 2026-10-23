@@ -920,3 +920,25 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Décisions prises :** modèle250/surcharge275.50, progressif200/achat3.99, totalconsommé43.98 ; UIreload+SQLREADONLY21:38:43UTC, personnel0allocations/achats/dépenses. FABcachait2070.17, actiondésormaisdansflux ; capturesréellesaprèsreloadmobile/bureau etmodaleouverture/fermeture. Qualité26788build/types/lint/9delivery0. Premièrecaptureafter.jpgencoreancienHMR, NONpreuveaprès.
 **Prochaine étape :** vérifierstaging/commit ; contributionB aprèsinscriptionhumaine ; autresscénarios/caches/offline/revueglobale/PlaywrightMCP/CIexactSHA restentouverts.
 **Contexte pour reprise :** HEAD5b73d0bavantcommit, runtime68803ResendHTTPS3443, copieDBwork17intactehorssaisiesfictives. ChromefinanceTabcréateur surdépensespersonnel ; recipientTab6IABsignupnom/emailpréremplis,motdepassevide,markHandoffmaintenu. Ne pas entrer nouveaucredential/accepterterms àlaplacehumain. Aucunpush, sourceDB/env,nouvelemail niAuthfabriqué. Préexistantsserena/next-env/CSexclus. Progrèsutile, aucuneclôturegoal.
+
+---
+## [2026-10-23] — Recette multi-onglets réelle
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md` P7 et session-and-delivery, caches/navigation.
+**Tâche en cours :** personnel/couple dans deux onglets Chrome du créateur.
+**Objectif :** éprouver NFR003 sur vraie app sans fabriquer une seconde identité.
+**État :** IN_PROGRESS
+**Décisions prises :** précédent tour PROGRESS, commit3fa2f2b ; allocation250/275.50 et achat3.99 prouvés. AuthB attend saisie humaine ; autre travail indépendant disponible. Test multi-onglets et historique en lecture, pas de modification Auth/source/finances, pas d’envoi. Estimation10–15min, coût indisponible.
+**Prochaine étape :** ouvrir second onglet avec URL observée, vérifier contenu et navigation puis rechargement/retour. Ne pas nommer BFCache une simple navigation arrière sans preuve de mécanisme.
+
+---
+## [2026-10-23] — Preuve multi-onglets conservée, pilote Chrome indisponible
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md` P7.
+**Tâche en cours :** reprise du goalglobal nonatteint.
+**Objectif :** mêmesespaces etdeuxmembresréels, critèresoriginauxinchangés.
+**État :** IN_PROGRESS
+**Fichiers touchés :** preuveMULTITAB-REAL/matrice/tasks/state/session.
+**Décisions prises :** précédenttestmulti-ongletsPROGRESS(autoritativeUI+SQL), réponsequestionhumaine seuleNO_PROGRESS. DeuxChromeongletspersonnel0/couple4, recharges/retourssansmélange ; aucunBFCacheprouvé. Brouillonrenommageconfirmvu, annulationUIinconnue, SQLnomnonmodifié. Pannepilotagefocusemulationpersistante aprèsrebinddocumenté ; nativepermissionsrefusées, pasdecontournement. Runtime68803confirmélivepartoolhandle ; aucunredémarrage.
+**Prochaine étape :** commitpreuves ; réévalueractionsindépendantesutiles. InscriptionBrequiertnouveaumotdepasseetconditionshumain, nepasautomatiser. Pasdepoursuiteindéfinieparrépétitiondestestsdéjàverts.
+**Contexte pour reprise :** HEAD3fa2f2bavantcommit ; CUAkernelresetaprèsscreenshotexpiré, ancienshandlesnonfiables. OngletChromecréateur1730267667personnel/depenses,1730267675fichecouplec42…draftnonenregistré. PremiergetTabtourDebuggerunattached, listTabslesvoit, tabs.get+DOMexpirefocus. IAB6recipientsignuppréparéàretrouveretmarkHandoffsiaccessible. 9delivery0, SQLprivate.multitab-readonly-proof.json21:58:37. Aucuneinscription/adhésion/réceptionOTPnouvelle, CI/revueglobale/MCP/offlineouverts. Préexistantserena,next-env,CSpascommiter. Nejamaisdéclarergoalcomplete ; auditblockedseulementaprès3toursàimpasseréelle, paspourceprogrèspreuve.
