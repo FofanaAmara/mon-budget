@@ -700,3 +700,59 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Decisions prises :** sixstories/feature/epic IN_PROGRESS ;30AC inchanges. Aucune fausse session, inscription, OTP ou reception externe.
 **Prochaine etape :** staging/check/commitlocal ; revalider une eventuelle nouvelle surface Auth/boite/outillage/publication, sinon compter impasse reelle sans creer de nouveaux audits identiques.
 **Contexte pour reprise :** HEAD5101fa5 code avantcommitdoc ;260unit/build/types/lint/7gardes acquis dernier tour,99PG/13Chromium du socle precedent. Rapportcanonique delivery-current-audit.md et matrice17/30. Resend13:37Zverified/sendingenabled,0email ; receivingenabled nonnecessaire. GitHub SHAcomplet5101fa5total0. ChromeDevTools anonymepage1,81598runtimepolledvivant. PlaywrightMCP/CUAabsents ; Gmailnonconnecte, suggestionunique23octobre a nepasrepeter7jours. Aucunpush/dispatch/permissionschange/DBsource. Dernierturnprogresfonctionnel ; ce turn auditexterne etstatutsverifies, pasdeprogresadhesion. Aucune autre correctioncode reproductible actuellement identifiee. Si impasse identique3toursreels, marquerblocked sans fauxDone.
+
+---
+## [2026-10-23] - Impasse de recette, controle 1/3
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md`, P7.
+**Tache en cours :** preuves Auth/reception/MCP/CI toujours manquantes.
+**Objectif :** conserver integralement le goal, aucune cloture fictive.
+**Etat :** IN_PROGRESS
+**Fichiers touches :** ce checkpoint uniquement.
+**Decisions prises :** derniergoalturn a corrige backlog/audit (progres documentaire) ; tourcourant NO_PROGRESS, premier controle consecutif d'impasse. Pasde nouveau test/rapport/commit artificiel.
+**Prochaine etape :** verifier une nouvelle surface/session/connexion/autorisation ; sinon compter le meme blocage. Au troisiemecontrole consecutif sans action utile possible, update_goal blocked.
+**Contexte pour reprise :** HEADf1dc46f ; aucun nouveau code. Catalogue actuel sans Gmail/CUA/PlaywrightMCP. ChromeDevTools page1 acces direct au personnel b99... redirige effectivement verslanding, session anonyme confirmee. Aucun credential/cookie extrait, session forcee, mail externe, push ou deploiement. CI du code5101fa5zero et Resendexpediteurverified controles dernierturn, pasrejoues sans raison. Les30AC/17exigences restentouverts selon matrice. Source/fixtures preservees ; preexistantsserena/next-env/CS inchanges. Ne pas traiter une intention d'attente comme jobactif ni repeterauditdocumentairecommeprogresfonctionnel.
+
+---
+## [2026-10-23] - Impasse de recette, controle 2/3
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md`, P7.
+**Tache en cours :** recette complete exigeant Auth/boite/MCP/CI.
+**Objectif :** goal integral, aucun faux DONE.
+**Etat :** IN_PROGRESS
+**Fichiers touches :** checkpoint uniquement.
+**Decisions prises :** dernierturn NO_PROGRESS1 ; courant NO_PROGRESS2, meme condition externe sans action utile nouvelle. Pas de rerun, modification speculative ou substitution par fauxAuth/CLI.
+**Prochaine etape :** prochaincontrole : si memes conditions sans changement, update_goal blocked selon seuil3 ; ne pas continuer des boucles de statut.
+**Contexte pour reprise :** objectif relu ; HEADf1dc46f inchange. Catalogue toujours sans Gmail/CUA/PlaywrightMCP. ChromeDevToolslist_pages/evaluate page1 confirment /landing, lienconnexion present et aucune .space-product-content. Aucune nouvelle autorisationpush/connexion ou identite verifiee disponible. PasdejobCIenattente a simuler, pasdemailenvoye. Dernier auditcomplet delivery-current-audit.md reste applicable, aucune nouvelle preuve de livraison. Quatre familles manquantes : vraiAuth2membres+nousignup/receptionexterne, E2Eprivecomplet, PlaywrightMCP/revueglobale, CIduSHAautorise. Propositions deja faites ne pasrepeter ou demander pendantabsence.
+
+---
+## [2026-10-23] - Impasse confirmee3/3, goal BLOCKED
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md`, P7.
+**Tache en cours :** attente d'un changement externe pour la recette finale.
+**Objectif :** integral et non atteint ; aucun critere reduit.
+**Etat :** BLOCKED
+**Fichiers touches :** ce checkpoint, aucun code.
+**Decisions prises :** troisieme turnconsecutif NO_PROGRESS sur le meme manque Auth/boite/outillage/CI. update_goal(status=blocked) reussi et statutblocked retourne. Arret des relances sans progres ; aucune attente de job fictif.
+**Prochaine etape :** reprise humaine avec acces aux sessions de recette et boite controlee, outils requis et autorisation de publication pourCI ; revalider les nouvelles ressources puis poursuivre la matrice17/30. Pasde question envoyee pendantabsence.
+**Contexte pour reprise :** HEADf1dc46f, derniers commitscode5101fa5/5c07240.260unitaires/build/types/lint/7gardes acquis,99PG/13Chromium du socle anterieur. Controlecourant : ChromeDevToolslist_pages/evaluate page1 /landing anonyme, lienconnexion present, pasfinance ; catalogue toujours sansGmail/CUA/PlaywrightMCP. Reste receptionexterneResend, signup/verification/acceptation explicite puis contribution2sessions, E2Eprive/onglets/offline/BFCache, visuelPlaywrightMCP/revueglobale etCIduSHA. Pasdepush/deploiement/secretpublie/DBsource/emailVerifiedforce. Auditcanonique delivery-current-audit.md, backlog/readinessIN_PROGRESS. Trois checkpoints d'impasse restent noncommites avec ce journal ; preexistantsserena/next-env/CS preservesaussi. Goalblocked confirmeoutil, pascomplete/pause.
+
+---
+## [2026-10-23] - Authorized MCP repair
+
+**Plan :** `.Codex/plans/mcp-playwright-serena-repair.md`.
+**Task :** repair configured Playwright and diagnose Serena.
+**State :** IN_PROGRESS
+**Decisions :** explicit user authorization; no further confirmation. Preserve unrelated MCP config and preexisting .serena/project.yml. Feature goal remains blocked pending actual resource changes; this task repairs tools.
+**Next :** back up named MCP settings, codex mcp add; activate project with Serena session5b02edb0 and verify TypeScript symbols.
+
+---
+## [2026-10-23] - Playwright and Serena repaired and verified
+
+**Plan :** `.Codex/plans/mcp-playwright-serena-repair.md`.
+**Task :** MCP repair explicitly requested by user.
+**State :** DONE for MCP repair; financial feature goal remains incomplete.
+**Files :** plan, tasks, session report, feedback/index, delivery audit note; global namedMCP settings changed outside Git.
+**Decisions :** Playwright package corrected and pinned0.0.83; Serena codex context/project-from-cwd. ActualMCP25/23tools/browser/symbols probe23656exit0. Preexisting .serena/project.yml preserved by originalhash. Final full settings stable through repeat commands and probe; initial unrelated hash drift unassignable, no blind rollback. No source app/DB/Auth changed.
+**Next :** commit project tracking after stagedcheck. User restartCodex reloads Playwright tools in the conversation, then feature validation can resume when requested/resources available.
+**Resume context :** private backups and protocol proof in .local/mcp-repair; no secret/global config committed. Current conversation Playwright tool inventory still empty, despite subprocess server success. Old feature blocked status not changed to complete. Preexistingserena/next-env/CS remain excluded. Prior uncommitted goal-blockage checkpoints included in state history.

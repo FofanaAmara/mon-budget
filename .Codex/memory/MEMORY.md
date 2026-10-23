@@ -31,3 +31,5 @@
 - [Styles des actions dans les listes](feedback_list_action_styles.md) — cibler la ligne prévue, vérifier primaire/hover/focus/disabled après changement de contenu.
 
 - [Liens Auth avant hydratation](feedback_auth_link_ssr.md) — vérifier les vrais href SSR et leur retour après clic/recharge, pas seulement les props de formulaire.
+
+- [MCP startup verification](feedback_mcp_startup_validation.md) - enabled state is not tool availability; diagnose package, protocol, project and language server separately.
