@@ -1,7 +1,6 @@
-import { pageSpace } from "@/lib/spaces/page";
+import { pageSpace, pageIdentity } from "@/lib/spaces/page";
 import { getSpaces } from "@/lib/actions/spaces";
 import { getReceivedInvitations } from "@/lib/actions/invitations";
-import { requireIdentity } from "@/lib/spaces/context";
 import SpacesList from "@/components/spaces/SpacesList";
 export const dynamic = "force-dynamic";
 export default async function SpacesPage({
@@ -12,7 +11,7 @@ export default async function SpacesPage({
   await pageSpace(params);
   const [spaces, identity, incoming] = await Promise.all([
     getSpaces(),
-    requireIdentity(),
+    pageIdentity(),
     getReceivedInvitations(),
   ]);
   return (

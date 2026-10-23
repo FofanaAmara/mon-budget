@@ -19,7 +19,7 @@ vi.mock("@/lib/db", () => ({
 }));
 
 import { createSpace, getSpaces, getLastSpace, renameSpace, rememberSpace, getSpaceMembers } from "@/lib/actions/spaces";
-import { requireSpace } from "@/lib/spaces/context";
+import { requireSpace, SpaceAccessError, UnauthenticatedSpaceError } from "@/lib/spaces/context";
 
 const database = "spaces_migration_test_" + randomBytes(4).toString("hex");
 const identities = {
@@ -98,6 +98,8 @@ describe("space services and local SQL — real PostgreSQL, server session stubb
   test("unauthenticated operations cannot read or create an owned space", async () => {
     state.identity = null;
     await expect(getSpaces()).rejects.toThrow(/Connecte-toi/);
+    await expect(getSpaces()).rejects.toBeInstanceOf(UnauthenticatedSpaceError);
+    await expect(requireSpace(randomUUID())).rejects.toBeInstanceOf(SpaceAccessError);
     expect(await createSpace({ expectedActorId: "signed-out", name: "Unauthenticated", creationKey: randomUUID() })).toMatchObject({ ok: false });
     expect((await native.query("SELECT 1 FROM financial_spaces WHERE name='Unauthenticated'")).rowCount).toBe(0);
   });

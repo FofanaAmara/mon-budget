@@ -351,6 +351,7 @@
 }
 body:has(.space-onboarding) {
   padding-top: 0;
+  padding-bottom: 0;
 }
 .space-toast {
   position: fixed;

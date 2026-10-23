@@ -1,9 +1,10 @@
 "use client";
 
-import { NeonAuthUIProvider } from "@neondatabase/auth/react";
+import { AuthUIProvider } from "@neondatabase/auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
+import { Toaster } from "sonner";
 import { invalidateFinancialViews } from "@/lib/auth/financial-visibility";
 import { authClient } from "@/lib/auth/client";
 
@@ -11,19 +12,27 @@ export function AuthProviders({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   return (
-    <NeonAuthUIProvider
-      authClient={authClient}
-      navigate={(href) => router.push(href)}
-      replace={(href) => router.replace(href)}
-      onSessionChange={() => {
-        invalidateFinancialViews({ notifyCurrent: false });
-        router.refresh();
-      }}
-      redirectTo="/"
-      Link={Link}
-      credentials={{ forgotPassword: true }}
-    >
-      {children}
-    </NeonAuthUIProvider>
+    <div className="neon-auth-ui">
+      <AuthUIProvider
+        authClient={authClient}
+        navigate={(href) => router.push(href)}
+        replace={(href) => router.replace(href)}
+        onSessionChange={() => {
+          invalidateFinancialViews({ notifyCurrent: false });
+          router.refresh();
+        }}
+        redirectTo="/"
+        Link={Link}
+        credentials={{ forgotPassword: true }}
+        magicLink={false}
+        multiSession={false}
+        apiKey={false}
+        passkey={false}
+        oneTap={false}
+      >
+        {children}
+        <Toaster theme="light" />
+      </AuthUIProvider>
+    </div>
   );
 }

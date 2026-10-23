@@ -544,3 +544,63 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Decisions prises :** FABdepensesmasque1450a375px -> memeboutonenflux ; totalgroupe/lignesdecales -> rail28gap12partage ycomprissansaction. Aucuneaction/calculfinancierchange.
 **Prochaine etape :** commit apresdiffcachedcheck ; poursuivre vraiesrecettesautresfamilles/sessions et limitesrestantes.
 **Contexte pour reprise :**runtime98404vivant3002work17 ; viewportCUArestaure.2depensesfictivesRecetteUI3.99/1450en couple13603cc1,personnelb99e9a9e0. Reloadexact2,totalSQL1453.99,guidecouple1/4personnel0/4,dernierespacecouplereprisparracine. Imagesavant/apres.local/financial-spaces/responsive-current,preuvesdocresponsive-current-execution.md.226unit/7gardes/types0/lint0warning/buildWebpack80357termine0 en copieisolee ; revueindependantesource/capturesdeuxdeltas sansfinding. PasdetestnouveauCSSmiroir, pasdererunPG/natifsinchanges(97/29precedents). Historique/progressivevisuelnonprouve ; autresfinances/Auth2comptes/signup/receptionResend/MCP/CI nonprouves. Aucunpush/mail/DBsource ; preserve dirtyserena/next-env/anciensCS. Tour=progresconcret,counterimpasse0.
+
+---
+## [2026-10-23] - Nom long et session entre onglets
+
+**Plan :** espaces-financiers-implementation.md P3.4/P6/P7.
+**Tache en cours :** creationespacefictifnomlong, choixNonpuis session/interonglets et landinginvitationanonyme.
+**Objectif :** valider vraieapp sans substituer une acceptation simulee au vrai destinataire.
+**Etat :** IN_PROGRESS
+**Fichiers touches :** suivi/preuves, code uniquement sidefautreproduit.
+**Decisions prises :** toursprecedents=progres93f51f5 ; aucunequestion/AWM. Deconnexion prevue de la session de recette dejaautorisee dans les tests du plan, aucune suppression ou nouveaucredential. Ne pas soumettre une inscription hebergee avec engagement legal sans confirmation requise ; cela ne fermepasletrajetnouvelinvite.
+**Prochaine etape :** Reglages/liste/creationnom80 puis deuxongletsprives et signout ; liensAuthsanssoumission.
+**Contexte pour reprise :**CUArecette21personnel/couple,appBrowseriab,viewportrestore.98404vivant. AdresseMailpitfictive precedentlien consultable via22. AuthAmaraTestverifie reel, mais aucuncredentialinventea utiliser ; Chromeautrejar a verifiersansassumer sessionrestauree. Estimation10-20kjetons,coutindisponible,aucunservicepayant/push/DBsource.
+
+---
+## [2026-10-23] - Deux comptes existants reels disponibles
+
+**Plan :** espaces-financiers-implementation.md P4/P7 prioritaire, P3.4 ensuite.
+**Tache en cours :** invitationMailpitAversB,acceptationB,contributionfictiveB lueparA ; refus500a corriger avantfin.
+**Objectif :** preuveeffective2membresAuth existants sans fauxcomptes ou impersonation.
+**Etat :** IN_PROGRESS
+**Fichiers touches :** suivi/preuves ; correctionRSC prevue.
+**Decisions prises :** ChromeReserve1730267657possede unautrecompteAuth reel et unespacepersonnel86f31867. Sesidentifiants/adresse nepasversionner. Aucuncredentiallu/mint, aucuneinscription/contrat. Lesdeuxsessionspreexistantes peuventtesterl'invitationexistante. A inviterB seulementdanscouple13603cc1clonecontenantles2depensesfictives ; aucunecriturepersonalB oubaseSource. SMTP runtime98404forceMailpitloopback,aucunResend. Ne pasdeconnecteravantceparcours.
+**Prochaine etape :** inviterdepuisAverscourrielB observeUI,Mailpitfiltre,lienB,acceptationdistincte,contributionetisolement.
+**Contexte pour reprise :**espace80cree8777847c parA,guide0/4,pasemailNon. ChromeBrefusacces877...a genereSpaceAccessErrornontraduitHTTP500 dansrequireSpace/layout/pageSpace. Defautconcretlog98404etcaptureforeign-space-before.png a reparer parscreen404generique sansenumeration. Aapp21 resteauthentifiee ; BChromeRoot86...authentifieesanscredential. Estimationtranchea reevaluerenfonction2comptes ; coutindisponibleaucunservicepayant.
+
+---
+## [2026-10-23 08:25] — Refus privés et fournisseur UI corrigés
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`.
+**Tâche en cours :** validation finale et commit du correctif page404/connexion, provider UI sans script de thème.
+**Objectif :** goal complet conservé, adhésion réelle non revendiquée.
+**État :** IN_PROGRESS
+**Fichiers touchés :** voir session2026-10-23-private-access-current.md.
+**Décisions prises :** les deux comptes réels sont non vérifiés ; ne pas contourner Auth. Mailpit fonctionne. Page refus générique dans les deux sens, callback vers espaces autorisés fonctionne. ThemeProvider inutile retiré par export public de base et Sonner2.0.8 explicite, aucune option d'auth élargie.
+**Prochaine étape :** contrôler build/types/lint/audit en session57584, mettre à jour rapport/matrice et commit après diffcachedcheck ; puis étudier renvoi de vérification NeonAuth.
+**Contexte pour reprise :** HEAD93f51f5 ; runtime98404 vivant3002work17.233unit/97PG verts, revue indépendante sans finding. Première erreur twoFactor du build corrigée (option absente=falsy). Preuves privées.local/financial-spaces/session-current ; CUA et locators, pasMCP. A IAB21 invitationBversA nonvérifiée ; IAB23 refuse espaceB2d512829 ; Chrome1730267659 espaceBautorisé. Viewportrestauré. Aucunpush/DBsource/Resendexterne/nouveaucompte. Tourstatut précédent=no progress ; ce tour=progrès concret, compteurimpasse0.
+
+---
+## [2026-10-23 08:27] — Gates de la tranche accès privés verts
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`.
+**Tâche en cours :** commit local après contrôle du staging.
+**Objectif :** feature complète toujours IN_PROGRESS.
+**État :** IN_PROGRESS
+**Fichiers touchés :** session private-access-current et liste de fichiers explicite du commit.
+**Décisions prises :** aucun test/MCP/CI distant remplacé par un verdict local. Auth UI base conserve deux facteurs désactivés via option absente conforme au type public.
+**Prochaine étape :** gitdiffcachedcheck puis commit ; reprendre DISC-ESP-006 et les validations restantes.
+**Contexte pour reprise :**233unit/97PG verts ; copie isolée session57584 terminée0 : install/buildWebpack/types/lint0warning/7delivery/auditprod0. Première erreur twoFactor corrigée et suiteunitrejouée. Pas de nouvelle migration,29natifs antérieurs inchangés. Runtime98404 sur clone local, pas de DBsource/push/Resend. Revue source sans finding ; revue deltafinal/captures demandée au même reviewer. Browser consoleNeon a été détaché pendant création, configuration Auth non lue ; aucun changement hébergé effectué. IAB21et22àconserver, viewport restauré.
+
+---
+## [2026-10-23 08:32] — Finding visuel mobile corrigé et clôturé
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`.
+**Tâche en cours :** commit de la tranche après dernière vérification lint.
+**Objectif :** goal global IN_PROGRESS, parcours conjoint non vérifié.
+**État :** IN_PROGRESS
+**Fichiers touchés :** app/spaces.css en plus du delta accès/provider ; rapport/session/discovery/mémoire.
+**Décisions prises :** supprimer padding-bottom68px réservé à la nav absente sur.space-onboarding. Capture précédente338x732 n’est pas une preuve375 ; nouvellecapture exacte375x812 aprèsreload, body/main/viewport sanspadding, bandesdisparues. Revue visuelleclôturée ; desktop1280x900 aussi scanné.
+**Prochaine étape :** session52318 build/types déjà0, attendrelint puis staging/check/commitlocal.
+**Contexte pour reprise :**233unit/97PG/7delivery/auditprod0 ; CSSseul ajouté ensuite, build/typesrerun0. Images.local/session-current/foreign-space-mobile-no-nav-padding.png etdesktop-no-nav-padding.png. Runtime98404 vivant, IAB21invitationnonvérifiée et22Mailpitmarqués à conserver,23refusmarquéhandoff, viewportreset. Ne pas reprendre les captures anciennes comme verdict375. Pasdepush ouAuthconfigmutation. Revue du retraittwoFactor confirmée, aucunfindingrestant de cette tranche.

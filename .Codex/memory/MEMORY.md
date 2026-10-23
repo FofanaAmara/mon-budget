@@ -25,3 +25,5 @@
 - [Protocole de page navigateur](feedback_browser_url_protocol.md) - distinguer ancien onglet interne refuse et vraie page HTTP autorisee ; Mailpit reste une preuve locale distincte.
 
 - [Actions et montants mobiles](feedback_fixed_action_layout.md) - interaction FAB/guide et rails de controles variables a verifier sur les listes financieres.
+
+- [Contrat du fournisseur Auth UI](feedback_auth_ui_provider.md) — effets du wrapper, script de thème au repli, options publiques et contrôles SSR/types/navigateur.

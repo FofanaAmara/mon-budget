@@ -6,7 +6,7 @@ import { getOrInitSetupGuideData } from "@/lib/actions/financial/setup-guide";
 import { SpaceProvider } from "@/components/spaces/SpaceContext";
 import FinancialSessionBoundary from "@/components/auth/FinancialSessionBoundary";
 import LayoutShell from "@/components/LayoutShell";
-import { requireSpace } from "@/lib/spaces/context";
+import { pageSpaceContext } from "@/lib/spaces/page";
 
 export const dynamic = "force-dynamic";
 export default async function FinancialLayout({
@@ -17,7 +17,7 @@ export default async function FinancialLayout({
   children: ReactNode;
 }) {
   const { spaceId } = await params;
-  const { userId } = await requireSpace(spaceId);
+  const { userId } = await pageSpaceContext(spaceId);
   const [spaces, settings, guideData] = await Promise.all([
     getSpaces(),
     getSettings(spaceId),

@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import FinancialSessionBoundary from "@/components/auth/FinancialSessionBoundary";
-import { requireIdentity } from "@/lib/spaces/context";
+import { pageIdentity } from "@/lib/spaces/page";
 
 export default async function PrivateInvitationsLayout({ children }: { children: ReactNode }) {
-  const identity = await requireIdentity();
+  const identity = await pageIdentity();
   return <FinancialSessionBoundary userId={identity.id}>{children}</FinancialSessionBoundary>;
 }

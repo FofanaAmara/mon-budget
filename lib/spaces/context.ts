@@ -3,6 +3,7 @@ import { sql } from "@/lib/db";
 import { SpaceIdSchema } from "./schemas";
 
 export class SpaceAccessError extends Error {}
+export class UnauthenticatedSpaceError extends SpaceAccessError {}
 export class SpacesUnavailableError extends Error {}
 
 export async function requireIdentity(
@@ -12,7 +13,7 @@ export async function requireIdentity(
     ? auth.getSession({ query: { disableCookieCache: "true" } })
     : authSessionReader.getSession());
   if (!session?.user?.id)
-    throw new SpaceAccessError("Connecte-toi pour continuer.");
+    throw new UnauthenticatedSpaceError("Connecte-toi pour continuer.");
   return {
     id: session.user.id,
     name: session.user.name || null,

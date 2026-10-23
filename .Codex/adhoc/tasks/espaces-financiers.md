@@ -60,3 +60,12 @@ Recette responsive et isolation des saisies : IN_PROGRESS - depend de Mailpit135
 Defaut visuel375px : IN_PROGRESS - FAB depenses recouvre montant1450, correction par action en flux dans entete puis preuve avant/apres, revue et checks.
 
 Recette responsive/separation et corrections : COMPLETED pour cette tranche bornee - fiches375/1280,2saisies1453.99couple/personnel0,reload/racine/guide,2defauts corriges et revus.226unit/7gardes/types/lint0warning/buildverts. GoalglobalIN_PROGRESS ; autresvariantes/Auth2membres/Resend/MCP/CIouverts.
+
+Recette nomlong/sessioninteronglets/landinganonyme : IN_PROGRESS - depend93f51f5/runtime98404 ; nouvelespacefictifmax80, choixNon, formulairenonenregistre et deconnexion de session de recette, verification masqueautresonglets et liensAuth.
+
+Parcours2comptesexistants : IN_PROGRESS - deuxsessionspreexistantes distinctes disponibles ; Mailpit/acceptation/contribution/isolationprioritaires. Defaut500surspaceinterdit restea corriger avantcloture.
+
+RefusRSC500 : IN_PROGRESS - sous-type sessionabsente et traductionpage404/authsansmasquerpannes ; deuxcomptesreels nonverifies, acceptationbloquee danslesdeuxsens, aucuncontournement.
+
+
+Refus RSC500 et script de thème : COMPLETED pour cette tranche bornée — refus générique dans les deux sens, retour autorisé, scan desktop/mobile375,233unit/97PG/build/types/lint0warning/7gardes/auditprod0 et revue source indépendante. Commit local à effectuer. Goal global IN_PROGRESS ; deux comptes réels restent non vérifiés et aucune adhésion n'est prouvée (DISC-ESP-006).
