@@ -109,3 +109,25 @@
 **Décisions prises :** propositions documentées, pas encore acceptées : espace explicite dans URL/actions, garde centralisé+FK même espace, frontière préférences/finance, migration progressive et rollback v2 après partage ; D2/D4 à fermer pour invitations réelles.
 **Prochaine étape :** l’humain valide le plan puis gate0 ; ne pas lancer du code ou une migration sur la seule remise du document.
 **Contexte pour reprise :** design7aaec6d validé et backlog61dc09e existant. Schéma réel18tables175colonnes49index50contraintes lu enreadOnly ; correction de l’inventaire précédent :16modules d’actions,86exports. Vitest baseline176pass/1fail (palette badgeIN_PROGRESS), aucun build/lint ni test DB financier exécuté. Plan12sections/17exigences/12critères/8questions vérifiés. Pas de transportmail applicatif configuré trouvé ; coût/domaine/retourauth à prouver. PlaywrightMCP absent, gatevisuel explicite non substitué parCLI/CUA. Sourceapp inchangée, .serena/project.yml/next-env.d.ts préexistants préservés. Pas de push.
+
+---
+## [2026-10-22] — Goal espaces financiers rédigé, mail non prêt
+**Plan :** .Codex/plans/espaces-financiers-implementation.md (référence ; aucune exécution).
+**Tâche en cours :** remise du goal-authoring et réponse sur envoi email.
+**Objectif :** condition de vraie livraison backlog/design/plan avec invitations reçues et adhésion testée.
+**État :** DONE (rédaction du goal uniquement, non activé).
+**Fichiers touchés :** .Codex/goals/espaces-financiers.goal.txt et espaces-financiers-authoring.md ; session et state.
+**Décisions prises :** six critères comportementaux avec preuves affichées,≤4000octets, coût/budget et échappatoire ; setup mail inclus, aucune simulation suffisante pour DONE.
+**Prochaine étape :** humain précise fournisseur/domaine ou autorise sa préparation, puis lance explicitement le goal d’exécution si souhaité.
+**Contexte pour reprise :** backlog61dc09e, design7aaec6d, plan24708a0. Aucune variable/provider mail local ou implémentation de transport trouvés. Vercel env ls échoue tokeninvalide : distant non vérifié, ne pas affirmer absence de config distante. VAPID_EMAIL n’envoie pas d’email. Il faut transport, expéditeur autorisé, secrets serveur, coût/quotas et URL ouvrable par destinataire ; un vrai courriel reçu puis adhésion existant/nouveau comptes doivent être prouvés. Question texte async sur ressources mail posée, réponse pas reçue. Aucun outil create_goal appelé, aucun compte/service créé ni mail envoyé. Modifications .serena/project.yml et next-env.d.ts préexistantes préservées, paspush.
+
+---
+## [2026-10-22] — Ressources mail existantes confirmées
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** finalisation du goal écrit, non activé.
+**Objectif :** réutiliser le service et le domaine existants pour les invitations.
+**État :** DONE (rédaction).
+**Fichiers touchés :** conditiongoal, rapportauthoring, état et session.
+**Décisions prises :** humain confirme disposer du service et du domaine ; les intégrer, sans nouvel abonnement imposé. Leurs noms restent à préciser.
+**Prochaine étape :** réponse à la question du service/domaine, puis configuration sécurisée lors de l’exécution autorisée.
+**Contexte pour reprise :** la mention précédente réponse non reçue est remplacée par cette confirmation ; noms demandés via question async. Ne jamais demander une cléAPI en clair dans le chat. Intégration locale absente et Vercel non vérifié faute de jetonvalide ; ressources disponibles ≠ réception d’invitation prouvée. Condition≤4000octets conservée, pas de goal lancé, aucun mail envoyé.
