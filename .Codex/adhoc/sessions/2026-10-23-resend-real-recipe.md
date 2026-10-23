@@ -36,3 +36,8 @@ Objectif/contribution123.45, dette fictive500/charges25.50+5/versement75.25 : so
 Banc React/Chromium ciblé ajouté au script et à la CI/garde : RED ancien composantdc01350 dans copie isolée(exit1 sur525.50absent), puis GREEN3cas(fraîcheur/brouillon, historique200, cible retirée). Probes97930/88052 verts. Source corrigée toujours restaurée aprèsRED. Qualité finale55948 build/types/lint/9delivery0,265unit77992 etnavigation14497 sixcas0. Aucun fauxMCP/CI distante/revueindépendante.
 
 GmailShoworiginal consulté uniquement pour le message autorisé : SPF/DKIM/DMARC PASS ; capture résumé/JSONprivés, aucun original brut enregistré, aucune modification de boîte/DNS. Classementspam conservé et causes non établies. InscriptionB toujoursenattente. DISC014 et mémoireentité fraîche ajoutés ; DISC012/013 précisés.
+
+### Transfert et deux corrections du guide
+Transfertfictif23.45 : projet123.45→100, libre0→23.45, totalconservé123.45/reload. Dépassement200 non soumis carboutondésactivé. SQLREADONLY journaux opposés et patrimoinepersonnel0. VérificateurinitialORDERBYaliastexte donnaitordrelexical ; corrigé enqualifiant colonne numérique, aucunemutationfinancièrecompensatrice.
+
+Guide4/4texte corrigé avec captures avant/après viaRevoir. Faux1/4personnel découvert carpottechniquePLANNED comptecommeexpense ; REDPG confirmé puisprédicatRECURRING/ONE_TIMEactifs,100services verts. VraieUIpersonnel0/4 stable etcouple4/4, soldesconservés. Build/types/lint/9delivery56136verts. DISC015/mémoireprédicat etfeedbackSQLtri ajoutés. Toujoursaucunsecondcompte/adhésion/push/MCP/CI distante.

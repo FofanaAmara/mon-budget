@@ -134,6 +134,21 @@ describe("space settings and guide — shared finances, individual account", () 
     expect(await guide.getOrInitSetupGuideData(personal)).toMatchObject({isCompleted:false,isVisible:true});
   });
 
+  test("savings pots do not complete the expense step, but active expense templates do", async () => {
+    const id = await space("Épargne sans dépense");
+    await native.query(`INSERT INTO expenses(space_id,user_id,name,amount,type,system_kind)
+      VALUES($1,$2,'Pot libre',0,'PLANNED','FREE_SAVINGS'),
+            ($1,$2,'Objectif',0,'PLANNED',NULL)`, [id,a]);
+    expect((await guide.getOrInitSetupGuideData(id)).stepsCompletion.expense).toBe(false);
+    const expense = (await native.query(`INSERT INTO expenses(space_id,user_id,name,amount,type,is_active)
+      VALUES($1,$2,'Dépense inactive',10,'ONE_TIME',false) RETURNING id`, [id,a])).rows[0].id;
+    expect((await guide.getOrInitSetupGuideData(id)).stepsCompletion.expense).toBe(false);
+    await native.query("UPDATE expenses SET is_active=true WHERE id=$1", [expense]);
+    expect((await guide.getOrInitSetupGuideData(id)).stepsCompletion.expense).toBe(true);
+    await native.query("UPDATE expenses SET type='RECURRING' WHERE id=$1", [expense]);
+    expect((await guide.getOrInitSetupGuideData(id)).stepsCompletion.expense).toBe(true);
+  });
+
   test("old guide dates survive repeated complete/dismiss; reset stays local", async () => {
     await native.query("UPDATE space_setup_guide SET completed_at='2020-01-01',dismissed_at='2020-01-02' WHERE space_id=$1",[common]);
     const before=await timestamps(common),other=await timestamps(personal);

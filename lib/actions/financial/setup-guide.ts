@@ -13,7 +13,7 @@ export async function getOrInitSetupGuideData(spaceId: string): Promise<GuideDat
   const month = currentMonth();
   const rows = await sql`WITH progress AS (
     SELECT EXISTS(SELECT 1 FROM incomes WHERE space_id=${spaceId} AND is_active) AS income,
-      EXISTS(SELECT 1 FROM expenses WHERE space_id=${spaceId} AND is_active) AS expense,
+      EXISTS(SELECT 1 FROM expenses WHERE space_id=${spaceId} AND is_active AND type IN ('RECURRING','ONE_TIME')) AS expense,
       EXISTS(SELECT 1 FROM monthly_expenses WHERE space_id=${spaceId} AND month=${month}) AS generate,
       EXISTS(SELECT 1 FROM monthly_expenses WHERE space_id=${spaceId} AND month=${month} AND status='PAID') AS pay
   ), initialized AS (

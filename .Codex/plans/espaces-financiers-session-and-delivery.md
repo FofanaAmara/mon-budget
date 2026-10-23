@@ -104,3 +104,10 @@ Reproduction autoritative : dette fictive500, ajoutcharge25.50, ouverture imméd
 Cible : stocker seulement les identifiants sélectionnés et dériver les objets depuis debts/allPots courants à chaque rendu. Garder les brouillons de formulaire, callbacks et contrôles serveur actuels ; une entité absente ne reste pas affichée dans une modale devenue invalide. Rejouer charge5fictive puis ouverturePayer pendantrefresh, attendre miseàjour et vérifier total530.50 dans pageetmodale, puis versement75.25 et reload455.25. Tester modalesépargne/dette et basculeperso. Types/lint/build/units/navigation en copie isolée ; aucune mutation source, pas de faux Auth.
 
 Même fenêtre de recette : texteguide4/4 encoreàreprendre, pas de clôtureglobale. Estimation10–20minutes/5–10kjetons supplémentaires, coût monétaire indisponible et aucun service payant.
+
+
+## Faux avancement du guide par les pots d’épargne
+
+Reproduit dans le personnel en vraieUI : aucun revenu récurrent/dépense/objectif, seul potlibre0 ; guide1/4. getOrInitSetupGuideData compte toute ligneexpenses active, y compris PLANNED/FREE_SAVINGS créé techniquement à la première visite patrimoine. Ce n’est pas un mélange de finances, mais un faux progrès local. Capture guide-free-pot-before.jpg.
+
+Correction bornée : étapeexpense compte seulement RECURRING/ONE_TIME actifs, préservant la prise en compte historique des dépenses ponctuelles (finishedSpace de la suite existante utiliseONE_TIME). Exclure les pots PLANNED et objectifs, pas les écritures réelles. TestPG sur clone synthétique : potlibre/objectif ne complètent pasexpense ; vraie dépenseinactive ne complète pas ; activation de ONE_TIME puis RECURRING complète ; personnel distinct resteintact. REDavantSQL, GREENaprès, suite complète100services attendue sans réécriture de dates/finances. Captureaprès personnel0/4 et couple4/4 conservé. Aucunemigration/resetDB ou changementd’Auth.

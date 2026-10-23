@@ -58,3 +58,16 @@ Nouveau banc `npm run test:spaces:selection` : vrai parent et vraies feuilles, d
 Qualité finale55948 : buildWebpack/types/lint/9delivery exit0 dans copie isolée incluant nouveau banc et workflow.265unit77992 exit0 ; bancnavigation14497 exit0, six cas sans erreurpage. RevueReact locale du diff : aucun nouveau fetch/effect, étatminimalID et brouillons non écrasés, pas de logique financière serveur changée. La revue indépendante globale reste ouverte. Commande ciblée ajoutée à la CI et garde requis, aucun push/run distant.
 
 Diagnostic du mail reçu : Gmail SPF/DKIM/DMARC tousPASS, capture du résumé et JSON anonymisé conservésprivés ; ne pas attribuer le spam à un échecDNS non observé. Nouveau compte toujours non soumis, handoff maintenu et aucun secondemailenvoyé. Texteguide4/4 restant déjà tracé ; objectif intégral nonatteint.
+
+
+## Transfert entre pots et guide — 2026-10-23T21:31UTC
+
+Transfert réel dans la copie locale, viaUI et sans virement bancaire :23.45 du projet vers l’épargnelibre. Au préalable,200 dépasse123.45disponibles et le bouton est désactivé ; aucune soumission de ce montant. Après transfert/reload : projet100.00, libre23.45, total123.45 conservé et dette455.25 inchangée. SQLREADONLY confirme contributions123.45/−23.45/+23.45 dans le même espace. Personnel garde0.00 et aucun objectif dédié aprèsbascule. transfer-proof.json checked21:29:12Z ; captures preview/reload inspectées.
+
+Premier vérificateurSQL a échoué sur l’ordre des trois montants, car ORDER BYamount utilisait l’alias amount::text et triait lexicalement. Aucun écart des données : correction du seul vérificateur en ORDER BYs.amount numérique, preuve rerunverte ; aucune mutation compensatrice. Pattern ajouté à la mémoiremontants.
+
+Guide4/4 : reproduit via boutonRevoir qui ne touche qu’au suivi de guide. Branchetextuelle complète manquante corrigée, capturesguide-complete-before/afterdesktop/mobile effectivement vues ; « Tout est prêt ! » au lieu de « Déjà à mi-chemin ! ». Pas de nouveau test miroir pour une phrase. Ne pas confondre le délai de célébration15s avec une attente du goal.
+
+DISC015 : guide personnel1/4 alors que seul potlibre0. EXISTSexpenses active comptaitPLANNED/FREE_SAVINGS. Filtrage aux typesRECURRING/ONE_TIME actifs, préservant ponctuelleshistoriques. REDPG39076 confirme falseattendu/trueobtenu ; GREEN81042 :100tests sur6fichiers, clones synthétiques. Aucun reset ou nouvelle migration sur recette/source. VraieUI personnelle aprèsreload0/4 ; première capture après prise pendant animation conservée, image stable guide-free-pot-after-steady.jpg retenue. SQLguide-progress-proof.json21:31:17Z : couple4vrais, personnel4faux et épargne personnelle0.00. Retourcouple conserve données ; aucun effetd’une réinitialisation de guide partagé sur personnel.
+
+Qualité finale56136 : buildWebpack/types/lint/9delivery tous0 en copie isolée incluant les deux correctionsguide et le testPG.265unit du commit précédent gardent leur portée ; pas de nouveau run unitaire revendiqué après cette phrase/prédicat. RéceptionResend déjàacquise mais créationcompte/adhésionB toujoursabsentes, markHandoffIAB6maintenu. Pasdegoalcomplete/MCP/CI distante ni push.

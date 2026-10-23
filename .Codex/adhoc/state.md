@@ -876,3 +876,25 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Décisions prises :** dernierturn PROGRESS. Patrimoine fictif exact et isolé :123.45 épargné, dette455.25 après500+25.50+5−75.25. Correction vraie course de sélectionobjetancien : sixIDs dérivés des props. Ancien composantRED, corrigéGREEN3cas et vraieUI. Données personnelles non écrites.
 **Prochaine étape :** stagedcheck/commit ; reprendre guide4/4 et autres indépendants restants, puis adhésionB après saisiecredential humaine. Aucun gateAuth/MCP/CI/revueglobale inventé.
 **Contexte pour reprise :** HEADdc01350 avantcommitcourant ; runtime68803ResendHTTPS3443, Chromecréateur surpatrimoinecouple. IABrecipientTab6 formulaireprérempli mais motdepassevide, markHandoff maintenu ; pas de nouveau mail. Tests :265unit77992, quality55948build/types/lint/9delivery0, selection97930/88052GREEN3, copieRED44288exit1attendu, navigation14497GREEN6. Copiesourcecorrigée restaurée dansfinally aprèsRED. Preuves.local/resend-recipe/patrimoine-proof.json checked21:21:47Z ; images3modales restantes vues. GmailAuthrésumé3PASS vérifié, spamrestantsanscauseétablie. Goalcomplet17/30 toujoursenattente, pasdebloquage3tourscarprogrèsutile. Préexistantsserena/next-env/CS exclus, aucunpush/DBsource.
+
+---
+## [2026-10-23] — Guide et transferts en recette
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md` P3/P7 ; observation guide dans DISC013.
+**Tâche en cours :** texteguide complet et transfert local fictif.
+**Objectif :** progression du goal intégral, pas de contournement de l’inscription.
+**État :** IN_PROGRESS
+**Décisions prises :** dernierturn PROGRESS, commitdc4d8a0. Lecture source confirme resetSetupGuide ne modifie que le suivi du guide, pas les finances ; progression recalculée depuis vraies données. Peut reproduire4/4 via boutonRevoir, puis corriger branche de sous-titre manquante. Transfert entre potobjectif et épargnelibre dans même espace, pas de virement bancaire. Estimation10–15minutes/4–8kjetons, coût indisponible, aucun nouvel envoi/service.
+**Prochaine étape :** capture du4/4 avant, correction et capture après, puis transfert et vérification SQL/total/reload/personnel.
+
+---
+## [2026-10-23] — Guide corrigé et transfert conservé
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md` P3/P7, extensionsguide dans session-and-delivery.
+**Tâche en cours :** clôture de tranche puis suite du goal.
+**Objectif :** intégral17/30 non atteint, nouvelle inscription et deux membres toujours requis.
+**État :** IN_PROGRESS
+**Fichiers touchés :** SetupGuideSheet1branche, setup-guide.tsprédicat, testPG ; plan/tasks/preuve/matrice/état/session/mémoires/discoveries.
+**Décisions prises :** dernierturn PROGRESS. Transfert23.45 exact, projet100/libre23.45/total123.45 conservé et personnel0. Texte4/4 corrigé. Fauxavancement1/4 dûaupotPLANNED, REDPG puis100services verts après filtreRECURRING/ONE_TIMEactifs. Aucune donnée financière corrigée pour faire passer un test ; le défaut de tri du vérificateur a été corrigé seul.
+**Prochaine étape :** stagedcheck/commit ; poursuivre allocations/progressives et autres indépendants ouverts, puis adhésionB aprèscredential humain. CI/MCP/revueglobale/offline restent ouverts.
+**Contexte pour reprise :** HEADdc4d8a0 avantcommit ; runtime68803ResendHTTPS3443. Chromecréateur restauré surpatrimoinecouple ; IABrecipientTab6signupnonfinalisé markHandoffmaintenu. Preuveslocal/resend-recipe/transfer-proof.json21:29Z etguide-progress-proof21:31Z. guidebefore/afterstablepersonnel0/4 et4/4copydesktop/mobile vues ; premièreafterpendantanimation n’est pasretenue. Tests81042PG100/6verts,56136build/types/lint/9delivery0 ; pasdere-run265unit surdernièretrancheprétendu. Aucunpush/DBsource/nouveauemail/sessionfabriquée. Préexistantsserena/next-env/CS exclus ; goalnoncomplete etpasd’impassecarprogrèsutile.

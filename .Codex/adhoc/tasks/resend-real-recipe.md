@@ -59,3 +59,22 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Reproduire page525.50/modale500 après charge | vraie UI | COMPLETED : screenshot avant |
 | Sélection par ID dérivée des props fraîches | cause confirmée | COMPLETED : six sélections et disparition de cible |
 | Rejouer charge/ouverture/versement et qualité | correction | COMPLETED : UIréelle, RED/GREEN3cas,265unit et qualité finale verts |
+
+
+## Guide terminé et transfert d’épargne
+
+| Tâche | Dépendance | État |
+|---|---|---|
+| Reproduire puis corriger texte du guide4/4 | espace complet | COMPLETED : branche complète et captures réelles |
+| Transfert fictif et conservation du total | deux pots dédiés | COMPLETED :100+23.45=123.45, dépassementUI bloqué |
+| Recharge/isolation et preuves SQL | opération | COMPLETED : journaux opposés et personnel0 |
+| Qualité et commit local | validation | IN_PROGRESS :100services et build/types/lint/9delivery verts, commit à vérifier |
+
+
+## Faux avancement du guide
+
+| Tâche | Dépendance | État |
+|---|---|---|
+| Reproduire1/4 avec seul potlibre0 | UI personnel | COMPLETED : capture avant |
+| TestPG RED puis filtrage des véritables dépenses | causeSQL | COMPLETED : pot/objectif/inactif exclus, ponctuelle et récurrente actives gardées |
+| SuitePG et captures0/4 /4/4 | correction | COMPLETED :100tests et preuves réelles/SQL |

@@ -35,6 +35,8 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 
 - **PATRIMOINE-REAL** : suite de resend-real-execution.md ; objectif/contribution123.45, dette500+25.50+5−75.25=455.25 persistants, journaux SQLREADONLY dans bon espace, absence personnelle et retourcouple. Trois modales restantes de DISC013 vues ; sélection obsolète DISC014 reproduite puis corrigée, banc React/Chromium REDancien/GREEN3cas, champs conservés et cible disparue masquée. Ce banc simule props/services et ne ferme ni Auth ni MCP ni revue indépendante.
 
+- **TRANSFER-GUIDE-REAL** : suite de resend-real-execution.md ; transfert23.45 conserve total123.45/reload et personnel0, deux écritures opposées SQL ; dépassementUI bloqué. Guide4/4 corrigé en texte, faux1/4 du pot technique reproduit puis corrigé ; REDPG puis100services verts, UIpersonnel0/4/couple4/4 et qualité finale. Pas de nouvelle identité réelle ni CI/MCP/revue globale.
+
 ## Exigences
 
 | ID | État | Preuves disponibles | Preuve restante pour clôture |
@@ -43,7 +45,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | FR-002 | PARTIEL | MIG/SQL conservation exacte, backfill Mes finances et map stable | Reconnexion navigateur du compte existant avec toutes pages ; release cible autorisée |
 | FR-003 | PARTIEL | PG espaces distincts ; UI personnel puis couple vide | Deux espaces sur toutes les pages avec recharge, vrai compte |
 | FR-004 | PARTIEL | NAV sélecteur seul et préférence ; PG dernier espace | UI-ACCESS prouve option unique désactivée et création mobile ; connexion/reconnexion reste ouverte |
-| FR-005 | PARTIEL | 78 actions contextualisées, PG toutes familles ; FIN-REAL revenu/rappels et REF-REAL références/abonnement et PATRIMOINE-REAL épargne/dette isolés en vraie UI | Tour E2E de toutes fonctions et automatismes sur deux contextes |
+| FR-005 | PARTIEL | 78 actions contextualisées, PG toutes familles ; FIN-REAL revenu/rappels et REF-REAL références/abonnement et PATRIMOINE-REAL épargne/dette et TRANSFER-GUIDE-REAL transfert/guide isolés en vraie UI | Tour E2E de toutes fonctions et automatismes sur deux contextes |
 | FR-006 | PARTIEL | MAIL local, MAIL-REAL réception externe et lien, PG acceptation ; UI landing explicite et mauvais compte | UI-VERIFY parcours de vérification raccordé ; réception OTP/externe, acceptation et contribution à deux sessions restent à prouver |
 | FR-007 | À PROUVER | Routes publiques/auth/confirmation implémentées ; AUTH et PG bornés | Inscription réelle, réception/confirmation OTP, retour et acceptation sans espace imposé ; UI-VERIFY ne couvre que le raccordement et les tests bornés |
 | FR-008 | PARTIEL | UI Non saute et Oui propose invitation ; même service | Nouveau compte réel, report d’envoi et reprise mobile/desktop |

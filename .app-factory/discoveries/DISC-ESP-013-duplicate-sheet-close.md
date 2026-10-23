@@ -17,3 +17,6 @@ Après4/4, le guide affiche brièvement « Déjà à mi-chemin ! » avant sa cé
 
 ## Suite de recette patrimoine
 Historique d’épargne, nouvelle charge et versement dette désormais ouverts dans la vraie app avec données fictives : une seule fermeture chacun ; captures desktop/mobile et inspection visuelle réalisées. Historique fermé via son bouton, charge/versement soumis avec succès. L’ancienne limite des trois modales non exercées est levée pour ces cas ; variantes longues/listes volumineuses et gate globalMCP restent distincts.
+
+
+Le texte4/4 consigné plus haut est corrigé et recetté : branchecomplète « Tout est prêt ! », captures réelles avant/aprèsdesktop/mobile. VoirDISC015 pour le faux avancement technique également corrigé. Aucune modification des délais de célébration.

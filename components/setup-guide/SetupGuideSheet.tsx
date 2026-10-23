@@ -43,6 +43,7 @@ type Props = {
 function getSubtitle(completedCount: number, totalSteps: number): string {
   if (completedCount === 0)
     return `${totalSteps} étapes pour être opérationnel`;
+  if (completedCount === totalSteps) return "Tout est prêt !";
   if (completedCount === totalSteps - 1) return "Plus qu'une étape !";
   if (completedCount >= Math.floor(totalSteps / 2)) return "Déjà à mi-chemin !";
   return "Beau début !";
