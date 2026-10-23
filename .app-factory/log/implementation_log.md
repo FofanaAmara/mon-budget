@@ -16,3 +16,4 @@ Pour les details, voir les sous-dossiers par feature dans `.app-factory/log/`.
 | 2026-03-01 | FIX-BLQ-002 | Fix suivi depenses tracking bugs | Done |
 
 | 2026-10-22 | espaces-financiers / PM | Priorité humaine immédiate ; 6 stories verticales, exigences/couverture, propositions produit et readiness distincte premier incrément/feature | Backlog raffiné ; ESP-001 prêt à concevoir ; feature NOT READY pour build |
+| 2026-10-22 | espaces-financiers / PM amendement | Quatre propositions approuvées intégrées à l’input et au backlog ; autres choix restent propositions ; conception d’expérience autorisée séparément | Cadrage actualisé ; build toujours non commencé |

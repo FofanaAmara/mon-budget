@@ -11,8 +11,10 @@ Ajout 2026-10-22 : 1 epic, 1 feature, 6 stories ESP. Statut de la nouvelle featu
 
 - Epic : `finances-partagees` ; feature : [espaces-financiers](epics/finances-partagees/features/espaces-financiers/feature-brief.md).
 - Ordre : ESP-001 premier espace → ESP-002 conservation existants → ESP-003 création/bascule → ESP-004 invitation compte existant → ESP-005 inscription invitée → ESP-006 invitation onboarding.
-- [Readiness](epics/finances-partagees/features/espaces-financiers/readiness.md) : premier incrément prêt à concevoir ; feature complète NOT READY pour build (arbitrages ciblés, dimensionnement et plan).
+- [Readiness](epics/finances-partagees/features/espaces-financiers/readiness.md) : premier incrément prêt à concevoir ; feature complète NOT READY pour build (conception, dimensionnement et plan).
 - Source : `.Codex/inputs/espaces-financiers/input.md` ; [couverture](epics/finances-partagees/coverage-map.md).
+
+Les quatre décisions complémentaires sont validées : invitations par courriel et visibles après connexion ; nouvel invité rejoignant directement le commun sans espace personnel supplémentaire forcé ; reprise du dernier espace utilisé ; « Mes finances » modifiable pour les comptes existants. La conception d’expérience est autorisée ; aucun build applicatif encore validé.
 
 ### Avertissement sur les états historiques
 

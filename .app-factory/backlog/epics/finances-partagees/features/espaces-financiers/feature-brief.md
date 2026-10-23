@@ -41,15 +41,25 @@ Chemin critique : 001 → 002 → 003 → 004 → 005 → 006. Chaque story trav
 - Tests d’isolation avec deux comptes membres, un troisième non-membre et au moins deux espaces aux données volontairement distinctes ; essais de références d’objets croisées.
 - Vérifications visuelles desktop/mobile, clavier, nom très court et très long ; inspection de la page entière. Playwright MCP reste requis par le protocole humain, pas remplacé par l’inspection du code.
 
+## Complément humain validé — 2026-10-22
+
+Approbation « ok ça me va » des quatre propositions présentées :
+
+1. Invitations par courriel, également visibles après connexion.
+2. Un nouvel invité peut rejoindre directement l’espace commun sans créer obligatoirement un espace personnel supplémentaire.
+3. Reprise du dernier espace utilisé à la connexion.
+4. Premier espace des comptes existants nommé « Mes finances », modifiable ensuite.
+
+Ces décisions sont prêtes à nourrir la conception d’expérience autorisée via `/cs-create-experience`. Elles ne valident ni le plan technique ni les autres propositions ci-dessous.
+
 ## Propositions PM à valider — ne sont pas des décisions humaines
 
 | Sujet | Proposition recommandée | Pourquoi / dépendance |
 |-------|-------------------------|-----------------------|
-| Invitation | Adresse courriel du compte, notification après connexion et courriel avec lien ; seul le compte dont l’adresse est vérifiée peut accepter | Parcours compréhensible même avant inscription, destinataire identifiable. Arbitrage nécessaire pour ESP-004/005 ; faisabilité/coût à vérifier par le Builder. |
+| Identité / lien invitation | Courriel lié à l’identité du destinataire, adresse vérifiée et lien dans le courriel | Le canal courriel et la visibilité après connexion sont désormais décidés ; vérification d’identité et forme du lien restent à concevoir/valider pour le bon destinataire, faisabilité/coût à vérifier par le Builder. |
 | Cycle d’invitation | Validité 7 jours ; renvoi et annulation possibles à tout membre ; refus possible au destinataire ; doublon en attente signalé sans multiplier les invitations | Éviter accès durable non désiré et confusion. Proposition à valider avant critères détaillés d’expiration/renvoi/annulation/refus ; pas ajoutée silencieusement aux stories. |
-| Inscription sur invitation | Accepter peut établir le premier espace de l’utilisateur ; pas de création forcée d’un espace personnel vide avant de rejoindre | Respecte le premier espace obligatoire sans détour artificiel. Arbitrage nécessaire pour ESP-005. |
-| Nom / reprise existants | Saisie obligatoire non vide, espaces seuls refusés ; préremplir « Mes finances » pour les nouveaux, attribuer « Mes finances » aux comptes existants | Réduit la friction. La validation exacte relève de la conception ; nom initial des comptes existants à confirmer avant ESP-002. |
-| Connexion / onglets | Reprendre le dernier espace valide ; changement limité à l’onglet courant, les autres gardent leur contexte affiché | Évite bascule surprise pendant une saisie. Proposition de comportement avant ESP-003, stockage non prescrit. |
+| Nom des nouveaux espaces | Saisie obligatoire non vide, espaces seuls refusés ; préremplir « Mes finances » pour les nouveaux | Réduit la friction ; validation exacte à concevoir. Pour les comptes existants, le nom « Mes finances », modifiable ensuite, est désormais décidé. |
+| Onglets / repli du contexte | Changement limité à l’onglet courant, les autres gardent leur contexte affiché ; repli explicite si le dernier espace est inaccessible | La reprise du dernier espace à la connexion est décidée. L’indépendance des onglets et le repli restent des propositions pour éviter les bascules surprises ; stockage non prescrit. |
 | Mobile | Sidebar accessible depuis un bouton du menu mobile contenant le même sélecteur | Préserve le lieu décidé et rend l’action disponible sur petit écran. Détail de conception, pas blocage produit du premier incrément. |
 | Formulaire ouvert | Demander de terminer ou abandonner une saisie avant de basculer ; ne jamais la déplacer vers l’autre espace | Empêche les erreurs d’affectation. Interaction précise à concevoir dans ESP-003. |
 | Préférences et guide | Compte, sécurité, appareil et consentement push individuels ; configuration financière et progression du guide propres à l’espace ; un nouvel arrivant ne réinitialise pas le guide d’un espace déjà configuré | Évite qu’une préférence individuelle modifie les finances communes. À confirmer avant ESP-003/005. |

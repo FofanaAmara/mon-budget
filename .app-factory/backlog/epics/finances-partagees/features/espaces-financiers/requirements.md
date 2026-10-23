@@ -1,16 +1,16 @@
 # Exigences — Espaces financiers
 
-Source primaire : `.Codex/inputs/espaces-financiers/input.md`, version avec sidebar ; priorité immédiate confirmée dans la conversation du 2026-10-22. Extraction préalable au découpage. Les propositions PM sont uniquement dans le brief et ne deviennent pas des décisions par leur présence ici.
+Source primaire : `.Codex/inputs/espaces-financiers/input.md`, version avec sidebar ; priorité immédiate confirmée dans la conversation du 2026-10-22. Extraction préalable au découpage, amendée par les quatre validations humaines du même jour. Les propositions PM sont uniquement dans le brief et ne deviennent pas des décisions par leur présence ici.
 
 | ID | Exigence vérifiable | Ancre de l’input |
 |----|---------------------|------------------|
 | FR-001 | Créer et nommer le premier espace pendant l’onboarding ; démarrage solo possible. | Décision premier espace obligatoire |
-| FR-002 | Préserver toutes les données financières des comptes existants dans un premier espace. | Décision conservation |
+| FR-002 | Préserver toutes les données financières des comptes existants dans un premier espace nommé « Mes finances », modifiable ensuite. | Décision conservation |
 | FR-003 | Créer des espaces supplémentaires et conserver des finances séparées. | Décision plusieurs espaces |
-| FR-004 | Choisir l’espace dans la liste déroulante de la sidebar ; une seule option sans bascule si un seul espace. | Décision sidebar |
+| FR-004 | Choisir l’espace dans la liste déroulante de la sidebar ; une seule option sans bascule si un seul espace ; reprendre le dernier espace utilisé à la connexion. | Décision sidebar |
 | FR-005 | Faire refléter l’espace actif par toutes les fonctions et la configuration financière existantes. | Décision même application |
-| FR-006 | Inviter une personne avec un compte, lui montrer l’invitation après connexion, obtenir son acceptation. | Décision invitation compte existant |
-| FR-007 | Permettre inscription puis acceptation à une personne invitée sans compte. | Décision invitation sans compte |
+| FR-006 | Inviter par courriel une personne avec un compte, lui montrer aussi l’invitation après connexion, obtenir son acceptation. | Décision invitation compte existant |
+| FR-007 | Permettre inscription puis acceptation à une personne invitée sans compte ; elle peut rejoindre directement sans espace personnel supplémentaire obligatoire. | Décision invitation sans compte |
 | FR-008 | Pouvoir lancer une invitation dès l’onboarding sans la rendre obligatoire. | Décision démarrage partagé |
 | FR-009 | Donner à chaque membre les mêmes capacités de gestion des données, de l’espace et d’invitation ; aucun privilège du créateur. | Décision égalité |
 | NFR-001 | Refuser toute lecture/écriture d’un non-membre et toute relation entre objets d’espaces différents, y compris par accès direct. | Garde-fou isolation |

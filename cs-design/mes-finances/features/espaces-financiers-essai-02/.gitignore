@@ -1,0 +1,5 @@
+.cache/
+logs/
+dist/
+node_modules/
+proofs/

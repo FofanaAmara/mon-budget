@@ -28,6 +28,14 @@ Le bénéfice recherché est de gérer ensemble les finances communes tout en co
 
 ## Décisions autoritaires + le pourquoi de chacune
 
+### Support des mockups : React — décision humaine du 2026-10-22
+
+Verbatim humain : « je veux les mockup en react pas en html ». Le livrable de conception doit être un prototype React simple, séparé de l’application, sans Storybook ni création de bibliothèque de composants. L’humain a explicitement rejeté le skill dépendant de Storybook ; ne pas réintroduire ce prérequis. Cette décision remplace le support HTML choisi initialement. La continuité impérative avec la vraie application reste intégralement applicable.
+
+### Continuité impérative avec la vraie application — correction humaine du 2026-10-22
+
+Verbatim humain : « c’est bien designé mais c’est totalement déconnecté de la vraie app » ; « il faut que le designer ouvre la vraie app pour comprendre l’existant et ajouter adéquatement les mockups qui seront une continuité de l’existant ». Le designer doit visiter la vraie application et prolonger ses écrans et parcours ; cohérence de marque seule insuffisante. Cette instruction lève explicitement la restriction historique interdisant source/screenshots au designer pour ce mandat. Aucun redesign global ni bibliothèque demandé ; conserver la base visible sauf changements nécessaires aux espaces financiers.
+
 ### Le concept est l'espace financier
 
 Confirmation humaine : « oui exact espace financier c'est le bon ». Un espace contient le contexte financier complet, pas uniquement un budget. Pourquoi : le besoin englobe les fonctions existantes.
@@ -69,6 +77,17 @@ Verbatim humain : « Apres on doit pouvoir ajouter un autre espace si on veut »
 ### Conservation des finances des comptes existants
 
 La proposition de créer pour les comptes existants un premier espace contenant toutes leurs données actuelles a été approuvée par le « exact » humain précédant la demande d'input. Pourquoi : préserver les finances déjà saisies et le fonctionnement actuel sans ressaisie.
+
+### Complément validé après le raffinement du backlog — 2026-10-22
+
+L’humain a répondu « ok ça me va » aux quatre propositions suivantes présentées ensemble :
+
+- Invitations envoyées par courriel, également visibles après connexion. Pourquoi : permettre au conjoint de retrouver l’invitation avec ou sans compte préalable. La vérification de l’adresse, le lien et la durée ne font pas partie de cette validation.
+- Un nouvel invité peut rejoindre directement l’espace commun sans créer obligatoirement un espace personnel supplémentaire. Pourquoi : éviter un détour vide tout en lui donnant un premier espace après acceptation.
+- Reprise du dernier espace utilisé à la connexion. Pourquoi : retrouver le contexte de travail sans choix imposé à chaque connexion. La portée entre onglets et appareils et le repli en cas d’espace indisponible restent à concevoir.
+- Premier espace des comptes existants nommé « Mes finances », modifiable ensuite. Pourquoi : conserver immédiatement les finances actuelles dans un espace identifiable sans imposer une ressaisie.
+
+Cette validation ne confirme ni courriel vérifié, ni expiration à sept jours, ni onglets indépendants, ni répartition précise des préférences/guide, ni départ/exclusion/suppression.
 
 ## Faits vérifiés avec ancres
 
@@ -120,10 +139,10 @@ N/A — aucune maquette, aucun template d'interface ni liste de livrables techni
 
 ## Ce qui reste génuinement ouvert
 
-- Déclinaison mobile du sélecteur de la sidebar, détails visuels et interaction quand il n'a qu'une option (ouverture ou contrôle désactivé), choix systématique à la connexion ou reprise du dernier espace, comportement sur plusieurs appareils et onglets. L'emplacement dans la sidebar et l'option unique sans bascule sont déjà décidés.
-- Canal et destinataire de l'invitation, lien éventuel, notification dans l'application, expiration, renvoi, annulation et refus. Visibilité après connexion et acceptation après inscription sont décidées, transport non tranché.
-- Articulation entre inscription via invitation, création obligatoire du premier espace et accès à l'espace invité. Ne pas en déduire une obligation de créer d'abord un espace personnel supplémentaire non désiré.
-- Nom proposé, règles de nommage et nom attribué au premier espace des utilisateurs existants.
+- Déclinaison mobile du sélecteur de la sidebar, détails visuels et interaction quand il n'a qu'une option (ouverture ou contrôle désactivé), repli si le dernier espace utilisé n’est plus accessible, comportement sur plusieurs appareils et onglets. La reprise du dernier espace utilisé à la connexion est décidée ; L'emplacement dans la sidebar et l'option unique sans bascule sont déjà décidés.
+- Identification et vérification du destinataire de l’invitation, lien éventuel, expiration, renvoi, annulation et refus. Le courriel et la visibilité après connexion sont décidés ; aucun détail supplémentaire du transport n’est imposé.
+- Détails du parcours d’inscription invité, notamment interruption et poursuite sans acceptation. Rejoindre directement l’espace commun sans créer d’espace personnel supplémentaire est désormais décidé.
+- Nom proposé aux nouveaux utilisateurs et règles de nommage. Le nom « Mes finances », modifiable ensuite, est décidé pour le premier espace des comptes existants.
 - Départ, exclusion, suppression d'espace, dernier membre, sort des invitations et données ; confirmations et récupération éventuelle. Ne pas inventer de privilège du créateur pour résoudre ces questions.
 - Séparation entre préférences individuelles et configuration de l'espace : devise, rappels, notifications, suivi d'onboarding et guide. Authentification et compte restent individuels ; leur articulation avec les espaces est à concevoir.
 - Guide de configuration d'un espace supplémentaire et accueil d'un membre rejoignant un espace déjà configuré.
@@ -147,6 +166,6 @@ Au niveau de l'intention, le résultat doit permettre de constater :
 - Deux personnes, dont l'une peut s'inscrire après invitation, rejoignent le même espace après acceptation et y utilisent les fonctions existantes avec des droits égaux ; un compte non-membre n'y accède pas.
 - Les finances existantes sont conservées dans un premier espace après migration, sans perte ni mélange, avec les fonctions existantes vérifiées.
 
-Position : concrétisation du « Partage familial » de .app-factory/docs/vision.md. Cet input précède requirements, conception et plan ; aucun travail aval n'est réputé réalisé.
+Position : concrétisation du « Partage familial » de .app-factory/docs/vision.md. Cet input reste la source des décisions ; le backlog a été raffiné ensuite dans `.app-factory/backlog/epics/finances-partagees/`. Cette mention ne certifie aucune implémentation. La priorité immédiate et la conception de l’expérience ont depuis été autorisées ; le plan technique reste à valider avant implémentation.
 
 Coût : N/A — aucune cible propre à cette feature donnée par l'humain. .app-factory/docs/architecture.md indique une infrastructure sur plans gratuits ; vérifier cette contrainte et l'impact du transport des invitations avant de proposer un service payant, sans la faire passer pour une décision nouvellement prise.

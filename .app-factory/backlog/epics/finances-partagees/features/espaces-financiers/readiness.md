@@ -21,14 +21,17 @@ Agent : af-pm. Portée : backlog uniquement, aucune validation d’implémentati
 
 Les points ne sont pas inventés par le PM : l’agent interdit d’estimer le travail technique et aucune estimation de l’équipe n’a eu lieu. Aucun pourcentage de capacité sprint/MoSCoW n’est certifié en l’absence de sprint défini.
 
-## Arbitrages produit qui bloquent des stories suivantes
+## Décisions produit désormais validées
 
-| Point | Stories affectées | Proposition concrète à faire valider |
-|-------|-------------------|-------------------------------------|
-| Nom de l’espace repris | ESP-002 | « Mes finances », modifiable ensuite |
-| Reprise du contexte et préférence/guide | ESP-003 et accueil ESP-005/006 | Dernier espace valide ; onglets indépendants ; préférences compte/appareil individuelles, configuration financière et guide par espace |
-| Destinataire et transport invitation | ESP-004/005/006 | Courriel du compte vérifié, notification après connexion + courriel d’invitation |
-| Première appartenance d’un nouvel invité | ESP-005/006 | L’espace accepté peut être son premier espace ; pas d’espace personnel vide forcé |
+L’humain a approuvé le 2026-10-22 : invitation par courriel et visible après connexion ; accès direct de l’invité au commun sans espace personnel supplémentaire forcé ; reprise du dernier espace utilisé à la connexion ; nom « Mes finances » modifiable pour le premier espace des comptes existants. Ces quatre points ne sont plus des blocages produit.
+
+## Points restants pour la conception et l’implémentation
+
+- ESP-003 et accueil ESP-005/006 : portée entre onglets/appareils, repli si le dernier espace est inaccessible, classification des préférences et progression du guide. Propositions du brief à examiner sans les attribuer à l’humain.
+- ESP-004/005/006 : mécanisme garantissant le bon destinataire, lien éventuel et cycle d’invitation. Courriel vérifié, sept jours, renvoi/annulation/refus restent des propositions ; seul le canal courriel et la visibilité après connexion sont validés.
+- Ensemble : conception de l’expérience autorisée via `/cs-create-experience`, puis dimensionnement équipe, plan technique et validation avant build. Aucun de ces livrables n’est réputé déjà réalisé.
+
+La feature reste NOT READY pour build au titre de la DoR technique/design non acquise ; la conception peut avancer avec ces quatre décisions fermes. Les règles produit supplémentaires doivent être examinées avant d’implémenter le parcours affecté.
 
 Les propositions de durée/renvoi/annulation/refus sont regroupées dans le brief pour validation ; aucune obligation supplémentaire n’est présentée comme acquise. Le périmètre recommandé reporte départ/exclusion/suppression d’espace. Si ces actions sont retenues dans la première livraison, leurs règles deviennent un blocage avant leur implémentation, sans privilège du créateur.
 
@@ -36,4 +39,4 @@ Le sélecteur mobile précis, les règles de longueur du nom et les détails vis
 
 ## Prochaine action
 
-Préparer le plan technique d’ESP-001 et la stratégie d’ensemble permettant de conserver puis isoler toutes les finances. Faire examiner les risques/tailles de 002 et 003, sans découpage DB/API/UI. Présenter au propriétaire du produit le plan et le groupe compact de propositions produit avant implémentation. Le backlog a bien la priorité demandée ; ni l’input ni cette priorité ne valent validation d’un plan absent.
+Préparer le plan technique d’ESP-001 et la stratégie d’ensemble permettant de conserver puis isoler toutes les finances. Faire examiner les risques/tailles de 002 et 003, sans découpage DB/API/UI. Présenter au propriétaire du produit le plan et les seules propositions restantes avant l’implémentation des parcours affectés. Ne pas redemander les quatre décisions déjà validées. Le backlog a bien la priorité demandée ; ni l’input ni cette priorité ne valent validation d’un plan absent.

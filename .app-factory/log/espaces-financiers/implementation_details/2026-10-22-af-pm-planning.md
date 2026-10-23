@@ -30,3 +30,11 @@ Aucun build, test applicatif ou navigateur exécuté : seuls les documents chang
 ## État de fin
 
 Backlog documentaire complet, prochaine priorité visible ; conception ESP-001 à préparer et plan à soumettre. Feature entière NOT READY pour build ; ne pas passer le gate sur la seule base de critères rédigés. Les propositions à consolider avec l’humain se trouvent dans le brief ; l’input source reste inchangé.
+
+## Complément humain validé — amendement documentaire
+
+Après la proposition consolidée du lead, l’humain répond « ok ça me va » à exactement quatre décisions : invitations courriel également visibles après connexion ; nouvel invité rejoignant directement l’espace commun sans espace personnel supplémentaire obligatoire ; reprise du dernier espace utilisé à la connexion ; premier espace des comptes existants nommé « Mes finances », modifiable ensuite. Input source, brief, exigences, critères des stories concernées, readiness et index sont amendés. Le dossier `.Codex` est protégé en écriture : le premier essai a échoué par PermissionError ; l’escalade limitée à cet amendement a été autorisée et l’écriture a réussi. Aucun contournement utilisé.
+
+Courriel vérifié, lien précis, durée de sept jours, onglets indépendants, classification préférences/guide, départ/exclusion/suppression ne sont pas devenus des décisions humaines. La conception d’expérience `/cs-create-experience` est autorisée et orchestrée séparément par le lead ; cet amendement ne réalise ni cette conception ni le build. Les quatre décisions ne doivent plus être redemandées. Le verdict de build reste NOT READY en l’absence de conception, dimensionnement équipe et plan validé.
+
+Contrôles réexécutés : 16 exigences couvertes, 6 stories et 30 AC Given/When/Then, dépendances précédentes sans cycle, liens Markdown locaux valides et `git diff --check` sans erreur. Aucun code applicatif ni commit de cet agent ; brief stabilisé signalé au lead pour la suite CS.
