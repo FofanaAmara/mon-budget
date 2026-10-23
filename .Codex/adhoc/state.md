@@ -628,3 +628,39 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Décisions prises :** OTP dédié email-verification avec adresse dérivée de session fraîche et acteur de départ ; invitation pending/nonexpirée contrôlée. Aucune appartenance/bitAuth écrit par app, réponseprovider non sérialisée. Vérification fraîche après succès et acceptation séparée. Réponse UI tardive gardée par acteur/montage.
 **Prochaine étape :** staging explicite/diffcachedcheck/commit ; poursuivre inter-onglets/offline/autres finances et conditions de recette externe du goal.
 **Contexte pour reprise :**HEAD15ae38f avantcommitcourant ; runtime98404 vivant3002clonework17.246unit/99PG/7nouveauxcasChromium/6ancienscas verts. BuildWebpack/types/lint0warning/7gardesworkflow finaux session42370terminée0. Dépendances inchangées, auditprod0socle conservé. Revueindépendante source/nouveauCI/captures sansfinding. CUA21invitationnonvérifiée afficheformulaire, aucunsend/verify soumis ; codefictifvidé, Tabskippeddisabled, viewportrestauré.22Mailpitconservé. Preuves.local/financial-spaces/verification-current etverification-harness. CritèreMCPdistinctnonfermé, aucunpush/runCI/Resend/OTPexterne/DBsource. Source officNeonAPIOTP disponible sanschangerglobalconfig ; consoleNeonLogin, aucuneconfighébergéelue oumodifiée. DefautCSShoverprimaireblancsurpâle résolu et revu (DISC-ESP-007). PremièrefixturePGdeclinedinvalide corrigée enappelantvraieactiondecline ; suite99repassée. Tour=progrès concret, compteurimpasse0. Préexistantsserena/next-env/anciensCSàpréserver.
+
+---
+## [2026-10-23 08:47] — Recette réelle bascules et onglets
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`, P3.4/P7 du plan parent.
+**Tâche en cours :** bascules avec brouillon et données financières dans deux onglets ; perte réseau par onglet si surface disponible.
+**Objectif :** prouver le comportement réel sans réduire le goal au banc simulé.
+**État :** IN_PROGRESS
+**Fichiers touchés :** suivi et preuves à venir ; code seulement si défaut reproduit.
+**Décisions prises :** HEADb468dd1 confirmé après commit local OTP ; précédenttour=progrès concret, compteurimpasse0. Préserver AuthA/B pour recette ultérieure. UI CUA disponible, aucune capacité réseau par onglet exposée. MCPChromeDevTools list_pages échoue sur profil déjà utilisé ; ne pas arrêter/emprunter un profil d’origine inconnue. Aucun fichier de configuration MCP dans workspace ; documentation primaire lue, aucune configuration globale changée et aucune question pendant absence.
+**Prochaine étape :** utiliser les onglets IAB de recette pour deux espaces/brouillon/recharge ; vérifier ensuite une surface DevTools UI ciblée si nécessaire.
+**Contexte pour reprise :**246unit/99PG/7nouveauxcasChromium/6ancienscas/build/types/lint/7delivery verts au b468dd1, aucun code modifié depuis. Runtime98404 local3002 sur copie work17 à confirmer par UI. IAB21invitationOTP nonvérifiée conservée,22Mailpit,23peut servir pour finances A. PersonnelAb99e9a9e vide ; coupleA13603cc1 contient deuxdépensesfictives3.99/1450. BChrome conserve son compte, espacefictif2d512829 vide. Aucunmail/OTPexterne/push/SQLsource. Tranche10–18kjetons coûtindisponible.
+
+---
+## [2026-10-23] — Reprise et contrôle du défilement desktop
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`.
+**Tâche en cours :** corriger la réservation mobile appliquée au desktop ; preuve réelle DevTools et qualité isolée.
+**Objectif :** feature complète maintenue, adhésion réelle et réception externe non prouvées.
+**État :** IN_PROGRESS
+**Fichiers touchés :** plan/suivi ; app/globals.css prévu.
+**Décisions prises :** dernier tour point d’état = no progress ; nouveau DevTools list_pages réussit, session neuve anonyme sans usurper les sessions A/B. Aucun outil PlaywrightMCP disponible. Capture avec filePath refusée par racines MCP ; image inline dans trace, ne pas annoncer de fichier sauvegardé.
+**Prochaine étape :** CSS puis captures aux seuils et build isolé.
+**Contexte pour reprise :** HEADb468dd1 ; runtime3002 PID22750 confirmé, Mailpit70680 confirmé. SQLread-only isolation-current/persistence-proof.json certifie125.25personnel/987.65couple et un membre chacun, préférencedernierespacepersonnel. Deuxonglets/recharge précédents réussis ; brouillon changé puis abandon par fermeture du seul onglet après blocage CUA, pas de validation refus/acceptation du dialogue. NativeChrome précédent appel interrompu, aucune preuveoffline/BFCache. Nouveau DevTools page1auth/sign-in1280x720,body788/padding68. CUA précédent runtime perdu ; ne pas inventer credential/cookie. Butglobal reste actif.
+
+---
+## [2026-10-23] — Réservation navigation corrigée ; retour Auth découvert
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`.
+**Tâche en cours :** commitlocal du correctif CSS puis DISC-ESP-009.
+**Objectif :** feature partagée complète ; aucun faux verdict de livraison.
+**État :** IN_PROGRESS
+**Fichiers touchés :** voir session2026-10-23-isolation-navigation.md.
+**Décisions prises :** réserver header/nav seulement au vrai shell financier mobile ; Auth sans bandes ni scroll. Revue manuelle et renduDevTools ne ferment pas revue indépendante/PlaywrightMCP.
+**Prochaine étape :** staging explicite, diffcachedcheck séparé, commitlocal ; puis corriger retour entre vues Auth par contrat public et tests.
+**Contexte pour reprise :** runtime31557 arrêté volontairement après CSScompilé périmé confirméHTTP ; nouveau81598 prêt3002 et rendu finalcorrect. Build/types/lint0warning/7delivery finaux45790exit0 en copie isolée. ChromeDevToolspage1 nouvelle session anonyme, actuellementsign-in1280x720 ; imagesinline avant/après, filePath interdit par racinesoutil. VraielandingMailpit→sign-up garde retour, puis lien Connexion du fournisseur le perd, DISC-ESP-009 ouvert. Aucun nouvelauth/OTP/emailResend/CI/push/sourceSQL. Preuve persistance.private.local/isolation-current : personnel125.25/couple987.65, membres1chaque. AuthfinanceE2E finale/offline/BFCache restent à prouver. Ce tour=progrès concret, compteurimpasse0.

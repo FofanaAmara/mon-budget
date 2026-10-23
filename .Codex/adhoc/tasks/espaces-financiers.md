@@ -75,3 +75,10 @@ DISC-ESP-006 vérification du destinataire : IN_PROGRESS — dépend du socle15a
 
 
 DISC-ESP-006 tranche technique : COMPLETED — actions OTP et UI,246unit/99PG, nouveau banc7cas et ancien6cas, build/types/lint0warning/7gardesworkflow verts, revue source/captures fermée. Réception/confirmation OTP réelle et adhésion toujours IN_PROGRESS. Défaut hover DISC-ESP-007 corrigé et revu.
+
+
+Recette réelle bascules/onglets : IN_PROGRESS — dépend b468dd1 ; brouillon refusé/conservé puis abandonné, données distinctes/recharge/deuxonglets, historique/offline si contrôle ciblé disponible. Garder les sessions Auth existantes et tracer la différence CUA/MCP.
+
+Réservation navigation desktop : IN_PROGRESS — capture avant réelle DevTools sur connexion et ancienne capture revenus ; limiter68px aux petits écrans, valider seuils et qualité sans toucher Auth/finances.
+
+Réservation navigation : COMPLETED pour le correctif borné et son rendu Auth375/1280 ; build/types/lint/7gardes verts. Finances mobile authentifiées et PlaywrightMCP restent ouverts. Isolation réelle125.25/987.65 persistante prouvée, membres1+1. DISC-ESP-009 retour Auth : IN_PROGRESS, lien Connexion interne perd redirectTo après inscription ouverte depuis invitation.
