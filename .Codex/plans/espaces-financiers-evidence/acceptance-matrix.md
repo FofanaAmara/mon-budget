@@ -113,3 +113,6 @@ RecetteUI-RESP : deux depenses ponctuelles fictives creees/rechargees dans le co
 
 
 Recette externe du23octobre21:03UTC : MAIL-REAL lève l’ancien manque de boîte/réception. Le runner68803 sert HTTPS3443 avec option explicite `--resend`, Mailpit reste le défaut hors option. Session destinataire IAB préparée, mot de passe vide, aucune inscription/acceptation automatique. Les gates de contribution réelle, nouveau compte, CI et PlaywrightMCP restent ouverts. Cette preuve CUA n’est pas renommée PlaywrightMCP.
+
+
+ALLOCATION-PROGRESSIVE-REAL : allocation250/275.50, uniqueachat3.99/200, consommé43.98 et personnelisolé prouvés UI+SQL. Boutonmobile corrigé et captures finales inspectées ; qualité26788verte. Preuve bornéeFR005, aucuncritère global clôturé. Détails dans resend-real-execution.md. Les mentions historiques de non-réception restent dépassées par MAIL-REAL ; adhésionB demeure ouverte.

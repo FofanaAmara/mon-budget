@@ -68,7 +68,7 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Reproduire puis corriger texte du guide4/4 | espace complet | COMPLETED : branche complète et captures réelles |
 | Transfert fictif et conservation du total | deux pots dédiés | COMPLETED :100+23.45=123.45, dépassementUI bloqué |
 | Recharge/isolation et preuves SQL | opération | COMPLETED : journaux opposés et personnel0 |
-| Qualité et commit local | validation | IN_PROGRESS :100services et build/types/lint/9delivery verts, commit à vérifier |
+| Qualité et commit local | validation | COMPLETED :100services et build/types/lint/9delivery verts, commit5b73d0b |
 
 
 ## Faux avancement du guide
@@ -78,3 +78,13 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Reproduire1/4 avec seul potlibre0 | UI personnel | COMPLETED : capture avant |
 | TestPG RED puis filtrage des véritables dépenses | causeSQL | COMPLETED : pot/objectif/inactif exclus, ponctuelle et récurrente actives gardées |
 | SuitePG et captures0/4 /4/4 | correction | COMPLETED :100tests et preuves réelles/SQL |
+
+
+## Allocations et consommation progressive
+
+| Tâche | Dépendance | État |
+|---|---|---|
+| Allocation fictive du revenu partagé | revenu existant | COMPLETED :250modèle/275.50mensuel |
+| Budget progressif et consommation fictive | catégorie dédiée | COMPLETED :200prévu/3.99achat unique |
+| Recharges/isolation/SQL et captures | saisies | COMPLETED :SQLREADONLY +UIpersonnel0, mobilecorrigé |
+| Journal/matrice/commit local | validation | COMPLETED :qualité26788verte, correctif et preuves commitées localement |

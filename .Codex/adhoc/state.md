@@ -898,3 +898,25 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Décisions prises :** dernierturn PROGRESS. Transfert23.45 exact, projet100/libre23.45/total123.45 conservé et personnel0. Texte4/4 corrigé. Fauxavancement1/4 dûaupotPLANNED, REDPG puis100services verts après filtreRECURRING/ONE_TIMEactifs. Aucune donnée financière corrigée pour faire passer un test ; le défaut de tri du vérificateur a été corrigé seul.
 **Prochaine étape :** stagedcheck/commit ; poursuivre allocations/progressives et autres indépendants ouverts, puis adhésionB aprèscredential humain. CI/MCP/revueglobale/offline restent ouverts.
 **Contexte pour reprise :** HEADdc4d8a0 avantcommit ; runtime68803ResendHTTPS3443. Chromecréateur restauré surpatrimoinecouple ; IABrecipientTab6signupnonfinalisé markHandoffmaintenu. Preuveslocal/resend-recipe/transfer-proof.json21:29Z etguide-progress-proof21:31Z. guidebefore/afterstablepersonnel0/4 et4/4copydesktop/mobile vues ; premièreafterpendantanimation n’est pasretenue. Tests81042PG100/6verts,56136build/types/lint/9delivery0 ; pasdere-run265unit surdernièretrancheprétendu. Aucunpush/DBsource/nouveauemail/sessionfabriquée. Préexistantsserena/next-env/CS exclus ; goalnoncomplete etpasd’impassecarprogrèsutile.
+
+---
+## [2026-10-23] — Recette allocations et dépenses progressives
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md`, P3/P7.
+**Tâche en cours :** allocation et budget progressif fictifs dans le seul espaceResend.
+**Objectif :** preuvesFR005, sans faux parcours à deux.
+**État :** IN_PROGRESS
+**Décisions prises :** dernierturn PROGRESS, commit5b73d0b. Revenu et catégorie dédiés déjà disponibles. Aucune donnée personnelle à modifier ; montants de suivi seulement. Estimation15–25minutes/5–10kjetons, coût indisponible, aucun service/envoi nouveau.
+**Prochaine étape :** ouvrir allocation, configurer une enveloppe fictive puis consommation progressive, preuves SQL et comparaisons de contexte.
+
+---
+## [2026-10-23 17:40] — Allocation et progression vérifiées
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension allocationmobile ; parentP3/P7.
+**Tâche en cours :** clôture de tranche locale, goalglobal toujoursIN_PROGRESS.
+**Objectif :** recettecouple authentifiée sans prétendredeuxmembres.
+**État :** IN_PROGRESS
+**Fichiers touchés :** AllocationTrackingTab.tsx ; plan/preuve/matrice/discovery016/état/tasks/session/mémoireFAB.
+**Décisions prises :** modèle250/surcharge275.50, progressif200/achat3.99, totalconsommé43.98 ; UIreload+SQLREADONLY21:38:43UTC, personnel0allocations/achats/dépenses. FABcachait2070.17, actiondésormaisdansflux ; capturesréellesaprèsreloadmobile/bureau etmodaleouverture/fermeture. Qualité26788build/types/lint/9delivery0. Premièrecaptureafter.jpgencoreancienHMR, NONpreuveaprès.
+**Prochaine étape :** vérifierstaging/commit ; contributionB aprèsinscriptionhumaine ; autresscénarios/caches/offline/revueglobale/PlaywrightMCP/CIexactSHA restentouverts.
+**Contexte pour reprise :** HEAD5b73d0bavantcommit, runtime68803ResendHTTPS3443, copieDBwork17intactehorssaisiesfictives. ChromefinanceTabcréateur surdépensespersonnel ; recipientTab6IABsignupnom/emailpréremplis,motdepassevide,markHandoffmaintenu. Ne pas entrer nouveaucredential/accepterterms àlaplacehumain. Aucunpush, sourceDB/env,nouvelemail niAuthfabriqué. Préexistantsserena/next-env/CSexclus. Progrèsutile, aucuneclôturegoal.
