@@ -1,11 +1,9 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
 
 import { useState } from "react";
-import {
-  formatCAD,
-  formatShortDate,
-  getNextBiweeklyPayDate,
-} from "@/lib/utils";
+import {formatShortDate,getNextBiweeklyPayDate} from "@/lib/utils";
 import { SOURCE_META } from "@/lib/constants";
 import type { MonthlyIncome, Income, IncomeSource } from "@/lib/types";
 import StatusBadge from "@/components/StatusBadge";
@@ -32,6 +30,8 @@ export function IncomeInstanceRow({
   onDelete,
   onUpdateAmount,
 }: IncomeInstanceProps) {
+  const formatCAD = useSpaceCurrency();
+
   const [expanded, setExpanded] = useState(false);
   const srcMeta = SOURCE_META[(mi.income_source ?? "OTHER") as IncomeSource];
   const isReceived = mi.status === "RECEIVED" || mi.status === "PARTIAL";
@@ -306,6 +306,8 @@ export function VariableIncomeRow({
   isCurrentMonth,
   onMarkReceived,
 }: VariableIncomeProps) {
+  const formatCAD = useSpaceCurrency();
+
   const srcMeta = SOURCE_META[(inc.source ?? "OTHER") as IncomeSource];
 
   return (

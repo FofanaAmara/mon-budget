@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
 import { monthLabel, prevMonth, nextMonth, currentMonthKey } from '@/lib/month-utils';
 
 type Props = {

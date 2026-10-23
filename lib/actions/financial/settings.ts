@@ -5,7 +5,6 @@ import { validateInput } from "@/lib/schemas/validate";
 import { requireSpace } from "@/lib/spaces/context";
 import { requireFinancialRecord, revalidateSpace } from "@/lib/spaces/financial";
 import { SpaceSettingsPatch, type SpaceSettings } from "@/lib/spaces/settings";
-import type { z } from "zod";
 
 export async function getSettings(spaceId: string): Promise<SpaceSettings> {
   await requireSpace(spaceId);
@@ -14,7 +13,7 @@ export async function getSettings(spaceId: string): Promise<SpaceSettings> {
   return requireFinancialRecord(rows[0]) as SpaceSettings;
 }
 
-export async function updateSettings(spaceId: string, input: z.infer<typeof SpaceSettingsPatch>): Promise<SpaceSettings> {
+export async function updateSettings(spaceId: string, input: {default_currency?:string;default_reminder_offsets?:number[]}): Promise<SpaceSettings> {
   const data = validateInput(SpaceSettingsPatch, input);
   await requireSpace(spaceId);
   const offsets = data.default_reminder_offsets;

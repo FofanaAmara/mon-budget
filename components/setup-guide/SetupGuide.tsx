@@ -1,10 +1,12 @@
 "use client";
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 /**
  * SetupGuide — Orchestrator component for the onboarding setup checklist.
  *
  * Renders on ALL authenticated pages (mobile bar + desktop widget).
- * Receives real data from the server via props (fetched in app/layout.tsx).
+ * Receives real data from the server via props (fetched after context in app/espaces/[spaceId]/layout.tsx).
  *
  * Keyboard: Escape collapses the open sheet/widget.
  *
@@ -16,15 +18,16 @@
  */
 
 import { useState, useEffect, useCallback, useTransition, useRef } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import {useSearchParams} from "next/navigation";
+import {useFinancialRouter as useRouter,useFinancialPathname as usePathname} from "@/components/spaces/navigation";
 import SetupGuideBar from "./SetupGuideBar";
 import SetupGuideSheet from "./SetupGuideSheet";
 import type { SetupGuideStepData } from "./SetupGuideStep";
 import {
   dismissSetupGuide,
   completeSetupGuide,
-} from "@/lib/actions/setup-guide";
-import type { GuideData, GuideStepCompletion } from "@/lib/actions/setup-guide";
+} from "@/lib/actions/financial/setup-guide";
+import type { GuideData, GuideStepCompletion } from "@/lib/spaces/guide";
 
 // ── Static step definitions ──────────────────────────────────────────────────
 
@@ -109,6 +112,8 @@ type SetupGuideProps = {
 const CELEBRATION_DELAY_MS = 15_000;
 
 export default function SetupGuide({ guideData }: SetupGuideProps) {
+  const { spaceId } = useFinancialSpace();
+
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -182,7 +187,7 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
   useEffect(() => {
     if (isAllComplete && guideData?.isVisible && !isDismissed) {
       startTransition(async () => {
-        await completeSetupGuide();
+        await completeSetupGuide(spaceId);
       });
 
       const timer = setTimeout(() => {
@@ -190,13 +195,13 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
         // Auto-dismiss in DB so the guide won't reappear on next navigation.
         // The CTA remains as an early-exit option on the current page.
         startTransition(async () => {
-          await dismissSetupGuide();
+          await dismissSetupGuide(spaceId);
         });
       }, CELEBRATION_DELAY_MS);
 
       return () => clearTimeout(timer);
     }
-  }, [isAllComplete, guideData?.isVisible, isDismissed, startTransition]);
+  }, [spaceId, isAllComplete, guideData?.isVisible, isDismissed, startTransition]);
 
   // Collapse on Escape key
   useEffect(() => {
@@ -217,10 +222,10 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
     setIsDismissed(true);
     setIsExpanded(false);
     startTransition(async () => {
-      await dismissSetupGuide();
+      await dismissSetupGuide(spaceId);
       router.push("/");
     });
-  }, [router, startTransition]);
+  }, [spaceId, router, startTransition]);
 
   /**
    * Handles step tap — navigates to the step's target page via Next.js router.

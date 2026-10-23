@@ -1,7 +1,7 @@
 "use server";
 
 import { sql } from "@/lib/db";
-import { requireSpace,SpaceAccessError } from "@/lib/spaces/context";
+import { requireSpace } from "@/lib/spaces/context";
 import { requireFinancialParents,requireFinancialRecord,revalidateSpace } from "@/lib/spaces/financial";
 import { payMonthlyExpenses,reverseMonthlyPayment } from "@/lib/spaces/monthly-payments";
 import type { MonthlyExpense,MonthSummary } from "@/lib/types";
@@ -75,13 +75,14 @@ export async function markAsPaid(spaceId:string,id:string):Promise<void> {
   revalidateSpace(spaceId);
 }
 
-export async function markAsUpcoming(spaceId:string,id:string):Promise<void> {
+export async function markAsUpcoming(spaceId:string,id:string):Promise<{ok:true}|{ok:false;error:string}> {
   validateInput(idSchema,id);
   const {userId}=await requireSpace(spaceId);
   const [rows]=await sql.transaction(txn=>[reverseMonthlyPayment(txn,spaceId,userId,id)]);
   const record=requireFinancialRecord(rows[0]);
-  if(record.historical_unknown) throw new SpaceAccessError("Le montant déduit de ce versement historique est invérifiable. Son annulation automatique nécessite une vérification.");
+  if(record.historical_unknown) return {ok:false,error:"Le montant déduit de ce versement historique est invérifiable. Pour préserver ton solde, son annulation automatique est bloquée. Aucun montant n’a été modifié."};
   revalidateSpace(spaceId);
+  return {ok:true};
 }
 
 export async function deferExpenseToMonth(spaceId:string,id:string,targetMonth:string):Promise<void> {

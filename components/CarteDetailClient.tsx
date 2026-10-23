@@ -1,8 +1,10 @@
 'use client';
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
 
-import { formatCAD, calcMonthlyCost, daysUntil } from '@/lib/utils';
+
+import {calcMonthlyCost,daysUntil} from "@/lib/utils";
 import type { Expense, Card } from '@/lib/types';
-import Link from 'next/link';
+import Link from "@/components/spaces/navigation";
 
 /* ─── Types ──────────────────────────────────────────── */
 
@@ -38,6 +40,8 @@ function getDueBadge(days: number): { bg: string; color: string } {
 /* ─── Component ──────────────────────────────────────── */
 
 export default function CarteDetailClient({ card, expenses, monthlyTotal }: Props) {
+  const formatCAD = useSpaceCurrency();
+
   const autoExpenses   = expenses.filter((e) => e.auto_debit);
   const manualExpenses = expenses.filter((e) => !e.auto_debit);
 

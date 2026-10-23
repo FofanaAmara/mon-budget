@@ -1,8 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from "@/components/spaces/navigation";
+import {useFinancialPathname as usePathname} from "@/components/spaces/navigation";
 import { useState, useRef, useEffect } from "react";
+import SpaceSelector from "@/components/spaces/SpaceSelector";
 import { authClient } from "@/lib/auth/client";
 
 type Tab = {
@@ -420,6 +421,8 @@ export default function BottomNav() {
             </span>
           </div>
         </div>
+
+        <SpaceSelector />
 
         {/* Nav items */}
         <nav

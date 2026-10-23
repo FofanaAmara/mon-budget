@@ -11,7 +11,8 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:spaces:db": "node --test __tests__/integration/financial-spaces-migration.test.mjs",
-    "test:spaces:services": "vitest run --config vitest.spaces.config.ts"
+    "test:spaces:services": "vitest run --config vitest.spaces.config.ts",
+    "test:spaces:navigation": "node __tests__/browser/space-navigation-fixture/check.mjs"
   },
   "dependencies": {
     "@neondatabase/auth": "^0.2.0-beta.1",

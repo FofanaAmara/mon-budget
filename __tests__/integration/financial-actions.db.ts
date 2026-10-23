@@ -20,7 +20,7 @@ import * as savings from "@/lib/actions/financial/savings";
 import { createSpace } from "@/lib/actions/spaces";
 import * as incomes from "@/lib/actions/financial/incomes";
 import * as monthlyIncomes from "@/lib/actions/financial/monthly-incomes";
-import { dismissSetupGuide, completeSetupGuide, resetSetupGuide, getOrInitSetupGuideData } from "@/lib/actions/setup-guide";
+import { dismissSetupGuide, completeSetupGuide, resetSetupGuide, getOrInitSetupGuideData } from "@/lib/actions/financial/setup-guide";
 
 const database = "spaces_migration_test_" + randomBytes(4).toString("hex");
 let native: Awaited<ReturnType<typeof localConnection>>;
@@ -452,14 +452,13 @@ describe("financial actions — persistent shared-space isolation", () => {
   });
 
   test("an already closed legacy guide keeps its historical dates on repeated completion/dismissal", async () => {
-    await native.query(`INSERT INTO setup_guide(user_id,completed_at,dismissed_at)
-      VALUES($1,'2020-01-01','2020-01-02')`,[a]);
-    const before=(await native.query("SELECT * FROM setup_guide WHERE user_id=$1",[a])).rows[0];
-    expect((await getOrInitSetupGuideData())?.isVisible).toBe(false);
-    await completeSetupGuide(); await dismissSetupGuide(); await dismissSetupGuide();
-    expect((await native.query("SELECT * FROM setup_guide WHERE user_id=$1",[a])).rows[0]).toEqual(before);
-    await resetSetupGuide();
-    await dismissSetupGuide();
-    expect((await native.query("SELECT dismissed_at FROM setup_guide WHERE user_id=$1",[a])).rows[0].dismissed_at).not.toBeNull();
+    await native.query(`UPDATE space_setup_guide SET completed_at='2020-01-01',dismissed_at='2020-01-02' WHERE space_id=$1`,[couple]);
+    const before=(await native.query("SELECT * FROM space_setup_guide WHERE space_id=$1",[couple])).rows[0];
+    expect((await getOrInitSetupGuideData(couple))?.isVisible).toBe(false);
+    await completeSetupGuide(couple); await dismissSetupGuide(couple); await dismissSetupGuide(couple);
+    expect((await native.query("SELECT * FROM space_setup_guide WHERE space_id=$1",[couple])).rows[0]).toEqual(before);
+    await resetSetupGuide(couple);
+    await dismissSetupGuide(couple);
+    expect((await native.query("SELECT dismissed_at FROM space_setup_guide WHERE space_id=$1",[couple])).rows[0].dismissed_at).not.toBeNull();
   });
 });

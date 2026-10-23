@@ -1,9 +1,11 @@
 "use client";
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { deleteExpense } from "@/lib/actions/expenses";
-import { deleteDebt } from "@/lib/actions/debts";
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
+import { deleteExpense } from "@/lib/actions/financial/expenses";
+import { deleteDebt } from "@/lib/actions/financial/debts";
 import ProjectModal from "@/components/ProjectModal";
 import DebtModal from "@/components/DebtModal";
 import AddSavingsModal from "@/components/AddSavingsModal";
@@ -33,6 +35,8 @@ export default function ProjetsEpargneClient({
   debts,
   totalDebtBalance,
 }: Props) {
+  const { spaceId } = useFinancialSpace();
+
   const router = useRouter();
   const [, startTransition] = useTransition();
   const [createModal, setCreateModal] = useState(false);
@@ -56,7 +60,7 @@ export default function ProjetsEpargneClient({
   function handleDeleteProject(id: string) {
     if (confirm("Supprimer cet objectif ?")) {
       startTransition(async () => {
-        await deleteExpense(id);
+        await deleteExpense(spaceId, id);
         router.refresh();
       });
     }
@@ -65,7 +69,7 @@ export default function ProjetsEpargneClient({
   function handleDeleteDebt(id: string) {
     if (confirm("Supprimer cette dette ?")) {
       startTransition(async () => {
-        await deleteDebt(id);
+        await deleteDebt(spaceId, id);
         router.refresh();
       });
     }

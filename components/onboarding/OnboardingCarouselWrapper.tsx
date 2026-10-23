@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
 import { useCallback } from "react";
 import OnboardingCarousel from "./OnboardingCarousel";
 import { markOnboardingSeen } from "@/lib/actions/onboarding-carousel";

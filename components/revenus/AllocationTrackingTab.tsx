@@ -1,9 +1,14 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
+import Link from "@/components/spaces/navigation";
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { updateMonthlyAllocation } from "@/lib/actions/allocations";
-import { formatCAD } from "@/lib/utils";
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
+import { updateMonthlyAllocation } from "@/lib/actions/financial/allocations";
+
 import AdhocAllocationModal from "@/components/AdhocAllocationModal";
 import SheetCloseButton from "@/components/SheetCloseButton";
 import type { MonthlyAllocation, Section, Expense } from "@/lib/types";
@@ -31,6 +36,10 @@ export default function AllocationTrackingTab({
   sections,
   projects,
 }: AllocationTrackingTabProps) {
+  const formatCAD = useSpaceCurrency();
+
+  const { spaceId } = useFinancialSpace();
+
   const router = useRouter();
   const [, startTransition] = useTransition();
 
@@ -53,7 +62,7 @@ export default function AllocationTrackingTab({
     const amt = parseFloat(overrideAmount);
     if (isNaN(amt) || amt < 0) return;
     startTransition(async () => {
-      await updateMonthlyAllocation(
+      await updateMonthlyAllocation(spaceId,
         overrideModal.id,
         amt,
         overrideNote || null,
@@ -249,7 +258,7 @@ export default function AllocationTrackingTab({
           >
             Aucune enveloppe configurée
           </p>
-          <a
+          <Link
             href="/parametres/allocation"
             style={{
               fontSize: "13px",
@@ -259,7 +268,7 @@ export default function AllocationTrackingTab({
             }}
           >
             → Configurer dans les Réglages
-          </a>
+          </Link>
         </div>
       ) : (
         <div
@@ -767,7 +776,7 @@ export default function AllocationTrackingTab({
 
       {/* Link to settings */}
       <div style={{ textAlign: "center" as const, marginTop: "24px" }}>
-        <a
+        <Link
           href="/parametres/allocation"
           style={{
             fontSize: "13px",
@@ -777,7 +786,7 @@ export default function AllocationTrackingTab({
           }}
         >
           Gérer les enveloppes dans les Réglages →
-        </a>
+        </Link>
       </div>
 
       {/* Adhoc allocation FAB — current month only */}

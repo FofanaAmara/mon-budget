@@ -4,7 +4,8 @@ import { sql } from "@/lib/db";
 import { currentMonth } from "@/lib/utils";
 import { requireSpace } from "@/lib/spaces/context";
 import { revalidateSpace } from "@/lib/spaces/financial";
-import type { GuideData } from "@/lib/actions/setup-guide";
+import type { GuideData } from "@/lib/spaces/guide";
+export type { GuideData, GuideStepCompletion } from "@/lib/spaces/guide";
 
 /** Run only after resolving the explicit space. Step progress is shared by all members. */
 export async function getOrInitSetupGuideData(spaceId: string): Promise<GuideData> {

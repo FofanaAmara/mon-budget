@@ -360,4 +360,15 @@ describe("expenses and allocations — real PostgreSQL, Auth/cache stubbed",()=>
     await monthly.generateMonthlyExpenses(common,"2031-02");
     expect((await monthly.getMonthlyExpenses(common,"2031-02")).some(row=>row.expense_id===once.id)).toBe(false);
   });
+
+  test("an unverifiable historical debt reversal returns an explicit safe result without changing money or history",async()=>{
+    state.userId=a;
+    const loan=await debt(70,30);
+    const payment=await instance(common,{debt_id:loan.id,amount:30,status:"PAID",debt_paid_amount:null});
+    const before=await record("debts",loan.id),logs=await debtLogs(loan.id);
+    expect(await monthly.markAsUpcoming(common,payment.id)).toMatchObject({ok:false,error:expect.stringContaining("invérifiable")});
+    expect(await record("debts",loan.id)).toEqual(before);
+    expect(await debtLogs(loan.id)).toEqual(logs);
+    expect(await record("monthly_expenses",payment.id)).toEqual(payment);
+  });
 });

@@ -1,10 +1,13 @@
 "use client";
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useTransition, useRef, useEffect } from "react";
-import Link from "next/link";
+import Link from "@/components/spaces/navigation";
 import { authClient } from "@/lib/auth/client";
-import { loadDemoData, clearAllUserData } from "@/lib/actions/demo-data";
-import { resetSetupGuide } from "@/lib/actions/setup-guide";
+import { loadDemoData, clearAllUserData } from "@/lib/actions/financial/demo-data";
+import { resetSetupGuide } from "@/lib/actions/financial/setup-guide";
 
 const PREFERENCE_ITEMS = [
   {
@@ -198,6 +201,9 @@ function LinkRow({
 }
 
 export default function ParametresClient({ hasData }: { hasData: boolean }) {
+  const { spaceId } = useFinancialSpace();
+  const router = useRouter();
+
   const [showClearModal, setShowClearModal] = useState(false);
   const [isPendingLoad, startLoadTransition] = useTransition();
   const [isPendingClear, startClearTransition] = useTransition();
@@ -214,7 +220,7 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
 
   function handleResetGuide() {
     startResetTransition(async () => {
-      await resetSetupGuide();
+      await resetSetupGuide(spaceId);
       setGuideResetDone(true);
     });
   }
@@ -222,9 +228,9 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
   function handleLoadDemo() {
     setFeedback(null);
     startLoadTransition(async () => {
-      const result = await loadDemoData();
+      const result = await loadDemoData(spaceId);
       if (result.success) {
-        window.location.reload();
+        router.refresh();
       } else {
         setFeedback(result.error ?? "Erreur");
       }
@@ -234,9 +240,9 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
   function handleClearAll() {
     setFeedback(null);
     startClearTransition(async () => {
-      const result = await clearAllUserData();
+      const result = await clearAllUserData(spaceId);
       if (result.success) {
-        window.location.href = "/";
+        router.push("/");
       } else {
         setFeedback(result.error ?? "Erreur");
         setShowClearModal(false);

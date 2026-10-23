@@ -1,9 +1,15 @@
 "use client";
+import {useSpaceDraftValues} from "@/components/spaces/SpaceContext";
+
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useRef, useEffect } from "react";
 
 import { IconClose } from "@/components/icons";
-import { formatCAD } from "@/lib/utils";
+
 import type { Section, Card, Debt, DebtFrequency } from "@/lib/types";
 
 const FREQUENCIES: { value: DebtFrequency; label: string }[] = [
@@ -22,6 +28,10 @@ type Props = {
 };
 
 export default function DebtModal({ sections, cards, debt, onClose }: Props) {
+  const formatCAD = useSpaceCurrency();
+
+  const { spaceId } = useFinancialSpace();
+
   const isEdit = !!debt;
   const [name, setName] = useState(debt?.name ?? "");
   const [originalAmount, setOriginalAmount] = useState(
@@ -46,6 +56,8 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
   const [cardId, setCardId] = useState(debt?.card_id ?? "");
   const [sectionId, setSectionId] = useState(debt?.section_id ?? "");
   const [notes, setNotes] = useState(debt?.notes ?? "");
+  useSpaceDraftValues({name,originalAmount,remainingBalance,interestRate,paymentAmount,paymentFrequency,paymentDay,autoDebit,cardId,sectionId,notes});
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -113,11 +125,11 @@ export default function DebtModal({ sections, cards, debt, onClose }: Props) {
       };
 
       if (isEdit) {
-        const { updateDebt } = await import("@/lib/actions/debts");
-        await updateDebt(debt.id, payload);
+        const { updateDebt } = await import("@/lib/actions/financial/debts");
+        await updateDebt(spaceId, debt.id, payload);
       } else {
-        const { createDebt } = await import("@/lib/actions/debts");
-        await createDebt(payload);
+        const { createDebt } = await import("@/lib/actions/financial/debts");
+        await createDebt(spaceId, payload);
       }
       onClose();
     } catch {

@@ -1,7 +1,9 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
 
-import Link from "next/link";
-import { formatCAD } from "@/lib/utils";
+
+import Link from "@/components/spaces/navigation";
+
 import type {
   MonthSummary,
   MonthlySavingsSummary,
@@ -221,6 +223,8 @@ export default function TabTableauDeBord({
   totalEpargne,
   valeurNette,
 }: Props) {
+  const formatCAD = useSpaceCurrency();
+
   // Epargne progress (toward goals)
   const savingsGoalTotal = savingsSummary.byProject.reduce(
     (s, p) => s + p.total,

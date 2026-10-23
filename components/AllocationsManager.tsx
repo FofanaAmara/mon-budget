@@ -1,13 +1,17 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
 import SheetCloseButton from "@/components/SheetCloseButton";
 import {
   deleteAllocation,
   reorderAllocations,
-} from "@/lib/actions/allocations";
-import { formatCAD } from "@/lib/utils";
+} from "@/lib/actions/financial/allocations";
+
 import type { IncomeAllocation, Section, Expense } from "@/lib/types";
 import AllocationModal from "./AllocationModal";
 
@@ -24,6 +28,10 @@ export default function AllocationsManager({
   projects,
   expectedMonthlyIncome,
 }: Props) {
+  const formatCAD = useSpaceCurrency();
+
+  const { spaceId } = useFinancialSpace();
+
   const router = useRouter();
   const [, startTransition] = useTransition();
   const [showModal, setShowModal] = useState(false);
@@ -57,7 +65,7 @@ export default function AllocationsManager({
   function confirmDelete() {
     if (!deleteTarget) return;
     startTransition(async () => {
-      await deleteAllocation(deleteTarget.id);
+      await deleteAllocation(spaceId, deleteTarget.id);
       setDeleteTarget(null);
       router.refresh();
     });
@@ -68,7 +76,7 @@ export default function AllocationsManager({
     const ids = allocations.map((a) => a.id);
     [ids[index - 1], ids[index]] = [ids[index], ids[index - 1]];
     startTransition(async () => {
-      await reorderAllocations(ids);
+      await reorderAllocations(spaceId, ids);
       router.refresh();
     });
   }
@@ -78,7 +86,7 @@ export default function AllocationsManager({
     const ids = allocations.map((a) => a.id);
     [ids[index], ids[index + 1]] = [ids[index + 1], ids[index]];
     startTransition(async () => {
-      await reorderAllocations(ids);
+      await reorderAllocations(spaceId, ids);
       router.refresh();
     });
   }

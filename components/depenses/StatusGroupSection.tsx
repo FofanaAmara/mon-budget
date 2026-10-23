@@ -1,7 +1,9 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
 
 import { useState } from "react";
-import { formatCAD } from "@/lib/utils";
+
 import { GROUP_LABELS } from "@/lib/constants";
 import ExpenseTrackingRow from "@/components/ExpenseTrackingRow";
 import type { MonthlyExpense, ExpenseGroupKey } from "@/lib/types";
@@ -24,6 +26,8 @@ export default function StatusGroupSection({
   onAction,
   onOpenActions,
 }: Props) {
+  const formatCAD = useSpaceCurrency();
+
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
     new Set(),
   );

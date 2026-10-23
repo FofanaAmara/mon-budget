@@ -1,6 +1,8 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
 
-import { formatCAD } from "@/lib/utils";
+
+
 import { IconCheck } from "@/components/icons";
 import type { MonthlyExpense } from "@/lib/types";
 import {
@@ -94,6 +96,8 @@ export default function ExpenseTrackingRow({
   onAction,
   onOpenActions,
 }: Props) {
+  const formatCAD = useSpaceCurrency();
+
   const isPaid = expense.status === "PAID";
   const isProgressive = expense.is_progressive;
   // Cast to number — DB returns DECIMAL as string

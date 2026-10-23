@@ -1,9 +1,15 @@
 "use client";
+import {useSpaceDraftValues} from "@/components/spaces/SpaceContext";
+
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useRef, useEffect } from "react";
 
 import { IconClose } from "@/components/icons";
-import { calcMonthlySuggested, formatCAD } from "@/lib/utils";
+import {calcMonthlySuggested} from "@/lib/utils";
 import type { Section } from "@/lib/types";
 
 type Props = {
@@ -12,11 +18,17 @@ type Props = {
 };
 
 export default function ProjectModal({ sections, onClose }: Props) {
+  const formatCAD = useSpaceCurrency();
+
+  const { spaceId } = useFinancialSpace();
+
   const [name, setName] = useState("");
   const [targetAmount, setTargetAmount] = useState("");
   const [targetDate, setTargetDate] = useState("");
   const [sectionId, setSectionId] = useState("");
   const [initialAmount, setInitialAmount] = useState("");
+  useSpaceDraftValues({name,targetAmount,targetDate,sectionId,initialAmount});
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -57,8 +69,8 @@ export default function ProjectModal({ sections, onClose }: Props) {
     setLoading(true);
     setError("");
     try {
-      const { createExpense } = await import("@/lib/actions/expenses");
-      await createExpense({
+      const { createExpense } = await import("@/lib/actions/financial/expenses");
+      await createExpense(spaceId, {
         name: name.trim(),
         amount: 0,
         type: "PLANNED",

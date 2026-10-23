@@ -1,7 +1,11 @@
 "use client";
+import {useSpaceDraftValues} from "@/components/spaces/SpaceContext";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useRef, useEffect } from "react";
-import { createIncome, updateIncome } from "@/lib/actions/incomes";
+import { createIncome, updateIncome } from "@/lib/actions/financial/incomes";
 import { IconClose, IconCheck } from "@/components/icons";
 import type { Income, IncomeFrequency, IncomeSource } from "@/lib/types";
 
@@ -64,6 +68,8 @@ type Props = {
 // ── Component ────────────────────────────────────────────────────────────────
 
 export default function IncomeModal({ income, onClose }: Props) {
+  const { spaceId } = useFinancialSpace();
+
   const isEdit = !!income;
 
   const [name, setName] = useState(income?.name ?? "");
@@ -87,6 +93,8 @@ export default function IncomeModal({ income, onClose }: Props) {
   });
   const [autoDeposit, setAutoDeposit] = useState(income?.auto_deposit ?? false);
   const [notes, setNotes] = useState(income?.notes ?? "");
+  useSpaceDraftValues({name,source,frequency,amount,estimatedAmount,payAnchorDate,autoDeposit,notes});
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -122,9 +130,9 @@ export default function IncomeModal({ income, onClose }: Props) {
         notes: notes.trim() || null,
       };
       if (isEdit && income) {
-        await updateIncome(income.id, data);
+        await updateIncome(spaceId, income.id, data);
       } else {
-        await createIncome(data);
+        await createIncome(spaceId, data);
       }
       onClose();
     } catch {

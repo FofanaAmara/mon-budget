@@ -28,3 +28,5 @@ P1.3 progression : 72/78 exports financiers convertis ; services60/60, migration
 P1.3 progression : 76/78 exports financiers et partition des réglages communs/individuels ;70services/181unit, types/lint verts. Appelants encore pending ; autonomie explicitement demandée pendant absence, décisions documentées sans question.
 
 P1.3 progression : 78/78exports financiers implémentés ; maintenance transactionnelle ciblée et116exemples conservés. 80services/181unit/types/lint/buildverts. Raccordement des appelants, suppression legacy et parcoursproduit restent à faire.
+
+P1.3 raccordement : 78/78exports et appelants explicites,15anciensmodules supprimés ; routes canoniques, sélecteur/sidebar/drawer, devise/guide et caches raccordés.81services/188unit/types/lint/buildverts,5casChromeisolésverts. ESP-003 IN_PROGRESS ; vraieactivation/UIcréation/gestion/invitations/auth/E2E/visuelMCP encoreàfaire.

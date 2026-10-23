@@ -1,8 +1,12 @@
 "use client";
+import {useSpaceDraftValues} from "@/components/spaces/SpaceContext";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { addDebtTransaction } from "@/lib/actions/debt-transactions";
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
+import { addDebtTransaction } from "@/lib/actions/financial/debt-transactions";
 import SheetCloseButton from "@/components/SheetCloseButton";
 import type { Debt } from "@/lib/types";
 
@@ -15,10 +19,14 @@ export default function ChargeDebtSheet({
   debt,
   onClose,
 }: ChargeDebtSheetProps) {
+  const { spaceId } = useFinancialSpace();
+
   const router = useRouter();
   const [, startTransition] = useTransition();
   const [chargeAmount, setChargeAmount] = useState("");
   const [chargeNote, setChargeNote] = useState("");
+  useSpaceDraftValues({chargeAmount,chargeNote});
+
 
   async function handleSubmit() {
     const amount = parseFloat(chargeAmount);
@@ -26,7 +34,7 @@ export default function ChargeDebtSheet({
     const now = new Date();
     const txMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
     startTransition(async () => {
-      await addDebtTransaction(
+      await addDebtTransaction(spaceId,
         debt.id,
         "CHARGE",
         amount,

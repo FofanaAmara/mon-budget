@@ -1,7 +1,10 @@
 "use client";
+import {useSpaceDraft} from "@/components/spaces/SpaceContext";
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useTransition, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
 import SheetCloseButton from "@/components/SheetCloseButton";
 import Breadcrumb from "@/components/Breadcrumb";
 import {
@@ -10,7 +13,7 @@ import {
   deleteSection,
   getSectionExpenseCount,
   reorderSections,
-} from "@/lib/actions/sections";
+} from "@/lib/actions/financial/sections";
 import type { Section } from "@/lib/types";
 
 /* ─── Constants ──────────────────────────────────────── */
@@ -79,6 +82,8 @@ export default function SectionsClient({
 }: {
   sections: Section[];
 }) {
+  const { spaceId } = useFinancialSpace();
+
   const router = useRouter();
   const [sections, setSections] = useState(initial);
   const [modal, setModal] = useState<ModalState>({ mode: "closed" });
@@ -100,6 +105,9 @@ export default function SectionsClient({
   }, [modal.mode]);
 
   /* ── Handlers ── */
+
+  const draftOriginal=modal.mode==="edit"?modal.section:null;
+  useSpaceDraft(modal.mode!=="closed" && (name !== (draftOriginal?.name ?? "") || icon !== (draftOriginal?.icon ?? "🏠") || color !== (draftOriginal?.color ?? COLORS[0].value)));
 
   function openCreate() {
     setName("");
@@ -123,14 +131,14 @@ export default function SectionsClient({
     if (!name.trim()) return;
     startTransition(async () => {
       if (modal.mode === "create") {
-        const newSection = await createSection({
+        const newSection = await createSection(spaceId, {
           name: name.trim(),
           icon,
           color,
         });
         setSections((prev) => [...prev, newSection]);
       } else if (modal.mode === "edit") {
-        await updateSection(modal.section.id, {
+        await updateSection(spaceId, modal.section.id, {
           name: name.trim(),
           icon,
           color,
@@ -149,14 +157,14 @@ export default function SectionsClient({
   }
 
   async function handleDeleteClick(id: string) {
-    const count = await getSectionExpenseCount(id);
+    const count = await getSectionExpenseCount(spaceId, id);
     setDeleteExpenseCount(count);
     setDeleting(id);
   }
 
   function handleDeleteConfirm(id: string) {
     startTransition(async () => {
-      await deleteSection(id);
+      await deleteSection(spaceId, id);
       setSections((prev) => prev.filter((s) => s.id !== id));
       setDeleting(null);
       setDeleteExpenseCount(0);
@@ -180,7 +188,7 @@ export default function SectionsClient({
 
   function handleDragEnd() {
     startTransition(async () => {
-      await reorderSections(sections.map((s) => s.id));
+      await reorderSections(spaceId, sections.map((s) => s.id));
       dragIndex.current = null;
     });
   }

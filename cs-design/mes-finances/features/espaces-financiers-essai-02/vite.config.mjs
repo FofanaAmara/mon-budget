@@ -11,6 +11,9 @@ const simulatedServices = {
  name:'isolated-services', enforce:'pre',
  resolveId(id) {
   if(id.startsWith(root+'/lib/')) id='@/'+id.slice(root.length+1);
+  if(id==='@/components/spaces/SpaceContext') return path.join(mocks,'space-context.jsx');
+  if(id==='@/components/spaces/navigation') return path.join(mocks,'financial-navigation.jsx');
+  if(id==='@/components/spaces/SpaceSelector') return path.join(mocks,'space-selector.jsx');
   if(id.startsWith('@/lib/actions/')) return '\0simulated:'+id;
   if(id==='@/lib/auth/client') return path.join(mocks,'auth.jsx');
   if(id==='@neondatabase/auth/react') return path.join(mocks,'AuthView.jsx');
@@ -24,7 +27,7 @@ const simulatedServices = {
   const source=id.slice('\0simulated:'.length);
   const code=readFileSync(path.join(root,source.replace('@/', '')+'.ts'),'utf8');
   const names=[...code.matchAll(/export\s+(?:async\s+)?function\s+(\w+)/g)].map(x=>x[1]);
-  return `import { simulate } from ${JSON.stringify(path.join(mocks,'services.jsx'))};\n`+names.map(n=>`export async function ${n}(...args){return simulate(${JSON.stringify(n)},args);}`).join('\n');
+  return `import { simulate } from ${JSON.stringify(path.join(mocks,'services.jsx'))};\n`+names.map(n=>`export async function ${n}(...args){const result=await simulate(${JSON.stringify(n)},${source.includes('/financial/')?n==='updateSettings'?"args":"args.slice(1)":"args"});return ${n==='markAsUpcoming'?'({ok:true})':'result'};}`).join('\n');
  }
 };
 export default defineConfig({root:here,envDir:path.join(here,'.cache/no-env'),cacheDir:path.join(here,'.cache/vite'),optimizeDeps:{entries:[path.join(here,'index.html')]},plugins:[simulatedServices],resolve:{alias:[{find:'@',replacement:root}],dedupe:['react','react-dom']},esbuild:{jsx:'automatic'},css:{postcss:{plugins:[tailwind({base:root})]}},server:{host:'127.0.0.1',port:4301,strictPort:true,fs:{allow:[root]}},build:{outDir:path.join(here,'.cache/dist'),emptyOutDir:true}});

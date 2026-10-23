@@ -1,15 +1,14 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useTransition, useSyncExternalStore } from "react";
-import { useRouter } from "next/navigation";
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
 
-import { deleteExpense } from "@/lib/actions/expenses";
-import {
-  formatCAD,
-  formatShortDate,
-  daysUntil,
-  calcMonthlyCost,
-} from "@/lib/utils";
+import { deleteExpense } from "@/lib/actions/financial/expenses";
+import {formatShortDate,daysUntil,calcMonthlyCost} from "@/lib/utils";
 import ExpenseModal from "@/components/ExpenseModal";
 import type { Expense, Section, Card, RecurrenceFrequency } from "@/lib/types";
 import StatusBadge from "@/components/StatusBadge";
@@ -29,15 +28,15 @@ const FREQ_LABELS: Record<RecurrenceFrequency, string> = {
   YEARLY: "Annuel",
 };
 
-function formatSectionTotal(amount: number): string {
-  return formatCAD(amount);
-}
-
 export default function ExpenseTemplateManager({
   expenses,
   sections,
   cards,
 }: Props) {
+  const formatCAD = useSpaceCurrency();
+
+  const { spaceId } = useFinancialSpace();
+
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [editingExpense, setEditingExpense] = useState<Expense | undefined>();
@@ -68,7 +67,7 @@ export default function ExpenseTemplateManager({
 
   function handleDelete(id: string) {
     startTransition(async () => {
-      await deleteExpense(id);
+      await deleteExpense(spaceId, id);
       setDeletingId(null);
       router.refresh();
     });
@@ -154,7 +153,7 @@ export default function ExpenseTemplateManager({
                 whiteSpace: "nowrap",
               }}
             >
-              {formatSectionTotal(sectionTotal)}
+              {formatCAD(sectionTotal)}
             </span>
             <div
               style={{
@@ -375,7 +374,7 @@ export default function ExpenseTemplateManager({
                     fontVariantNumeric: "tabular-nums",
                   }}
                 >
-                  {formatSectionTotal(
+                  {formatCAD(
                     unsectioned.reduce((s, e) => s + calcMonthlyCost(e), 0),
                   )}
                   <span
@@ -565,6 +564,8 @@ function ExpenseRow({
   onCancelDelete,
   isClient,
 }: ExpenseRowProps) {
+  const formatCAD = useSpaceCurrency();
+
   const isNonMonthly =
     expense.type === "RECURRING" &&
     expense.recurrence_frequency &&

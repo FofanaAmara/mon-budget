@@ -1,6 +1,6 @@
 {
   "date": "2026-10-23",
-  "meaning": "Implementation registry; no UI or end-to-end delivery implied. All legacy financial entry points must be removed at cutover.",
+  "meaning": "All original financial server modules removed and explicit-space callers wired. Runtime, full product UX, auth, invitations and delivery are still unverified/incomplete.",
   "converted": 78,
   "baselineExports": 86,
   "baselineFinancialExports": 78,
@@ -10,8 +10,11 @@
       "export": "getAllocations",
       "scope": "financial",
       "implementation": "lib/actions/financial/allocations.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/parametres/allocation/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/parametres/allocation/page.tsx"
       ]
     },
@@ -20,8 +23,11 @@
       "export": "createAllocation",
       "scope": "financial",
       "implementation": "lib/actions/financial/allocations.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/AllocationModal.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/AllocationModal.tsx"
       ]
     },
@@ -30,8 +36,11 @@
       "export": "updateAllocation",
       "scope": "financial",
       "implementation": "lib/actions/financial/allocations.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/AllocationModal.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/AllocationModal.tsx"
       ]
     },
@@ -40,8 +49,11 @@
       "export": "deleteAllocation",
       "scope": "financial",
       "implementation": "lib/actions/financial/allocations.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/AllocationsManager.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/AllocationsManager.tsx"
       ]
     },
@@ -50,8 +62,11 @@
       "export": "reorderAllocations",
       "scope": "financial",
       "implementation": "lib/actions/financial/allocations.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/AllocationsManager.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/AllocationsManager.tsx"
       ]
     },
@@ -60,8 +75,11 @@
       "export": "generateMonthlyAllocations",
       "scope": "financial",
       "implementation": "lib/actions/financial/allocations.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/revenus/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/revenus/page.tsx"
       ]
     },
@@ -70,8 +88,11 @@
       "export": "getMonthlyAllocations",
       "scope": "financial",
       "implementation": "lib/actions/financial/allocations.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/revenus/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/revenus/page.tsx"
       ]
     },
@@ -80,8 +101,11 @@
       "export": "createAdhocMonthlyAllocation",
       "scope": "financial",
       "implementation": "lib/actions/financial/allocations.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/AdhocAllocationModal.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/AdhocAllocationModal.tsx"
       ]
     },
@@ -90,8 +114,11 @@
       "export": "updateMonthlyAllocation",
       "scope": "financial",
       "implementation": "lib/actions/financial/allocations.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/revenus/AllocationTrackingTab.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/revenus/AllocationTrackingTab.tsx"
       ]
     },
@@ -100,8 +127,15 @@
       "export": "getCards",
       "scope": "financial",
       "implementation": "lib/actions/financial/cards.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/cartes/page.tsx",
+        "app/espaces/[spaceId]/depenses/[id]/edit/page.tsx",
+        "app/espaces/[spaceId]/depenses/page.tsx",
+        "app/espaces/[spaceId]/parametres/charges/page.tsx",
+        "app/espaces/[spaceId]/projets/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/cartes/page.tsx",
         "app/depenses/[id]/edit/page.tsx",
         "app/depenses/page.tsx",
@@ -114,8 +148,11 @@
       "export": "getCardById",
       "scope": "financial",
       "implementation": "lib/actions/financial/cards.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/cartes/[id]/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/cartes/[id]/page.tsx"
       ]
     },
@@ -124,8 +161,11 @@
       "export": "createCard",
       "scope": "financial",
       "implementation": "lib/actions/financial/cards.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/CartesClient.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/CartesClient.tsx"
       ]
     },
@@ -134,8 +174,11 @@
       "export": "updateCard",
       "scope": "financial",
       "implementation": "lib/actions/financial/cards.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/CartesClient.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/CartesClient.tsx"
       ]
     },
@@ -144,8 +187,11 @@
       "export": "deleteCard",
       "scope": "financial",
       "implementation": "lib/actions/financial/cards.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/CartesClient.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/CartesClient.tsx"
       ]
     },
@@ -154,8 +200,9 @@
       "export": "hasOrphanedData",
       "scope": "legacy",
       "implementation": null,
-      "status": "pending",
-      "callerFiles": [
+      "status": "retired-no-runtime-claim",
+      "callerFiles": [],
+      "baselineCallerFiles": [
         "app/page.tsx"
       ]
     },
@@ -164,8 +211,9 @@
       "export": "claimOrphanedData",
       "scope": "legacy",
       "implementation": null,
-      "status": "pending",
-      "callerFiles": [
+      "status": "retired-no-runtime-claim",
+      "callerFiles": [],
+      "baselineCallerFiles": [
         "components/ClaimBanner.tsx"
       ]
     },
@@ -174,8 +222,11 @@
       "export": "ensureDefaultSections",
       "scope": "financial",
       "implementation": "lib/actions/financial/claim.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/page.tsx"
       ]
     },
@@ -184,8 +235,11 @@
       "export": "addDebtTransaction",
       "scope": "financial",
       "implementation": "lib/actions/financial/debt-transactions.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/projets/ChargeDebtSheet.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/projets/ChargeDebtSheet.tsx"
       ]
     },
@@ -194,8 +248,11 @@
       "export": "getMonthlyDebtSummary",
       "scope": "financial",
       "implementation": "lib/actions/financial/debt-transactions.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/page.tsx"
       ]
     },
@@ -204,16 +261,20 @@
       "export": "getDebtTransactions",
       "scope": "financial",
       "implementation": "lib/actions/financial/debt-transactions.ts",
-      "status": "service-tested-callers-pending",
-      "callerFiles": []
+      "status": "callers-wired-runtime-unverified",
+      "callerFiles": [],
+      "baselineCallerFiles": []
     },
     {
       "legacyFile": "lib/actions/debts.ts",
       "export": "getDebts",
       "scope": "financial",
       "implementation": "lib/actions/financial/debts.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/projets/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/projets/page.tsx"
       ]
     },
@@ -222,24 +283,33 @@
       "export": "createDebt",
       "scope": "financial",
       "implementation": "lib/actions/financial/debts.ts",
-      "status": "service-tested-callers-pending",
-      "callerFiles": []
+      "status": "callers-wired-runtime-unverified",
+      "callerFiles": [
+        "components/DebtModal.tsx"
+      ],
+      "baselineCallerFiles": []
     },
     {
       "legacyFile": "lib/actions/debts.ts",
       "export": "updateDebt",
       "scope": "financial",
       "implementation": "lib/actions/financial/debts.ts",
-      "status": "service-tested-callers-pending",
-      "callerFiles": []
+      "status": "callers-wired-runtime-unverified",
+      "callerFiles": [
+        "components/DebtModal.tsx"
+      ],
+      "baselineCallerFiles": []
     },
     {
       "legacyFile": "lib/actions/debts.ts",
       "export": "deleteDebt",
       "scope": "financial",
       "implementation": "lib/actions/financial/debts.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/ProjetsEpargneClient.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/ProjetsEpargneClient.tsx"
       ]
     },
@@ -248,8 +318,12 @@
       "export": "getTotalDebtBalance",
       "scope": "financial",
       "implementation": "lib/actions/financial/debts.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/page.tsx",
+        "app/espaces/[spaceId]/projets/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/page.tsx",
         "app/projets/page.tsx"
       ]
@@ -259,8 +333,11 @@
       "export": "makeExtraPayment",
       "scope": "financial",
       "implementation": "lib/actions/financial/debts.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/projets/ExtraPaymentSheet.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/projets/ExtraPaymentSheet.tsx"
       ]
     },
@@ -269,8 +346,11 @@
       "export": "hasUserData",
       "scope": "financial",
       "implementation": "lib/actions/financial/demo-data.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/parametres/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/parametres/page.tsx"
       ]
     },
@@ -279,8 +359,11 @@
       "export": "loadDemoData",
       "scope": "mixed",
       "implementation": "lib/actions/financial/demo-data.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/ParametresClient.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/ParametresClient.tsx"
       ]
     },
@@ -289,8 +372,11 @@
       "export": "clearAllUserData",
       "scope": "mixed",
       "implementation": "lib/actions/financial/demo-data.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/ParametresClient.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/ParametresClient.tsx"
       ]
     },
@@ -299,8 +385,11 @@
       "export": "addExpenseTransaction",
       "scope": "financial",
       "implementation": "lib/actions/financial/expense-transactions.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/depenses/ExpenseActionSheet.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/depenses/ExpenseActionSheet.tsx"
       ]
     },
@@ -309,8 +398,11 @@
       "export": "getExpenseTransactions",
       "scope": "financial",
       "implementation": "lib/actions/financial/expense-transactions.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/depenses/ExpenseActionSheet.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/depenses/ExpenseActionSheet.tsx"
       ]
     },
@@ -319,8 +411,11 @@
       "export": "getExpenses",
       "scope": "financial",
       "implementation": "lib/actions/financial/expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/parametres/charges/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/parametres/charges/page.tsx"
       ]
     },
@@ -329,16 +424,20 @@
       "export": "getUpcomingExpenses",
       "scope": "financial",
       "implementation": "lib/actions/financial/expenses.ts",
-      "status": "service-tested-callers-pending",
-      "callerFiles": []
+      "status": "callers-wired-runtime-unverified",
+      "callerFiles": [],
+      "baselineCallerFiles": []
     },
     {
       "legacyFile": "lib/actions/expenses.ts",
       "export": "getExpenseById",
       "scope": "financial",
       "implementation": "lib/actions/financial/expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/depenses/[id]/edit/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/depenses/[id]/edit/page.tsx"
       ]
     },
@@ -347,8 +446,12 @@
       "export": "createExpense",
       "scope": "financial",
       "implementation": "lib/actions/financial/expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/ExpenseModal.tsx",
+        "components/ProjectModal.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/ExpenseModal.tsx"
       ]
     },
@@ -357,8 +460,11 @@
       "export": "updateExpense",
       "scope": "financial",
       "implementation": "lib/actions/financial/expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/ExpenseModal.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/ExpenseModal.tsx"
       ]
     },
@@ -367,8 +473,12 @@
       "export": "deleteExpense",
       "scope": "financial",
       "implementation": "lib/actions/financial/expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/ExpenseTemplateManager.tsx",
+        "components/ProjetsEpargneClient.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/ExpenseTemplateManager.tsx",
         "components/ProjetsEpargneClient.tsx"
       ]
@@ -378,8 +488,11 @@
       "export": "getExpensesByCard",
       "scope": "financial",
       "implementation": "lib/actions/financial/expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/cartes/[id]/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/cartes/[id]/page.tsx"
       ]
     },
@@ -388,8 +501,11 @@
       "export": "getMonthlySummaryBySection",
       "scope": "financial",
       "implementation": "lib/actions/financial/expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/page.tsx"
       ]
     },
@@ -398,8 +514,12 @@
       "export": "getIncomes",
       "scope": "financial",
       "implementation": "lib/actions/financial/incomes.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/parametres/revenus/page.tsx",
+        "app/espaces/[spaceId]/revenus/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/parametres/revenus/page.tsx",
         "app/revenus/page.tsx"
       ]
@@ -409,8 +529,11 @@
       "export": "getMonthlyIncomeTotal",
       "scope": "financial",
       "implementation": "lib/actions/financial/incomes.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/page.tsx"
       ]
     },
@@ -419,8 +542,11 @@
       "export": "createIncome",
       "scope": "financial",
       "implementation": "lib/actions/financial/incomes.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/IncomeModal.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/IncomeModal.tsx"
       ]
     },
@@ -429,8 +555,11 @@
       "export": "updateIncome",
       "scope": "financial",
       "implementation": "lib/actions/financial/incomes.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/IncomeModal.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/IncomeModal.tsx"
       ]
     },
@@ -439,8 +568,11 @@
       "export": "deleteIncome",
       "scope": "financial",
       "implementation": "lib/actions/financial/incomes.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/IncomeTemplateManager.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/IncomeTemplateManager.tsx"
       ]
     },
@@ -449,16 +581,23 @@
       "export": "createAdhocIncome",
       "scope": "financial",
       "implementation": "lib/actions/financial/incomes.ts",
-      "status": "service-tested-callers-pending",
-      "callerFiles": []
+      "status": "callers-wired-runtime-unverified",
+      "callerFiles": [
+        "components/AdhocIncomeModal.tsx"
+      ],
+      "baselineCallerFiles": []
     },
     {
       "legacyFile": "lib/actions/monthly-expenses.ts",
       "export": "generateMonthlyExpenses",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/depenses/page.tsx",
+        "app/espaces/[spaceId]/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/depenses/page.tsx",
         "app/page.tsx"
       ]
@@ -468,8 +607,12 @@
       "export": "getMonthlyExpenses",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/depenses/page.tsx",
+        "app/espaces/[spaceId]/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/depenses/page.tsx",
         "app/page.tsx"
       ]
@@ -479,8 +622,12 @@
       "export": "getMonthSummary",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/depenses/page.tsx",
+        "app/espaces/[spaceId]/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/depenses/page.tsx",
         "app/page.tsx"
       ]
@@ -490,8 +637,12 @@
       "export": "markAsPaid",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/DepensesTrackingClient.tsx",
+        "components/depenses/ExpenseActionSheet.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/DepensesTrackingClient.tsx",
         "components/depenses/ExpenseActionSheet.tsx"
       ]
@@ -501,8 +652,11 @@
       "export": "deferExpenseToMonth",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/depenses/ExpenseActionSheet.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/depenses/ExpenseActionSheet.tsx"
       ]
     },
@@ -511,8 +665,12 @@
       "export": "markAsUpcoming",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/DepensesTrackingClient.tsx",
+        "components/depenses/ExpenseActionSheet.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/DepensesTrackingClient.tsx",
         "components/depenses/ExpenseActionSheet.tsx"
       ]
@@ -522,8 +680,11 @@
       "export": "deleteMonthlyExpense",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/depenses/ExpenseActionSheet.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/depenses/ExpenseActionSheet.tsx"
       ]
     },
@@ -532,8 +693,11 @@
       "export": "updateMonthlyExpenseAmount",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/depenses/ExpenseActionSheet.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/depenses/ExpenseActionSheet.tsx"
       ]
     },
@@ -542,8 +706,12 @@
       "export": "autoMarkOverdue",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/depenses/page.tsx",
+        "app/espaces/[spaceId]/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/depenses/page.tsx",
         "app/page.tsx"
       ]
@@ -553,8 +721,12 @@
       "export": "autoMarkPaidForAutoDebit",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/depenses/page.tsx",
+        "app/espaces/[spaceId]/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/depenses/page.tsx",
         "app/page.tsx"
       ]
@@ -564,8 +736,11 @@
       "export": "getMonthlyExpenseActualsBySection",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-expenses.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/revenus/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/revenus/page.tsx"
       ]
     },
@@ -574,16 +749,23 @@
       "export": "createAdhocExpense",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-expenses.ts",
-      "status": "service-tested-callers-pending",
-      "callerFiles": []
+      "status": "callers-wired-runtime-unverified",
+      "callerFiles": [
+        "components/AdhocExpenseModal.tsx"
+      ],
+      "baselineCallerFiles": []
     },
     {
       "legacyFile": "lib/actions/monthly-incomes.ts",
       "export": "generateMonthlyIncomes",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-incomes.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/page.tsx",
+        "app/espaces/[spaceId]/revenus/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/page.tsx",
         "app/revenus/page.tsx"
       ]
@@ -593,8 +775,12 @@
       "export": "autoMarkReceivedForAutoDeposit",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-incomes.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/page.tsx",
+        "app/espaces/[spaceId]/revenus/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/page.tsx",
         "app/revenus/page.tsx"
       ]
@@ -604,8 +790,13 @@
       "export": "getMonthlyIncomeSummary",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-incomes.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/page.tsx",
+        "app/espaces/[spaceId]/parametres/allocation/page.tsx",
+        "app/espaces/[spaceId]/revenus/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/page.tsx",
         "app/parametres/allocation/page.tsx",
         "app/revenus/page.tsx"
@@ -616,8 +807,11 @@
       "export": "markIncomeReceived",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-incomes.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/revenus/IncomeTrackingTab.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/revenus/IncomeTrackingTab.tsx"
       ]
     },
@@ -626,8 +820,11 @@
       "export": "markIncomeAsExpected",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-incomes.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/revenus/IncomeTrackingTab.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/revenus/IncomeTrackingTab.tsx"
       ]
     },
@@ -636,8 +833,11 @@
       "export": "deleteMonthlyIncome",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-incomes.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/revenus/IncomeTrackingTab.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/revenus/IncomeTrackingTab.tsx"
       ]
     },
@@ -646,8 +846,11 @@
       "export": "updateMonthlyIncomeAmount",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-incomes.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/revenus/IncomeTrackingTab.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/revenus/IncomeTrackingTab.tsx"
       ]
     },
@@ -656,8 +859,11 @@
       "export": "markVariableIncomeReceived",
       "scope": "financial",
       "implementation": "lib/actions/financial/monthly-incomes.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/revenus/IncomeTrackingTab.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/revenus/IncomeTrackingTab.tsx"
       ]
     },
@@ -667,7 +873,8 @@
       "scope": "individual",
       "implementation": null,
       "status": "pending",
-      "callerFiles": [
+      "callerFiles": [],
+      "baselineCallerFiles": [
         "app/page.tsx"
       ]
     },
@@ -677,7 +884,8 @@
       "scope": "individual",
       "implementation": null,
       "status": "pending",
-      "callerFiles": [
+      "callerFiles": [],
+      "baselineCallerFiles": [
         "components/onboarding/OnboardingCarouselWrapper.tsx"
       ]
     },
@@ -686,8 +894,14 @@
       "export": "getPlannedExpenses",
       "scope": "financial",
       "implementation": "lib/actions/financial/savings.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/page.tsx",
+        "app/espaces/[spaceId]/parametres/allocation/page.tsx",
+        "app/espaces/[spaceId]/projets/page.tsx",
+        "app/espaces/[spaceId]/revenus/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/page.tsx",
         "app/parametres/allocation/page.tsx",
         "app/projets/page.tsx",
@@ -699,40 +913,53 @@
       "export": "updateSavedAmount",
       "scope": "financial",
       "implementation": "lib/actions/financial/savings.ts",
-      "status": "service-tested-callers-pending",
-      "callerFiles": []
+      "status": "callers-wired-runtime-unverified",
+      "callerFiles": [],
+      "baselineCallerFiles": []
     },
     {
       "legacyFile": "lib/actions/savings.ts",
       "export": "addSavingsContribution",
       "scope": "financial",
       "implementation": "lib/actions/financial/savings.ts",
-      "status": "service-tested-callers-pending",
-      "callerFiles": []
+      "status": "callers-wired-runtime-unverified",
+      "callerFiles": [
+        "components/AddSavingsModal.tsx"
+      ],
+      "baselineCallerFiles": []
     },
     {
       "legacyFile": "lib/actions/savings.ts",
       "export": "getSavingsContributions",
       "scope": "financial",
       "implementation": "lib/actions/financial/savings.ts",
-      "status": "service-tested-callers-pending",
-      "callerFiles": []
+      "status": "callers-wired-runtime-unverified",
+      "callerFiles": [
+        "components/SavingsHistoryModal.tsx"
+      ],
+      "baselineCallerFiles": []
     },
     {
       "legacyFile": "lib/actions/savings.ts",
       "export": "transferSavings",
       "scope": "financial",
       "implementation": "lib/actions/financial/savings.ts",
-      "status": "service-tested-callers-pending",
-      "callerFiles": []
+      "status": "callers-wired-runtime-unverified",
+      "callerFiles": [
+        "components/TransferSavingsModal.tsx"
+      ],
+      "baselineCallerFiles": []
     },
     {
       "legacyFile": "lib/actions/savings.ts",
       "export": "getOrCreateFreeSavings",
       "scope": "financial",
       "implementation": "lib/actions/financial/savings.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/projets/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/projets/page.tsx"
       ]
     },
@@ -741,8 +968,11 @@
       "export": "getMonthlySavingsSummary",
       "scope": "financial",
       "implementation": "lib/actions/financial/savings.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/page.tsx"
       ]
     },
@@ -751,8 +981,17 @@
       "export": "getSections",
       "scope": "financial",
       "implementation": "lib/actions/financial/sections.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/depenses/[id]/edit/page.tsx",
+        "app/espaces/[spaceId]/depenses/page.tsx",
+        "app/espaces/[spaceId]/parametres/allocation/page.tsx",
+        "app/espaces/[spaceId]/parametres/charges/page.tsx",
+        "app/espaces/[spaceId]/projets/page.tsx",
+        "app/espaces/[spaceId]/revenus/page.tsx",
+        "app/espaces/[spaceId]/sections/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/depenses/[id]/edit/page.tsx",
         "app/depenses/page.tsx",
         "app/parametres/allocation/page.tsx",
@@ -767,8 +1006,11 @@
       "export": "createSection",
       "scope": "financial",
       "implementation": "lib/actions/financial/sections.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/SectionsClient.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/SectionsClient.tsx"
       ]
     },
@@ -777,8 +1019,11 @@
       "export": "updateSection",
       "scope": "financial",
       "implementation": "lib/actions/financial/sections.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/SectionsClient.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/SectionsClient.tsx"
       ]
     },
@@ -787,8 +1032,11 @@
       "export": "getSectionExpenseCount",
       "scope": "financial",
       "implementation": "lib/actions/financial/sections.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/SectionsClient.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/SectionsClient.tsx"
       ]
     },
@@ -797,8 +1045,11 @@
       "export": "deleteSection",
       "scope": "financial",
       "implementation": "lib/actions/financial/sections.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/SectionsClient.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/SectionsClient.tsx"
       ]
     },
@@ -807,8 +1058,11 @@
       "export": "reorderSections",
       "scope": "financial",
       "implementation": "lib/actions/financial/sections.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/SectionsClient.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/SectionsClient.tsx"
       ]
     },
@@ -817,8 +1071,16 @@
       "export": "getSettings",
       "scope": "mixed",
       "implementation": "lib/actions/financial/settings.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/layout.tsx",
+        "app/espaces/[spaceId]/parametres/allocation/page.tsx",
+        "app/espaces/[spaceId]/parametres/charges/page.tsx",
+        "app/espaces/[spaceId]/parametres/devise/page.tsx",
+        "app/espaces/[spaceId]/parametres/rappels/page.tsx",
+        "app/espaces/[spaceId]/parametres/revenus/page.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/parametres/devise/page.tsx",
         "app/parametres/notifications/page.tsx",
         "app/parametres/rappels/page.tsx"
@@ -829,8 +1091,12 @@
       "export": "updateSettings",
       "scope": "mixed",
       "implementation": "lib/actions/financial/settings.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/parametres/DeviseClient.tsx",
+        "components/parametres/RappelsClient.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/parametres/DeviseClient.tsx",
         "components/parametres/NotificationsClient.tsx",
         "components/parametres/RappelsClient.tsx"
@@ -841,8 +1107,11 @@
       "export": "getOrInitSetupGuideData",
       "scope": "financial",
       "implementation": "lib/actions/financial/setup-guide.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "app/espaces/[spaceId]/layout.tsx"
+      ],
+      "baselineCallerFiles": [
         "app/layout.tsx"
       ]
     },
@@ -851,8 +1120,11 @@
       "export": "completeSetupGuide",
       "scope": "financial",
       "implementation": "lib/actions/financial/setup-guide.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/setup-guide/SetupGuide.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/setup-guide/SetupGuide.tsx"
       ]
     },
@@ -861,8 +1133,11 @@
       "export": "dismissSetupGuide",
       "scope": "financial",
       "implementation": "lib/actions/financial/setup-guide.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/setup-guide/SetupGuide.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/setup-guide/SetupGuide.tsx"
       ]
     },
@@ -871,8 +1146,11 @@
       "export": "resetSetupGuide",
       "scope": "financial",
       "implementation": "lib/actions/financial/setup-guide.ts",
-      "status": "service-tested-callers-pending",
+      "status": "callers-wired-runtime-unverified",
       "callerFiles": [
+        "components/ParametresClient.tsx"
+      ],
+      "baselineCallerFiles": [
         "components/ParametresClient.tsx"
       ]
     }

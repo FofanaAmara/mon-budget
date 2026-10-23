@@ -1,6 +1,8 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
 
-import { formatCAD } from "@/lib/utils";
+
+
 import type {
   MonthSummary,
   MonthlyExpense,
@@ -431,6 +433,8 @@ export default function TabSanteFinanciere({
   valeurNette,
   savingsSummary,
 }: Props) {
+  const formatCAD = useSpaceCurrency();
+
   // Score: percentage of expected expenses already paid (0-100)
   const coverageActual =
     summary.total > 0
