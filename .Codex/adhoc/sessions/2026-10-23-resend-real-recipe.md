@@ -18,3 +18,6 @@ Nom/emailpréremplis, motdepassevide, aucunecréationcompte/acceptation. OutilCU
 
 ## Fichiers modifiés
 scripts/financial-spaces/dev.mjs etREADME.md ; plan/session/tasks/state adhoc ; matrice/audit/preuveResend ; discovery012. Aucunsecret/adresse/token dansGit. Preexistantsserena/next-env/CSexclusducommit.
+
+### Contribution A et séparation persistante
+Une dépenseponctuellefictive12.34 créée viaUI dansespaceResend, rechargée et retrouvée ; espacepersonnel dépenses0puisretourcouple retrouveligne. SQLread-only confirme1ligneamount12.34/UPCOMING dansseulespacedédié,1membre. Capturesprivéesvues, nomsmontantslisibles etaucunchevauchementobservé. Sélecteur revient audashboarddelacible : naviguerensuiteversDépensespourvaliderlaliste, nepasconclurequ’unwaitForvideprouveuneabsencededonnée. Aucunemodificationdecode/testsrequisenplus ; objectifnonatteint. IAB6motdepassevide, demanderactionhumaineobligatoire.

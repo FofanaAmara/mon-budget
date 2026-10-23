@@ -19,3 +19,7 @@ L’humain a fourni l’adresse contrôlée et sa session GmailChrome, autorisé
 
 ## Restant
 Handoff utilisateur pour saisie du nouveau motdepasse et soumission acceptant lesconditions ; la politique de l’outil impose cette étape humaine. Ne pas utiliser untransportAPI pourla contourner. Ensuite verificationmail/auth, acceptationdistincte, contributionsdeuxsessions/recharge/isolation. Classementspam : DISC-ESP-012 ; certificatnonfiable bloqueSW, offline nonrecetté. Liensconditions/confidentialité de l’inscription pointent actuellement sur# ; documentés comme limitationobservée, pas de texte légal inventé. Goal intégral nonatteint ; CI/revueglobale/MCP et autresfamilles restentouverts.
+
+
+## Contribution du créateur avant adhésion — 2026-10-23T21:07UTC
+Utilisateur autorise poursuite ; IAB6 montre motdepasse toujoursvide, aucuneinscriptionsoumise. Avancée indépendante : création via vraieUI d’une dépenseponctuellefictive12.34, statutUPCOMING, dans le seul espace dédié. Reload réel conserve ligne/montant ; sélecteur vers personnel puispageDépenses montre0ligne, retourcouple/pageDépenses retrouvecontribution. LectureSQLread-only confirme une seuleligneamount12.34 dansbonspace et1membre. Preuvesprivéescreator-contribution-proof.json etcapturescreator-contribution-reloaded.png/personal-space-no-contribution.png réellementvues, sansdéfautvisuelobservé. CettepreuveneprouvepascontributiondeB ouaccèsaprèsadhésion. Handoffcredential/conditions toujoursnécessaire ; pasderequêteAuthparAPIpourcontourner. Pasdenouvelenvoi/DBsource/push.

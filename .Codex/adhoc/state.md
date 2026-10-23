@@ -799,3 +799,14 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Décisions prises :** Resend explicite --resend, défautMailpit conservé ; aucunecritureDBsource. Uneinvitationnouvelle viaUI dansespacevide. Gmailréceptionréelle(spam) etResenddelivered ; pasderetry. Credentialnouveau/conditions exigenthandoffhumain selonpolitiqueoutil, pasdecontournementAPI.
 **Prochaine étape :** utilisateur saisit motdepasse et soumetinscription surIAB6prérempli ; ensuite vérifierGmail/Neon, acceptationdistincte etcontributionsdeuxsessions. AutresgatesCI/MCP/revue/offline ouverts.
 **Contexte pour reprise :** session68803 activeHTTPS3443/redirect3002/Resend,32915terminéevolontairement. CUAfinanceTabChrome1730267667 créateur, testMailTab1730267669 courrielautoriséuniquement, recipientTabIAB6formulaireprérempli/motdepassevide ; nepasnavigueretperdresaisie. EspaceprivéIDdanspreuves.local/resend-recipe etURLsUI, pasdejetondansGit.1invitationpending/1attemptsent/1member, checked2026-10-23T21:03Z.9delivery/3CLIgardes/syntaxevalides, scriptignoredparESLintnormal. Derniertourprogrèsconcretpasimpasse ; aucunblocked/complete. Préexistantsserena/next-env/CSpréservés. CertautosignéempêcheSW, autresongletsprivésnonrecettés. Demanderuniquementactionhumaineobligatoire puiscontinuer.
+
+---
+## [2026-10-23] — Contribution A persistante et isolée
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`, recette externe.
+**Tâche en cours :** recetteàdeux, secondeinscriptionrequise.
+**Objectif :** goalintégral, pasdeclôtureavantvraieadhésion.
+**État :** IN_PROGRESS
+**Décisions prises :** utilisateurdemandecontinuer, maisIAB6motdepassevide confirmé. PolitiqueCUA imposehandoffnouveaucredential/soumissionconditions, autorisationgénéralenelecontournepas. Travailindépendantutileeffectué : contributionAfictive12.34, persistancereload, personnelvideetretourcouplevérifiésenUIetSQLreadonly.
+**Prochaine étape :** humainsaisitnouveaumotdepasseetsoumetformulaireIAB6déjàprérempli ; ensuiteverificationGmail/acceptationB/contributionB/reloadA etisolation. Pasdequestiondedécision, seuleactionhumaineobligatoire.
+**Contexte pour reprise :** HEAD2c7776aavantcheckpointcourant, runtime68803Resend3443 ; Chromecréateurrestesurdepensescouple, CUAfinanceTab ; IABrecipientTab6inscriptionenattente, markHandoffposé ; testMailTabcourrielrecette. Preuveslocal/resend-recipe creator-contribution-proof.json checked21:07Z,1ligne12.34UPCOMING1membre. Pasderequêtesecrète/sessionfabriquée/renvoidemail/push/DBsource. DerniertourPROGRESS(carvraiecontributionetpreuves), nouveaucompteetdeuxmembrestoujoursnonprouvés.17/30conservés, pasdegoalcomplete/blocked.
