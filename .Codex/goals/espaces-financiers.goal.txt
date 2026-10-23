@@ -14,7 +14,7 @@ DONE QUAND les preuves suivantes sont AFFICHÉES dans la conversation :
 5. Données existantes conservées dans « Mes finances », sans perte/doublon ni changement des montants/relations. Montrer comparaison avant/après, reprise de migration et restauration sur copie ; concurrence/générations/saisies/caches/offline ne mélangent aucun espace.
 6. Montrer tests unitaires/intégration/E2E, types, lint, build et CI requis tous verts, revue indépendante et validation visuelle Playwright MCP du plan. Résoudre l’échec unitaire préexistant ; ne pas ignorer un test ou remplacer ce critère par inspection de code/CLI/CUA. Montrer matrice des 17 exigences/30 AC et les preuves, commits et reprise.
 
-EMAIL : intégrer le service et domaine existants, expéditeur autorisé, secrets serveur, coût/quotas acceptés, état d’échec visible et reprise sans recréer espace/invitation. Service/domaine confirmés par l’humain ; noms à préciser. Emails simulés ou réception non prouvée = NON ATTEINT.
+EMAIL : Resend pour l’envoi réel, Mailpit pour les tests locaux. Configurer secrets serveur, expéditeur autorisé, coût/quotas et reprise sans doublon ; ne pas imposer EMAIL_TO comme destinataire. Mailpit seul ne suffit pas : prouver une réception externe via Resend.
 
 HORS-SCOPE : rôles différenciés, banque/remboursements, temps réel, conversion de devises, Storybook/bibliothèque et parcours destructeurs non validés. Pas de push/déploiement prod sans demande ; pas de test destructeur sur données réelles.
 

@@ -18,3 +18,6 @@ Condition goal prête à soumettre à l’humain, non activée. Rapport de cadra
 
 ### Réponse humaine pendant la rédaction
 L’humain confirme « Oui, j’ai déjà un service et un domaine ». Condition amendée : intégrer ces ressources existantes ; ne pas choisir/créer un autre service. Question complémentaire sur leurs noms posée, sans demander de clé API dans le chat. Transport intégré non encore démontré : la preuve de réception reste obligatoire.
+
+### Configuration Resend/Mailpit ajoutée par l’humain
+Noms et présence vérifiés dans .env.local sans valeurs : RESEND_API_KEY, EMAIL_FROM, EMAIL_TO, SMTP_HOST/SMTP_PORT. Port SMTP local joignable après contrôle réseau autorisé (premier essai sandbox EPERM). Aucun email envoyé, aucune API Resend appelée. Goal et plan mis à jour pour réutiliser Resend/Mailpit, séparer transports et garder réception externe réelle comme critère. EMAIL_TO ne doit pas imposer un destinataire global aux invitations réelles. Domaine/clé/quotas/distant restent non validés.

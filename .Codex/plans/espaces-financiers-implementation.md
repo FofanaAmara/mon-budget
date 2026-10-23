@@ -1,6 +1,6 @@
 # Plan d’implémentation — Espaces financiers personnels et partagés
 
-Date : 2026-10-22. Version : 1.0. **Statut : proposé à validation humaine ; aucune implémentation commencée.**
+Date : 2026-10-22. Version : 1.1 (configuration mail actualisée, sans exécution). **Statut : proposé à validation humaine ; aucune implémentation commencée.**
 Skill : `agent-work-methodology:planning-methodology`. Mandat : plan du chantier complet, six stories ESP-001 à ESP-006. Assurance proposée : renforcée, risque critique sur isolation et conservation des finances.
 
 ## 1. Résumé exécutif
@@ -33,7 +33,7 @@ Approche proposée :
 - `clearAllUserData()` supprime aussi préférences, onboarding et abonnements push. Le multiespace impose de borner cette action à l’espace choisi. `claimOrphanedData()` reprend globalement les lignes `unclaimed` : incompatible avec une attribution automatique sûre à plusieurs membres.
 - `public/sw.js` précharge des pages authentifiées et peut les restituer depuis CacheStorage en échec réseau ; le clic notification ouvre `/` sans contexte. `proxy.ts` ne rend pas publique une future route d’invitation. Le shell n’exclut aujourd’hui que auth/account/landing.
 - `AuthProviders` redirige actuellement vers `/`. Les pages auth existantes sont à réutiliser avec un retour d’invitation contrôlé. Le SDK installé expose des champs `emailVerified` et des paramètres de retour ; leur comportement réel reste à éprouver.
-- Aucun transport d’email applicatif trouvé dans code/paquets ni clé des fournisseurs courants dans l’environnement inspecté. Ce constat ne prouve pas l’absence d’un service côté hébergeur. Le cron existant envoie un rappel push générique quotidien ; il ne livre pas de courriels d’invitation.
+- Au contrôle initial, aucun transport d’email applicatif ni clé n’avait été trouvé. Depuis, l’humain confirme Resend et ajoute RESEND_API_KEY, EMAIL_FROM/EMAIL_TO et SMTP_HOST/SMTP_PORT pour Mailpit dans .env.local ; présence vérifiée sans afficher les valeurs, port SMTP local joignable. Le code de livraison, la validité de la clé, le domaine autorisé et la réception externe restent à prouver. La configuration hébergée n’a pas été vérifiée (jeton Vercel CLI invalide). Le cron existant envoie un rappel push générique quotidien ; il ne livre pas de courriels d’invitation.
 - Vitest exécuté : **176 réussites / 177, un échec préexistant**. `progressive-expenses.test.ts:146` attend `var(--teal-50)` alors que `expense-display-utils.ts` renvoie `#ECFDF5` pour IN_PROGRESS. Contrat de palette désaligné ; ne pas masquer ce test. [Baseline détaillée](espaces-financiers-evidence/baseline.md).
 - Aucun workflow `.github` ni configuration E2E versionnée trouvés ; Playwright est installé. Aucun outil Playwright MCP dédié exposé dans cette session. Pas de build/lint complet exécuté pour ce travail de planification.
 
@@ -106,7 +106,7 @@ Le choix de devise ne convertit jamais les montants existants. Appliquer le rég
 | D1 | Routes explicites par espace, onglets indépendants, dernier espace au serveur ; frontière compte/espace du tableau | Accord sur ce plan, puis tests des routes et préférences en phase 0/3. L’UX du sélecteur est déjà approuvée. |
 | D2 | Réserver l’acceptation à l’email de session normalisé et vérifié ; jeton aléatoire fort stocké seulement sous empreinte ; validité proposée de 7 jours | Confirmer politique et comportement de vérification Neon sur environnement de test avant ESP-004. Aucun compte invité non vérifié ne reçoit les finances par défaut. |
 | D3 | Ne pas ajouter dans cette livraison départ, exclusion ou suppression d’espace ; conserver la remise à zéro financière existante, mais limitée à l’espace et nommée dans sa confirmation | Accord de périmètre ; aucune exception de droits pour le créateur. Refus d’invitation présent dans le mock : définir l’état terminal sans adhésion avant exposition du bouton ; renvoi/annulation restent à préciser sans ajouter des écrans non demandés. |
-| D4 | Transport email via adaptateur serveur, envoi initial après commit et reprise durable ; fournisseur non choisi faute de configuration vérifiée | Valider le fournisseur, domaine expéditeur, quotas/coût, secrets, idempotence et fréquence de reprise. Aucune dépendance/service payant engagé par ce plan. Bloque les invitations réelles, pas le travail solo/conservation. |
+| D4 | Resend pour les invitations externes, Mailpit SMTP pour les essais locaux ; adaptateur serveur, envoi initial après commit et reprise durable | Vérifier clé Resend/domaine expéditeur, quotas/coût, secrets par environnement, idempotence et fréquence de reprise. Sélectionner explicitement le transport ; EMAIL_TO ne remplace pas les destinataires réels. Mailpit seul ne prouve pas la livraison externe. Aucune dépendance/service payant engagé par ce plan. Bloque les invitations réelles, pas le travail solo/conservation. |
 
 Ne pas redemander les décisions produit acquises : égalité des droits, espace initial, maquettes et placements de navigation, invitation conditionnelle, deux chemins auth, reprise du dernier espace et nom « Mes finances ».
 

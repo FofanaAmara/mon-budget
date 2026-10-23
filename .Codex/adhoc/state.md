@@ -131,3 +131,14 @@
 **Décisions prises :** humain confirme disposer du service et du domaine ; les intégrer, sans nouvel abonnement imposé. Leurs noms restent à préciser.
 **Prochaine étape :** réponse à la question du service/domaine, puis configuration sécurisée lors de l’exécution autorisée.
 **Contexte pour reprise :** la mention précédente réponse non reçue est remplacée par cette confirmation ; noms demandés via question async. Ne jamais demander une cléAPI en clair dans le chat. Intégration locale absente et Vercel non vérifié faute de jetonvalide ; ressources disponibles ≠ réception d’invitation prouvée. Condition≤4000octets conservée, pas de goal lancé, aucun mail envoyé.
+
+---
+## [2026-10-22] — Configurations mail disponibles localement
+**Plan :** .Codex/plans/espaces-financiers-implementation.md, v1.1 contexte mail.
+**Tâche en cours :** mise à jour du goal après réponse sur le transport.
+**Objectif :** réutiliser Resend pour réel, Mailpit pour tests locaux.
+**État :** DONE (cadrage, aucune exécution du goal).
+**Fichiers touchés :** goal, rapportauthoring, plan, session et state. .env.local lu uniquement, non versionné.
+**Décisions prises :** humain confirme Resend/Mailpit et a ajouté configs ; noms/présence vérifiés, port SMTP local joignable. Transport explicite par environnement, EMAIL_TO ne remplace pas destinataire réel.
+**Prochaine étape :** lors de l’exécution autorisée, intégrer transport puis vérifier domaine/clé/quotas et livraison externe ; ne pas affirmer prêt parce que variables présentes.
+**Contexte pour reprise :** RESEND_API_KEY, EMAIL_FROM, EMAIL_TO, SMTP_HOST, SMTP_PORT présents ; aucune valeur exposée. Un test TCP local autorisé réussi, aucun mail envoyé ni appelAPIResend. Vercel distant toujours non vérifié faute de jetonvalide. Goal≤4000octets actualisé, non activé ; préserver .serena/project.yml/next-env.d.ts ; paspush.
