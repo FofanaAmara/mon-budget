@@ -6,3 +6,5 @@
 - [Copies PostgreSQL vérifiées](feedback_postgres_restore_verification.md) — dépendances de schéma, CHECK normalisés, identité de cible et preuve de restauration.
 
 - [Backfill rejouable et copies dérivées](feedback_repeatable_backfill_copies.md) — reprendre la dernière configuration avant bascule, pas seulement conserver les originaux.
+
+- [Destination PostgreSQL effective](feedback_effective_database_target.md) — vérifier les paramètres réellement interprétés par le pilote avant connexion.

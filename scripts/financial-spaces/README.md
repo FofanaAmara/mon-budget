@@ -105,3 +105,31 @@ unchanged SQL after resolving the reported cause. Never reset the baseline or
 restore over a populated work database. After phase `ready`, backfill cannot
 reattribute shared data to its author and rollback to the old user-only app is
 forbidden. No automatic destructive down migration is supplied.
+
+## Real app against the local copy
+
+```sh
+npm run dev:spaces
+npm run test:spaces:services
+```
+
+The dev command verifies the owned fixture before starting Next on
+`http://localhost:3002`. It preserves `.env.local`, removes inherited database
+targets, and supplies only the dummy local credentials to the app process.
+Authentication still uses the existing Neon Auth service. Compiler outputs use
+`.next-spaces-dev`; generated changes to compiler configuration are restored.
+
+The local adapter accepts only the fixed loopback address, port, credentials
+and allowed database names. URI query parameters/fragments are rejected and
+the pool receives explicit components. Each connection verifies the PostgreSQL
+cluster identifier before application SQL. Production mode refuses this adapter.
+The default production driver remains Neon HTTP.
+
+The services suite uses real PostgreSQL on a unique disposable baseline clone,
+with the server session and Next cache invalidation stubbed. It checks atomic
+provisioning, concurrent retries, membership isolation, equal member rights,
+rename without switching the current space, and persistent selection. It does
+not prove real authentication or the invitation journey. The work fixture is
+still in the backfilled phase: space services deliberately refuse activation
+until financial actions and navigation have all been converted and cutover is
+approved for local recipe testing.

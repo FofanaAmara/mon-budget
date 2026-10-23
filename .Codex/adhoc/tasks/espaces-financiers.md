@@ -16,3 +16,5 @@ Plan : .Codex/plans/espaces-financiers-implementation.md. Méthode directe impos
 Ne pas déclarer fini sur la base d’une tranche verte. Le goal reste actif jusqu’à preuve de tous ses critères. Aucun push ni déploiement production automatique.
 
 P1.1 : COMPLETED — SQL, préflight, dry-run, application/reprise locale et conservation18tables703lignes prouvés. P1.2/P1.3 et parcoursproduitESP001/002 restentàréaliser.
+
+P1.2 : COMPLETED — services serveur et adaptateur de recette ; 15 tests PostgreSQL, 177 unitaires, types/lint/build verts, revue indépendante des corrections fermée. P1.3/navigation et conversion financière restent à réaliser.

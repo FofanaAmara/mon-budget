@@ -186,3 +186,25 @@
 **Décisions prises :** clientsSQLbrandésaprèsvérificationDocker+systemid ;runnerfixtureseulement ;backfillatomiquerejouablejusqu’àready,checksumimmuable. 003resteinactivesurworkavantconversionapp.
 **Prochaine étape :** implémentergarded’appartenance,servicescréation/lecture/renommage/préférenceetprofils, puisruntimeNextsurDBisoléepourraccorderonboardingetnavigationcanonique ;convertirles86actionsavantactivationmultiespace.
 **Contexte pour reprise :** evidence migration-execution.md. 001/002appliquéesetdoublepassée13espaces703lignesconservées,175colonnes18tables comparéesbaseline17 ;workphasebackfilled. Olddraftconservédansspaces_work17_draft_20261023aaprèsrefuschecksumattendu, pasdebypassledger. 18testsintégrationPostgreSQLdontvraiwriterbloquépuisrejeté18FKexactes,replay,rollback,lateconfig ;177unit,tsc0,lint0/17warnings. RevueP1lateconfigclose. NativeNode testcmdnpmruntest:spaces:dbclonelocalbaseline,puisdropuniquesabasejetable. PasdeTSappchangé,pasUIfunctionalencore. Ne pasrejouertest-databaseverifyinitialsurworkmigré(schémaattendudedifférent) ;utiliserverify-conservationavantnouvellescontributions. SQL003testémaisgateavecappnonconvertie,nepasactiverworkavantdécisiontechniquederecette. Prochainecontrainteconcrète :lib/db.tsutiliseneonHTTP,pasencorenatifPGlocal ;prévoirunadaptateurderecetteexplicitementisolé pourtester lavraieappavecAuthNeonactuel,sanschanger.env.localhumainniécrireDBsource. Routescibles/espaces/[spaceId],nécessitéIDexpliciteactions. Sourceetbaselineintactes,aucunmail/push/AWM. Préserverdirtyserena,next-envetuntrackedCS.
+
+---
+## [2026-10-23] — Services et runtime de recette
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** P1.2, garde et services d’espaces ; exécution Next sur copie isolée.
+**Objectif :** rendre les parcours utilisables dans la vraie app, sans modifier la source.
+**État :** IN_PROGRESS
+**Fichiers touchés :** lib/db, adaptateur local, lib/spaces, actions et tests à venir.
+**Décisions prises :** tour précédent = progrès vérifié (e5a8e92, migration703lignes/18testsSQL). Tranche estimée15–25kjetons, coût monétaire indisponible. Aucun AWM.
+**Prochaine étape :** adaptateur SQL natif local avec garde de cible, services atomiques et tests de membres/tiers/idempotence ; raccordement UI ensuite.
+**Contexte pour reprise :** work17 backfilled, baseline intacte, SQL003 testée non appliquée au work. lib/db actuel neon HTTP ne parle pas PostgreSQL local ; ne pas réorienter le navigateur vers source pour contourner. Préserver.env.local et dirtyserena,next-env/CS. Pas de mail/push.
+
+---
+## [2026-10-23 00:50] — Services vérifiés, conversion financière à poursuivre
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** P1.2 terminée, ESP-001/002 en cours ; conversion de toutes les actions avant exposition multiespace.
+**Objectif :** goal complet espaces et invitations, actif et non livré.
+**État :** IN_PROGRESS
+**Fichiers touchés :** adaptateur local, services/gardes/types, tests, runtime Next et preuve services-execution.md.
+**Décisions prises :** PostgreSQL pg est une dépendance runtime pour recette ; Neon reste le pilote par défaut. Aucune URL brute passée au pool local. Rejeu de création ne remplace pas la préférence plus récente. Plusieurs espaces sans préférence nécessitent un choix explicite.
+**Prochaine étape :** convertir les 86 exports de l’inventaire, leurs appelants et la navigation canonique par espace ; conserver le gate ready fermé sur work jusqu’à conversion complète.
+**Contexte pour reprise :** tests services15/15 PG réels (auth/cache simulés), unit177/177, types0, lint0erreur17warnings, build0 ; trois constats reviewer clos. Live Next session44028 sur localhost3002, copie work17 toujours backfilled ; services refusent ready absent. Configs tsconfig/next-env restaurées aux octets antérieurs après build. CUA page existante observée seulement, pas validation des nouveaux parcours ni PlaywrightMCP. Source/baseline intactes, aucun email/push/AWM. Préserver .serena/project.yml, next-env.d.ts et anciensCS non suivis. Logs privés .local/financial-spaces/services-*.log. Voir services-execution.md et session du jour.
