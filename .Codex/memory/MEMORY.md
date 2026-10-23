@@ -42,3 +42,5 @@
 - [Entités sélectionnées et props fraîches](feedback_current_entity_selection.md) — conserver les IDs et les brouillons séparément, vérifier les modales ouvertes pendant un refresh.
 
 - [Prédicats métier du guide](feedback_guide_domain_predicates.md) — une ligne dans expenses peut être un pot technique, pas une dépense configurée.
+
+- [Diagnostic des dialogues Chrome](feedback_browser_dialog_recovery.md) — distinguer onglet manquant, dialogue fermé et état UI non vérifié ; aucune panne globale déduite d’un seul handle.

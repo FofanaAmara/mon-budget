@@ -23,3 +23,12 @@ Le contrôle natif a été refusé : ComputerUsepermissionsnotgranted, après un
 9contrôles test:delivery passent sanséchec/skip. Aucun code produit modifié dans cette tranche, pas de nouveau build/types/unit/PG de services prétendu. Les tests financiers réels précédents restent leurs preuves bornées.
 
 Incomplets : annulation/confirmation du brouillon dans la vraieUI, réponsesRSC réellement retardées, échec réseau, offline/SW(certificat local refusé), BFCache, changementAuthinteronglets et deuxmembres. InscriptionB toujours à finaliser par humain (nouveau motdepasse/soumission). PlaywrightMCP, CIexactSHA et revueglobale encore ouverts. CUA n’est pas PlaywrightMCP. Aucun push/déploiement/nouvelemail/base source touché.
+
+
+## Reprise et reproduction du blocage
+
+Au tour suivant, l’ancien onglet temporaire1730267675 n’existe plus. Le rattachement à l’onglet principal1730267667 réussit : le DOM financier personnel est lisible, puis la fiche du couple après navigation. Chrome n’est donc pas globalement inaccessible.
+
+Une nouvelle saisie de renommage non enregistrée est visible dans le DOM. La bascule déclenche à nouveau un dialogueconfirm. Après dismiss, getJsDialog constate sa fermeture ; la lectureDOM échoue cependant à nouveau surEmulation.setFocusEmulationEnabled. Le résultat de l’annulation n’est toujours pas prouvé. La panne est reproduite sur deux onglets distincts après ce dialogue, sans cause interne du pilote établie ; aucune modification produit pour l’éviter et aucun nouveau nom enregistré par l’agent.
+
+L’IAB6 reste sur l’inscription, nom/email préremplis, mot de passe vide, conditions non acceptées. Handoff maintenu. Le blocage de ce parcours a persisté sur plus de trois tours, comme le blocage du pilote après dialogue ; les autres tranches utiles ont été conservées. Les tests déjà verts ne remplacent pas inscription/adhésion réelle, PlaywrightMCP ouCI distante. Pas de nouvel envoi ni de push. Goal à marquerbloqué, jamais terminé ; reprise après saisie/soumission humaine et rétablissement des outils/gates requis.

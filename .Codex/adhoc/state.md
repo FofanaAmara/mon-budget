@@ -942,3 +942,24 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Décisions prises :** précédenttestmulti-ongletsPROGRESS(autoritativeUI+SQL), réponsequestionhumaine seuleNO_PROGRESS. DeuxChromeongletspersonnel0/couple4, recharges/retourssansmélange ; aucunBFCacheprouvé. Brouillonrenommageconfirmvu, annulationUIinconnue, SQLnomnonmodifié. Pannepilotagefocusemulationpersistante aprèsrebinddocumenté ; nativepermissionsrefusées, pasdecontournement. Runtime68803confirmélivepartoolhandle ; aucunredémarrage.
 **Prochaine étape :** commitpreuves ; réévalueractionsindépendantesutiles. InscriptionBrequiertnouveaumotdepasseetconditionshumain, nepasautomatiser. Pasdepoursuiteindéfinieparrépétitiondestestsdéjàverts.
 **Contexte pour reprise :** HEAD3fa2f2bavantcommit ; CUAkernelresetaprèsscreenshotexpiré, ancienshandlesnonfiables. OngletChromecréateur1730267667personnel/depenses,1730267675fichecouplec42…draftnonenregistré. PremiergetTabtourDebuggerunattached, listTabslesvoit, tabs.get+DOMexpirefocus. IAB6recipientsignuppréparéàretrouveretmarkHandoffsiaccessible. 9delivery0, SQLprivate.multitab-readonly-proof.json21:58:37. Aucuneinscription/adhésion/réceptionOTPnouvelle, CI/revueglobale/MCP/offlineouverts. Préexistantserena,next-env,CSpascommiter. Nejamaisdéclarergoalcomplete ; auditblockedseulementaprès3toursàimpasseréelle, paspourceprogrèspreuve.
+
+---
+## [2026-10-23] — Chrome principal accessible, reprise du brouillon
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md` P7, recetteMULTITAB.
+**Tâche en cours :** terminer annulation/confirmation de bascule sur une fiche accessible.
+**État :** IN_PROGRESS
+**Décisions prises :** dernier tour PROGRESS par sauvegarde81a58c7. InscriptionIAB6 toujours motdepassevide. Ancienonglet1730267675 désormaismanquant, mais acquisitionongletprincipal1730267667 etDOMréel réussissent : piloteChrome non globalement bloqué. Cette preuve change la prochaineaction ; pasd’impasse globale. Aucune causeoutil prétenduefixée. Estimation5–10min, aucun coûtpayant.
+**Prochaine étape :** brouillonrenommagecouple nonsauvegardé, déclencherconfirm puisrefuser etobserver ; confirmerensuiteabandonnonpersistant, pasd’email ni nouveaucredential.
+
+---
+## [2026-10-23] — Audit de blocage du goal
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md`, intégralité conservée.
+**Tâche en cours :** reprise suspendue par dépendances externes, sans clôture.
+**Objectif :** dix-sept exigences/trenteAC et sixconditionsdugoal, inchangés.
+**État :** BLOCKED (à confirmer par update_goal).
+**Fichiers touchés :** preuveMULTITAB/state/session/mémoire de diagnostic.
+**Décisions prises :** plus de trois tours avec inscriptionBrequérantnouveaucredentialhumain. Pilotage après dialogue égalementreproduit : Chrome principal récupéré etDOMlu, puisconfirm/dismissànouveaupertefocus. Ne pas prétendreChromeglobalementinaccessible niannulationréussie. Aucune autre action sûre identifiée qui clôture un manque réel sans ces dépendances ; répétitions de tests déjà verts n’apporteraient rien.
+**Prochaine étape :** attendre interventionhumaine/externe ; reprendre inscription/acceptation/contributionsàdeux puis gates navigateur/CI/revue restantouverts. Pasdepushsansdemandeexplicite ; pasd’automatisationnouveaumotdepasse/conditions.
+**Contexte pour reprise :** HEAD81a58c7avantcommitdiagnostic. Runtime68803local3443 et copieDBwork17 préservés. IABrecipientTab6signupprérempli/motdepassevide/markHandoff ; Chrome1730267667fichecouplec42…brouillonrenommage nonsauvegardé,dialoguefermémaisDOMinaccessible. Ancien1730267675ferméautomatiquement. MULTITABpreuvesavantpanne conservées.local/resend-recipe,9deliveryverts dernier81a58c7. Aucun nouvelemail/mutationfinancière/Auth/sourceDB/env. Préexistantsserena,next-env,CSpascommiter. AucunDONE ; utiliserupdate_goalblockedaprèscommit etreporterétatretourné.
