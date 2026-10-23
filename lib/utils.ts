@@ -160,8 +160,8 @@ export function calcMonthlySuggested(
   targetAmount: number,
   savedAmount: number,
   targetDate: string,
+  now = new Date(),
 ): number {
-  const now = new Date();
   const target = new Date(targetDate);
   const monthsRemaining =
     (target.getFullYear() - now.getFullYear()) * 12 +

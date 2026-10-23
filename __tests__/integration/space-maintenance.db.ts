@@ -6,7 +6,10 @@ import { localConnection } from "../../scripts/financial-spaces/local-fixture.mj
 import { runMigrations } from "../../scripts/financial-spaces/migrate.mjs";
 
 const state = vi.hoisted(() => ({ userId: "fixture-maintenance-a" as string | null, sql: null as DatabaseSql | null }));
-vi.mock("@/lib/auth/server", () => ({ auth: { getSession: async () => ({ data: state.userId ? { user: { id: state.userId } } : null }) } }));
+vi.mock("@/lib/auth/server", () => {
+  const getSession = async () => ({ data: state.userId ? { user: { id: state.userId } } : null });
+  return { auth: { getSession }, authSessionReader: { getSession } };
+});
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 vi.mock("@/lib/db", () => ({ sql: Object.assign((strings: TemplateStringsArray, ...values: unknown[]) => state.sql!(strings, ...values), {
   transaction: (...args: Parameters<DatabaseSql["transaction"]>) => state.sql!.transaction(...args),

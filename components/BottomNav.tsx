@@ -183,7 +183,8 @@ export default function BottomNav() {
 
   async function handleSignOut() {
     await authClient.signOut();
-    window.location.href = "/auth/sign-in";
+    // Discard in-memory private state and replace the signed-out history entry.
+    window.location.replace("/auth/sign-in");
   }
 
   // Routes that belong to "Reglages" but don't start with /parametres

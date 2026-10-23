@@ -26,14 +26,23 @@ const state = vi.hoisted(() => ({
   },
   sql: null as DatabaseSql | null,
   messages: [] as InvitationMail[],
+  sessionRequests: [] as unknown[],
   fail: false,
   handler: null as null | ((message: InvitationMail) => Promise<string>),
 }));
 vi.mock("@/lib/auth/server", () => ({
-  auth: {
+  authSessionReader: {
     getSession: async () => ({
       data: state.identity ? { user: state.identity } : null,
     }),
+  },
+  auth: {
+    getSession: async (options: unknown) => {
+      state.sessionRequests.push(options);
+      return {
+        data: state.identity ? { user: state.identity } : null,
+      };
+    },
   },
 }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
@@ -226,10 +235,16 @@ describe("space invitations — real PostgreSQL, Auth/transport edges simulated"
   test("concurrent acceptance is atomic, creates one membership and no personal space; all rights are equal", async () => {
     const id = state.messages.find((x) => x.to === b.email)!.id;
     state.identity = b;
+    state.sessionRequests = [];
     const results = await Promise.all(
       Array.from({ length: 3 }, () =>
         invitations.respondToInvitation(id, "accept"),
       ),
+    );
+    expect(state.sessionRequests).toEqual(
+      Array.from({ length: 3 }, () => ({
+        query: { disableCookieCache: "true" },
+      })),
     );
     expect(results.every((x) => x.ok)).toBe(true);
     expect(

@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   distDir: process.env.MES_FINANCES_BUILD_DIR ?? ".next",
   // The development badge overlaps the carousel's bottom-left skip control.
   devIndicators: false,
+  // Project instructions are maintained explicitly, outside Next dev generation.
+  agentRules: false,
   logging: { incomingRequests: { ignore: [/^\/invitation\//, /^\/auth\//] } },
   turbopack: {
     root: path.resolve(__dirname),

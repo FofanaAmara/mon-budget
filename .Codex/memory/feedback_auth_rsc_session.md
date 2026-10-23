@@ -1,0 +1,5 @@
+# Sessions Auth en rendu serveur
+
+What happened : après mise à niveau Neon, un getSession en RSC a essayé d’écrire des cookies ; un contexte dit read-only a aussi révélé un second GET implicite sans les flags de lecture.
+Why it happened : la méthode serveur du SDK renouvelle un cache local et mint une session après Set-Cookie. Les options du premier GET ne couvrent pas toutes ses opérations internes.
+How to prevent : tester le véritable adaptateur installé avec une réponse Set-Cookie et cookies.set interdit en RSC. Réserver le SDK mutable aux actions/handlers ; lecteur RSC autoritatif borné, sans cache ni refresh ni mutation. Tester le nombre de requêtes, le préfixe URL, les cookies filtrés et les erreurs, pas uniquement la valeur renvoyée. Rechercher tous les appels directs et tous les comportements par défaut, y compris les lectures annexes d’onboarding : corriger uniquement les invitations laisse le défaut sur les autres pages. Les décisions de destinataire demandent une session fraîche avec le type d’option attendu par le SDK.

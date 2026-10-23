@@ -15,3 +15,5 @@
 - [Types Next générés](feedback_generated_next_types.md) — préserver les changements humains pour toutes les commandes génératrices, y compris typegen.
 
 - [Déduplication des courriels](feedback_email_idempotency_window.md) — fenêtre fournisseur, payload figé et état incertain.
+
+- [Sessions Auth en rendu serveur](feedback_auth_rsc_session.md) — tester les effets réels du SDK et séparer lecture RSC de renouvellement mutable.

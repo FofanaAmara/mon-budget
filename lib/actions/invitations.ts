@@ -61,7 +61,7 @@ export async function getReceivedInvitations(): Promise<{
   verified: boolean;
   invitations: InvitationView[];
 }> {
-  const identity = await requireIdentity();
+  const identity = await requireIdentity({ readOnly: true });
   await requireSpacesReady();
   if (!identity.emailVerified || !identity.email)
     return { verified: false, invitations: [] };
@@ -90,7 +90,7 @@ export async function getPublicInvitation(token: string): Promise<{
   if (!row) return null;
   let identity: Awaited<ReturnType<typeof requireIdentity>> | null = null;
   try {
-    identity = await requireIdentity();
+    identity = await requireIdentity({ readOnly: true });
   } catch (error) {
     if (!(error instanceof SpaceAccessError)) throw error;
   }
@@ -117,7 +117,7 @@ export async function inviteToSpace(
   emailInput: string,
 ): Promise<InvitationResult<InvitationView>> {
   const context = await requireSpace(spaceId);
-  const identity = await requireIdentity();
+  const identity = await requireIdentity({ fresh: true });
   const parsed = InvitationEmail.safeParse(emailInput);
   if (!parsed.success)
     return { ok: false, error: parsed.error.issues[0].message };
@@ -259,7 +259,7 @@ export async function respondToInvitation(
 ): Promise<
   InvitationResult<{ spaceId: string; spaceName: string; accepted: boolean }>
 > {
-  const identity = await requireIdentity();
+  const identity = await requireIdentity({ fresh: true });
   await requireSpacesReady();
   if (!identity.emailVerified || !identity.email)
     return {
@@ -305,7 +305,7 @@ export async function respondToInvitation(
 
 /** Confirmation survives refresh and is visible only to the responding verified account. */
 export async function getInvitationResponse(invitationId: string) {
-  const identity = await requireIdentity();
+  const identity = await requireIdentity({ readOnly: true });
   await requireSpacesReady();
   if (
     !identity.emailVerified ||

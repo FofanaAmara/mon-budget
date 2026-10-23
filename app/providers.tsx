@@ -11,7 +11,6 @@ export function AuthProviders({ children }: { children: ReactNode }) {
 
   return (
     <NeonAuthUIProvider
-      // @ts-expect-error — NeonAuthUIProvider expects NeonAuthClient but createAuthClient() returns a compatible superset; SDK type mismatch
       authClient={authClient}
       navigate={(href) => router.push(href)}
       replace={(href) => router.replace(href)}

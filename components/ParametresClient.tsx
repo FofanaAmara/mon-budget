@@ -498,7 +498,8 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
         <button
           onClick={async () => {
             await authClient.signOut();
-            window.location.href = "/auth/sign-in";
+            // Discard in-memory private state and replace the signed-out history entry.
+    window.location.replace("/auth/sign-in");
           }}
           style={{
             width: "100%",

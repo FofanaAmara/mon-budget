@@ -331,3 +331,32 @@
 **Contexte pour reprise :** invitations-management-execution.md.95servicesPG/193unit/21migrations/6bancChrome verts,types0,lint0erreur15warnings. UIréelleCUA : créationpersonnelleNo et coupleYes+Mailpit, renamecouple pendantpersonnelactif, publicmauvaiscompterefusé ; HTTPanonyme200texte/boutons/no-store/no-referrer. PasPlaywrightMCP (absent),ChromeMCPprofiloccupé, pasdepreuveResendexterne/nouveaucompte.31alertesnpmidentiquesHEADdont4critiques, nodemaileraucunealerte. Runtime3002session26401actif ; ongletIAB20marquéhandoffsurfichecouple. Source3001processususernonarrêté. Work contient désormais2espacessynthétiquescréésviaUI : personnelb99e9a9e-e6a2-4cfa-838d-3f7aec6712b3,couple13603cc1-c500-4a3c-9ce0-4abe836622f0 ; invitationfictiveMailpituniquement. Certificatstrictancienworkfalseconservé, nouveaucertificatpréUIvrai. Préserverdirtyserena/next-env/anciensCS. Aucunmailréel/push/prod,goalactifnonlivré.
 
 Checkpoint avant commit : build final sortie0, types0, lint0erreur15warnings, diffcheck0 ; revue finale de tranche fermée sans nouveau finding. Gardeformulaire tardif et sixième test navigateur vérifiés. Feature globale IN_PROGRESS ; aucune preuve de réception externe ou de nouvel utilisateur ajoutée depuis le checkpoint précédent.
+
+---
+## [2026-10-23] — Réparation des dépendances avant recette finale
+**Plan :** .Codex/plans/espaces-financiers-dependency-repair.md, parent espaces-financiers-implementation.md.
+**Tâche en cours :** versions corrigées/compatibilités avant nouvellespreuvesAuth.
+**Objectif :** nepaslivrerl’auth/serveuravecalertescritiquesconnues ; scopefeatureglobalinchangé.
+**État :** IN_PROGRESS
+**Fichiers touchés :** plan/state puispackage-lock etadaptateurs siAPIchangée.
+**Décisions prises :** tourprécédent=progrèsvérifié3cced35 ; 31alertesréellesidentiquesauHEADantérieur. Choisircorrigéscompatiblesofficiels,sansforcertransitivesBetterAuth ; Vitestmajeure4conservée. Tranche15–25kestimée,coûtindisponible. AucunAWM/question/push/prod.
+**Prochaine étape :** changelogNeonAuth,codemodNextdryrun,installationciblée puiscontratsAuth.
+**Contexte pour reprise :** runtime3002session26401 stoppéparSIGINTetconfirmésortie0. Clonework17ready006et2espacessynthétiques/invitationMailpitconservés,archivebefore_invitationsetbaselineintactes. PasdenouvellepreuveResendreçu/comptecréé/PlaywrightMCP. Dirtypréexistantserena,next-env/CSàpréserver. Types/lint/buildvertsavanttranche.
+
+Checkpoint sécurité : Next16.4.2/Vitest4.1.12/Neon0.6Beta BetterAuth1.7.6 ; runtime0alerte,5highlintsanspatchamontdocumentés. SDK0.7n’estpasretenu(peerUI0.6),overrideNeonreprendmatriceofficielle. PeerAJV8devexplicitesecondevérifnpmcilockfinalencours(session75371anciennefinalisée,sessionnouvelleàsuivreoutils). RevuefermeP1RSCaprèslecteurHTTPunique ;199unit/95PG/21migration/6bancChromeverts ;typesloggercorrigéaprèséchec,derniertsc0,lint0erreur15warnings. BuildancienlecteurHTTPaéchouétypepartiellogger ; corrigeravecresolveNeonAuthLogging(silent),puisnouveaubuildobligatoireavantcommit. Runtime3002toujoursarrêtéàredémarrer aprèsbuild. Aucunemail/push/prod.
+
+---
+## [2026-10-23 03:24] — Socle corrigé, recette globale à poursuivre
+
+**Plan :** `.Codex/plans/espaces-financiers-dependency-repair.md`, parent espaces-financiers-implementation.md.
+**Tâche en cours :** clôture de la tranche technique ; goal global IN_PROGRESS.
+**Objectif :** feature espaces et invitation réellement reçue, sans question durant absence ni AWM.
+**État :** IN_PROGRESS
+**Fichiers touchés :** voir dependency-repair-execution.md et session du jour.
+**Décisions prises :** Next16.4.2, Neon0.6-beta avec matrice officielle, Vitest4.1.12 ; lecteur RSC autoritatif sans mutation ; mutations invitation fraîches. Garde strict des écritures Next tardives. Audit production zéro ; cinq alertes lint sans patch documentées, aucun downgrade incompatible.
+**Prochaine étape :** commit exact de la tranche puis matrice 17 exigences/30AC, Auth réel à deux sessions/réception externe autorisée, caches/offline/CI/Playwright MCP.
+**Contexte pour reprise :** 205 unitaires,95PG,21migrations,6cas navigateur isolé verts ; types0,lint0erreur15warnings,build16.4.2vert ; npmci réussi et graphe0problème. Revue indépendante P1RSC/P2garde fermée. Runtime3002 session97088 actif avec copie work17ready006 et espaces synthétiques ; source/baseline/archive conservées. Politique navigateur refuse l’onglet : ne pas contourner, aucune nouvelle validation visuelle de la mise à niveau. Réception Resend/nouveau compte/PlaywrightMCP/CI non prouvés. Aucun mail externe/push/prod. Préserver dirtyserena/next-env (import.next/dev/types)/anciensCS, ne pas les stage. Goal actif non livré.
+
+Checkpoint final Auth : lecteur sans mutation devenu le défaut requireIdentity pour toutes les pages et actions ; le carrousel RSC hasSeenOnboarding a aussi été corrigé après finding indépendant. 206 unitaires et95PG verts sur ce dernier code ; types/lint/build relancés. Première relance build a échoué par accès GoogleFonts restreint, nouvelle relance réseau session68798 en cours. Aucun contournement navigateur.
+
+Checkpoint avant commit : 206unit/95PG verts, types0, lint0erreur15warnings ; build Webpack16.4.2 sortie0 sur dernier code. Turbopack final reste BLOQUÉ par EPERM lors du bind du worker CSS (après accès GoogleFonts) : rapport conservé, aucun faux vert. Revue indépendante a fermé dernierP1 carrousel. Build concurrent avait arrêté le runtime par le garde strict (comportement attendu) ; configurations restaurées, recette redémarrée session50892, runtime-final.log. Séquencer build/typegen etdev. Diffnext-envexactpréexistant ettsconfigHEAD conservés. Aucun nouveau navigateur/mail/push/prod.

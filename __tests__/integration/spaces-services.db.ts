@@ -7,7 +7,10 @@ import { runMigrations } from "../../scripts/financial-spaces/migrate.mjs";
 
 type Identity = { id: string; name: string; email: string };
 const state = vi.hoisted(() => ({ identity: null as Identity | null, sql: null as DatabaseSql | null }));
-vi.mock("@/lib/auth/server", () => ({ auth: { getSession: async () => ({ data: state.identity ? { user: { ...state.identity } } : null }) } }));
+vi.mock("@/lib/auth/server", () => {
+  const getSession = async () => ({ data: state.identity ? { user: { ...state.identity } } : null });
+  return { auth: { getSession }, authSessionReader: { getSession } };
+});
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 vi.mock("@/lib/db", () => ({
   sql: Object.assign((strings: TemplateStringsArray, ...values: unknown[]) => state.sql!(strings, ...values), {

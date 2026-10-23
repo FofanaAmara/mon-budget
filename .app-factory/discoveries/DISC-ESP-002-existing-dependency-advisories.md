@@ -12,4 +12,8 @@ L’authentification et le serveur de l’app sont concernés, en plus des outil
 Identifier les versions corrigées depuis les sources primaires et les compatibilités Neon Auth/Next/React ; appliquer les mises à jour nécessaires sur branche locale, régénérer lockfile, tester contratsauth et feature, réauditer. Ne pas lancer audit fix --force ni réduire les gates.
 
 ## Status
-OPEN — correction avant livraison finale ; aucun push ou déploiement autorisé.
+PARTIALLY_RESOLVED — Next 16.4.2, Neon Auth 0.6.0-beta et Vitest 4.1.12 installés et testés. Audit de production : zéro alerte ; quatre critiques initiales résolues. Installation propre et graphe vérifiés sans erreur.
+
+Restent cinq alertes high de développement dans la chaîne ESLint Next → fast-glob/micromatch → braces 3.0.3 (GHSA-vfj7-8cjw-p6xm). Aucun patch braces disponible à la vérification ; le downgrade ESLint Next 14 suggéré par npm est incompatible et rejeté. Globs contrôlés par le dépôt, chaîne absente du runtime produit. Risque technique limité au développement accepté sous consigne d’autonomie, sans masquer le rapport ni déclarer le goal livré. Suivre un correctif amont.
+
+Voir DEC-002 et `.Codex/plans/espaces-financiers-evidence/dependency-repair-execution.md`. Rapports finaux privés dans `.local/financial-spaces/dependency-repair/`. Aucun push ou déploiement.
