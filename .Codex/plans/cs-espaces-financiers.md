@@ -67,3 +67,37 @@ L’humain demande React et refuse HTML. Route courante : skill creative-studio-
 ## Révision humaine — React simple sans Storybook
 
 L’humain rejette explicitement le skill dépendant de Storybook : arrêt de cette direction. Npm arrêté sortie130, aucun package installé ni serveur Storybook lancé ; artefacts préservés .tmp/cs-espaces-financiers/abandoned-storybook/. Mandat courant : mockups React simples avec Vite/React déjà présents ; brief essai02 remplacé, même agent cs_react_experience relancé sans cycle/skills-new/Storybook/library. Aucun code app modifié. Auto-revue puis regardneuf comparatif ordinaires, pas machinerieStorybook.
+
+## Révision humaine — Onboarding, invitation et réglages (2026-10-22)
+
+### Résumé exécutif
+Appliquer les trois corrections explicites du sponsor au prototype React simple, sans modifier l’application réelle.
+### État actuel
+SpaceForm affiche systématiquement son étape invitation. SidebarSelector affiche gestion/création/invitations. La route /parametres/espace ouvre directement le détail actif. Le scénario signup ouvre directement AuthPage et son mock ne représente que l’inscription.
+### État cible
+Question explicite espace partagé oui/non ; non crée immédiatement sans invitation, oui ouvre invitation. Page publique dit « Tu as été invité dans un espace », boutons connexion/inscription sur routes auth existantes, puis acceptation distincte. Sidebar contient seulement sélecteur. Réglages > Espaces et membres liste tous les espaces autorisés avec bouton création, chaque ligne ouvre son détail.
+### Écarts et approche
+- Formulaire : ajouter choix radio requis à côté du nom, branche conditionnelle.
+- Invitation : écran public et routes /auth/sign-in et /auth/sign-up réutilisant AuthPage ; mock AuthView selon pathname, retour vers invitation authentifiée.
+- Navigation : simplifier SidebarSelector et drawer ; index espaces dans réglages, détail par ID et opérations ciblées sur cet ID sans changer espace actif.
+### Impact
+App.jsx, mocks/AuthView.jsx, preview.css, fixtures si besoin, README/brief et input de cadrage. Rayon limité au prototype ; préserver sources app, dépendances et modifications préexistantes.
+### Périmètre
+IN : corrections demandées, liens directs conservés/actualisés, preuves mobile/desktop, commit local. OUT : backend/auth réelle/envoi email et intégration produit, car revue des maquettes en cours.
+### Hypothèses
+Le Vite4301 est disponible (tester navigateur). AuthPage accepte pathname transformé (inspecté). Tous membres restent égaux (décision humaine existante).
+### Pre-Mortem
+- Modification d’un espace non actif renomme le mauvais : passer ID du détail explicitement et tester les deux noms.
+- Invitation est acceptée implicitement à la connexion : préserver étape Accepter, vérifier compteur après auth.
+- Actions gestion restent accessibles sidebar mobile : contrôler texte et capture du drawer375px.
+### Rollback
+Avant commit, restaurer uniquement fichiers de cette passe depuis HEAD si abandon explicite ; après commit utiliser git revert du commit de correction identifié. Ne pas toucher .serena/project.yml ni next-env.d.ts.
+### Phases et contrôles
+1. Cadrage et état (ce document), puis état IN_PROGRESS.
+2. Formulaire et écrans/routes ; build sortie0 avant validation.
+3. Navigateur : non/oui, deux boutons auth, acceptation, liste/création/détail, rename espace non actif ; captures375px et desktop, zéro défaut connu avant remise.
+4. Docs/liens et commit sélectif, sans push.
+### Succès
+PASS si non saute invitation, oui l’affiche ; landing public propose exactement les deux choix auth ; connexion et inscription reviennent à acceptation explicite ; sidebar ne contient aucune action de gestion ; liste affiche tous espaces et création ; détail renomme seulement ID choisi ; build0 et contrôles visuels sans chevauchement/troncature.
+### Tests
+Tests navigateur CUA, sans prétendre Playwright MCP. Vérifier liens directs et états persistants ; captures avant/après aux mêmes dimensions pour les surfaces modifiées. Relecture huit questions planning-methodology : oui aux huit, périmètre et rollback explicites, hypothèses vérifiables.

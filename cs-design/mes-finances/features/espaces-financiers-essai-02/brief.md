@@ -25,3 +25,6 @@ Prévisualisation directe sans galerie de bibliothèque ; petit choix de scénar
 
 Browser via CUA Chrome extension, onglet neuf ; IAB indisponible/ChromeMCP conflitprofil. Réinitialiser viewport/fermer tes seules tabs. Pas de PlaywrightMCP revendiqué. Vérifier375 FIRST puis1280, comparer VISUELLEMENT à vraie app, champs/noms longs, étatvide/rempli, clavier et flux. Preuves locales dans essai02/proofs/, pas /tmp ; logs/dérivés dans essai02/.cache et logs.
 Ne pas produire une machine d'état, requirements/plan/Storybookdocs ; pas appliquer le skill-new révoqué. Ton auto-revue visuelle reste requise pour mockups propres, parent fera regardneuf comparatif. Aucun agent supplémentaire ni commit/push. Aucun codeapp/.serena/next-env/packageracine à modifier. Pas de demande permission pour routine autorisée. Si blocage technique réel, informer parent en continuant indépendant.
+
+## Corrections humaines après test du prototype
+Onboarding : demander si l’espace est partagé, invitation seulement si oui. Invitation publique : annoncer explicitement l’invitation et proposer connexion/inscription via les pages existantes, avant acceptation explicite. Sidebar : sélecteur seulement. Réglages > Espaces et membres : liste de tous mes espaces + création, clic vers fiche de détail pour renommer, voir membres et inviter ; cette consultation ne change pas l’espace actif.

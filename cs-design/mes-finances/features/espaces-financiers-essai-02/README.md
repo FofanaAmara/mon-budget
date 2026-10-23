@@ -8,13 +8,13 @@ Depuis la racine du projet :
 node node_modules/vite/bin/vite.js --config cs-design/mes-finances/features/espaces-financiers-essai-02/vite.config.mjs --configLoader runner
 ```
 
-Le petit bouton « Maquette React · Démo » ouvre le choix de parcours et la réinitialisation : couple+personnel, solo, compte vide, premier espace, invitation avec/sans compte, nom long. Il permet aussi de jouer l’autre membre. Les données fictives et l’écran courant persistent dans le stockage local de cette seule origine.
+Le petit bouton « Maquette React · Démo » ouvre le choix de parcours et la réinitialisation : couple+personnel, solo, compte vide, premier espace, invitation connectée ou avant connexion, nom long. Il permet aussi de jouer l’autre membre. Les données fictives et l’écran courant persistent dans le stockage local de cette seule origine.
 
 ## Réemploi et ajouts
 
 Les vraies définitions React sont importées : LayoutShell/BottomNav, AccueilClient et ses trois onglets, DepensesTrackingClient et filtres/feuilles, RevenusTrackingClient avec Allocation, ProjetsEpargneClient, ParametresClient et gestionnaires/réglages. `app/globals.css` est importé directement. La police provient du fichier local déjà généré par la vraie app. Aucun fichier de l’application n’est modifié.
 
-Ajouts React locaux : sélecteur dans la sidebar desktop ; ouverture d’une sidebar d’espaces par une ligne sous le header mobile ; création/nom/invitation facultative ; Espace et membres ajouté au hub Réglages ; invitations reçues et confirmation ; étapes de premier espace. La navigation existante reste à cinq entrées. Le guide de configuration réel reste présent pour un nouvel espace vide.
+Ajouts React locaux : sélecteur dans la sidebar desktop ; ouverture d’une sidebar d’espaces par une ligne sous le header mobile ; création/nom/choix personnel ou partagé ; invitation uniquement si partagé ; liste Espaces et membres dans Réglages, création puis détail par espace ; entrée publique d’invitation vers connexion ou inscription existante, invitations reçues et confirmation ; étapes de premier espace. La navigation existante reste à cinq entrées. Le guide de configuration réel reste présent pour un nouvel espace vide.
 
 La page Auth réelle (`app/auth/[path]/page.tsx`) est également importée : la transformation Vite locale résout ses params sans async, sans éditer le fichier. Seule AuthView est substituée par un formulaire de démonstration sans mot de passe ni service. Le cadre, le logo, le texte de marque et le responsive viennent de la vraie page.
 
@@ -49,13 +49,25 @@ Un lien avec `scenario` ouvre une copie initiale du parcours demandé, même si 
 - [Compte existant vide](http://localhost:4301/?scenario=empty)
 - [Premier espace / onboarding](http://localhost:4301/?scenario=onboarding)
 - [Invitation — compte existant](http://localhost:4301/?scenario=invite)
-- [Invitation — nouveau compte](http://localhost:4301/?scenario=signup)
+- [Invitation — avant connexion](http://localhost:4301/?scenario=signup)
 - [Nom long](http://localhost:4301/?scenario=long)
 - [Créer un autre espace](http://localhost:4301/?scenario=couple&dialog=create)
-- [Espace et membres / inviter](http://localhost:4301/parametres/espace?scenario=couple)
+- [Liste Espaces et membres](http://localhost:4301/parametres/espace?scenario=couple)
 - [Dépenses du couple](http://localhost:4301/depenses?scenario=couple)
 - [Revenus du couple](http://localhost:4301/revenus?scenario=couple)
 - [Patrimoine du couple](http://localhost:4301/projets?scenario=couple)
 - [Réglages du couple](http://localhost:4301/parametres?scenario=couple)
 
 Vérification : les13 adresses ont été ouvertes dans le navigateur et leur écran initial contrôlé. Build Vite exécuté avec succès.
+
+### Révision demandée après test humain
+
+- Onboarding et création : choix explicite personnel/partagé. Non crée directement ; oui propose l’invitation facultative.
+- La sidebar contient uniquement le sélecteur. Gestion, liste et création sont dans Réglages > Espaces et membres. Le détail ouvre l’espace choisi sans basculer l’espace actif ; renommage et invitation ciblent cet ID.
+- Page publique explicite d’invitation, avant auth, avec deux liens vers les routes existantes. AuthPage réelle réemployée pour connexion et inscription, formulaire service simulé ; l’acceptation reste une étape distincte.
+- [Détail de Notre couple](http://localhost:4301/parametres/espace/couple?scenario=couple)
+- [Détail de Mes finances](http://localhost:4301/parametres/espace/personal?scenario=couple)
+- [Connexion depuis invitation](http://localhost:4301/auth/sign-in?scenario=signup)
+- [Inscription depuis invitation](http://localhost:4301/auth/sign-up?scenario=signup)
+
+Preuves de cette révision : proofs/revision-*.png, ignorées par Git. Les captures et vérifications antérieures décrivent la version précédente ; les commandes de gestion en sidebar qui y figurent sont supprimées par cette révision.

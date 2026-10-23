@@ -169,3 +169,11 @@ Au niveau de l'intention, le résultat doit permettre de constater :
 Position : concrétisation du « Partage familial » de .app-factory/docs/vision.md. Cet input reste la source des décisions ; le backlog a été raffiné ensuite dans `.app-factory/backlog/epics/finances-partagees/`. Cette mention ne certifie aucune implémentation. La priorité immédiate et la conception de l’expérience ont depuis été autorisées ; le plan technique reste à valider avant implémentation.
 
 Coût : N/A — aucune cible propre à cette feature donnée par l'humain. .app-factory/docs/architecture.md indique une infrastructure sur plans gratuits ; vérifier cette contrainte et l'impact du transport des invitations avant de proposer un service payant, sans la faire passer pour une décision nouvellement prise.
+
+## Décisions humaines — révision après test des maquettes (2026-10-22)
+
+Ces décisions précisent les sections précédentes et priment sur les anciennes propositions visuelles :
+- Onboarding : poser explicitement « Est-ce un espace partagé avec d’autres personnes ? ». Réponse non : créer sans afficher de page invitation ; réponse oui : proposer cette page.
+- Invitation avant authentification : page explicite « Tu as été invité dans un espace », nom de l’espace, choix Se connecter ou Créer un compte renvoyant vers les pages existantes. Après authentification, acceptation explicite distincte.
+- Sidebar : uniquement la liste déroulante pour changer d’espace ; aucune création, gestion, liste de membres ou action d’invitation à cet endroit.
+- Réglages > Espaces et membres : liste de mes espaces accessibles et bouton de création. Clic sur un espace : sa fiche détail pour renommer, voir les membres et inviter. Consulter un détail ne change pas le contexte actif ; actions ciblées sur cet espace.

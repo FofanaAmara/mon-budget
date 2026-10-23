@@ -43,3 +43,25 @@
 **Décisions prises :** React/Vite existants, sans Storybook ni bibliothèque ; réemploi composants réels, données fictives et actions locales. Aucun package racine ni source applicative modifié.
 **Prochaine étape :** l’humain teste http://localhost:4301 via Maquette React · Démo ; recueillir ses retours avant intégration.
 **Contexte pour reprise :** serveur Vite session87161 actif. Build Vite exit0 ; revue indépendante comparative réelle effectuée. Cible invitation corrigée44×44 et recontrôlée par parent dans navigateur375×812, acceptation avec compteur supprimé confirmée. Capture finale proofs/parent-final.png, viewport restauré. Preuves privées ignorées. Bug préexistant RevenusMonument mobile documenté DISC-ESP-001 ; correction typographique locale au prototype explicitée. .serena/project.yml et next-env.d.ts préexistants exclus. Anciennes maquettes HTML rejetées conservées sur disque, hors livraison. Pas de push.
+
+---
+## [2026-10-22] — Corrections humaines parcours espaces
+**Plan :** .Codex/plans/cs-espaces-financiers.md, révision onboarding/invitation/réglages.
+**Tâche en cours :** corriger le prototype React selon les trois demandes précises.
+**Objectif :** onboarding conditionnel, entrée invitation publique et gestion centralisée dans réglages.
+**État :** IN_PROGRESS
+**Fichiers touchés :** prototype essai02 et docs de cadrage.
+**Décisions prises :** sidebar sélecteur seul ; réglages liste puis détail par ID ; conserver auth existante via mocks locaux.
+**Prochaine étape :** capturer avant, implémenter puis vérifier deux branches, deux auth et gestion espace non actif.
+**Contexte pour reprise :** preview4301 ; app réelle3001 lecture seule. SourceApp inchangée, pas de dépendances. Changements approuvés explicitement dans la demande humaine. TaskCreate/TaskUpdate absents : phases visibles ici et en commentaires. Préserver modifications préexistantes .serena/project.yml et next-env.d.ts. Pas de push.
+
+---
+## [2026-10-22] — Révision UX des maquettes vérifiée
+**Plan :** .Codex/plans/cs-espaces-financiers.md, révision onboarding/invitation/réglages.
+**Tâche en cours :** remise des trois corrections humaines.
+**Objectif :** retest humain du prototype corrigé.
+**État :** DONE (maquettes seulement, validation humaine à venir).
+**Fichiers touchés :** essai02/src/App.jsx et preview.css, mocks/AuthView.jsx, brief/README/revision-ux ; input et suivi.
+**Décisions prises :** question de partage obligatoire, non sans invitation ; landing publique vers deux routes auth ; sidebar sélecteur seul ; liste/création dans réglages, détail par ID sans bascule implicite.
+**Prochaine étape :** humain teste onboarding, invitation publique et liste puis détail ; intégrer seulement après mandat.
+**Contexte pour reprise :** serveur4301 conservé actif. Liens /?scenario=onboarding, /?scenario=signup (landing publique), /auth/sign-in?scenario=signup, /auth/sign-up?scenario=signup, /parametres/espace?scenario=couple (liste), /parametres/espace/couple?scenario=couple (détail). Parcours vérifiés375×812/1280×900 et rename espace non actif. Preuves ignorées proofs/revision-*.png. Dernier build0,1,18s. Auth simulée uniquement. Modifications préexistantes .serena/project.yml et next-env.d.ts exclues ; anciennes maquettes HTML non suivies conservées. Aucun push.

@@ -41,3 +41,7 @@ Maquettes prêtes pour test humain sur http://localhost:4301. Aucune approbation
 ### Liens directs des maquettes
 Correction demandée par l’humain : chaque parcours doit être ouvrable directement. Ajout du paramètre scenario prioritaire au stockage local, du chemin initial et du dialogue création ;13 liens documentés et ouverts dans le navigateur. Sans paramètre, reprise locale conservée. Build Vite sortie0. Changement limité au démarrage du prototype, sans changement UI ni application métier.
 Fichiers : essai-02/src/App.jsx et README.md.
+
+### Révision humaine — onboarding, invitation et réglages
+Ajout choix personnel/partagé avant toute invitation ; page publique invitation avec deux chemins auth existants ; sidebar sélecteur seul ; réglages liste/création puis fiche par ID. Input et brief actualisés. Vérifications CUA375×812 puis1280×900 : les deux branches onboarding, connexion/inscription puis acceptation distincte, création partagée depuis réglages, rename personnel sans changer couple actif, sélecteur solo désactivé et drawer sans gestion. Captures avant/après locales dans proofs/revision-*.png. Correction visuelle footer boutons même hauteur et focus champ invitation. Build Vite sortie0,1,18s ; console sans erreur observée et diff-check propre.
+Fichiers : essai02/App.jsx, AuthView.jsx, preview.css, README.md, brief.md, revision-ux.md ; input ; plan/state/session. Aucun code applicatif ni dépendance modifié. Retours humains sur cette nouvelle révision attendus.
