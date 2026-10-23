@@ -195,7 +195,7 @@ export function countBiweeklyPayDatesInMonth(
   const monthEnd = new Date(year, month + 1, 0); // last day of month
 
   // Find the first pay date on or before monthStart
-  let cursor = new Date(anchor);
+  const cursor = new Date(anchor);
   if (cursor > monthStart) {
     while (cursor > monthStart) {
       cursor.setDate(cursor.getDate() - 14);
@@ -236,7 +236,7 @@ export function getNextBiweeklyPayDate(anchorDate: string | Date): Date {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  let cursor = new Date(anchor);
+  const cursor = new Date(anchor);
 
   if (cursor >= today) {
     // Walk backward to find the closest future one

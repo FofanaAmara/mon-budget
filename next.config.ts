@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
+  // Keep verification builds separate from an already-running local dev server.
+  distDir: process.env.MES_FINANCES_BUILD_DIR ?? ".next",
   turbopack: {
     root: path.resolve(__dirname),
   },

@@ -98,9 +98,7 @@ export default function OnboardingCarousel({ onComplete, onSkip }: Props) {
 
   // ─── Track transform ─────────────────────────────────────────────────────
 
-  const trackTranslate =
-    -(currentSlide * 100) +
-    (dragOffset / (viewportRef.current?.offsetWidth ?? 375)) * 100;
+  const trackTranslate = `calc(${-currentSlide * 100}% + ${dragOffset}px)`;
 
   // ─── Render ──────────────────────────────────────────────────────────────
 
@@ -121,7 +119,7 @@ export default function OnboardingCarousel({ onComplete, onSkip }: Props) {
       >
         <div
           className={`onboarding-track${isDragging ? " onboarding-track--dragging" : ""}`}
-          style={{ transform: `translateX(${trackTranslate}%)` }}
+          style={{ transform: `translateX(${trackTranslate})` }}
         >
           {/* ── Slide 1: Bienvenue ── */}
           <SlideWelcome

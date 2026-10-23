@@ -1,0 +1,2480 @@
+{
+  "purpose": "Baseline for explicit-space migration; not evidence that isolation is implemented.",
+  "limits": "Static references, including callbacks. Direct SQL table matches are lexical; helper call chains must be reviewed during migration.",
+  "modules": 16,
+  "count": 86,
+  "scopes": {
+    "financial": 78,
+    "individual": 2,
+    "mixed": 4,
+    "legacy": 2
+  },
+  "actions": [
+    {
+      "file": "lib/actions/allocations.ts",
+      "export": "getAllocations",
+      "line": 77,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expenses",
+        "income_allocations"
+      ],
+      "sqlSites": [
+        79
+      ],
+      "calls": [
+        "(rows as Record<string, unknown>[]).map",
+        "(rows as { id: string }[]).map",
+        "(sectionsMap.get(r.id as string) ?? []).map",
+        "fetchAllocationSections",
+        "requireAuth",
+        "sectionsMap.get"
+      ],
+      "callers": [
+        {
+          "file": "app/parametres/allocation/page.tsx",
+          "line": 14,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/allocations.ts",
+      "export": "createAllocation",
+      "line": 104,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "income_allocations"
+      ],
+      "sqlSites": [
+        111,
+        123
+      ],
+      "calls": [
+        "(sectionsMap.get(alloc.id as string) ?? []).map",
+        "fetchAllocationSections",
+        "requireAuth",
+        "revalidatePath",
+        "sectionsMap.get",
+        "setAllocationSections",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/AllocationModal.tsx",
+          "line": 98,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/allocations.ts",
+      "export": "updateAllocation",
+      "line": 158,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "income_allocations"
+      ],
+      "sqlSites": [
+        170
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidatePath",
+        "setAllocationSections",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/AllocationModal.tsx",
+          "line": 96,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/allocations.ts",
+      "export": "deleteAllocation",
+      "line": 189,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "income_allocations"
+      ],
+      "sqlSites": [
+        192
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/AllocationsManager.tsx",
+          "line": 60,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/allocations.ts",
+      "export": "reorderAllocations",
+      "line": 201,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "income_allocations"
+      ],
+      "sqlSites": [
+        205
+      ],
+      "calls": [
+        "Promise.all",
+        "orderedIds.map",
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/AllocationsManager.tsx",
+          "line": 71,
+          "usage": "call"
+        },
+        {
+          "file": "components/AllocationsManager.tsx",
+          "line": 81,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/allocations.ts",
+      "export": "generateMonthlyAllocations",
+      "line": 219,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expenses",
+        "income_allocations",
+        "monthly_allocations"
+      ],
+      "sqlSites": [
+        223,
+        250
+      ],
+      "calls": [
+        "Number",
+        "Promise.all",
+        "inserts.push",
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "app/revenus/page.tsx",
+          "line": 29,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/allocations.ts",
+      "export": "getMonthlyAllocations",
+      "line": 263,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expenses",
+        "income_allocations",
+        "monthly_allocations"
+      ],
+      "sqlSites": [
+        268
+      ],
+      "calls": [
+        "(rows as Record<string, unknown>[]).map",
+        "(rows as { allocation_id: string }[]).map",
+        "(sectionsMap.get(r.allocation_id as string) ?? []).map",
+        "fetchAllocationSections",
+        "requireAuth",
+        "sectionsMap.get",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "app/revenus/page.tsx",
+          "line": 46,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/allocations.ts",
+      "export": "createAdhocMonthlyAllocation",
+      "line": 304,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "income_allocations",
+        "monthly_allocations"
+      ],
+      "sqlSites": [
+        318,
+        330,
+        353
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidatePath",
+        "setAllocationSections",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/AdhocAllocationModal.tsx",
+          "line": 54,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/allocations.ts",
+      "export": "updateMonthlyAllocation",
+      "line": 364,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "monthly_allocations"
+      ],
+      "sqlSites": [
+        371
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/revenus/AllocationTrackingTab.tsx",
+          "line": 56,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/cards.ts",
+      "export": "getCards",
+      "line": 11,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "cards"
+      ],
+      "sqlSites": [
+        13
+      ],
+      "calls": [
+        "requireAuth"
+      ],
+      "callers": [
+        {
+          "file": "app/cartes/page.tsx",
+          "line": 7,
+          "usage": "call"
+        },
+        {
+          "file": "app/depenses/[id]/edit/page.tsx",
+          "line": 17,
+          "usage": "call"
+        },
+        {
+          "file": "app/depenses/page.tsx",
+          "line": 36,
+          "usage": "call"
+        },
+        {
+          "file": "app/parametres/charges/page.tsx",
+          "line": 41,
+          "usage": "call"
+        },
+        {
+          "file": "app/projets/page.tsx",
+          "line": 17,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/cards.ts",
+      "export": "getCardById",
+      "line": 19,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "cards"
+      ],
+      "sqlSites": [
+        23
+      ],
+      "calls": [
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "app/cartes/[id]/page.tsx",
+          "line": 17,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/cards.ts",
+      "export": "createCard",
+      "line": 27,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "cards"
+      ],
+      "sqlSites": [
+        35
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/CartesClient.tsx",
+          "line": 218,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/cards.ts",
+      "export": "updateCard",
+      "line": 50,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "cards"
+      ],
+      "sqlSites": [
+        62
+      ],
+      "calls": [
+        "CreateCardSchema.partial",
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/CartesClient.tsx",
+          "line": 225,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/cards.ts",
+      "export": "deleteCard",
+      "line": 77,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "cards"
+      ],
+      "sqlSites": [
+        80
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/CartesClient.tsx",
+          "line": 239,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/claim.ts",
+      "export": "hasOrphanedData",
+      "line": 9,
+      "scope": "legacy",
+      "rationale": "Disable public orphan discovery after migration.",
+      "tables": [
+        "sections"
+      ],
+      "sqlSites": [
+        12
+      ],
+      "calls": [
+        "Number",
+        "requireAuth"
+      ],
+      "callers": [
+        {
+          "file": "app/page.tsx",
+          "line": 49,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/claim.ts",
+      "export": "claimOrphanedData",
+      "line": 18,
+      "scope": "legacy",
+      "rationale": "Remove public claim; no authenticated user may appropriate unclaimed data.",
+      "tables": [
+        "cards",
+        "debts",
+        "expenses",
+        "incomes",
+        "monthly_expenses",
+        "monthly_incomes",
+        "notification_log",
+        "push_subscriptions",
+        "savings_contributions",
+        "sections",
+        "settings"
+      ],
+      "sqlSites": [
+        25,
+        26,
+        30,
+        32,
+        34,
+        36,
+        38,
+        40,
+        42,
+        44,
+        46,
+        48,
+        50
+      ],
+      "calls": [
+        "console.error",
+        "requireAuth",
+        "revalidateAllPages"
+      ],
+      "callers": [
+        {
+          "file": "components/ClaimBanner.tsx",
+          "line": 16,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/claim.ts",
+      "export": "ensureDefaultSections",
+      "line": 75,
+      "scope": "financial",
+      "rationale": "Initialize sections only inside an explicitly authorized space.",
+      "tables": [
+        "sections"
+      ],
+      "sqlSites": [
+        78,
+        82
+      ],
+      "calls": [
+        "DEFAULT_SECTIONS.map",
+        "Number",
+        "Promise.all",
+        "requireAuth"
+      ],
+      "callers": [
+        {
+          "file": "app/page.tsx",
+          "line": 46,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/debt-transactions.ts",
+      "export": "addDebtTransaction",
+      "line": 11,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [],
+      "sqlSites": [],
+      "calls": [
+        "requireAuth",
+        "revalidateDebtPages",
+        "sql.transaction",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/projets/ChargeDebtSheet.tsx",
+          "line": 29,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/debt-transactions.ts",
+      "export": "getMonthlyDebtSummary",
+      "line": 66,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "debt_transactions"
+      ],
+      "sqlSites": [
+        71
+      ],
+      "calls": [
+        "Number",
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "app/page.tsx",
+          "line": 81,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/debt-transactions.ts",
+      "export": "getDebtTransactions",
+      "line": 94,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "debt_transactions",
+        "debts"
+      ],
+      "sqlSites": [
+        99
+      ],
+      "calls": [
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": []
+    },
+    {
+      "file": "lib/actions/debts.ts",
+      "export": "getDebts",
+      "line": 15,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "cards",
+        "debts",
+        "sections"
+      ],
+      "sqlSites": [
+        17
+      ],
+      "calls": [
+        "requireAuth"
+      ],
+      "callers": [
+        {
+          "file": "app/projets/page.tsx",
+          "line": 19,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/debts.ts",
+      "export": "createDebt",
+      "line": 31,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "debts"
+      ],
+      "sqlSites": [
+        34
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidateDebtPages",
+        "validateInput"
+      ],
+      "callers": []
+    },
+    {
+      "file": "lib/actions/debts.ts",
+      "export": "updateDebt",
+      "line": 59,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "debts"
+      ],
+      "sqlSites": [
+        66
+      ],
+      "calls": [
+        "CreateDebtSchema.partial",
+        "requireAuth",
+        "revalidateDebtPages",
+        "validateInput"
+      ],
+      "callers": []
+    },
+    {
+      "file": "lib/actions/debts.ts",
+      "export": "deleteDebt",
+      "line": 87,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "debts"
+      ],
+      "sqlSites": [
+        90
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidateDebtPages",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/ProjetsEpargneClient.tsx",
+          "line": 68,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/debts.ts",
+      "export": "getTotalDebtBalance",
+      "line": 97,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "debts"
+      ],
+      "sqlSites": [
+        99
+      ],
+      "calls": [
+        "Number",
+        "requireAuth"
+      ],
+      "callers": [
+        {
+          "file": "app/page.tsx",
+          "line": 79,
+          "usage": "call"
+        },
+        {
+          "file": "app/projets/page.tsx",
+          "line": 20,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/debts.ts",
+      "export": "makeExtraPayment",
+      "line": 107,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [],
+      "sqlSites": [],
+      "calls": [
+        "String",
+        "String(new Date().getMonth() + 1).padStart",
+        "new Date().getFullYear",
+        "new Date().getMonth",
+        "requireAuth",
+        "revalidateDebtPages",
+        "sql.transaction",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/projets/ExtraPaymentSheet.tsx",
+          "line": 36,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/demo-data.ts",
+      "export": "hasUserData",
+      "line": 11,
+      "scope": "financial",
+      "rationale": "Query selected space only.",
+      "tables": [
+        "cards",
+        "debts",
+        "expenses",
+        "incomes"
+      ],
+      "sqlSites": [
+        13
+      ],
+      "calls": [
+        "requireAuth"
+      ],
+      "callers": [
+        {
+          "file": "app/parametres/page.tsx",
+          "line": 7,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/demo-data.ts",
+      "export": "loadDemoData",
+      "line": 30,
+      "scope": "mixed",
+      "rationale": "Financial demo rows belong to selected space; preserve individual account settings.",
+      "tables": [
+        "cards",
+        "debt_transactions",
+        "debts",
+        "expenses",
+        "income_allocations",
+        "incomes",
+        "monthly_allocations",
+        "monthly_expenses",
+        "monthly_incomes",
+        "savings_contributions",
+        "sections",
+        "settings"
+      ],
+      "sqlSites": [
+        42,
+        43,
+        46,
+        60,
+        70,
+        77,
+        231,
+        240,
+        248,
+        259,
+        267,
+        275,
+        284,
+        291,
+        299,
+        377,
+        384,
+        389,
+        395,
+        410,
+        532,
+        542,
+        547,
+        552,
+        558,
+        563,
+        573,
+        589,
+        601,
+        610,
+        616
+      ],
+      "calls": [
+        "String",
+        "String(day).padStart",
+        "console.error",
+        "hasUserData",
+        "requireAuth",
+        "revalidateAllPages"
+      ],
+      "callers": [
+        {
+          "file": "components/ParametresClient.tsx",
+          "line": 225,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/demo-data.ts",
+      "export": "clearAllUserData",
+      "line": 636,
+      "scope": "mixed",
+      "rationale": "Reset financial data in named space only; preserve subscriptions, account and other spaces.",
+      "tables": [
+        "cards",
+        "debt_transactions",
+        "debts",
+        "expenses",
+        "income_allocations",
+        "incomes",
+        "monthly_allocations",
+        "monthly_expenses",
+        "monthly_incomes",
+        "notification_log",
+        "push_subscriptions",
+        "savings_contributions",
+        "sections",
+        "settings",
+        "setup_guide",
+        "user_onboarding"
+      ],
+      "sqlSites": [
+        644,
+        645,
+        646,
+        647,
+        648,
+        649,
+        650,
+        651,
+        652,
+        653,
+        654,
+        655,
+        656,
+        657,
+        658,
+        659,
+        663
+      ],
+      "calls": [
+        "console.error",
+        "requireAuth",
+        "revalidateAllPages"
+      ],
+      "callers": [
+        {
+          "file": "components/ParametresClient.tsx",
+          "line": 237,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/expense-transactions.ts",
+      "export": "addExpenseTransaction",
+      "line": 15,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expenses",
+        "monthly_expenses"
+      ],
+      "sqlSites": [
+        28
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidateExpensePages",
+        "sql.transaction",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/depenses/ExpenseActionSheet.tsx",
+          "line": 136,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/expense-transactions.ts",
+      "export": "getExpenseTransactions",
+      "line": 57,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expense_transactions"
+      ],
+      "sqlSites": [
+        63
+      ],
+      "calls": [
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/depenses/ExpenseActionSheet.tsx",
+          "line": 144,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/expenses.ts",
+      "export": "getExpenses",
+      "line": 15,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "cards",
+        "expenses",
+        "sections"
+      ],
+      "sqlSites": [
+        17
+      ],
+      "calls": [
+        "requireAuth"
+      ],
+      "callers": [
+        {
+          "file": "app/parametres/charges/page.tsx",
+          "line": 39,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/expenses.ts",
+      "export": "getUpcomingExpenses",
+      "line": 31,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "cards",
+        "expenses",
+        "sections"
+      ],
+      "sqlSites": [
+        33
+      ],
+      "calls": [
+        "requireAuth"
+      ],
+      "callers": []
+    },
+    {
+      "file": "lib/actions/expenses.ts",
+      "export": "getExpenseById",
+      "line": 51,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "cards",
+        "expenses",
+        "sections"
+      ],
+      "sqlSites": [
+        54
+      ],
+      "calls": [
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "app/depenses/[id]/edit/page.tsx",
+          "line": 15,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/expenses.ts",
+      "export": "createExpense",
+      "line": 67,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expenses"
+      ],
+      "sqlSites": [
+        89
+      ],
+      "calls": [
+        "calcNextDueDate",
+        "nextDate.toISOString",
+        "nextDate.toISOString().split",
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/ExpenseModal.tsx",
+          "line": 92,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/expenses.ts",
+      "export": "updateExpense",
+      "line": 134,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expenses",
+        "monthly_expenses"
+      ],
+      "sqlSites": [
+        154,
+        187
+      ],
+      "calls": [
+        "CreateExpenseSchema.partial",
+        "calcNextDueDate",
+        "currentMonth",
+        "nextDate.toISOString",
+        "nextDate.toISOString().split",
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/ExpenseModal.tsx",
+          "line": 90,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/expenses.ts",
+      "export": "deleteExpense",
+      "line": 206,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expenses",
+        "monthly_expenses"
+      ],
+      "sqlSites": [
+        209,
+        213
+      ],
+      "calls": [
+        "currentMonth",
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/ExpenseTemplateManager.tsx",
+          "line": 71,
+          "usage": "call"
+        },
+        {
+          "file": "components/ProjetsEpargneClient.tsx",
+          "line": 59,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/expenses.ts",
+      "export": "getExpensesByCard",
+      "line": 229,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "cards",
+        "expenses",
+        "sections"
+      ],
+      "sqlSites": [
+        232
+      ],
+      "calls": [
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "app/cartes/[id]/page.tsx",
+          "line": 18,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/expenses.ts",
+      "export": "getMonthlySummaryBySection",
+      "line": 249,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expenses",
+        "sections"
+      ],
+      "sqlSites": [
+        259
+      ],
+      "calls": [
+        "requireAuth"
+      ],
+      "callers": [
+        {
+          "file": "app/page.tsx",
+          "line": 76,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/incomes.ts",
+      "export": "getIncomes",
+      "line": 16,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "incomes"
+      ],
+      "sqlSites": [
+        18
+      ],
+      "calls": [
+        "requireAuth"
+      ],
+      "callers": [
+        {
+          "file": "app/parametres/revenus/page.tsx",
+          "line": 9,
+          "usage": "call"
+        },
+        {
+          "file": "app/revenus/page.tsx",
+          "line": 45,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/incomes.ts",
+      "export": "getMonthlyIncomeTotal",
+      "line": 26,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [],
+      "sqlSites": [],
+      "calls": [
+        "Number",
+        "calcMonthlyIncome",
+        "getIncomes",
+        "incomes.reduce"
+      ],
+      "callers": [
+        {
+          "file": "app/page.tsx",
+          "line": 77,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/incomes.ts",
+      "export": "createIncome",
+      "line": 44,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "incomes"
+      ],
+      "sqlSites": [
+        47
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/IncomeModal.tsx",
+          "line": 127,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/incomes.ts",
+      "export": "updateIncome",
+      "line": 60,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "incomes"
+      ],
+      "sqlSites": [
+        67
+      ],
+      "calls": [
+        "CreateIncomeSchema.partial",
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/IncomeModal.tsx",
+          "line": 125,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/incomes.ts",
+      "export": "deleteIncome",
+      "line": 89,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "incomes"
+      ],
+      "sqlSites": [
+        92
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/IncomeTemplateManager.tsx",
+          "line": 106,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/incomes.ts",
+      "export": "createAdhocIncome",
+      "line": 99,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "incomes",
+        "monthly_incomes"
+      ],
+      "sqlSites": [
+        108,
+        116,
+        123
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": []
+    },
+    {
+      "file": "lib/actions/monthly-expenses.ts",
+      "export": "generateMonthlyExpenses",
+      "line": 213,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [],
+      "sqlSites": [],
+      "calls": [
+        "formatDueDate",
+        "generateDebtPaymentInstances",
+        "generateOneTimeInstances",
+        "generateRecurringInstances",
+        "month.split",
+        "month.split(\"-\").map",
+        "new Date(year, monthNum, 0).getDate",
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "app/depenses/page.tsx",
+          "line": 24,
+          "usage": "call"
+        },
+        {
+          "file": "app/page.tsx",
+          "line": 52,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-expenses.ts",
+      "export": "getMonthlyExpenses",
+      "line": 229,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "cards",
+        "expenses",
+        "monthly_expenses",
+        "sections"
+      ],
+      "sqlSites": [
+        237,
+        259
+      ],
+      "calls": [
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "app/depenses/page.tsx",
+          "line": 33,
+          "usage": "call"
+        },
+        {
+          "file": "app/page.tsx",
+          "line": 73,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-expenses.ts",
+      "export": "getMonthSummary",
+      "line": 285,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expenses",
+        "monthly_expenses"
+      ],
+      "sqlSites": [
+        288
+      ],
+      "calls": [
+        "Number",
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "app/depenses/page.tsx",
+          "line": 34,
+          "usage": "call"
+        },
+        {
+          "file": "app/page.tsx",
+          "line": 74,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-expenses.ts",
+      "export": "markAsPaid",
+      "line": 319,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "monthly_expenses"
+      ],
+      "sqlSites": [
+        325,
+        334
+      ],
+      "calls": [
+        "new Date().toISOString",
+        "new Date().toISOString().split",
+        "requireAuth",
+        "revalidateExpensePages",
+        "revalidatePath",
+        "sql.transaction",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/DepensesTrackingClient.tsx",
+          "line": 73,
+          "usage": "call"
+        },
+        {
+          "file": "components/depenses/ExpenseActionSheet.tsx",
+          "line": 98,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-expenses.ts",
+      "export": "deferExpenseToMonth",
+      "line": 376,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "monthly_expenses"
+      ],
+      "sqlSites": [
+        385,
+        414,
+        420
+      ],
+      "calls": [
+        "new Intl.DateTimeFormat(\"fr-CA\", {\n    month: \"long\",\n    year: \"numeric\",\n  }).format",
+        "requireAuth",
+        "revalidateExpensePages",
+        "sourceMonth.split",
+        "sourceMonth.split(\"-\").map",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/depenses/ExpenseActionSheet.tsx",
+          "line": 108,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-expenses.ts",
+      "export": "markAsUpcoming",
+      "line": 433,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "monthly_expenses"
+      ],
+      "sqlSites": [
+        436
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidateExpensePages",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/DepensesTrackingClient.tsx",
+          "line": 74,
+          "usage": "call"
+        },
+        {
+          "file": "components/depenses/ExpenseActionSheet.tsx",
+          "line": 99,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-expenses.ts",
+      "export": "deleteMonthlyExpense",
+      "line": 446,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "monthly_expenses"
+      ],
+      "sqlSites": [
+        449
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidateExpensePages",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/depenses/ExpenseActionSheet.tsx",
+          "line": 126,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-expenses.ts",
+      "export": "updateMonthlyExpenseAmount",
+      "line": 458,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "monthly_expenses"
+      ],
+      "sqlSites": [
+        465
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidateExpensePages",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/depenses/ExpenseActionSheet.tsx",
+          "line": 118,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-expenses.ts",
+      "export": "autoMarkOverdue",
+      "line": 474,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "monthly_expenses"
+      ],
+      "sqlSites": [
+        478
+      ],
+      "calls": [
+        "new Date().toISOString",
+        "new Date().toISOString().split",
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "app/depenses/page.tsx",
+          "line": 28,
+          "usage": "call"
+        },
+        {
+          "file": "app/page.tsx",
+          "line": 57,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-expenses.ts",
+      "export": "autoMarkPaidForAutoDebit",
+      "line": 492,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expenses",
+        "monthly_expenses"
+      ],
+      "sqlSites": [
+        497
+      ],
+      "calls": [
+        "new Date().toISOString",
+        "new Date().toISOString().split",
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "app/depenses/page.tsx",
+          "line": 29,
+          "usage": "call"
+        },
+        {
+          "file": "app/page.tsx",
+          "line": 58,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-expenses.ts",
+      "export": "getMonthlyExpenseActualsBySection",
+      "line": 519,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "monthly_expenses"
+      ],
+      "sqlSites": [
+        524
+      ],
+      "calls": [
+        "(rows as { section_id: string; total: string }[]).map",
+        "Number",
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "app/revenus/page.tsx",
+          "line": 47,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-expenses.ts",
+      "export": "createAdhocExpense",
+      "line": 541,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "monthly_expenses"
+      ],
+      "sqlSites": [
+        572,
+        577
+      ],
+      "calls": [
+        "new Date().toISOString",
+        "new Date().toISOString().split",
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": []
+    },
+    {
+      "file": "lib/actions/monthly-incomes.ts",
+      "export": "generateMonthlyIncomes",
+      "line": 23,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "incomes",
+        "monthly_incomes"
+      ],
+      "sqlSites": [
+        26,
+        63
+      ],
+      "calls": [
+        "(\n    incomes as {\n      id: string;\n      name: string;\n      amount: number;\n      frequency: string;\n      pay_anchor_date: string | Date | null;\n      auto_deposit: boolean;\n    }[]\n  ).map",
+        "Number",
+        "Promise.all",
+        "countBiweeklyPayDatesInMonth",
+        "month.split",
+        "month.split(\"-\").map",
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "app/page.tsx",
+          "line": 53,
+          "usage": "call"
+        },
+        {
+          "file": "app/revenus/page.tsx",
+          "line": 28,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-incomes.ts",
+      "export": "autoMarkReceivedForAutoDeposit",
+      "line": 80,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "monthly_incomes"
+      ],
+      "sqlSites": [
+        85
+      ],
+      "calls": [
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "app/page.tsx",
+          "line": 59,
+          "usage": "call"
+        },
+        {
+          "file": "app/revenus/page.tsx",
+          "line": 33,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-incomes.ts",
+      "export": "getMonthlyIncomeSummary",
+      "line": 99,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "incomes",
+        "monthly_incomes"
+      ],
+      "sqlSites": [
+        106
+      ],
+      "calls": [
+        "Number",
+        "items.reduce",
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "app/page.tsx",
+          "line": 75,
+          "usage": "call"
+        },
+        {
+          "file": "app/parametres/allocation/page.tsx",
+          "line": 17,
+          "usage": "call"
+        },
+        {
+          "file": "app/revenus/page.tsx",
+          "line": 44,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-incomes.ts",
+      "export": "markIncomeReceived",
+      "line": 134,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "monthly_incomes"
+      ],
+      "sqlSites": [
+        145
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidateIncomePages",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/revenus/IncomeTrackingTab.tsx",
+          "line": 114,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-incomes.ts",
+      "export": "markIncomeAsExpected",
+      "line": 159,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "monthly_incomes"
+      ],
+      "sqlSites": [
+        164
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidateIncomePages",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/revenus/IncomeTrackingTab.tsx",
+          "line": 73,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-incomes.ts",
+      "export": "deleteMonthlyIncome",
+      "line": 174,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "monthly_incomes"
+      ],
+      "sqlSites": [
+        177
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidateIncomePages",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/revenus/IncomeTrackingTab.tsx",
+          "line": 85,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-incomes.ts",
+      "export": "updateMonthlyIncomeAmount",
+      "line": 186,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "monthly_incomes"
+      ],
+      "sqlSites": [
+        193
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidateIncomePages",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/revenus/IncomeTrackingTab.tsx",
+          "line": 101,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/monthly-incomes.ts",
+      "export": "markVariableIncomeReceived",
+      "line": 202,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "monthly_incomes"
+      ],
+      "sqlSites": [
+        215
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidateIncomePages",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/revenus/IncomeTrackingTab.tsx",
+          "line": 116,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/onboarding-carousel.ts",
+      "export": "hasSeenOnboarding",
+      "line": 13,
+      "scope": "individual",
+      "rationale": "Presentation consent stays per account.",
+      "tables": [
+        "user_onboarding"
+      ],
+      "sqlSites": [
+        18
+      ],
+      "calls": [
+        "Boolean",
+        "auth.getSession"
+      ],
+      "callers": [
+        {
+          "file": "app/page.tsx",
+          "line": 40,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/onboarding-carousel.ts",
+      "export": "markOnboardingSeen",
+      "line": 33,
+      "scope": "individual",
+      "rationale": "Presentation consent stays per account.",
+      "tables": [
+        "user_onboarding"
+      ],
+      "sqlSites": [
+        36
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidatePath"
+      ],
+      "callers": [
+        {
+          "file": "components/onboarding/OnboardingCarouselWrapper.tsx",
+          "line": 21,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/savings.ts",
+      "export": "getPlannedExpenses",
+      "line": 22,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "cards",
+        "expenses",
+        "sections"
+      ],
+      "sqlSites": [
+        24
+      ],
+      "calls": [
+        "requireAuth"
+      ],
+      "callers": [
+        {
+          "file": "app/page.tsx",
+          "line": 78,
+          "usage": "call"
+        },
+        {
+          "file": "app/parametres/allocation/page.tsx",
+          "line": 16,
+          "usage": "call"
+        },
+        {
+          "file": "app/projets/page.tsx",
+          "line": 15,
+          "usage": "call"
+        },
+        {
+          "file": "app/revenus/page.tsx",
+          "line": 49,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/savings.ts",
+      "export": "updateSavedAmount",
+      "line": 40,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expenses"
+      ],
+      "sqlSites": [
+        47
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": []
+    },
+    {
+      "file": "lib/actions/savings.ts",
+      "export": "addSavingsContribution",
+      "line": 59,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [],
+      "sqlSites": [],
+      "calls": [
+        "requireAuth",
+        "revalidatePath",
+        "sql.transaction",
+        "validateInput"
+      ],
+      "callers": []
+    },
+    {
+      "file": "lib/actions/savings.ts",
+      "export": "getSavingsContributions",
+      "line": 83,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "savings_contributions"
+      ],
+      "sqlSites": [
+        88
+      ],
+      "calls": [
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": []
+    },
+    {
+      "file": "lib/actions/savings.ts",
+      "export": "transferSavings",
+      "line": 96,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expenses"
+      ],
+      "sqlSites": [
+        119
+      ],
+      "calls": [
+        "Number",
+        "requireAuth",
+        "revalidatePath",
+        "sql.transaction",
+        "validateInput"
+      ],
+      "callers": []
+    },
+    {
+      "file": "lib/actions/savings.ts",
+      "export": "getOrCreateFreeSavings",
+      "line": 154,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "cards",
+        "expenses",
+        "sections"
+      ],
+      "sqlSites": [
+        156,
+        166
+      ],
+      "calls": [
+        "requireAuth"
+      ],
+      "callers": [
+        {
+          "file": "app/projets/page.tsx",
+          "line": 18,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/savings.ts",
+      "export": "getMonthlySavingsSummary",
+      "line": 174,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expenses",
+        "savings_contributions"
+      ],
+      "sqlSites": [
+        184,
+        207
+      ],
+      "calls": [
+        "(\n    rows as { expense_id: string; name: string; total: number }[]\n  ).map",
+        "Number",
+        "String",
+        "String(daysInMonth).padStart",
+        "String(monthNum).padStart",
+        "byProject.reduce",
+        "month.split",
+        "month.split(\"-\").map",
+        "new Date(year, monthNum, 0).getDate",
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "app/page.tsx",
+          "line": 80,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/sections.ts",
+      "export": "getSections",
+      "line": 11,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "sections"
+      ],
+      "sqlSites": [
+        13
+      ],
+      "calls": [
+        "requireAuth"
+      ],
+      "callers": [
+        {
+          "file": "app/depenses/[id]/edit/page.tsx",
+          "line": 16,
+          "usage": "call"
+        },
+        {
+          "file": "app/depenses/page.tsx",
+          "line": 35,
+          "usage": "call"
+        },
+        {
+          "file": "app/parametres/allocation/page.tsx",
+          "line": 15,
+          "usage": "call"
+        },
+        {
+          "file": "app/parametres/charges/page.tsx",
+          "line": 40,
+          "usage": "call"
+        },
+        {
+          "file": "app/projets/page.tsx",
+          "line": 16,
+          "usage": "call"
+        },
+        {
+          "file": "app/revenus/page.tsx",
+          "line": 48,
+          "usage": "call"
+        },
+        {
+          "file": "app/sections/page.tsx",
+          "line": 7,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/sections.ts",
+      "export": "createSection",
+      "line": 19,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "sections"
+      ],
+      "sqlSites": [
+        27,
+        30
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/SectionsClient.tsx",
+          "line": 126,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/sections.ts",
+      "export": "updateSection",
+      "line": 40,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "sections"
+      ],
+      "sqlSites": [
+        47
+      ],
+      "calls": [
+        "CreateSectionSchema.partial",
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/SectionsClient.tsx",
+          "line": 133,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/sections.ts",
+      "export": "getSectionExpenseCount",
+      "line": 62,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expenses"
+      ],
+      "sqlSites": [
+        65
+      ],
+      "calls": [
+        "requireAuth",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/SectionsClient.tsx",
+          "line": 152,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/sections.ts",
+      "export": "deleteSection",
+      "line": 72,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expenses",
+        "monthly_expenses",
+        "sections"
+      ],
+      "sqlSites": [
+        76,
+        77,
+        78
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/SectionsClient.tsx",
+          "line": 159,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/sections.ts",
+      "export": "reorderSections",
+      "line": 85,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "sections"
+      ],
+      "sqlSites": [
+        90
+      ],
+      "calls": [
+        "Promise.all",
+        "orderedIds.map",
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/SectionsClient.tsx",
+          "line": 183,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/settings.ts",
+      "export": "getSettings",
+      "line": 10,
+      "scope": "mixed",
+      "rationale": "Split account contact/notification preferences from space currency/reminder defaults.",
+      "tables": [
+        "settings"
+      ],
+      "sqlSites": [
+        13,
+        16
+      ],
+      "calls": [
+        "requireAuth"
+      ],
+      "callers": [
+        {
+          "file": "app/parametres/devise/page.tsx",
+          "line": 7,
+          "usage": "call"
+        },
+        {
+          "file": "app/parametres/notifications/page.tsx",
+          "line": 7,
+          "usage": "call"
+        },
+        {
+          "file": "app/parametres/rappels/page.tsx",
+          "line": 7,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/settings.ts",
+      "export": "updateSettings",
+      "line": 26,
+      "scope": "mixed",
+      "rationale": "Same split; account fields never grant access to another member profile.",
+      "tables": [
+        "settings"
+      ],
+      "sqlSites": [
+        40
+      ],
+      "calls": [
+        "JSON.stringify",
+        "requireAuth",
+        "revalidatePath",
+        "validateInput"
+      ],
+      "callers": [
+        {
+          "file": "components/parametres/DeviseClient.tsx",
+          "line": 21,
+          "usage": "call"
+        },
+        {
+          "file": "components/parametres/NotificationsClient.tsx",
+          "line": 32,
+          "usage": "call"
+        },
+        {
+          "file": "components/parametres/RappelsClient.tsx",
+          "line": 27,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/setup-guide.ts",
+      "export": "getOrInitSetupGuideData",
+      "line": 35,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "expenses",
+        "incomes",
+        "monthly_expenses",
+        "setup_guide"
+      ],
+      "sqlSites": [
+        43,
+        98
+      ],
+      "calls": [
+        "Boolean",
+        "auth.getSession",
+        "computeVisibility",
+        "currentMonth"
+      ],
+      "callers": [
+        {
+          "file": "app/layout.tsx",
+          "line": 46,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/setup-guide.ts",
+      "export": "completeSetupGuide",
+      "line": 149,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "setup_guide"
+      ],
+      "sqlSites": [
+        151
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidatePath"
+      ],
+      "callers": [
+        {
+          "file": "components/setup-guide/SetupGuide.tsx",
+          "line": 185,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/setup-guide.ts",
+      "export": "dismissSetupGuide",
+      "line": 163,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "setup_guide"
+      ],
+      "sqlSites": [
+        165
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidatePath"
+      ],
+      "callers": [
+        {
+          "file": "components/setup-guide/SetupGuide.tsx",
+          "line": 193,
+          "usage": "call"
+        },
+        {
+          "file": "components/setup-guide/SetupGuide.tsx",
+          "line": 220,
+          "usage": "call"
+        }
+      ]
+    },
+    {
+      "file": "lib/actions/setup-guide.ts",
+      "export": "resetSetupGuide",
+      "line": 177,
+      "scope": "financial",
+      "rationale": "Require membership and scope all SQL, parent IDs, generation, revalidation and side effects to explicit space ID.",
+      "tables": [
+        "setup_guide"
+      ],
+      "sqlSites": [
+        179
+      ],
+      "calls": [
+        "requireAuth",
+        "revalidatePath"
+      ],
+      "callers": [
+        {
+          "file": "components/ParametresClient.tsx",
+          "line": 217,
+          "usage": "call"
+        }
+      ]
+    }
+  ],
+  "outsideActionSql": [
+    {
+      "file": "app/api/cron/push/route.ts",
+      "line": 56,
+      "tables": [
+        "push_subscriptions"
+      ]
+    },
+    {
+      "file": "app/api/cron/push/route.ts",
+      "line": 85,
+      "tables": [
+        "push_subscriptions"
+      ]
+    },
+    {
+      "file": "app/api/push/send/route.ts",
+      "line": 50,
+      "tables": [
+        "push_subscriptions"
+      ]
+    },
+    {
+      "file": "app/api/push/subscribe/route.ts",
+      "line": 29,
+      "tables": [
+        "push_subscriptions"
+      ]
+    }
+  ]
+}

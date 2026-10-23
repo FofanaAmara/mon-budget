@@ -449,7 +449,7 @@ export default function AllocationsManager({
                                     opacity: 0.7,
                                   }}
                                 >
-                                  · Jusqu'à {alloc.end_month}
+                                  · Jusqu’à {alloc.end_month}
                                 </span>
                               )}
                             </div>
@@ -702,7 +702,7 @@ export default function AllocationsManager({
                   marginBottom: "24px",
                 }}
               >
-                "{deleteTarget.label}" sera retirée de toutes les allocations
+                « {deleteTarget.label} » sera retirée de toutes les allocations
                 futures. Cette action est irréversible.
               </p>
               <div className="flex" style={{ gap: "12px" }}>

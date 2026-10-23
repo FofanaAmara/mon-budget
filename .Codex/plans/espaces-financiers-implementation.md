@@ -369,3 +369,7 @@ Les tests avec mutations exigent une cible isolée vérifiée : pas de fixtures,
 | Hypothèses toutes validables ? | OUI | §7 avec moyen et phase ; aucune ressource déclarée absente sans vérification |
 
 **Conclusion de préparation :** plan complet et relu, prêt à décision humaine ; pas READY pour exécution tant que validation du plan et préconditions de gate0 manquent. Une validation du plan ne constitue pas un feu vert automatique pour migrer la production, envoyer des invitations réelles à des tiers ou pousser le dépôt.
+
+## Consigne d’exécution humaine — priorité sur les mentions de méthode antérieures
+
+L’humain a activé le goal puis précisé « utilises pas awm pour ce travail ». Exécution directe à partir de ce plan, du backlog et des maquettes ; aucun workflow/cycle/skill AWM, nouveau WRD ou état AWM. Suivi adhoc projet ; aucune commandeAF n’orchestre ce chantier. Cette consigne change la méthode, pas la portée ni les critères de conservation, isolation, preuve réelle, revue et budget. Les gates techniques de ce plan restent des vérifications avant mutation/exposition, pas des gates AWM.

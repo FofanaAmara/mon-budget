@@ -113,11 +113,12 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const shouldAutoOpen = searchParams.get("guide") === "open";
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(
+    shouldAutoOpen || Boolean(guideData?.isCompleted),
+  );
   const [isDismissed, setIsDismissed] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const [, startTransition] = useTransition();
-  const hasTriggeredCompletion = useRef(false);
   const hasRefreshedForStep3 = useRef(false);
 
   // Compute derived values from server data
@@ -126,6 +127,24 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
     ? Object.values(completion).filter(Boolean).length
     : 0;
   const isAllComplete = guideData?.isCompleted ?? false;
+  const [expansionSignals, setExpansionSignals] = useState({
+    autoOpen: shouldAutoOpen,
+    complete: isAllComplete,
+  });
+  // Adjust to a new navigation/completion signal before committing the render.
+  // User-initiated collapse remains effective until a new signal arrives.
+  if (
+    expansionSignals.autoOpen !== shouldAutoOpen ||
+    expansionSignals.complete !== isAllComplete
+  ) {
+    setExpansionSignals({ autoOpen: shouldAutoOpen, complete: isAllComplete });
+    if (
+      (shouldAutoOpen && !expansionSignals.autoOpen) ||
+      (isAllComplete && !expansionSignals.complete)
+    ) {
+      setIsExpanded(true);
+    }
+  }
   const steps = completion ? buildStepData(completion) : [];
 
   // First uncompleted step title (for the bar label)
@@ -151,8 +170,9 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
   // Auto-expand when arriving from onboarding carousel (?guide=open)
   useEffect(() => {
     if (shouldAutoOpen) {
-      setIsExpanded(true);
-      window.history.replaceState({}, "", "/");
+      const url = new URL(window.location.href);
+      url.searchParams.delete("guide");
+      window.history.replaceState(window.history.state, "", url.pathname + url.search);
     }
   }, [shouldAutoOpen]);
 
@@ -160,9 +180,7 @@ export default function SetupGuide({ guideData }: SetupGuideProps) {
   // When all steps are done, the guide first shows all 4 steps checked
   // for 15 seconds, then switches to the celebration view.
   useEffect(() => {
-    if (isAllComplete && !hasTriggeredCompletion.current) {
-      hasTriggeredCompletion.current = true;
-      setIsExpanded(true);
+    if (isAllComplete) {
       startTransition(async () => {
         await completeSetupGuide();
       });

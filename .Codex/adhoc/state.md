@@ -142,3 +142,25 @@
 **Décisions prises :** humain confirme Resend/Mailpit et a ajouté configs ; noms/présence vérifiés, port SMTP local joignable. Transport explicite par environnement, EMAIL_TO ne remplace pas destinataire réel.
 **Prochaine étape :** lors de l’exécution autorisée, intégrer transport puis vérifier domaine/clé/quotas et livraison externe ; ne pas affirmer prêt parce que variables présentes.
 **Contexte pour reprise :** RESEND_API_KEY, EMAIL_FROM, EMAIL_TO, SMTP_HOST, SMTP_PORT présents ; aucune valeur exposée. Un test TCP local autorisé réussi, aucun mail envoyé ni appelAPIResend. Vercel distant toujours non vérifié faute de jetonvalide. Goal≤4000octets actualisé, non activé ; préserver .serena/project.yml/next-env.d.ts ; paspush.
+
+---
+## [2026-10-22] — Exécution directe du goal espaces financiers
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** phase0, baseline et infrastructure isolée ; goal actif complet.
+**Objectif :** livrer les6stories/17exigences/30AC avec vraie livraisonemail, maquettes intégrées et conservation/isolation prouvées.
+**État :** IN_PROGRESS
+**Fichiers touchés :** suivi, puis code/tests de baseline et infrastructure de recette.
+**Décisions prises :** consigne humaine explicite « utilises pas awm pour ce travail » : aucun workflow/skill/capacité AWM pour la suite. Sous-tâche contrat AWM interrompue ; revue technique directe read-only autorisée avant cette consigne conservée. Contrat = backlog/plan/maquettes existants, pas nouveau WRD. Toutes les preuves du goal restent exigées.
+**Prochaine étape :** corriger baseline vérifiée, créer DBisolée locale, snapshot/restore et inventaire ; pas de migrationDBréelle.
+**Contexte pour reprise :** goal lit attachment931190f0…/goal-objective.md (lu), contient emaildoublonné avec ancien nomsàpréciser mais dernière instructionResend/Mailpit prévaut. Mention finale nonlancé est historique, le goal est maintenant actif. Aucun tour antérieur de goal exécuté ; ce tour est progrès (étatinspecté). Sourceapp actuellement sans espaces. Docker28.4 joignable via permissionréseau, imagepostgres16 etPG17supabase présentes ; psql/pg_dump locaux14. Baseline :176pass/1fail badge ; tsc erreur stubamountdupliqué ; lint application10erreurs + mock/cachegonflant scan2211problèmes. Préserver .serena/project.yml et next-env.d.ts préexistants. Budget trancheinitiale15k–25ktokens estimatif, coûtmonétaireunknown. TaskCreate/TaskUpdate absents : suivi markdown avec dépendances. Paspush/déploiementprod/mailréel envoyé.
+
+---
+## [2026-10-23 00:15] — Préparation vérifiée, copie isolée restaurée
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** clôture de la préparation P0, puis ESP-001/002 sur copie locale.
+**Objectif :** goal complet espaces/invitations ; reste actif, feature non implémentée.
+**État :** IN_PROGRESS
+**Fichiers touchés :** corrections baseline composants/tests/lint/build, scripts/financial-spaces, inventaire/evidence, suivi.
+**Décisions prises :** aucun AWM conformément à l’humain. Outil natif PostgreSQL isolé dans projet choisi par humain ; Homebrew global non réparé. Copie PostgreSQL17.11, extension uuid-ossp1.1, contraintes CHECK comparées après reparsage TEMP, données intégrales hashées. Tous les writes de ce travail ciblent le conteneur local possédé, aucune mutation source.
+**Prochaine étape :** commit préparation vérifiée puis migration expand/backfill sur spaces_work17 avec tests de conservation/isolation/reprise ; ne pas modifier baseline17.
+**Contexte pour reprise :** evidence baseline-execution.md : 177 tests, types/lint0erreurs17warnings/build0 ; 18tables703lignes identiques,175colonnes49indexes50contraintes. Registre86exports16modules dans action-inventory.json ;78finance2individuels4mixtes2legacy. Script test-database.mjs prepare/snapshot/restore/verify protégé label+port+montage+systemid ; dump/manifest SHA+schema+markers exigés, ne jamais écraser base peuplée. Répertoire privé .local/financial-spaces ; fixture mon-budget-spaces-test-01a165b5 sur127.0.0.1:55437, userbudget_test/passwordlocal-fixture-only (dummy local), DB spaces_baseline17 / spaces_work17. Anciens essais PG18/DBvides conservés. Nativeclient .local/tools/libpq@17/17.11/bin/pg_dump ; pas de secrets Docker/arguments/stdout. Readme décrit le setup. Reviewer indépendant a clos3findings. CUA carrousel4slides observé mais aucun substitut au gatePlaywrightMCP encore indisponible. Aucun mailResend/CI/E2E/espacefonctionnel prouvé. Préserver .serena/project.yml,next-env.d.ts et fichiers CS non suivis préexistants ; paspush.

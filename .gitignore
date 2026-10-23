@@ -12,6 +12,8 @@ node_modules/
 
 # Next.js
 .next/
+.next-*/
+.local/
 out/
 
 # Build
