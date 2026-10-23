@@ -1,6 +1,6 @@
 # Matrice de recette — 17 exigences et 30 critères
 
-État au 2026-10-23, après e990b5d et préparation de la recette reproductible. **Le goal n’est pas atteint.**
+État au 2026-10-23, après e990b5d, 1c9bef8 et tranche sessions privées/livraison incertaine. **Le goal n’est pas atteint.**
 
 Sources : requirements.md et six stories dans `.app-factory/backlog/epics/finances-partagees/features/espaces-financiers/`. Maquettes approuvées : `cs-design/mes-finances/features/espaces-financiers-essai-02/`, commit 7aaec6d.
 
@@ -15,6 +15,7 @@ PARTIEL signifie code et preuves bornées présents, mais preuve de bout en bout
 - **UI** : invitations-management-execution.md ; parcours CUA dans la vraie app avant mise à niveau des dépendances. Création solo/couple, réglages ciblés, Mailpit et mauvais compte observés ; captures privées. Cela ne constitue pas une validation Playwright MCP ni une recette actuelle complète.
 - **AUTH** : dependency-repair-execution.md ; sept tests de contrat du véritable adaptateur, transport simulé. Lecture serveur sans mutation, fraîcheur explicite des décisions d’invitation. Aucune preuve de nouvel utilisateur ou de deux sessions hébergées.
 - **MAIL** : DEC-001, tests invitation/mail, réception Mailpit observée. Lecture Resend du 2026-10-23 : domaine expéditeur vérifié, sending enabled, receiving disabled ; origine publique et boîte de recette explicite absentes. Aucun email externe envoyé/reçu.
+- **SESSION** : session-delivery-execution.md et DEC-003 ; garde du vrai layout avec identité serveur, signout contrôlé (y compris retour invitation), invalidation/expiration/historique/offline ; douze tests sans navigateur. Runbook de réconciliation et trois tests PG de sa mutation minimale, aucune preuve fournisseur ou réception réelle ajoutée.
 - **CI** : workflow local `.github/workflows/financial-spaces.yml` ; gardes RED puis vert, résultat final testé contre échec/annulation/skip/absence. Aucun run GitHub sur ce SHA ni protection distante prouvés.
 
 Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-001 dans `.Codex/adhoc/decisions/`. Les journaux privés restent sous `.local/financial-spaces/` ; aucun jeton, contenu de boîte ou adresse réelle dans cette matrice.
@@ -35,7 +36,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | FR-010 | PARTIEL | UI liste/création/détail ; renommer B sous A actif | Rejouer interface actuelle, liste des membres et sélecteur actualisé |
 | NFR-001 | PARTIEL | PG tiers/IDs croisés ; SQL FK composites et space_id obligatoire | Intrusions via vrais endpoints/pages dans sessions isolées |
 | NFR-002 | PARTIEL | MIG/SQL exacts ; PG génération et acceptation concurrentes | Recharge navigateur/multisession et reprise réelle sans mélange |
-| NFR-003 | PARTIEL | NAV requêtes tardives et brouillons ; PG concurrence | Vraie app multi-onglets, réponses RSC tardives, échec de bascule et offline |
+| NFR-003 | PARTIEL | NAV requêtes tardives et brouillons ; PG concurrence ; SESSION masquage et invalidation | Vraie app multi-onglets, réponses RSC tardives, échec de bascule et offline |
 | UXR-001 | PARTIEL | NAV et UI sélecteur/sidebar/drawer | Playwright MCP mobile/desktop, clavier, noms longs, option unique |
 | UXR-002 | PARTIEL | Maquettes React intégrées à la vraie app ; UI avant mise à niveau | Playwright MCP pages entières, montants extrêmes, noms longs, overflow |
 | TR-001 | PARTIEL | Stack conservée ; coûts non engagés ; Resend existant vérifié en lecture | Quota/coût applicable à la recette externe et origine publique autorisée |
@@ -58,7 +59,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | ESP-003/AC-1 | PARTIEL | UI liste puis création couple sans copie ; PG | Rejouer liste actuelle, données des deux espaces après recharge |
 | ESP-003/AC-2 | PARTIEL | NAV préférence/contexte ; PG configurations séparées | Bascule de chaque page et prochaine connexion réelles |
 | ESP-003/AC-3 | PARTIEL | UI renommage B sous A ; PG membre sans privilège | Sélecteur actualisé et données conservées sur sessions réelles |
-| ESP-003/AC-4 | PARTIEL | NAV brouillon, confirmation refusée et réponse tardive | Multi-onglets/late-RSC sur vraie app et échec réseau |
+| ESP-003/AC-4 | PARTIEL | NAV brouillon, confirmation refusée et réponse tardive ; SESSION verrouille le document | Multi-onglets/late-RSC sur vraie app et échec réseau |
 | ESP-003/AC-5 | PARTIEL | PG refus tiers/objets croisés et SQL FK | Tests directs HTTP/UI puis accès valide |
 | ESP-004/AC-1 | PARTIEL | UI invitation Mailpit persistée ; aucun accès avant acceptation PG | Courriel externe réellement reçu et invitation visible chez destinataire |
 | ESP-004/AC-2 | À PROUVER | Landing/auth/retour/confirmation implémentés ; PG | Connexion existante puis acceptation réelle et sélecteur |
@@ -67,7 +68,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | ESP-004/AC-5 | PARTIEL | PG triple acceptation concurrente, rollback et confirmation privée | Reprise d’échec et double confirmation via vraie UI |
 | ESP-005/AC-1 | À PROUVER | Landing explicite et AuthView existant raccordés | Inscription réelle conserve le lien et n’accepte pas automatiquement |
 | ESP-005/AC-2 | À PROUVER | PG acceptation sans espace personnel ; identité fraîche | Compte créé/vérifié réel rejoint explicitement |
-| ESP-005/AC-3 | PARTIEL | UI mauvais compte ; PG refus et absence accès | Mauvais compte après inscription puis bon compte réel |
+| ESP-005/AC-3 | PARTIEL | UI mauvais compte ; PG refus ; SESSION changement de compte conserve retour et refuse erreur signout | Mauvais compte après inscription puis bon compte réel |
 | ESP-005/AC-4 | À PROUVER | Lien durable, liste invitations et choix sans espace implémentés | Interruption/reprise signup/auth sans adhésion automatique |
 | ESP-005/AC-5 | À PROUVER | PG contributions communes et persistance | Nouvel inscrit ajoute puis recharge, autre session retrouve la dépense |
 | ESP-006/AC-1 | PARTIEL | UI Oui propose email facultatif, création espace réutilisée | Véritable premier onboarding, report et émission externe |
@@ -83,6 +84,6 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 3. Vraie app : onglets, réponses tardives, caches RSC et navigation offline/déconnexion. Le refus de navigateur antérieur n’est pas contourné.
 4. Playwright MCP : outil requis absent/refus d’accès ; captures CUA et banc CLI gardent leur nom et leur portée.
 5. CI distante verte sur le SHA exact et revue globale ; aucun push/déploiement autorisé. Workflow local préparé ne prouve pas les réglages de branche ni un run distant.
-6. Réconciliation opérationnelle d’un envoi incertain : après 23 h, aucune reprise aveugle ; vérifier l’événement fournisseur et la réception, puis intervention autorisée. Procédure à finaliser avant release.
+6. Réconciliation opérationnelle d’un envoi incertain : après 23 h, aucune reprise aveugle ; vérifier l’événement fournisseur et la réception, puis intervention autorisée. Runbook et statement testés sur clone synthétique ; intervention réelle et preuves fournisseur/réception encore non acquises.
 
 URL de recette locale : http://localhost:3002. Source et baseline privée ne sont pas migrées en production. Les stories restent en cours, sans changement artificiel de leurs critères.

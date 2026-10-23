@@ -4,6 +4,7 @@ import { NeonAuthUIProvider } from "@neondatabase/auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
+import { invalidateFinancialViews } from "@/lib/auth/financial-visibility";
 import { authClient } from "@/lib/auth/client";
 
 export function AuthProviders({ children }: { children: ReactNode }) {
@@ -14,7 +15,10 @@ export function AuthProviders({ children }: { children: ReactNode }) {
       authClient={authClient}
       navigate={(href) => router.push(href)}
       replace={(href) => router.replace(href)}
-      onSessionChange={() => router.refresh()}
+      onSessionChange={() => {
+        invalidateFinancialViews({ notifyCurrent: false });
+        router.refresh();
+      }}
       redirectTo="/"
       Link={Link}
       credentials={{ forgotPassword: true }}

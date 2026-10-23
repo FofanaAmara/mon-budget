@@ -10,7 +10,7 @@
     "lint": "eslint",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:spaces:db": "node --test __tests__/integration/financial-spaces-migration.test.mjs __tests__/integration/synthetic-baseline.test.mjs",
+    "test:spaces:db": "node --test __tests__/integration/financial-spaces-migration.test.mjs __tests__/integration/synthetic-baseline.test.mjs __tests__/integration/delivery-reconciliation.test.mjs",
     "test:spaces:services": "vitest run --config vitest.spaces.config.mts",
     "test:spaces:navigation": "node __tests__/browser/space-navigation-fixture/check.mjs",
     "test:delivery": "node --test __tests__/delivery/*.test.mjs",

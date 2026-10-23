@@ -41,9 +41,4 @@ export function appOrigin() {
     throw new Error("APP_ORIGIN must be a trusted application origin.");
   return url.origin;
 }
-export function validInvitationReturn(value: unknown) {
-  return typeof value === "string" &&
-    /^\/invitation\/[a-f0-9-]{36}\.[A-Za-z0-9_-]{43}$/.test(value)
-    ? value
-    : null;
-}
+export { validInvitationReturn } from "./return-path";

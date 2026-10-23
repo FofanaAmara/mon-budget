@@ -4,6 +4,7 @@ import Link from "@/components/spaces/navigation";
 import {useFinancialPathname as usePathname} from "@/components/spaces/navigation";
 import { useState, useRef, useEffect } from "react";
 import SpaceSelector from "@/components/spaces/SpaceSelector";
+import { signOutAndClear } from "@/lib/auth/sign-out";
 import { authClient } from "@/lib/auth/client";
 
 type Tab = {
@@ -182,9 +183,7 @@ export default function BottomNav() {
   }, [desktopMenuOpen]);
 
   async function handleSignOut() {
-    await authClient.signOut();
-    // Discard in-memory private state and replace the signed-out history entry.
-    window.location.replace("/auth/sign-in");
+    await signOutAndClear();
   }
 
   // Routes that belong to "Reglages" but don't start with /parametres

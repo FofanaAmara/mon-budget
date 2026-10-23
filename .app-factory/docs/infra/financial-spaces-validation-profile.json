@@ -9,7 +9,9 @@
     "scripts/financial-spaces/prepare-synthetic.mjs",
     "scripts/financial-spaces/synthetic-certificate.mjs",
     "__tests__/fixtures/financial-spaces/legacy-schema.sql",
-    ".Codex/plans/espaces-financiers-evidence/acceptance-matrix.md"
+    ".Codex/plans/espaces-financiers-evidence/acceptance-matrix.md",
+    "scripts/financial-spaces/reconcile-confirmed-delivery.sql",
+    ".app-factory/docs/runbooks/invitation-delivery.md"
   ],
   "requiredScripts": [
     "test:delivery",

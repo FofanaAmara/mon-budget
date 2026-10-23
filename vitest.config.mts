@@ -6,7 +6,7 @@ export default defineConfig({
     globals: false,
     server: { deps: { inline: ["@neondatabase/auth"] } },
     environment: "node",
-    include: ["__tests__/**/*.test.ts"],
+    include: ["__tests__/**/*.test.{ts,tsx}"],
   },
   resolve: {
     alias: {

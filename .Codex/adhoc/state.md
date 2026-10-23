@@ -386,3 +386,29 @@ Checkpoint avant commit : 206unit/95PG verts, types0, lint0erreur15warnings ; bu
 **Contexte pour reprise :** source et baseline privée703lignes intactes (empreinte relue), work17ready006 et recette3002session50892 conservés. Synthetic template spaces_ci_baseline17 certifié/rejoué ; archives spaces_ci_baseline17_failed_seed_20261023 et spaces_ci_baseline17_before_schema_guard préservées.95PGsynthetic/26migration-certificat/210unit/7gardes verts ; freshnpmci puisqualitydans.local/financial-spaces/ci-quality-rehearsal sans.env/secrets/backup : types/lint/buildWebpack/auditprod0verts. Banc navigateur nonrelancé (refuspolitiquene pascontourner), sixpreuvesanciennes seulement ; CIpréparéeNode22, localNode24.9, aucunrunGitHub. Revue P2schémafermée. ResendGETmetadata200domaineverifiedsendingenabledreceivingdisabled ; APP_ORIGINpubliqueetdestinatairerecetteexpliciteabsents, aucunmailenvoyé. ProfilDevOps/docspublisher/checkPASS ; Matrice acceptancematrix17exigences30AC connuepartielle. Dirtyserena/next-env/anciensCSàpréserver, aucunpush/prod/AWM.
 
 Checkpoint rectification du commit : diffcheck après staging a signalé un blanc final SQL mais le shell a poursuivi ; correction et mémoire de propagation des codes d’échec ajoutées. Ancienne fixture synthétique vérifiée puis archivée spaces_ci_baseline17_before_format_cleanup avant nettoyage/checksum ; préparation/rejeu et26tests relancés session99182. Avant commit rectifié : contrôler diffcached dans une opération distincte, puis commit seulement si sortie0. Source/baselineprivée/work inchangés.
+
+---
+## [2026-10-23] — Isolation des sessions déjà affichées
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md` (parentP3.4/P4.2).
+**Tâche en cours :** garde client de session pour les pages financières, puis runbook uncertain.
+**Objectif :** éviter l’affichage conservé après déconnexion/changement de compte/offline ; goal complet inchangé.
+**État :** IN_PROGRESS
+**Fichiers touchés :** à suivre.
+**Décisions prises :** précédent tour = progrès1c9bef8. Priorité écart confidentialité repéré dans le code ; aucune prétention de reproduction visuelle, navigateur refusé inchangé. PasAWM/questions. Estimation10–20k, coût indisponible.
+**Prochaine étape :** contrôleur d’invalidation et garde avec identité serveur, déconnexion commune et signal interonglets sans PII.
+**Contexte pour reprise :** source/baseline/work intacts, recette50892 vivant ; syntheticcertifié42lignes,210unit/95PG/26migration/7gardes verts avanttranche. UI/auth2sessions/Resendreçu/CI/MCP restentnonprouvés ; aucunpush/mail/prod. Préserverdirtyserena/next-env/anciensCS.
+
+---
+## [2026-10-23] — Sessions privées et procédure de livraison vérifiées
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`, parentP3.4/P4.2/P7.1.
+**Tâche en cours :** clôture de la tranche et commit ; goal global toujours IN_PROGRESS.
+**Objectif :** vraie feature espaces/invitation reçue, sans AWM/questions pendant absence.
+**État :** IN_PROGRESS
+**Fichiers touchés :** voir session-delivery-execution.md et session du jour.
+**Décisions prises :** DEC-003 garde identitéclient/serveur et document invalidé (signout, signalonglet, offline, histoire, expiry). Brouillons retirés explicitement, rechargecomplète ; signal sansPII. Quatrième chemin Auth/sign-out contrôlé, callbackinvitationbornéconservé. Runbook+SQLopérateurminimal, aucune mutation ni preuve fournisseur supposée.
+**Prochaine étape :** vérifier résultatbuild final puiscommit ; ensuite revueglobale et parcoursréels dès autoritédisponible, resterhonnêtesurblocages Auth/réception/MCP/CI.
+**Contexte pour reprise :**222unit/95PGsynthetic/29natifs verts,types0,lint0erreur15warnings,7gardes ; buildWebpackcopiecleanpremierfinalvert puisnouveaubuildmarkupespacement23001encours,sourceconfigsintacts. RevueP2Authroutefermée,expiry/SQLsansnouveaufinding. Recette3002session50892conservée ; source/baseline703/workaucunemutationdeces tests. Vérificationvisuelle/timingréel/manipongletsnonprouvée (navigateurrefusé nepascontourner). Aucunmail/boîteResend/push/CI/prod. Fichierspréexistantsserena/next-env/CSnonstage.
+
+Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout compilés dans copie sans.env.95PG60768 terminé0 ;29natifs/222unit/7gardes verts,types0lint0erreur15warnings. Runtime50892 confirmé vivant maintenant ; aucune nouvelle action navigateur ni mutation source/work. Revue de tranche fermée, gate visuel/réel toujours ouvert.

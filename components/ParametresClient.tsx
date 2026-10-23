@@ -5,7 +5,7 @@ import { useFinancialSpace } from "@/components/spaces/SpaceContext";
 
 import { useState, useTransition, useRef, useEffect } from "react";
 import Link from "@/components/spaces/navigation";
-import { authClient } from "@/lib/auth/client";
+import { signOutAndClear } from "@/lib/auth/sign-out";
 import { loadDemoData, clearAllUserData } from "@/lib/actions/financial/demo-data";
 import { resetSetupGuide } from "@/lib/actions/financial/setup-guide";
 
@@ -497,9 +497,7 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
         {/* Sign out */}
         <button
           onClick={async () => {
-            await authClient.signOut();
-            // Discard in-memory private state and replace the signed-out history entry.
-    window.location.replace("/auth/sign-in");
+            await signOutAndClear();
           }}
           style={{
             width: "100%",

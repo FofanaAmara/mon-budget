@@ -1,12 +1,10 @@
 "use client";
 
-import { authClient } from "@/lib/auth/client";
+import { signOutAndClear } from "@/lib/auth/sign-out";
 
 export default function SignOutButton() {
   async function handleSignOut() {
-    await authClient.signOut();
-    // Discard in-memory private state and replace the signed-out history entry.
-    window.location.replace("/auth/sign-in");
+    await signOutAndClear();
   }
 
   return (

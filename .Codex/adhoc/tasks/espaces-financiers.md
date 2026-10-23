@@ -38,3 +38,7 @@ Réparation sécurité : COMPLETED pour la tranche bornée DEC-002 (206 unitaire
 P7.1 préparation reproductible : IN_PROGRESS — template historique synthétique distinct de la copie privée, mêmes suites PostgreSQL puis workflow et matrice. Dépend du socle e990b5d vérifié ; CI distante, Auth réel et MCP toujours ouverts.
 
 P7.1 préparation reproductible : COMPLETED pour la tranche bornée (fixture42lignes/18tables,95PG/26migration-certificat,210unit,7gardes, qualité sans secrets et profil/docs). Matrice17/30 complète mais aucun verdict global acquis. CI distante/PlaywrightMCP/Authréel/réception externe/caches restent IN_PROGRESS. Voir verification-execution.md.
+
+P3.4 sessions et affichage privé : IN_PROGRESS — identité serveur au layout, invalidation de session/onglets/offline/BFCache et centralisation signout ; tests bornés puis vraie recette toujours à faire. Dépend du socleAuth e990b5d ; plan session-and-delivery.
+
+P3.4 sessions / P4.2 uncertain : COMPLETED pour la tranche technique bornée DEC-003 et runbook (222unit/95PG/29natifs, types/lint/buildWebpacken copie verts, revuefermée). Validation réelle onglets/offline/historique, Auth2comptes/email/MCP/CI distante toujours IN_PROGRESS.
