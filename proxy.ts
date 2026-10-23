@@ -24,6 +24,6 @@ export const config = {
      * - api/auth (Neon Auth API handler)
      * - auth/ (auth pages themselves)
      */
-    "/((?!_next/static|_next/image|favicon\\.ico|manifest\\.json|sw\\.js|icons/|api/auth|api/cron|auth/|landing).*)",
+    "/((?!_next/static|_next/image|favicon\\.ico|manifest\\.json|sw\\.js|icons/|api/auth|api/cron|auth/|invitation/|landing).*)",
   ],
 };

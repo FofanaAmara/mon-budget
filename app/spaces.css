@@ -560,3 +560,5 @@ body:has(.space-onboarding) {
     padding-top: 44px;
   }
 }
+
+.space-selector-caption {display:block;margin-bottom:10px;}

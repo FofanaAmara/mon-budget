@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  useId,
   useState,
   useTransition,
   useEffect,
@@ -14,7 +13,6 @@ import { useFinancialSpace } from "./SpaceContext";
 
 export default function SpaceSelector() {
   const { spaceId, spaces, lifetime, hasUnsavedChanges } = useFinancialSpace();
-  const id = useId();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState("");
@@ -28,48 +26,49 @@ export default function SpaceSelector() {
   }, []);
   return (
     <div className="space-selector">
-      <label htmlFor={id}>ESPACE FINANCIER</label>
-      <select
-        id={id}
-        aria-label="Espace financier actif"
-        value={spaceId}
-        disabled={pending || spaces.length <= 1}
-        onChange={(event) => {
-          const target = event.target.value;
-          if (
-            hasUnsavedChanges() &&
-            !window.confirm(
-              "Une saisie n’est pas enregistrée. L’abandonner et changer d’espace ?",
+      <label>
+        <span className="space-selector-caption">ESPACE FINANCIER</span>
+        <select
+          aria-label="Espace financier actif"
+          value={spaceId}
+          disabled={pending || spaces.length <= 1}
+          onChange={(event) => {
+            const target = event.target.value;
+            if (
+              hasUnsavedChanges() &&
+              !window.confirm(
+                "Une saisie n’est pas enregistrée. L’abandonner et changer d’espace ?",
+              )
             )
-          )
-            return;
-          const request = ++requestId.current;
-          lifetime.leave();
-          setError("");
-          startTransition(async () => {
-            try {
-              const result = await rememberSpace(target);
-              if (!mounted.current || request !== requestId.current) return;
-              if (!result.ok) {
+              return;
+            const request = ++requestId.current;
+            lifetime.leave();
+            setError("");
+            startTransition(async () => {
+              try {
+                const result = await rememberSpace(target);
+                if (!mounted.current || request !== requestId.current) return;
+                if (!result.ok) {
+                  lifetime.stay();
+                  setError(result.error);
+                  return;
+                }
+                router.push(`/espaces/${target}`);
+              } catch {
+                if (!mounted.current || request !== requestId.current) return;
                 lifetime.stay();
-                setError(result.error);
-                return;
+                setError("Impossible de changer d’espace. Réessaie.");
               }
-              router.push(`/espaces/${target}`);
-            } catch {
-              if (!mounted.current || request !== requestId.current) return;
-              lifetime.stay();
-              setError("Impossible de changer d’espace. Réessaie.");
-            }
-          });
-        }}
-      >
-        {spaces.map((space) => (
-          <option key={space.id} value={space.id}>
-            {space.name}
-          </option>
-        ))}
-      </select>
+            });
+          }}
+        >
+          {spaces.map((space) => (
+            <option key={space.id} value={space.id}>
+              {space.name}
+            </option>
+          ))}
+        </select>
+      </label>
       {error && (
         <p className="space-error" role="alert">
           {error}

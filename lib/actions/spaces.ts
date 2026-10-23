@@ -19,11 +19,11 @@ async function mutation<T>(work: () => Promise<T>): Promise<SpaceMutationResult<
 }
 
 async function syncProfile(identity: Awaited<ReturnType<typeof requireIdentity>>) {
-  await sql`INSERT INTO user_display_profiles(user_id,display_name,email)
-    VALUES(${identity.id},${identity.name},${identity.email})
-    ON CONFLICT(user_id) DO UPDATE SET display_name=EXCLUDED.display_name,email=EXCLUDED.email,updated_at=now()
-    WHERE (user_display_profiles.display_name,user_display_profiles.email)
-      IS DISTINCT FROM (EXCLUDED.display_name,EXCLUDED.email)`;
+  await sql`INSERT INTO user_display_profiles(user_id,display_name,email,email_verified)
+    VALUES(${identity.id},${identity.name},${identity.email},${identity.emailVerified})
+    ON CONFLICT(user_id) DO UPDATE SET display_name=EXCLUDED.display_name,email=EXCLUDED.email,email_verified=EXCLUDED.email_verified,updated_at=now()
+    WHERE (user_display_profiles.display_name,user_display_profiles.email,user_display_profiles.email_verified)
+      IS DISTINCT FROM (EXCLUDED.display_name,EXCLUDED.email,EXCLUDED.email_verified)`;
 }
 
 export async function getSpaces(): Promise<FinancialSpace[]> {
@@ -82,9 +82,9 @@ export async function createSpace(input: { name: string; creationKey: string }):
         FROM settings s CROSS JOIN jsonb_to_recordset(${JSON.stringify(DEFAULT_SECTIONS)}::jsonb)
           AS d(name text,icon text,color text,position integer)
       ), profile AS (
-        INSERT INTO user_display_profiles(user_id,display_name,email)
-        SELECT ${identity.id},${identity.name},${identity.email} FROM space
-        ON CONFLICT(user_id) DO UPDATE SET display_name=EXCLUDED.display_name,email=EXCLUDED.email,updated_at=now()
+        INSERT INTO user_display_profiles(user_id,display_name,email,email_verified)
+        SELECT ${identity.id},${identity.name},${identity.email},${identity.emailVerified} FROM space
+        ON CONFLICT(user_id) DO UPDATE SET display_name=EXCLUDED.display_name,email=EXCLUDED.email,email_verified=EXCLUDED.email_verified,updated_at=now()
       ), preference AS (
         INSERT INTO user_space_preferences(user_id,last_space_id) SELECT ${identity.id},space_id FROM settings
         ON CONFLICT(user_id) DO UPDATE SET last_space_id=EXCLUDED.last_space_id,updated_at=now()

@@ -30,3 +30,5 @@ P1.3 progression : 76/78 exports financiers et partition des réglages communs/i
 P1.3 progression : 78/78exports financiers implémentés ; maintenance transactionnelle ciblée et116exemples conservés. 80services/181unit/types/lint/buildverts. Raccordement des appelants, suppression legacy et parcoursproduit restent à faire.
 
 P1.3 raccordement : 78/78exports et appelants explicites,15anciensmodules supprimés ; routes canoniques, sélecteur/sidebar/drawer, devise/guide et caches raccordés.81services/188unit/types/lint/buildverts,5casChromeisolésverts. ESP-003 IN_PROGRESS ; vraieactivation/UIcréation/gestion/invitations/auth/E2E/visuelMCP encoreàfaire.
+
+Création/gestion/invitations : IN_PROGRESS global. UI réelle et services006 implémentés ;95PG/193unit/21migrations/6bancChrome. ESP001/003/004/005/006 restent IN_PROGRESS tant que leurs AC réels ne sont pas prouvés. Recette3002 active sur nouveau clone, ancienwork archivé. Mailpit reçu, pasResendexterne ; Auth2sessions/nouveau/CI/PlaywrightMCP/revueglobale et réparation sécurité restent ouverts. Voir invitations-management-execution.md.

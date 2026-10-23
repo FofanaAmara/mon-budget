@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   distDir: process.env.MES_FINANCES_BUILD_DIR ?? ".next",
   // The development badge overlaps the carousel's bottom-left skip control.
   devIndicators: false,
+  logging: { incomingRequests: { ignore: [/^\/invitation\//, /^\/auth\//] } },
   turbopack: {
     root: path.resolve(__dirname),
   },
@@ -41,6 +42,20 @@ const nextConfig: NextConfig = {
             value: "camera=(), microphone=(), geolocation=(), payment=()",
           },
           { key: "Content-Security-Policy-Report-Only", value: cspDirectives },
+        ],
+      },
+      {
+        source: "/invitation/:path*",
+        headers: [
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "Cache-Control", value: "private, no-store" },
+        ],
+      },
+      {
+        source: "/auth/:path*",
+        headers: [
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "Cache-Control", value: "private, no-store" },
         ],
       },
       {

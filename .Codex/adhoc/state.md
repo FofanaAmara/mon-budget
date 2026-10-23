@@ -307,3 +307,27 @@
 **Décisions prises :** supprimer15moduleslegacyetClaimBanner ; typesguidepurs ; routesexplicites,sélecteurseul, deviseparcontexte. Lifetimedecontexte+gardemontage/demandeempêchentlatenavigation ; confirmationbrouillonsycomprisfréquence/couleurparboutons. Historiqueinvérifiable :retourstructuré+messagevisible,aucunmontantchangé. SWicônesseulement/purgeancienscaches. PasAWM.
 **Prochaine étape :** créer /espaces choix, /onboarding premierespace etRéglages liste/création/détailrenommer/membres. Puisinvitations/ResendMailpit/authretour/conditionalonboarding. Avantactivercopy : finircheminsproduitetcutovercontrôlé003+004+005,recetteapp2sessions/onglets/lateRSC/cacheoffline/CI/PlaywrightMCP/matrice17exigences30AC.
 **Contexte pour reprise :** ui-context-execution.md.81services PGdontnouveauhistoriqueNULLnonmuté,188unit,types0,lint0erreur15warnings,buildNext0,Vite0,diffcheck0 ;5scénariosChrome réelsurvraiscomposantsmaisNext-router/actionmockés, doncaucuneE2EAuth/DBouPlaywrightMCPpreuve. Testnpmtest:spaces:navigation versionné,pôtéphémère,artefactsprivésui-harness. Reviewindépendantefermée. /espaces et /onboarding ne sont pas encoreimplémentés (redirectionslesréférencent),création/gestion/invitations manquent. Aucun cutoverwork :phasebackfilled,runtime3002arrêté ;source/baselineintactes,certificatstrictworkfalsepourancienne datedeguideconnue. Serveurprivé4302arrêtéPIDvérifié. Nexttypegen avait changéimportnext-env :restauréexactpréexistant.next/dev/types,nestagepas ; préserverdirtyserena,next-env/anciensCS. Nouveauxadaptateursmaquettesessai02 fontpartieduchangement,pasanciensCS. Aucunemail/push/prod. Prochaintourprioritéauxparcoursutilisateur,nepasrefairelesfondationsvertessansraison.
+
+---
+## [2026-10-23] — Création et gestion des espaces
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** parcoursutilisateur /espaces/onboarding/réglages puisinvitations.
+**Objectif :** rendre lefeatureutilisabledanslavraieapp.
+**État :** IN_PROGRESS
+**Fichiers touchés :** àsuivre.
+**Décisions prises :** tourprécédent=progrèsvérifiéc865c9c ; pasdenouvellesquestionspendantabsence. Tranche20–35kjetonsestimés,coûtindisponible. Prioritéparcoursutilisateurpuisinvitationdurable,servicesexistantsnonrefaitssansraison. AucunAWM.
+**Prochaine étape :** pages/formulairesréelsconformesauxmaquettes,invitationpersistanteettransportserveur.
+**Contexte pour reprise :**81services188unit5casChromebancisolé,build/types/lintverts ; workbackfillednonactivé,source/baselineintactes,ancienne datedeguidecopyconnue ; nocutover/email/push.
+
+---
+## [2026-10-23 02:47] — Parcours espaces et invitations locaux vérifiés
+**Plan :** .Codex/plans/espaces-financiers-implementation.md
+**Tâche en cours :** tranche création/gestion/invitation locale ; feature globale toujours IN_PROGRESS.
+**Objectif :** espaces persistants, conjoint invité puis membre ; aucune question pendant absence, aucun AWM.
+**État :** IN_PROGRESS
+**Fichiers touchés :** UI espaces/onboarding/gestion/invitations/auth/proxy ; invitations.sql006/actions/mail ; services/contexte et tests ; runner/prepare-recipe ; DEC001 et preuves.
+**Décisions prises :** email durable avant envoi, payloadv1/fromfigés, hashvérifié, retry23h puis uncertain ; acceptation comptevérifié explicite, confirmationroutepersistante et ouvertureseulechangepréférence. Ancienne copie work conservée entière sous spaces_work17_before_invitations, anciensrapportspréservés ; nouveau work cloné baseline+migrations001–006,703originauxidentiques avantUI. Pas de mutation source/baseline.
+**Prochaine étape :** vérifier résultatbuild/revuefinaledetranche puiscommit ; ensuite corriger vulnérabilitéspréexistantes, parcoursAuth2sessions/existant+nouveau/Resendexterne, réconciliationuncertain, cachesRSC/offline/CI/PlaywrightMCP/matrice30AC.
+**Contexte pour reprise :** invitations-management-execution.md.95servicesPG/193unit/21migrations/6bancChrome verts,types0,lint0erreur15warnings. UIréelleCUA : créationpersonnelleNo et coupleYes+Mailpit, renamecouple pendantpersonnelactif, publicmauvaiscompterefusé ; HTTPanonyme200texte/boutons/no-store/no-referrer. PasPlaywrightMCP (absent),ChromeMCPprofiloccupé, pasdepreuveResendexterne/nouveaucompte.31alertesnpmidentiquesHEADdont4critiques, nodemaileraucunealerte. Runtime3002session26401actif ; ongletIAB20marquéhandoffsurfichecouple. Source3001processususernonarrêté. Work contient désormais2espacessynthétiquescréésviaUI : personnelb99e9a9e-e6a2-4cfa-838d-3f7aec6712b3,couple13603cc1-c500-4a3c-9ce0-4abe836622f0 ; invitationfictiveMailpituniquement. Certificatstrictancienworkfalseconservé, nouveaucertificatpréUIvrai. Préserverdirtyserena/next-env/anciensCS. Aucunmailréel/push/prod,goalactifnonlivré.
+
+Checkpoint avant commit : build final sortie0, types0, lint0erreur15warnings, diffcheck0 ; revue finale de tranche fermée sans nouveau finding. Gardeformulaire tardif et sixième test navigateur vérifiés. Feature globale IN_PROGRESS ; aucune preuve de réception externe ou de nouvel utilisateur ajoutée depuis le checkpoint précédent.

@@ -1,3 +1,4 @@
+import { getReceivedInvitations } from "@/lib/actions/invitations";
 import { redirect } from "next/navigation";
 import { getLastSpace, getSpaces } from "@/lib/actions/spaces";
 import { requireSpace } from "./context";
@@ -13,5 +14,7 @@ export async function redirectToLastSpace(href: string) {
   const last = await getLastSpace();
   if (last) redirect(spacePath(last.id, href));
   const spaces = await getSpaces();
+  if (!spaces.length && (await getReceivedInvitations()).invitations.length)
+    redirect("/invitations");
   redirect(spaces.length ? "/espaces" : "/onboarding");
 }

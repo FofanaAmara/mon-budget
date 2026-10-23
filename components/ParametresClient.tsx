@@ -354,6 +354,8 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
           ))}
         </div>
 
+        <Link href="/parametres/espace" className="space-settings-row" style={{marginBottom:16}}><span aria-hidden="true">▱</span><span><strong>Espaces et membres</strong><small>Gérer tes espaces financiers</small></span><span aria-hidden="true">›</span></Link>
+
         {/* Preferences */}
         <div className="list-card">
           <div style={{ padding: "16px 20px 8px" }}>

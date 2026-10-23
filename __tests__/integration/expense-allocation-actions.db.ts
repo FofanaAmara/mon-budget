@@ -52,7 +52,7 @@ describe("expenses and allocations — real PostgreSQL, Auth/cache stubbed",()=>
     const admin=await localConnection();try{await admin.query(`CREATE DATABASE "${database}" TEMPLATE spaces_baseline17`);}finally{await admin.end();}
     native=await localConnection(database);
     const before=await legacyFingerprint(native);
-    await runMigrations(native,{through:"005",dryRun:false,allowCutover:true});
+    await runMigrations(native,{through:"006",dryRun:false,allowCutover:true});
     expect(await legacyFingerprint(native)).toEqual(before);
     const systemId=(await native.query("SELECT system_identifier::text FROM pg_control_system()")).rows[0].system_identifier;
     adapter=createLocalDatabase(`postgresql://budget_test:local-fixture-only@127.0.0.1:55437/${database}`,systemId);state.sql=adapter.sql;

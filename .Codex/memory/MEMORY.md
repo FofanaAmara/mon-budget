@@ -13,3 +13,5 @@
 
 - [Réponses après bascule](feedback_async_space_navigation.md) — lifetime, continuations, sélecteur et brouillons par boutons.
 - [Types Next générés](feedback_generated_next_types.md) — préserver les changements humains pour toutes les commandes génératrices, y compris typegen.
+
+- [Déduplication des courriels](feedback_email_idempotency_window.md) — fenêtre fournisseur, payload figé et état incertain.

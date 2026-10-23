@@ -93,6 +93,24 @@ try {
     throw Error(
       "Unmounted selector navigated after delayed preference response",
     );
+  await page.goto(origin + "/?creation");
+  await page.getByRole("heading", { name: "Création isolée" }).waitFor();
+  await page.evaluate(() => {
+    window.deferCreation = true;
+  });
+  await page.getByLabel("NOM DE L’ESPACE").fill("Création différée");
+  await page.getByRole("radio", { name: "Non, pour moi uniquement" }).check();
+  await page.getByRole("button", { name: "Créer mon espace" }).click();
+  await page.waitForFunction(
+    () => typeof window.resolveCreation === "function",
+  );
+  await page.getByRole("button", { name: "Fermer le formulaire" }).click();
+  await page.evaluate(() => window.resolveCreation());
+  await page.waitForTimeout(100);
+  if (await page.evaluate(() => window.creationCallbacks || 0))
+    throw Error("Closed creation form navigated from a late response");
+  if ((await page.evaluate(() => window.creationRequests)).length !== 1)
+    throw Error("Creation request duplicated");
   if (errors.length) throw Error(errors.join("\n"));
   const report = {
     passed: true,
@@ -104,6 +122,7 @@ try {
       "accepted abandonment opens B with empty form",
       "button-based field draft also requires abandonment approval",
       "delayed preference response cannot navigate after selector unmount",
+      "closed creation form cannot trigger parent navigation after late completion",
     ],
     pageErrors: errors,
   };

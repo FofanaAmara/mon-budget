@@ -323,4 +323,16 @@ describe('financial spaces migration — real isolated PostgreSQL', { concurrenc
       await expectSqlFailure('UPDATE monthly_expenses SET deferred_from_id=$1 WHERE id=$2',[b.monthly_expenses,a.monthly_expenses],'23503','monthly_expenses_deferred_source_space_fk');
     } finally {await client.query('ROLLBACK');}
   });
+  test('invitation expansion rolls back completely, preserves legacy data and replays', async()=>{
+    const before=await legacyFingerprint(client);
+    await assert.rejects(runMigrations(client,{through:'006',dryRun:false}),/allowCutover/);
+    await assert.rejects(runMigrations(client,{through:'006',dryRun:false,allowCutover:true,failAfter:'006-invitations.sql'}),/Injected migration interruption/);
+    assert.equal((await client.query("SELECT to_regclass('public.space_invitations') AS name")).rows[0].name,null);
+    assert.equal((await client.query("SELECT count(*)::integer AS count FROM information_schema.columns WHERE table_name='user_display_profiles' AND column_name='email_verified'")).rows[0].count,0);
+    await runMigrations(client,{through:'006',dryRun:false,allowCutover:true});
+    await runMigrations(client,{through:'006',dryRun:false,allowCutover:true});
+    assert.deepEqual(await legacyFingerprint(client),before);
+    assert.equal((await client.query("SELECT count(*)::integer AS count FROM space_invitations")).rows[0].count,0);
+  });
+
 });

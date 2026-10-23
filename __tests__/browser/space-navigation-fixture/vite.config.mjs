@@ -25,6 +25,8 @@ export default defineConfig({
       enforce: "pre",
       resolveId(id) {
         if (
+          id === "@/lib/actions/invitations" ||
+          id === path.join(root, "lib/actions/invitations") ||
           id === "@/lib/actions/spaces" ||
           id === path.join(root, "lib/actions/spaces")
         )

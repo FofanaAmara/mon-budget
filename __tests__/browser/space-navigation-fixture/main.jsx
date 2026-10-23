@@ -1,3 +1,4 @@
+import SpaceForm from "@/components/spaces/SpaceForm";
 import React, { useState, useMemo } from "react";
 import { createRoot } from "react-dom/client";
 import {
@@ -95,8 +96,26 @@ function App() {
     </Navigation.Provider>
   );
 }
+function CreationRace() {
+  const [open, setOpen] = useState(true);
+  return (
+    <>
+      <h1>Création isolée</h1>
+      <button onClick={() => setOpen(false)}>Fermer le formulaire</button>
+      {open && (
+        <SpaceForm
+          actorKey="fixture"
+          context="race"
+          onCreated={() => {
+            window.creationCallbacks = (window.creationCallbacks || 0) + 1;
+          }}
+        />
+      )}
+    </>
+  );
+}
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    {location.search === "?creation" ? <CreationRace /> : <App />}
   </React.StrictMode>,
 );
