@@ -82,3 +82,12 @@ SQLREADONLY sur copie possédée spaces_work17, garde identitéDocker : modèle2
 Défaut mobile reproduit : FAB masque2070.17 (allocation-progressive-mobile.jpg). Remplacé par bouton dans le flux, mêmecondition mois courant/callback ; recharge requise carHMR n’avait pas appliqué le changement. allocation-action-mobile-after.jpg est encore l’ancien rendu, explicitement NONretenue comme preuveaprès. Captures finales allocation-action-mobile-fixed.jpg(pageentière), allocation-action-mobile-bottom.jpg(viewportaprèsEnd) etallocation-action-desktop-fixed.jpg inspectées : montant et bouton lisibles ; ouverturemodale et fermeture vérifiées sans nouvelle saisie. DISC-ESP-016.
 
 Qualité isolée26788 : build/types/lint/9delivery tous0. Pas de tests miroirCSS ; dernières suites265unit/100PG d’autres tranches ne sont pas prétendues rejouées ici. Ni CI distante, ni PlaywrightMCP, ni revueglobale ajoutés. Inscription destinataire encore motdepassevide, pas d’acceptation ni secondmembre. Aucune nouvelle invitation/env/sourceDB/push.
+
+
+## MCP-INVITATION-ENTRY — 23 octobre, après intervention humaine
+
+L’humain a lui-même passé l’avertissement du navigateurPlaywright puis confirmé «c’est bon». Le vrai MCPPlaywright lit ensuite landing, puis ouvre le lien de la même invitationResend déjà reçue. Page explicite «Tu as été invité dans un espace», espaceRecetteResendCouple, auteur et deux liens connexion/inscription constatés dans snapshotMCP. Capture privée mcp-invitation-landing-desktop.png,1200x762, inspectée visuellement sur tout le viewport : contenu lisible, aucun chevauchement ou élément coupé.
+
+Clic réelMCP surCréeruncompte : AuthView existant, redirectTo d’invitation conservé dans l’URL et lienConnexion. Nom/adresse de recette préremplis viaMCP ; motdepasse laissé vide, aucune soumission/acceptation de conditions. Capture privée mcp-signup-handoff.png inspectée, mêmeviewport ; formulaire lisible. Handoff demandé à l’humain dans cette même fenêtrePlaywright. Aucun envoi supplémentaire, membre ajouté, secret saisi ou session fabriquée.
+
+Cette preuve lève l’absence d’accès général au MCP ; elle ne clôt pas le gate visuel complet ni mobile ni Auth/adhésion/contributions. L’exception a été donnée manuellement par l’humain : aucune preuve de confianceTLSinstallée ou de serviceworker/offline fonctionnel, et aucun ignoreHTTPSErrors utilisé par l’agent. Runtime27656, app3443, copie locale intacte. PréparationHTTPS dffe7aa inchangée.

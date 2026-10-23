@@ -118,3 +118,6 @@ Recette externe du23octobre21:03UTC : MAIL-REAL lève l’ancien manque de boît
 
 
 ALLOCATION-PROGRESSIVE-REAL : allocation250/275.50, uniqueachat3.99/200, consommé43.98 et personnelisolé prouvés UI+SQL. Boutonmobile corrigé et captures finales inspectées ; qualité26788verte. Preuve bornéeFR005, aucuncritère global clôturé. Détails dans resend-real-execution.md. Les mentions historiques de non-réception restent dépassées par MAIL-REAL ; adhésionB demeure ouverte.
+
+
+Mise à jour MCP-INVITATION-ENTRY : après acceptation humaine de l’avertissement, vraiMCPPlaywright accède à la page explicite d’invitation et suitCréeruncompte avec retourconservé. Deux captures desktop privées inspectées, formulaireprérempli et motdepassevide/handoff. Anciennes mentions d’outilMCPabsent sont historiques ; validationvisuelleglobale et mobile, inscription etadhésion restentouvertes. Aucune confianceTLSdurable ouofflineprouvée. Voir resend-real-execution.md.
