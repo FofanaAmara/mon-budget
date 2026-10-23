@@ -14,6 +14,7 @@ PARTIEL signifie code et preuves bornées présents, mais preuve de bout en bout
 - **NAV** : ui-context-execution.md et six scénarios du banc `__tests__/browser/space-navigation-fixture/` ; vrais composants, services et routeur simulés.
 - **UI** : invitations-management-execution.md ; parcours CUA dans la vraie app avant mise à niveau des dépendances. Création solo/couple, réglages ciblés, Mailpit et mauvais compte observés ; captures privées. Cela ne constitue pas une validation Playwright MCP ni une recette actuelle complète.
 - **UI-CURRENT** : mailpit-current-execution.md ; vraie app au c704c80, invitation depuis fiche, reception SMTP Mailpit observee, lien ouvert/mauvais compte refuse, recharge et seconde soumission sans doublon. CUA avec locators Playwright, distinct de PlaywrightMCP ; aucune acceptation/nouveau compte reelle prouvee.
+- **UI-RESP** : responsive-current-execution.md ; fiches375/1280, deuxdepenses reellesfictives, reload/bascule/dernierespace et guide separes. Defauts FAB/alignement reproduits/corriges et revuecaptures. CUA+locatorsPlaywright, pasMCP ni deuxmembres.
 - **AUTH** : dependency-repair-execution.md ; sept tests de contrat du véritable adaptateur, transport simulé. Lecture serveur sans mutation, fraîcheur explicite des décisions d’invitation. Aucune preuve de nouvel utilisateur ou de deux sessions hébergées.
 - **MAIL** : DEC-001, tests invitation/mail, réception Mailpit observée. Lecture Resend du 2026-10-23 : domaine expéditeur vérifié, sending enabled, receiving disabled ; origine publique et boîte de recette explicite absentes. Aucun email externe envoyé/reçu.
 - **SESSION** : session-delivery-execution.md et DEC-003 ; garde du vrai layout avec identité serveur, signout contrôlé (y compris retour invitation), invalidation/expiration/historique/offline ; douze tests sans navigateur. Extension private-entry-session-execution.md : vraies entrées privées gardées et refus serveur de changement d’acteur (quatre tests de rendu, deux tests PG). Runbook de réconciliation et trois tests PG de sa mutation minimale, aucune preuve fournisseur ou réception réelle ajoutée.
@@ -38,8 +39,8 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | NFR-001 | PARTIEL | PG tiers/IDs croisés ; SQL FK composites et space_id obligatoire | Intrusions via vrais endpoints/pages dans sessions isolées |
 | NFR-002 | PARTIEL | MIG/SQL exacts ; PG génération et acceptation concurrentes | Recharge navigateur/multisession et reprise réelle sans mélange |
 | NFR-003 | PARTIEL | NAV requêtes tardives et brouillons ; PG concurrence ; SESSION masquage et invalidation | Vraie app multi-onglets, réponses RSC tardives, échec de bascule et offline |
-| UXR-001 | PARTIEL | NAV et UI sélecteur/sidebar/drawer | Playwright MCP mobile/desktop, clavier, noms longs, option unique |
-| UXR-002 | PARTIEL | Maquettes React intégrées à la vraie app ; UI avant mise à niveau | Playwright MCP pages entières, montants extrêmes, noms longs, overflow |
+| UXR-001 | PARTIEL | NAV et UI sélecteur/sidebar/drawer | UI-RESP fiches/depenses375et1280 acquis ; MCP, claviercomplet et optionunique restent ouverts |
+| UXR-002 | PARTIEL | Maquettes React intégrées à la vraie app ; UI avant mise à niveau | UI-RESP montants3.99/1450etnomlong acquis surdepenses ; MCP et autrespagesentieres restent ouverts |
 | TR-001 | PARTIEL | Stack conservée ; coûts non engagés ; Resend existant vérifié en lecture | Quota/coût applicable à la recette externe et origine publique autorisée |
 | TR-002 | PARTIEL | Plan accepté, tests PG/MIG, test préexistant corrigé, revue de tranches | CI distante, revue globale et Playwright MCP ; validation complète |
 
@@ -58,7 +59,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | ESP-002/AC-4 | PARTIEL | SQL backfill rejouable ; PG générations concurrentes | Recharge réelle sur mois déjà généré |
 | ESP-002/AC-5 | PARTIEL | SQL interruption/rollback/checksum/gel ; garde rollout | Erreur visible sur vraie page et reprise valide |
 | ESP-003/AC-1 | PARTIEL | UI liste puis création couple sans copie ; PG | Rejouer liste actuelle, données des deux espaces après recharge |
-| ESP-003/AC-2 | PARTIEL | NAV préférence/contexte ; PG configurations séparées | Bascule de chaque page et prochaine connexion réelles |
+| ESP-003/AC-2 | PARTIEL | NAV préférence/contexte ; PG configurations séparées | UI-RESP depenses/reload/racine acquis ; autres pages et prochaine connexion reelles |
 | ESP-003/AC-3 | PARTIEL | UI renommage B sous A ; PG membre sans privilège | Sélecteur actualisé et données conservées sur sessions réelles |
 | ESP-003/AC-4 | PARTIEL | NAV brouillon, confirmation refusée et réponse tardive ; SESSION verrouille le document | Multi-onglets/late-RSC sur vraie app et échec réseau |
 | ESP-003/AC-5 | PARTIEL | PG refus tiers/objets croisés et SQL FK | Tests directs HTTP/UI puis accès valide |
@@ -92,3 +93,5 @@ URL de recette locale : http://localhost:3002. Source et baseline privée ne son
 Audit de livraison actualise : delivery-audit.md. API GitHub sur SHA29913ffa95c0687d7593398fb10ccabf130595fe :0run. Qualite locale apres nettoyage :226unit,types0,lint0warning,buildWebpack0 ; aucune preuve produit globale ajoutee.
 
 Recette locale actuelle du23octobre : voir UI-CURRENT. Le refus de l’ancien onglet data: ne constitue plus un blocage general du navigateur ; nouvel onglet HTTP utilise avec autorisation humaine.
+
+RecetteUI-RESP : deux depenses ponctuelles fictives creees/rechargees dans le couple seulement, personnel vide, guide et dernierespace controles. Captures375/1280 et deux corrections visuelles ; aucune cloture globale ou preuve multisession ajoutee.

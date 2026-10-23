@@ -267,41 +267,43 @@ export default function ExpenseTrackingRow({
       </div>
 
       {/* Toggle button — far right, only for current month, hidden for progressives */}
-      {isCurrentMonth && !isProgressive && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onAction(expense.id, isPaid ? "upcoming" : "paid");
-          }}
-          title={isPaid ? "Remettre à venir" : "Marquer payée"}
-          style={{
-            width: "28px",
-            height: "28px",
-            borderRadius: "50%",
-            border: isPaid ? "none" : "2px solid var(--slate-200)",
-            background: isPaid ? "var(--positive)" : "var(--white)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-            transition: "all 0.2s ease",
-            flexShrink: 0,
-          }}
-        >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke={isPaid ? "white" : "var(--slate-300)"}
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+      <div className="expense-action-slot">
+        {isCurrentMonth && !isProgressive && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onAction(expense.id, isPaid ? "upcoming" : "paid");
+            }}
+            title={isPaid ? "Remettre à venir" : "Marquer payée"}
+            style={{
+              width: "28px",
+              height: "28px",
+              borderRadius: "50%",
+              border: isPaid ? "none" : "2px solid var(--slate-200)",
+              background: isPaid ? "var(--positive)" : "var(--white)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              flexShrink: 0,
+            }}
           >
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-        </button>
-      )}
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke={isPaid ? "white" : "var(--slate-300)"}
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </button>
+        )}
+      </div>
     </div>
   );
 }

@@ -23,3 +23,5 @@
 - [Propagation des échecs de gates](feedback_gate_exit_codes.md) — contrôler le diff après staging puis conditionner réellement le commit au succès.
 
 - [Protocole de page navigateur](feedback_browser_url_protocol.md) - distinguer ancien onglet interne refuse et vraie page HTTP autorisee ; Mailpit reste une preuve locale distincte.
+
+- [Actions et montants mobiles](feedback_fixed_action_layout.md) - interaction FAB/guide et rails de controles variables a verifier sur les listes financieres.

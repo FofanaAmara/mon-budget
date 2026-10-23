@@ -54,3 +54,9 @@ P7.1 audit/clean lint : COMPLETED pour la tranche locale ;226unit,types0,lint0wa
 Recette Mailpit actuelle : IN_PROGRESS - autorisation navigateur/Playwright explicite ; runtime3002 a relancer puis UI, reception et lien.
 
 Recette Mailpit actuelle : COMPLETED pour le parcours borne - vraie fiche/envoi/reception/lien mauvaiscompte/recharge/seconde soumission sans doublon, SQLlecture1pending/sent/1membre. Acceptation2sessions/Resend/MCP/CI restent IN_PROGRESS.
+
+Recette responsive et isolation des saisies : IN_PROGRESS - depend de Mailpit1353d11 et runtime98404 ;375x812/1280x900, fausses depenses extremes espacecouple, reload et personnel distinct.
+
+Defaut visuel375px : IN_PROGRESS - FAB depenses recouvre montant1450, correction par action en flux dans entete puis preuve avant/apres, revue et checks.
+
+Recette responsive/separation et corrections : COMPLETED pour cette tranche bornee - fiches375/1280,2saisies1453.99couple/personnel0,reload/racine/guide,2defauts corriges et revus.226unit/7gardes/types/lint0warning/buildverts. GoalglobalIN_PROGRESS ; autresvariantes/Auth2membres/Resend/MCP/CIouverts.

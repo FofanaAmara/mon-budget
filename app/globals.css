@@ -298,6 +298,14 @@ body {
   letter-spacing: var(--tracking-wide);
 }
 
+/* Shared rail keeps expense group totals aligned with every row amount. */
+.expense-action-slot {
+  flex: 0 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ── FAB — the anchor of every page ───────────────────── */
 .fab {
   position: fixed;

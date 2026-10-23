@@ -520,3 +520,27 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Decisions prises :** autorisation navigateur/Playwright deja donnee, aucune question ; nouvel ongletHTTP21reel autorise distinct de l'ancien data refuse. CUA+locatorsPlaywright sans renommerMCP.
 **Prochaine etape :** commit du rapport, poursuivre recette sessions/utilisateurs et UI actuelle selon preuves ; externeResend/CI ne sont pas clos.
 **Contexte pour reprise :**runtime98404npmdevspaces3002surspaces_work17,SMTPMailpit1025etUI8025. HEADproduitc704c80. Fichecouple13603cc1souspersonnelactifb99e9a9e ; envoi UI fictif recette-conjoint-20261023@example.test. Mailpitexact1message, lienbonespace+mauvaiscompterefuse ; reloadpersiste et secondsendexact1mail. SQLlecturereadonly1invitationpending/sent/1membre. Captures privees.local/financial-spaces/mailpit-current etpersistence-proof.json. Aucunbearerversionne/Resend/push/DBsource. LesdeuxsurfacesIABetChromevoyaientunmauvaiscompte,paspreuve2membres. PasdecritereMCP/acceptationnouveau/receptionexterne/CI ferme. Ce tour=progresconcret, compteurimpasse remisazero.\.serena/next-env/anciensCSpreexistants a exclure ducommit.
+
+---
+## [2026-10-23] - Recette responsive et separation des saisies
+
+**Plan :** espaces-financiers-implementation.md P3/P7, maquettesessai02.
+**Tache en cours :** vraieUI aux375x812et1280x900 puis depensesfictives3.99/1450en couple,reload et personnel distinct.
+**Objectif :** avancer les gates UI/persistance sans simuler Authdestinataire.
+**Etat :** IN_PROGRESS
+**Fichiers touches :** suivi/preuves puis corrections si defaut constate.
+**Decisions prises :** precedenttour=progres1353d11, runtime98404confirmevivant. PasdemutationDBsource,push,compteheberge. Donneesfictives uniquement dans clonework17. UtiliserlesvraiesactionsdepuisUI, pasSQLpourcreerlespreuves. Estimation8-15kjetonscoutindisponible.
+**Prochaine etape :** taillesviewport, captures et saisies.
+**Contexte pour reprise :**CUArecetteonglet21,appBrowseriab,Mailpit22filtre. Personnelb99e9a9e,couple13603cc1. Gardesactuelles et Mailpitbonlien/persistance/mauvaiscompte dejaobserves. Aucun outilPlaywrightMCPdistinct ; CUAlocatorsPlaywright gardentleurnom.
+
+---
+## [2026-10-23] - Recette responsive et correctifs verifies
+
+**Plan :** espaces-financiers-implementation.md P3/P7, extensionsession-and-delivery.
+**Tache en cours :** commit local des corrections et preuves ; goal global IN_PROGRESS.
+**Objectif :** completconformeaugoal, aucune cloture globale.
+**Etat :** IN_PROGRESS
+**Fichiers touches :** voir session2026-10-23-responsive-current.md.
+**Decisions prises :** FABdepensesmasque1450a375px -> memeboutonenflux ; totalgroupe/lignesdecales -> rail28gap12partage ycomprissansaction. Aucuneaction/calculfinancierchange.
+**Prochaine etape :** commit apresdiffcachedcheck ; poursuivre vraiesrecettesautresfamilles/sessions et limitesrestantes.
+**Contexte pour reprise :**runtime98404vivant3002work17 ; viewportCUArestaure.2depensesfictivesRecetteUI3.99/1450en couple13603cc1,personnelb99e9a9e0. Reloadexact2,totalSQL1453.99,guidecouple1/4personnel0/4,dernierespacecouplereprisparracine. Imagesavant/apres.local/financial-spaces/responsive-current,preuvesdocresponsive-current-execution.md.226unit/7gardes/types0/lint0warning/buildWebpack80357termine0 en copieisolee ; revueindependantesource/capturesdeuxdeltas sansfinding. PasdetestnouveauCSSmiroir, pasdererunPG/natifsinchanges(97/29precedents). Historique/progressivevisuelnonprouve ; autresfinances/Auth2comptes/signup/receptionResend/MCP/CI nonprouves. Aucunpush/mail/DBsource ; preserve dirtyserena/next-env/anciensCS. Tour=progresconcret,counterimpasse0.

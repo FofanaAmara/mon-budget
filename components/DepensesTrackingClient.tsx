@@ -103,7 +103,7 @@ export default function DepensesTrackingClient({
         sections={sections}
       />
 
-      {/* Section header with desktop-only add button */}
+      {/* Keep the add action in the flow so it never covers expense amounts. */}
       <div
         style={{
           display: "flex",
@@ -126,11 +126,12 @@ export default function DepensesTrackingClient({
         </p>
         {isCurrentMonth && (
           <button
+            type="button"
             onClick={() => setAdhocModal(true)}
-            className="btn-desktop-only"
             style={{
               alignItems: "center",
               gap: "6px",
+              minHeight: "44px",
               padding: "8px 16px",
               background: "#0F766E",
               color: "white",
@@ -205,29 +206,6 @@ export default function DepensesTrackingClient({
       />
 
       {expenses.length > 0 && <ExpenseSummaryStats summary={summary} />}
-
-      {/* ====== FAB ====== */}
-      {isCurrentMonth && (
-        <button
-          onClick={() => setAdhocModal(true)}
-          aria-label="Ajouter une dépense imprévue"
-          className="fab fab-mobile-only"
-        >
-          <svg
-            width="26"
-            height="26"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
-        </button>
-      )}
 
       {/* ====== BACKDROP ====== */}
       {anySheetOpen && (
