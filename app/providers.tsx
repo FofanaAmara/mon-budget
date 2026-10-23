@@ -1,7 +1,7 @@
 "use client";
 
 import { AuthUIProvider } from "@neondatabase/auth/react";
-import Link from "next/link";
+import { InvitationAuthLink } from "@/components/auth/InvitationAuthNavigation";
 import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
 import { Toaster } from "sonner";
@@ -22,7 +22,7 @@ export function AuthProviders({ children }: { children: ReactNode }) {
           router.refresh();
         }}
         redirectTo="/"
-        Link={Link}
+        Link={InvitationAuthLink}
         credentials={{ forgotPassword: true }}
         magicLink={false}
         multiSession={false}

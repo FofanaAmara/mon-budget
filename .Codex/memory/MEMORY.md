@@ -29,3 +29,5 @@
 - [Contrat du fournisseur Auth UI](feedback_auth_ui_provider.md) — effets du wrapper, script de thème au repli, options publiques et contrôles SSR/types/navigateur.
 
 - [Styles des actions dans les listes](feedback_list_action_styles.md) — cibler la ligne prévue, vérifier primaire/hover/focus/disabled après changement de contenu.
+
+- [Liens Auth avant hydratation](feedback_auth_link_ssr.md) — vérifier les vrais href SSR et leur retour après clic/recharge, pas seulement les props de formulaire.

@@ -664,3 +664,15 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Décisions prises :** réserver header/nav seulement au vrai shell financier mobile ; Auth sans bandes ni scroll. Revue manuelle et renduDevTools ne ferment pas revue indépendante/PlaywrightMCP.
 **Prochaine étape :** staging explicite, diffcachedcheck séparé, commitlocal ; puis corriger retour entre vues Auth par contrat public et tests.
 **Contexte pour reprise :** runtime31557 arrêté volontairement après CSScompilé périmé confirméHTTP ; nouveau81598 prêt3002 et rendu finalcorrect. Build/types/lint0warning/7delivery finaux45790exit0 en copie isolée. ChromeDevToolspage1 nouvelle session anonyme, actuellementsign-in1280x720 ; imagesinline avant/après, filePath interdit par racinesoutil. VraielandingMailpit→sign-up garde retour, puis lien Connexion du fournisseur le perd, DISC-ESP-009 ouvert. Aucun nouvelauth/OTP/emailResend/CI/push/sourceSQL. Preuve persistance.private.local/isolation-current : personnel125.25/couple987.65, membres1chaque. AuthfinanceE2E finale/offline/BFCache restent à prouver. Ce tour=progrès concret, compteurimpasse0.
+
+---
+## [2026-10-23] — Retour invitation Auth corrigé et vérifié
+
+**Plan :** `.Codex/plans/espaces-financiers-session-and-delivery.md`, DISC-ESP-009.
+**Tâche en cours :** commitlocal après diffcachedcheck ; goalglobal actif.
+**Objectif :** créer/inviter/rejoindre/contribuer réellement, sans réduire les gates.
+**État :** IN_PROGRESS
+**Fichiers touchés :** session2026-10-23-auth-invitation-return.md et liste du staging.
+**Décisions prises :** adapter seulement le Link public et contexte local de page, pas de patch fournisseur/stockage. Test SSR réel avant hydratation nécessaire.
+**Prochaine étape :** staging/check/commit, puis reprendre les conditions Auth réelles et surfaces de recette authentifiée disponibles.
+**Contexte pour reprise :** HEAD5c07240 avantcommitAuth. Nouveaucorrectif validé260unit/19fichiers (69662exit0) et build/types/lint0warning/7gardes (10609exit0). ChromeDevToolspage1sessionanonyme à375x812 surforgot avec retourinvitationconservé, aucune soumission. Sourceidentitaire et empreinteMailpit privées, pas à recopier dansGit. Runtime81598 prêt3002 ; sourceDB/Resend/inscription/OTP/push/CI inchangés. Deuxcomptesexistants précédentsnonvérifiés toujourspasadhérents ; anciennesjarCUA non accessibles dans nouvellecollectiond’outils. DevToolsdisponible/MCPPlaywrightabsent. Goalglobal incomplet ; prochain audit doit garder réceptionexterne,2membres,nouveausignup,offline/BFCache,CI/revueindépendante/MCPouverts. Ce tour a produit deuxcorrectifsréels etpreuves, compteurimpasse0.

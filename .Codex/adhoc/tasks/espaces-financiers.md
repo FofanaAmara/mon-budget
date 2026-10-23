@@ -82,3 +82,5 @@ Recette réelle bascules/onglets : IN_PROGRESS — dépend b468dd1 ; brouillon r
 Réservation navigation desktop : IN_PROGRESS — capture avant réelle DevTools sur connexion et ancienne capture revenus ; limiter68px aux petits écrans, valider seuils et qualité sans toucher Auth/finances.
 
 Réservation navigation : COMPLETED pour le correctif borné et son rendu Auth375/1280 ; build/types/lint/7gardes verts. Finances mobile authentifiées et PlaywrightMCP restent ouverts. Isolation réelle125.25/987.65 persistante prouvée, membres1+1. DISC-ESP-009 retour Auth : IN_PROGRESS, lien Connexion interne perd redirectTo après inscription ouverte depuis invitation.
+
+DISC-ESP-009 : COMPLETED pour le correctif de conservation des liens — vraie régression SSR RED/vert,260unit/qualité verts, clics/recharges DevTools conservant invitation. Réception Auth et adhésion complètes restent IN_PROGRESS.

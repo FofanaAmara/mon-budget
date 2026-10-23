@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SignOutFlow from '@/components/auth/SignOutFlow';
+import { InvitationAuthNavigation } from '@/components/auth/InvitationAuthNavigation';
 import {validInvitationReturn} from '@/lib/invitations/security';
 import { AuthView } from '@neondatabase/auth/react';
 import type { AuthLocalization } from '@neondatabase/auth/react';
@@ -376,7 +377,9 @@ export default async function AuthPage({
               {/* Session-changing sign-out uses the same guarded path as financial pages. */}
             {path === 'sign-out'
               ? <SignOutFlow key={returnPath} returnTo={returnPath} />
-              : <AuthView pathname={`/auth/${path}`} localization={frLocalization} redirectTo={returnPath} callbackURL={returnPath} />}
+              : <InvitationAuthNavigation returnTo={returnPath}>
+                  <AuthView pathname={`/auth/${path}`} localization={frLocalization} redirectTo={returnPath} callbackURL={returnPath} />
+                </InvitationAuthNavigation>}
 
             {/* Terms — signup only */}
             {path === 'sign-up' && (
