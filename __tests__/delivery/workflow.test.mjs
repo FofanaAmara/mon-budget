@@ -41,7 +41,7 @@ test('the full proof has no conditional skips or secrets and executes real synth
   }
   const quality = workflow.jobs.quality.steps.map(step => step.run || '').join('\n');
   assert.ok(quality.includes('npm run test:spaces:verification'));
-  for (const command of ['npm ci', 'npm run test:delivery', 'npx vitest run', 'npm run test:spaces:navigation', 'npx next typegen', 'npx tsc --noEmit', 'npm run lint', 'npm run build -- --webpack', 'npm audit --omit=dev']) assert.ok(quality.includes(command), command);
+  for (const command of ['npm ci', 'npm run test:delivery', 'npx vitest run', 'npm run test:spaces:navigation', 'npm run test:spaces:selection', 'npx next typegen', 'npx tsc --noEmit', 'npm run lint', 'npm run build -- --webpack', 'npm audit --omit=dev']) assert.ok(quality.includes(command), command);
   const postgres = workflow.jobs.postgres.steps.map(step => step.run || '').join('\n');
   for (const command of ['npm ci', 'npm run test:spaces:prepare', 'npm run test:spaces:services', 'npm run test:spaces:db']) assert.ok(postgres.includes(command), command);
   assert.equal(workflow.jobs.postgres.env.MES_FINANCES_TEST_BASELINE, 'synthetic');

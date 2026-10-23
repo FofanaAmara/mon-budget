@@ -95,3 +95,12 @@ Pré-mortem : mélanger ancien payload Mailpit et envoi externe → créer une n
 Captures réelles avant : category-modal-before.png et card-modal-before.png sous `.local/resend-recipe/`. Deux croix apparaissent en haut à droite, rendues par SheetCloseButton absolu et bouton existant du header. Recherche source confirme le même ajout redondant dans SavingsHistoryModal, ExtraPaymentSheet et ChargeDebtSheet. Correction de la cause : enlever seulement l’import et l’instance SheetCloseButton dans ces cinq composants qui ont déjà leur propre fermeture ; conserver header, Escape/backdrop, callbacks, focus et mutations. Ne pas modifier le helper pour les consommateurs qui en ont besoin.
 
 Valider cartes/catégories par captures avant/après desktop et375px, unicité du bouton, clic/Escape et formulaires ; noter séparément la portée des trois autres modales si aucun jeu de données réel n’y donne encore accès. Types/lint/build en copie isolée, unités/delivery et revue React du diff. Pas de test miroir du JSX pour cette suppression simple. Déclarer la correction bornée, pas la recette exhaustive du goal. Durée estimée10–20minutes, coût monétaire indisponible, pas de service payant.
+
+
+## Entités obsolètes dans les modales patrimoine — recette réelle
+
+Reproduction autoritative : dette fictive500, ajoutcharge25.50, ouverture immédiatePayer avant fin du refresh ; page/DB525.50 mais modale reste500 même après réception du RSC. Capture debt-payment-stale-before.jpg. ProjetsEpargneClient stocke un objetDebt complet dansuseState ; les nouvelles props actualisent la liste mais pas cet objet. Même motif pour sélectionédition/charge et trois sélections de pots.
+
+Cible : stocker seulement les identifiants sélectionnés et dériver les objets depuis debts/allPots courants à chaque rendu. Garder les brouillons de formulaire, callbacks et contrôles serveur actuels ; une entité absente ne reste pas affichée dans une modale devenue invalide. Rejouer charge5fictive puis ouverturePayer pendantrefresh, attendre miseàjour et vérifier total530.50 dans pageetmodale, puis versement75.25 et reload455.25. Tester modalesépargne/dette et basculeperso. Types/lint/build/units/navigation en copie isolée ; aucune mutation source, pas de faux Auth.
+
+Même fenêtre de recette : texteguide4/4 encoreàreprendre, pas de clôtureglobale. Estimation10–20minutes/5–10kjetons supplémentaires, coût monétaire indisponible et aucun service payant.

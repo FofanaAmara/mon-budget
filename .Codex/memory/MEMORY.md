@@ -38,3 +38,5 @@
 - [Auth render deduplication and retry](feedback_auth_render_deduplication.md) - per-render cache, cross-request isolation and real server recovery.
 
 - [Fermetures de feuilles dupliquées](feedback_duplicate_sheet_controls.md) — inventorier les contrôles existants avant ajout transversal, recharger le vrai rendu et vérifier les dimensions des captures.
+
+- [Entités sélectionnées et props fraîches](feedback_current_entity_selection.md) — conserver les IDs et les brouillons séparément, vérifier les modales ouvertes pendant un refresh.

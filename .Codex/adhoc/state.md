@@ -854,3 +854,25 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Décisions prises :** dernière continuation PROGRESS. Nouvelle preuve REF-REAL : carte/catégorie/abonnement39.99 automatiques persistants et isolés, SQLREADONLY occurrence uniquePAID et références identiques. Double fermeture reproduite cartes/catégories, corrigée même motif cinq composants. Pas de rôle/état/calcul modifié.265unit et build/types/lint/9delivery verts.
 **Prochaine étape :** commit après stagedcheck ; finalisation humaine inscriptionIAB6 puis adhésion/contributionB. Recetter patrimoine pour valider visuellement les trois autres modales et corriger/valider texte4/4 du guide. CI/MCP/revueglobale et offline toujours ouverts.
 **Contexte pour reprise :** runtime68803Resend, Chromecréateur revenu/cartes selon dernièreaction, IABrecipientTab6 formulaire motdepassevide conservé markHandoff. Preuveslocal/resend-recipe : recurring-expense-references-proof.json checked21:15Z, cartes/catégories avant/après ; exportsJPEG372x806 mobile malgré nom.png, CSSviewport375x812 confirmé. Ancienne capture aprèsstale écartée puis vrai reload. Quality20493exit0/unit33834exit0. Source modifiée limitée à cinq imports/instancesSheetCloseButton retirés, boutonsheader conservés. Pasdenouvelleinvitation/DBsource/push/deploiement. Preexistantsserena/next-env/CS préservés. Aucungoalcomplete/blocked, aucune nouvelle identité fabriquée.
+
+---
+## [2026-10-23] — Recette patrimoine indépendante
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md`, P3/P7.
+**Tâche en cours :** projet et dette de suivi entièrement fictifs dans le seul espace Resend.
+**Objectif :** couvrir fonctions patrimoine et trois modales restantes, sans confondre avec adhésionB.
+**État :** IN_PROGRESS
+**Décisions prises :** dernier tour PROGRESS, commitdc01350. Montants locaux fictifs uniquement ; aucun véritable produit financier, paiement, prêt ou transfert bancaire. Estimation15–25minutes/6–12kjetons ; coût indisponible, aucun service nouveau. Préserver autres espaces et attendre action humaine pour credential.
+**Prochaine étape :** ouvrir Patrimoine, projet/contribution/historique puis dette/charge/versement ; comparer UI/SQL et personnel.
+
+---
+## [2026-10-23] — Patrimoine et sélection fraîche validés
+
+**Plan :** `.Codex/plans/espaces-financiers-implementation.md`, P3/P7 ; extension sélection dans session-and-delivery.
+**Tâche en cours :** clôture de tranche puis suite du goal intégral.
+**Objectif :** non atteint, inscription et contribution à deux encore requises.
+**État :** IN_PROGRESS
+**Fichiers touchés :** ProjetsEpargneClient, bancselection3fichiers, package/workflow/garde ; plan/tasks/matrice/preuve/session/state/mémoire/discoveries.
+**Décisions prises :** dernierturn PROGRESS. Patrimoine fictif exact et isolé :123.45 épargné, dette455.25 après500+25.50+5−75.25. Correction vraie course de sélectionobjetancien : sixIDs dérivés des props. Ancien composantRED, corrigéGREEN3cas et vraieUI. Données personnelles non écrites.
+**Prochaine étape :** stagedcheck/commit ; reprendre guide4/4 et autres indépendants restants, puis adhésionB après saisiecredential humaine. Aucun gateAuth/MCP/CI/revueglobale inventé.
+**Contexte pour reprise :** HEADdc01350 avantcommitcourant ; runtime68803ResendHTTPS3443, Chromecréateur surpatrimoinecouple. IABrecipientTab6 formulaireprérempli mais motdepassevide, markHandoff maintenu ; pas de nouveau mail. Tests :265unit77992, quality55948build/types/lint/9delivery0, selection97930/88052GREEN3, copieRED44288exit1attendu, navigation14497GREEN6. Copiesourcecorrigée restaurée dansfinally aprèsRED. Preuves.local/resend-recipe/patrimoine-proof.json checked21:21:47Z ; images3modales restantes vues. GmailAuthrésumé3PASS vérifié, spamrestantsanscauseétablie. Goalcomplet17/30 toujoursenattente, pasdebloquage3tourscarprogrèsutile. Préexistantsserena/next-env/CS exclus, aucunpush/DBsource.

@@ -13,3 +13,7 @@ Cartes et catégories : une fermeture, screenshots avant/après desktop et viewp
 
 ## Autre observation à reprendre avant clôture globale
 Après4/4, le guide affiche brièvement « Déjà à mi-chemin ! » avant sa célébration retardée15secondes. La capture pendant animation n’est pas une preuve de layout stable ; reprise stable sans guide conservée. Le texte complet avant célébration reste à corriger/valider dans la tranche guide, sans modifier ses données de progression pour fabriquer une preuve. Le goal n’est pas déclaré livré.
+
+
+## Suite de recette patrimoine
+Historique d’épargne, nouvelle charge et versement dette désormais ouverts dans la vraie app avec données fictives : une seule fermeture chacun ; captures desktop/mobile et inspection visuelle réalisées. Historique fermé via son bouton, charge/versement soumis avec succès. L’ancienne limite des trois modales non exercées est levée pour ces cas ; variantes longues/listes volumineuses et gate globalMCP restent distincts.
