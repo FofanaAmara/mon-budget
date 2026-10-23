@@ -8,6 +8,7 @@ import {
   type SessionData,
 } from "@neondatabase/auth/server";
 import { headers } from "next/headers";
+import { cache } from "react";
 
 const config = {
   baseUrl: process.env.NEON_AUTH_BASE_URL!,
@@ -20,7 +21,7 @@ const config = {
 /** Actions and route handlers may persist refreshed cookies. */
 export const auth = createNeonAuth(config);
 export class AuthSessionUnavailableError extends Error {
-  constructor() {
+  constructor(readonly status?: number) {
     super(
       "La session ne peut pas être vérifiée pour le moment. Réessaie dans un instant.",
     );
@@ -69,7 +70,10 @@ async function readSession(): Promise<{
     throw new AuthSessionUnavailableError();
   }
   if (response.status === 401) return { data: null, error: null };
-  if (!response.ok) throw new AuthSessionUnavailableError();
+  if (!response.ok) {
+    console.warn("[auth] Session verification failed", { status: response.status });
+    throw new AuthSessionUnavailableError(response.status);
+  }
   let payload: unknown;
   try {
     payload = await response.json();
@@ -93,4 +97,7 @@ async function readSession(): Promise<{
     throw new AuthSessionUnavailableError();
   return { data: session, error: null };
 }
-export const authSessionReader = { getSession: readSession };
+// React scopes this memoization to one server render, including concurrent
+// layout/page reads. No identity or failure is retained across requests.
+// Explicit fresh mutation checks continue to use the mutable SDK above.
+export const authSessionReader = { getSession: cache(readSession) };

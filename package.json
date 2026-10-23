@@ -14,6 +14,7 @@
     "test:spaces:services": "vitest run --config vitest.spaces.config.mts",
     "test:spaces:navigation": "node __tests__/browser/space-navigation-fixture/check.mjs",
     "test:spaces:verification": "node __tests__/browser/space-navigation-fixture/check-verification.mjs",
+    "test:auth:render": "node __tests__/browser/auth-session-render.mjs",
     "test:delivery": "node --test __tests__/delivery/*.test.mjs",
     "test:spaces:prepare": "node scripts/financial-spaces/prepare-synthetic.mjs"
   },

@@ -756,3 +756,23 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Decisions :** Playwright package corrected and pinned0.0.83; Serena codex context/project-from-cwd. ActualMCP25/23tools/browser/symbols probe23656exit0. Preexisting .serena/project.yml preserved by originalhash. Final full settings stable through repeat commands and probe; initial unrelated hash drift unassignable, no blind rollback. No source app/DB/Auth changed.
 **Next :** commit project tracking after stagedcheck. User restartCodex reloads Playwright tools in the conversation, then feature validation can resume when requested/resources available.
 **Resume context :** private backups and protocol proof in .local/mcp-repair; no secret/global config committed. Current conversation Playwright tool inventory still empty, despite subprocess server success. Old feature blocked status not changed to complete. Preexistingserena/next-env/CS remain excluded. Prior uncommitted goal-blockage checkpoints included in state history.
+
+---
+## [2026-10-23] - Safari login investigation
+
+**Plan :** `.Codex/plans/safari-local-auth.md`.
+**Task :** Safari login loops on HTTP while Chrome works.
+**State :** IN_PROGRESS
+**Decisions :** test installed WebKit/Chromium cookie behavior before attributing cause; no Auth security downgrade. Preserve original recipe DB/generated-file guards and preexisting changes.
+**Next :** bounded browser reproducer for Secure cookies on localhost, then appropriate root-cause fix.
+
+---
+## [2026-10-23] - Safari HTTPS and Auth render fixes verified
+
+**Plan :** `.Codex/plans/safari-local-auth.md`.
+**Task :** fix Safari login transport and new Chrome expense-session failure.
+**State :** DONE for bounded corrections; real user Safari login still needs retry.
+**Files :** session2026-10-23-safari-auth.md lists owned files; sourceapp/fixtures preserved.
+**Decisions :** Secure cookies stay protected; localHTTPS3443 plusHTTP3002redirect, projectcertificate only. No global CA install; browser user must approve certificate on first visit. LocalHSTS omitted while production retains it. Reactcache only perrender, fresh mutations unchanged; no identity/failure retained across requests. Numericstatusonly diagnostic; historical statusunknown. Error retry reloads sameURL after actual production test exposed ineffective reset.
+**Next :** stagedcheck/localcommit; user tests https://localhost:3443 . No push or hosted credentials.
+**Resume context :** old81598 stopped deliberately, new32915 servingHTTPS3443/HTTP3002redirect. Runtimehealth.json verifiedTLSwithprojectcert andHTTP200/noHSTS.265unit/99PG/9delivery and finalbuild/types/lint0warning allgreen. TrueNextRSCproductionprobe16196exit0:1readperrequest, A/Bisolated, newrequestfresh,503thenrecovery, actualretryworks. EarlierRED10!=1 and resetfailure retainedprivately, no falsified proof. ImagesWebKit/Chromiumloginanderror375/1280scanned; tests syntheticexceptrealappanonymeloginpage. RealSafariinstalled26.6.2, no hostedpasswordsubmitted. Privatecerts/evidenceunder.local ignored. Preexistingserena/next-env/CS untouched. Featureglobalgoalnotcomplete, statusnotchangedbythisbugfix.

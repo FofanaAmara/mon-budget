@@ -33,3 +33,6 @@
 - [Liens Auth avant hydratation](feedback_auth_link_ssr.md) — vérifier les vrais href SSR et leur retour après clic/recharge, pas seulement les props de formulaire.
 
 - [MCP startup verification](feedback_mcp_startup_validation.md) - enabled state is not tool availability; diagnose package, protocol, project and language server separately.
+
+- [Safari Secure localhost cookies](feedback_safari_secure_localhost.md) - HTTPS development, no Auth cookie downgrade or silent system CA install.
+- [Auth render deduplication and retry](feedback_auth_render_deduplication.md) - per-render cache, cross-request isolation and real server recovery.

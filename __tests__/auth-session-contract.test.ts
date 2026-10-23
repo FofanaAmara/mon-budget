@@ -229,6 +229,21 @@ describe("production Neon adapter session/cookie contract", () => {
     }
     expect(state.cookieReads).toBe(0);
   });
+
+  it("reports the upstream HTTP status without logging cookies or provider content", async () => {
+    const warning = vi.spyOn(console, "warn").mockImplementation(() => {});
+    vi.stubGlobal("fetch", vi.fn(async () => new Response("private-provider-response", { status: 429 })));
+    try {
+      await expect(requireIdentity({ readOnly: true })).rejects.toMatchObject({ status: 429 });
+      expect(warning).toHaveBeenCalledExactlyOnceWith("[auth] Session verification failed", { status: 429 });
+      const output = JSON.stringify(warning.mock.calls);
+      expect(output).not.toContain("private-provider-response");
+      expect(output).not.toContain("fixture-token");
+      expect(output).not.toContain("fixture-user");
+    } finally {
+      warning.mockRestore();
+    }
+  });
   it("RSC requests are uncached, bounded, refuse redirects and transmit only Neon cookies", async () => {
     state.cookie += "; unrelated=private-value";
     const request = vi.fn<typeof fetch>(async () => Response.json(cached));

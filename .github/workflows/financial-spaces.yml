@@ -32,6 +32,7 @@ jobs:
       - run: npm run test:delivery
       - run: npx vitest run
       - run: npx playwright install --with-deps chromium
+      - run: npm run test:auth:render
       - run: npm run test:spaces:navigation
       - run: npm run test:spaces:verification
       - run: npx next typegen

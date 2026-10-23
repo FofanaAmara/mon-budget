@@ -41,3 +41,7 @@ Les travaux de correction reproductibles précédents sont terminés. Rejouer de
 
 ## Tooling repair after user feedback - 2026-10-23
 User explicitly authorized Playwright/Serena repair. Wrong Playwright package returned npm404; official @playwright/mcp0.0.83 now configured and actualMCP initialized with25tools and blank browser test. Serena corrected to Codex context plus auto-project discovery,23tools and real TypeScript symbols passed. Existing conversation still has no exposed Playwright tools until restart. Therefore the earlier inventory is historical; server configuration is no longer an unresolved unknown. Financial feature PlaywrightMCP visual/E2E, real Auth/email and CI gates remain unproven. See .Codex/adhoc/sessions/2026-10-23-mcp-repair.md.
+
+
+## Local authentication corrections - 2026-10-23
+User testing exposed SafariHTTP cookie loss and a separate ChromeAuth upstream error. Recipe now canonical https://localhost:3443 with old3002 redirect and private local certificate (first-use browser approval required). No system trust or Auth protection disabled. Ten reads per true RSC request reduced to one with React request-scoped cache; user/request/failure isolation and production error retry proved.265unit/99PG/9delivery/finalbuild/types/lint pass. Exact historical upstream status unknown; safe numeric diagnostics now available. See session2026-10-23-safari-auth and discoveries010/011. These proofs do not close real hosted login/invitation/receipt/CI/MCP requirements.
