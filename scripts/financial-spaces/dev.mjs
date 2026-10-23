@@ -55,7 +55,7 @@ child.stdout.on('data', chunk => {
       });
       console.log(`Local fixture verified; .env.local and generated compiler files preserved. App: ${recipeHttpsOrigin}`);
       console.log(`Invitation transport: ${mailTransport}. Sending requires an explicit invitation in the app.`);
-      console.log('HTTP localhost:3002 redirects to HTTPS. On first visit, approve the project-only localhost certificate in your browser.');
+      console.log('HTTP localhost:3002 redirects to HTTPS. For macOS certificate setup, run npm run dev:spaces:trust and see docs/local-https.md.');
     } catch (error) { console.error(error.message); child.kill('SIGTERM'); process.exitCode = 1; }
   }
 });

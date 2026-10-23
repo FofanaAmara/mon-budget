@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:spaces": "node scripts/financial-spaces/dev.mjs",
+    "dev:spaces:trust": "node scripts/financial-spaces/trust-local-https.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

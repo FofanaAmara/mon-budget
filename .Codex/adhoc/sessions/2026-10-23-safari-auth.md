@@ -19,3 +19,14 @@ scripts/financial-spaces/local-https.mjs and dev.mjs/README; lib/auth/server.ts;
 
 ## Limits and follow-up
 Exact upstream incident status remains unknown, now recorded safely if repeated. No new retry loop or fake session. Real hosted Safari login must be retried by the user at https://localhost:3443 after approving the local certificate. Financial feature goal remains incomplete; actual two-member invitation, external Resend receipt, global PlaywrightMCP/review and remote CI are separate requirements. No unilateral push/deployment or financial source mutation.
+
+
+## Reconnaissance du certificat local — suite de la demande HTTPS
+
+Plan : `.Codex/plans/safari-local-auth.md`, extension du23octobre. Diagnostic confirmé : le vrai MCPPlaywright est disponible, l’app a été relancée28598, mais le certificat autosigné n’est pas reconnu ; aucune confiance mkcert trouvée dans les trousseaux. Le passage brut àHTTP réintroduirait le rejet des cookiesSecure parWebKit constaté auparavant.
+
+Commande npm dev:spaces:trust ajoutée. Par défaut elle vérifie et affiche le certificat existant, l’empreinteSHA256, la validité et le trousseau utilisateur ; aucune installation. L’option explicite --install appelle security avec politiqueSSL/localhost et trousseauutilisateur, sansstoreadmin ni autoritéCA générale. Refus certificatmultiple, CA, cléincompatible, certificat expiré et autresflags ; documentation de validation et de retrait par empreinte dans docs/local-https.md. Message du runner pointe désormais vers cette préparation au lieu de proposer des avertissements manuels récurrents.
+
+Dry-run réel réussi, confiance inchangée. 11testsdelivery verts, aucunskip ; lint --no-ignore des deuxscripts et du test sortie0/sanswarning. Première vérificationlint ignorait lesscripts selonconfig et a été rejouée explicitement. FixtureCA initiale sans keyCertSign ne représentait pas une CA utilisable pourX509Certificate.ca ; fixture corrigée avec keyCertSign/cRLSign, aucun défaut app masqué. Aucun build/types requis pour ces scriptsJS sans import produit ; pas de nouveau résultat de ces gates prétendu.
+
+Installation non exécutée : elle modifie la confiance du navigateur et la règle de handoff interdit de lever l’avertissement à la place de l’humain. L’utilisateur doit exécuter npm run dev:spaces:trust -- --install ; validation MCP sans exceptionTLS, SW et connexionSafari restent à faire ensuite. Pas de prétendue résolution finale des avertissements. Aucun env, Auth, DB, production, browserflag ou nouveau mail modifié. Préexistantsserena/next-env/CS préservés. Commitlocal sanspush.

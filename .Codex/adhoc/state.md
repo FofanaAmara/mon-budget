@@ -963,3 +963,25 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Décisions prises :** plus de trois tours avec inscriptionBrequérantnouveaucredentialhumain. Pilotage après dialogue égalementreproduit : Chrome principal récupéré etDOMlu, puisconfirm/dismissànouveaupertefocus. Ne pas prétendreChromeglobalementinaccessible niannulationréussie. Aucune autre action sûre identifiée qui clôture un manque réel sans ces dépendances ; répétitions de tests déjà verts n’apporteraient rien.
 **Prochaine étape :** attendre interventionhumaine/externe ; reprendre inscription/acceptation/contributionsàdeux puis gates navigateur/CI/revue restantouverts. Pasdepushsansdemandeexplicite ; pasd’automatisationnouveaumotdepasse/conditions.
 **Contexte pour reprise :** HEAD81a58c7avantcommitdiagnostic. Runtime68803local3443 et copieDBwork17 préservés. IABrecipientTab6signupprérempli/motdepassevide/markHandoff ; Chrome1730267667fichecouplec42…brouillonrenommage nonsauvegardé,dialoguefermémaisDOMinaccessible. Ancien1730267675ferméautomatiquement. MULTITABpreuvesavantpanne conservées.local/resend-recipe,9deliveryverts dernier81a58c7. Aucun nouvelemail/mutationfinancière/Auth/sourceDB/env. Préexistantsserena,next-env,CSpascommiter. AucunDONE ; utiliserupdate_goalblockedaprèscommit etreporterétatretourné.
+
+---
+## [2026-10-23] — HTTPS local sans avertissement, préparation de confiance limitée
+
+**Plan :** `.Codex/plans/safari-local-auth.md`, extension reconnaissancecertificat.
+**Tâche en cours :** commande de préparation/installation explicite du certificat feuille existant.
+**Objectif :** lever les avertissements sans régression Safari ; ne pas transformer le contournement du certificat en validation.
+**État :** IN_PROGRESS
+**Décisions prises :** MCPPlaywright désormais accessible ; app relancée session28598 sur copieDB locale, aucunenvoi automatique. Cert autosigné non reconnu ; ajout de confiance SSLlocalhost utilisateur proposé, pas deCA globale ni cookiesaffaiblis. Installation à faire par humain selon handoff navigateur ; commande dry-run par défaut. Autorisation préparation issue demandehumaine et autonomieexistante. Estimation10–20min ; aucuncoûtpayant.
+**Prochaine étape :** implémenter commande et documentation, checks, puis handoff concret. Préserver préexistantsserena/next-env/CS et n’effectuer aucunpush.
+
+---
+## [2026-10-23] — Préparation de confiance HTTPS vérifiée, activation humaine requise
+
+**Plan :** `.Codex/plans/safari-local-auth.md`, reconnaissance du certificat.
+**Tâche en cours :** correction HTTPS préparée ; activation et validation navigateur non acquises.
+**Objectif :** supprimer les avertissements tout en conservant la connexionSafari.
+**État :** IN_PROGRESS
+**Fichiers touchés :** script trust-local-https.mjs, package.json, dev.mjs(message), docs/local-https.md, testdelivery, plan/tasks/session/state/mémoire.
+**Décisions prises :** confiance feuille exacte SSLlocalhost/trousseauutilisateur uniquement. Dry-run par défaut, installation exclusivement --install parhumain ; aucuntrousseau modifié. 11deliveryverts etlint ciblé --no-ignore0warning. Aucun Auth/cookie/DB/env/production modifié.
+**Prochaine étape :** utilisateur exécute `npm run dev:spaces:trust -- --install`, confirme macOS si demandé ; ensuite tester le vrai MCPPlaywright sansignoreHTTPSErrors, Safari etSW. Ne pas déclarer les avertissements résolus avant ces preuves.
+**Contexte pour reprise :** certificat privé existant.local/financial-spaces/https/localhost.pem nonCA, validejusqu’au22novembre2026 ; empreintefin7D:0D montrée au dry-run. Runtime28598HTTPS3443,HTTP3002redirige. NouveauMCP désormaisaccessible ; testanonyme refusecertnonreconnu. Inscriptionréelle etgatesgoalencoreouverts. Scripts/testsansbuildproduit ; aucunpush ni servicepayant. Préexistantsserena/next-env/CSexclus ducommit. Goalprécédemmentbloqué, cetrajustementneleclôturepas.
