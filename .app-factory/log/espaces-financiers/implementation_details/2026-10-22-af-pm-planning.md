@@ -38,3 +38,11 @@ Après la proposition consolidée du lead, l’humain répond « ok ça me va »
 Courriel vérifié, lien précis, durée de sept jours, onglets indépendants, classification préférences/guide, départ/exclusion/suppression ne sont pas devenus des décisions humaines. La conception d’expérience `/cs-create-experience` est autorisée et orchestrée séparément par le lead ; cet amendement ne réalise ni cette conception ni le build. Les quatre décisions ne doivent plus être redemandées. Le verdict de build reste NOT READY en l’absence de conception, dimensionnement équipe et plan validé.
 
 Contrôles réexécutés : 16 exigences couvertes, 6 stories et 30 AC Given/When/Then, dépendances précédentes sans cycle, liens Markdown locaux valides et `git diff --check` sans erreur. Aucun code applicatif ni commit de cet agent ; brief stabilisé signalé au lead pour la suite CS.
+
+## Après approbation humaine des maquettes — mise à jour documentaire par le lead
+
+L’humain approuve explicitement le prototype React corrigé (`7aaec6d`) puis demande d’actualiser le backlog. Les décisions UX sont intégrées aux exigences et aux AC : choix personnel/partagé avec invitation conditionnelle ; page publique annonçant l’invitation avec connexion/inscription existantes et acceptation distincte ; sidebar sélecteur seul ; liste et création dans réglages puis fiche par espace, sans changement implicite du contexte actif. FR-010 rend la liste et la gestion par fiche explicitement traçables dans ESP-003 ; pas de nouvelle story technique.
+
+Brief, six parcours existants (AC de001/003/004/005/006 amendés), couverture, readiness, index et état feature sont alignés. Design APPROUVÉ ; stories REFINED et build NOT READY tant que préparation technique/dimensionnement/sûreté restent à traiter. Prochaine priorité inchangée. Ni estimation, ni auth/transport réels, ni migration, ni fin d’implémentation inventés.
+
+Contrôles exécutés :17 exigences couvertes,6 stories,30 AC Given/When/Then, dépendances uniquement précédentes et liens Markdown locaux existants. git diff --check propre. Aucun test applicatif/build relancé pour cette modification purement documentaire. Les résultats du prototype sont référencés comme simulations, sans certification de services réels.

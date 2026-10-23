@@ -3,7 +3,7 @@
 Generated: 2026-03-04 by af-bootstrap-backlog
 Updated: 2026-10-22 by af-pm — espaces financiers, nouvelle priorité humaine immédiate
 Historique du dashboard : 22 features et compteurs du 2026-03-07 conservés ci-dessous ; non recertifiés.
-Ajout 2026-10-22 : 1 epic, 1 feature, 6 stories ESP. Statut de la nouvelle feature : NOT READY pour build ; ESP-001 prêt pour conception.
+Ajout 2026-10-22 : 1 epic, 1 feature, 6 stories ESP. Statut de la nouvelle feature : DESIGN APPROUVÉ ; NOT READY pour build, ESP-001 prêt pour plan technique.
 
 ## Prochaine priorité — Espaces financiers (décision humaine du 2026-10-22)
 
@@ -11,10 +11,10 @@ Ajout 2026-10-22 : 1 epic, 1 feature, 6 stories ESP. Statut de la nouvelle featu
 
 - Epic : `finances-partagees` ; feature : [espaces-financiers](epics/finances-partagees/features/espaces-financiers/feature-brief.md).
 - Ordre : ESP-001 premier espace → ESP-002 conservation existants → ESP-003 création/bascule → ESP-004 invitation compte existant → ESP-005 inscription invitée → ESP-006 invitation onboarding.
-- [Readiness](epics/finances-partagees/features/espaces-financiers/readiness.md) : premier incrément prêt à concevoir ; feature complète NOT READY pour build (conception, dimensionnement et plan).
+- [Readiness](epics/finances-partagees/features/espaces-financiers/readiness.md) : maquettes React approuvées ; premier incrément prêt pour plan technique, feature complète NOT READY pour build (dimensionnement, plan et sûreté de migration/isolation).
 - Source : `.Codex/inputs/espaces-financiers/input.md` ; [couverture](epics/finances-partagees/coverage-map.md).
 
-Les quatre décisions complémentaires sont validées : invitations par courriel et visibles après connexion ; nouvel invité rejoignant directement le commun sans espace personnel supplémentaire forcé ; reprise du dernier espace utilisé ; « Mes finances » modifiable pour les comptes existants. La conception d’expérience est autorisée ; aucun build applicatif encore validé.
+Les quatre décisions complémentaires sont validées : invitations par courriel et visibles après connexion ; nouvel invité rejoignant directement le commun sans espace personnel supplémentaire forcé ; reprise du dernier espace utilisé ; « Mes finances » modifiable pour les comptes existants. Les maquettes React corrigées ont été approuvées par l’humain. Onboarding avec partage conditionnel, invitation publique vers auth existante, sidebar sélecteur seul et gestion liste/détail dans réglages font partie des critères. Aucun build applicatif encore validé.
 
 ### Avertissement sur les états historiques
 

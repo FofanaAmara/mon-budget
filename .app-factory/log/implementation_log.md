@@ -17,3 +17,5 @@ Pour les details, voir les sous-dossiers par feature dans `.app-factory/log/`.
 
 | 2026-10-22 | espaces-financiers / PM | Priorité humaine immédiate ; 6 stories verticales, exigences/couverture, propositions produit et readiness distincte premier incrément/feature | Backlog raffiné ; ESP-001 prêt à concevoir ; feature NOT READY pour build |
 | 2026-10-22 | espaces-financiers / PM amendement | Quatre propositions approuvées intégrées à l’input et au backlog ; autres choix restent propositions ; conception d’expérience autorisée séparément | Cadrage actualisé ; build toujours non commencé |
+
+- 2026-10-22 — Espaces financiers : backlog aligné sur maquettes React corrigées approuvées par l’humain (7aaec6d). Onboarding conditionnel, invitation publique/auth existante, sidebar sélecteur seul et réglages liste/création/détail. 17 exigences/6 stories/30 AC vérifiés ; design approuvé, préparation technique suivante, aucune implémentation métier déclarée. Détails : espaces-financiers/implementation_details/2026-10-22-af-pm-planning.md.

@@ -177,3 +177,7 @@ Ces décisions précisent les sections précédentes et priment sur les ancienne
 - Invitation avant authentification : page explicite « Tu as été invité dans un espace », nom de l’espace, choix Se connecter ou Créer un compte renvoyant vers les pages existantes. Après authentification, acceptation explicite distincte.
 - Sidebar : uniquement la liste déroulante pour changer d’espace ; aucune création, gestion, liste de membres ou action d’invitation à cet endroit.
 - Réglages > Espaces et membres : liste de mes espaces accessibles et bouton de création. Clic sur un espace : sa fiche détail pour renommer, voir les membres et inviter. Consulter un détail ne change pas le contexte actif ; actions ciblées sur cet espace.
+
+## Approbation humaine de la conception — 2026-10-22
+
+Après test des maquettes corrigées, l’humain confirme « ok c’est parfait ça me va », puis demande la mise à jour du backlog. Référence approuvée : `cs-design/mes-finances/features/espaces-financiers-essai-02/`, version commit `7aaec6d`, React simple sans Storybook ni bibliothèque. Les décisions UX de la section précédente sont acquises. Cette approbation porte sur les maquettes, pas sur un plan technique ou une preuve d’implémentation réelle ; préparer le plan reste l’étape suivante.

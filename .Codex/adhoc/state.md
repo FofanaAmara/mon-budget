@@ -65,3 +65,25 @@
 **Décisions prises :** question de partage obligatoire, non sans invitation ; landing publique vers deux routes auth ; sidebar sélecteur seul ; liste/création dans réglages, détail par ID sans bascule implicite.
 **Prochaine étape :** humain teste onboarding, invitation publique et liste puis détail ; intégrer seulement après mandat.
 **Contexte pour reprise :** serveur4301 conservé actif. Liens /?scenario=onboarding, /?scenario=signup (landing publique), /auth/sign-in?scenario=signup, /auth/sign-up?scenario=signup, /parametres/espace?scenario=couple (liste), /parametres/espace/couple?scenario=couple (détail). Parcours vérifiés375×812/1280×900 et rename espace non actif. Preuves ignorées proofs/revision-*.png. Dernier build0,1,18s. Auth simulée uniquement. Modifications préexistantes .serena/project.yml et next-env.d.ts exclues ; anciennes maquettes HTML non suivies conservées. Aucun push.
+
+---
+## [2026-10-22] — Mise à jour backlog après approbation design
+**Plan :** .Codex/plans/cs-espaces-financiers.md, révision backlog.
+**Tâche en cours :** aligner sources AF avec les maquettes explicitement approuvées.
+**Objectif :** préparer le passage au plan technique, prochaine priorité inchangée.
+**État :** IN_PROGRESS
+**Fichiers touchés :** backlog espaces-financiers, couverture/index, état feature, input et logs.
+**Décisions prises :** design approuvé ; aucune implémentation/estimation/validation technique déduite.
+**Prochaine étape :** exigences, AC, readiness puis contrôles documentaires et commit.
+**Contexte pour reprise :** demande humaine actuelle limitée à backlog. Plan/code/migration métier non autorisés par ce tour. Préserver .serena/project.yml et next-env.d.ts préexistants ; pas de push.
+
+---
+## [2026-10-22] — Backlog espaces financiers actualisé
+**Plan :** .Codex/plans/cs-espaces-financiers.md, révision backlog.
+**Tâche en cours :** remise du backlog aligné sur design approuvé.
+**Objectif :** sources prêtes pour préparation technique.
+**État :** DONE (mise à jour documentaire).
+**Fichiers touchés :** input et suivi ; backlog/coverage/index, état feature et logs AF.
+**Décisions prises :** design approuvé lié à prototype7aaec6d ;17 exigences et6 stories/30 AC ; build non prêt tant que plan/dimensionnement/sûreté non validés, priorité immédiate maintenue.
+**Prochaine étape :** sur mandat humain, préparer plan technique ESP-001 et stratégie de conservation/isolation/migration.
+**Contexte pour reprise :** toutes décisions UX validées intégrées. Référence .app-factory/backlog/epics/finances-partagees/features/espaces-financiers/feature-brief.md et readiness.md. Contrôles de couverture, GWT, dépendances et liens locaux passés ; diff-check propre. Aucun code ou migration exécuté. Préserver .serena/project.yml/next-env.d.ts préexistants ; aucun push.

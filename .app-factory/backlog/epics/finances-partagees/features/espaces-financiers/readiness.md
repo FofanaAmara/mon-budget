@@ -1,42 +1,46 @@
-# Examen de readiness — 2026-10-22
+# Examen de readiness — actualisé le 2026-10-22 après validation des maquettes
 
-Agent : af-pm. Portée : backlog uniquement, aucune validation d’implémentation.
+Portée : backlog et préparation de la prochaine priorité. Aucune implémentation métier déclarée.
 
 ## Verdicts distincts
 
-- **ESP-001 : READY pour conception et plan technique**, pas READY pour build. Le besoin utilisateur est décidé : nommer un premier espace, démarrer seul, utiliser l’application, voir une seule option dans la sidebar. Transport d’invitation, mobile détaillé et cycle de vie ne bloquent pas ce cadrage. Pas de maquette, estimation de l’équipe ni plan technique validé à ce stade : la DoR complète n’est pas acquise.
-- **Feature complète : NOT READY pour implémentation**. Les choix produit indiqués ci-dessous, le dimensionnement et le plan technique restent à traiter. Ce verdict ne bloque pas la préparation immédiate de l’incrément initial.
+- **Design : APPROUVÉ par l’humain**, après test et corrections du prototype React, commit `7aaec6d` : « ok c’est parfait ça me va ». Référence et limites dans le [brief](feature-brief.md#design-approuvé-après-test-humain--2026-10-22).
+- **ESP-001 : READY pour préparation du plan technique**, design disponible ; pas READY pour build tant que le plan et les preuves de sûreté nécessaires ne sont pas préparés/validés.
+- **Feature complète : NOT READY pour build**. Le design n’est plus un blocage. Dimensionnement, architecture de contexte, conservation/migration, isolation et points produit restants doivent être traités avant les parcours concernés.
+- Les six stories restent REFINED, prochaine priorité immédiate ; aucune n’est DONE ou en cours de développement.
 
 ## Résultats des contrôles AF
 
 | Contrôle | Résultat | Conclusion |
 |----------|----------|------------|
-| Couverture | 9 FR, 3 NFR, 2 UXR et 2 TR tous associés à des stories | PASS documentaire ; aucune preuve d’implémentation |
-| Dépendances | 6 stories ; uniquement vers des numéros précédents ; aucun cycle | PASS ; parcours mental 001 seul, 002 après 001, 003 après conservation, invitations ensuite |
-| Qualité | Chaque story : persona/objectif/bénéfice, 5 AC Given/When/Then, parcours nominal, erreur et limites, scénarios e2e | PASS documentaire |
-| Valeur utilisateur | 6 titres décrivent une action/expérience observable dans l’application ; aucune story par couche | PASS |
-| Alignement | Epic par résultat utilisateur ; architecture et entités au premier usage laissées au Builder | PASS |
-| Taille | 5 AC par story, mais conservation globale (002) et contextualisation globale (003) à risque | NON ÉTABLI : nombre d’AC ne prouve pas une session ; avis et estimation de l’équipe requis |
-| Design / technique | Pas de maquette ni plan technique validé ; assurance et sûreté migration non classifiées par le Builder | NON ACQUIS : requis avant build selon protocole applicable |
+| Couverture | 10 FR, 3 NFR, 2 UXR et 2 TR associés aux stories | PASS documentaire ; 17 exigences, aucune preuve d’implémentation |
+| Dépendances | 6 stories, uniquement vers des numéros précédents | PASS, aucun cycle ni découpage par couche |
+| Critères | 5 AC Given/When/Then par story, 30 au total | PASS documentaire ; nominal, erreurs et limites maintenus |
+| Design | Maquettes React corrigées approuvées par le sponsor | ACQUIS pour l’expérience ; simulation locale seulement |
+| Taille | Conservation globale002 et contextualisation003 à risque | NON ÉTABLI : estimation/dimensionnement requis, aucun point ni date inventé |
+| Technique | Plan, assurance et sûreté migration pas encore validés | NON ACQUIS : à préparer avant build |
 
-Les points ne sont pas inventés par le PM : l’agent interdit d’estimer le travail technique et aucune estimation de l’équipe n’a eu lieu. Aucun pourcentage de capacité sprint/MoSCoW n’est certifié en l’absence de sprint défini.
+## Décisions produit et UX acquises
 
-## Décisions produit désormais validées
+- Tous les membres ont tous les droits, sans privilège du créateur.
+- Invitations par courriel, également visibles après connexion ; nouvel invité pouvant rejoindre directement le commun sans espace personnel supplémentaire forcé.
+- Dernier espace utilisé repris ; données existantes dans « Mes finances », nom modifiable.
+- Onboarding : nom et question explicite du partage. Non crée sans page invitation ; Oui la propose, sans rendre l’envoi obligatoire.
+- Page d’invitation avant authentification : annonce explicite de l’espace, boutons Se connecter / Créer un compte vers les pages existantes ; acceptation distincte après authentification.
+- Sidebar desktop/mobile : uniquement le sélecteur pour la section espace. Avec une seule appartenance, option unique et aucune bascule.
+- Réglages > Espaces et membres : liste de mes espaces et création, clic vers fiche pour renommer, voir les membres et inviter. Consulter une fiche ne change pas l’espace actif.
 
-L’humain a approuvé le 2026-10-22 : invitation par courriel et visible après connexion ; accès direct de l’invité au commun sans espace personnel supplémentaire forcé ; reprise du dernier espace utilisé à la connexion ; nom « Mes finances » modifiable pour le premier espace des comptes existants. Ces quatre points ne sont plus des blocages produit.
+Ces décisions et l’approbation du design ne doivent pas être redemandées.
 
-## Points restants pour la conception et l’implémentation
+## Points restants avant implémentation des parcours concernés
 
-- ESP-003 et accueil ESP-005/006 : portée entre onglets/appareils, repli si le dernier espace est inaccessible, classification des préférences et progression du guide. Propositions du brief à examiner sans les attribuer à l’humain.
-- ESP-004/005/006 : mécanisme garantissant le bon destinataire, lien éventuel et cycle d’invitation. Courriel vérifié, sept jours, renvoi/annulation/refus restent des propositions ; seul le canal courriel et la visibilité après connexion sont validés.
-- Ensemble : conception de l’expérience autorisée via `/cs-create-experience`, puis dimensionnement équipe, plan technique et validation avant build. Aucun de ces livrables n’est réputé déjà réalisé.
+- Inventorier tous les chemins de données/traitements/caches et concevoir le contexte ; classifier préférences individuelles vs financières et progression du guide, onglets/appareils et repli si un espace devient inaccessible.
+- Concevoir une migration conservant montants, relations et unicité des instances ; stratégie de reprise, classification de sûreté/assurance et tests réels d’isolation à deux membres et un non-membre. Examiner les discoveries et l’échec de test cités dans l’input, sans les supposer résolus.
+- Garantir le bon destinataire et la continuité de l’invitation entre page publique, auth et acceptation. Vérification du courriel, durée de sept jours, modalités de renvoi/annulation/refus restent des propositions ; un bouton simulé ne les valide pas.
+- Dimensionner ESP-002/003 et redécouper par capacité utilisateur si nécessaire, sans stories DB/API/UI. Préparer le plan technique et le faire valider avant exécution.
 
-La feature reste NOT READY pour build au titre de la DoR technique/design non acquise ; la conception peut avancer avec ces quatre décisions fermes. Les règles produit supplémentaires doivent être examinées avant d’implémenter le parcours affecté.
-
-Les propositions de durée/renvoi/annulation/refus sont regroupées dans le brief pour validation ; aucune obligation supplémentaire n’est présentée comme acquise. Le périmètre recommandé reporte départ/exclusion/suppression d’espace. Si ces actions sont retenues dans la première livraison, leurs règles deviennent un blocage avant leur implémentation, sans privilège du créateur.
-
-Le sélecteur mobile précis, les règles de longueur du nom et les détails visuels à une option relèvent normalement de la conception. Ils ne constituent pas, isolément, des inconnues produit empêchant ESP-001.
+Le report des actions de départ/exclusion/suppression reste une proposition de périmètre ; aucune action destructrice ni rôle propriétaire ne s’ajoute tacitement.
 
 ## Prochaine action
 
-Préparer le plan technique d’ESP-001 et la stratégie d’ensemble permettant de conserver puis isoler toutes les finances. Faire examiner les risques/tailles de 002 et 003, sans découpage DB/API/UI. Présenter au propriétaire du produit le plan et les seules propositions restantes avant l’implémentation des parcours affectés. Ne pas redemander les quatre décisions déjà validées. Le backlog a bien la priorité demandée ; ni l’input ni cette priorité ne valent validation d’un plan absent.
+Préparer le plan technique d’ESP-001 et la stratégie d’ensemble de conservation/isolation, avec migration introduite dans la story qui en a besoin. Le mandat de cette mise à jour reste documentaire : pas de migration, d’envoi réel, de développement applicatif ou de push.
