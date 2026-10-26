@@ -31,7 +31,7 @@ Ces décisions et l’approbation du design ne doivent pas être redemandées.
 ## Conditions de clôture restantes
 
 1. ESP002/AC1 : vraie nouvelle connexion du compte historique. Recharger sa session et consulter l’historique ne sont pas assimilés à une déconnexion/connexion.
-2. Retour HTTP explicitement demandé : TLS désactivé, service worker réellement activé sur HTTP3002 ; purge ancien cache privé à vérifier. Connexion Safari en HTTP non validée avec les cookies Secure Neon inchangés.
+2. Retour HTTP explicitement demandé : TLS désactivé, service worker réellement activé sur HTTP3002 ; purge ancien cache privé à vérifier. Connexion/reload/navigation/signout WebKit26 et ChromiumMCP vérifiés via profilHTTPloopback ; SDK/cookies production inchangés. Safari natif utilisateur à confirmer.
 3. Retour avec BFCache réellement actif ; retour documentaire404 après changement d’acteur acquis, navigateur MCP BFCache désactivé donc aucune preuve persisted=true.
 4. CI distante entièrement verte sur SHA livré, après autorisation de push. Qualité/revue locales ne remplacent pas la CI. Aucun push/déploiement autorisé actuellement ; origine/callback production à vérifier avant release autorisée.
 

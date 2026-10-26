@@ -53,3 +53,7 @@ Conclusion : l’enabler de lancement BFCache est acquis, mais sa recette réell
 ### 14:53 — HTTPS local désactivé sur demande explicite
 
 UserdemandeHTTP, décisionprioritaire suranciennepistetrust. RunnerHTTP3002direct/APP_ORIGINHTTP ; docsactualisées, commentaireHSTSclarifié, pasAuth/prod/env/DBsource.16831arrêt0,58028démarrégardeDBvalidée. HTTP200sansredirect/HSTS,3443plusécouté ; renduMCPcapturé/inspecté, SWactivated/controllertrue,console0erreur. nodecheck/11deliveryverts. SafariHTTPnonvalidé, SecureNeoninchangé ; cette limite annoncée avant/aprèsmodification. Aucunservicepayantnouveau, coûtprécisindisponible ; aucuneémissionau démarrage. Commit local de cette tâche nécessaire, pasdepush.
+
+### 15:11 — Safari HTTP : cookies locaux et navigation Auth corrigés
+
+DeuxREDWebKitréels : Secure rejeté, puis sessionauthentifiée avecnavigationfigée. GatewaydevHTTPlocalisoléetnavigate/replaceAuthdocumentaires sansrefreshconcurrent réparentlesdeux. GREENWebKitconnexion/reload/depenses7.89existante/signout0cookie, capturesinspectées ; MCPChromiumvraieconnexion/reload/signout/reconnexion.266unit/14delivery/build/types/lintverts, revueindépendantegatewayetproviderfavorable. TestscollisionportsfixespuisEPERMsandboxcorrigés/rejoués, aucunéchecignoré. SDK/production/donnéessource/envinchangés, aucunmailtestenvoyé. AuthnatifSafari reste àconfirmerhumain, pasrenommageWebKit→Safari/MCP. Runtime61868HTTP3002gateway/Next3003surcopieisoléelaissévivant ; commitlocalàfaire.

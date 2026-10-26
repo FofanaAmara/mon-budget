@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import dotenv from 'dotenv';
+import { startLocalHttpAuthGateway } from './local-http-auth.mjs';
 import { restoreGeneratedConfigs } from './generated-config.mjs';
 import { root, localConnection, port, username, password } from './local-fixture.mjs';
 
@@ -35,16 +36,22 @@ function restoreGeneratedFiles() {
 }
 
 const child = spawn(process.execPath, [
-  'node_modules/next/dist/bin/next', 'dev', '--hostname', '127.0.0.1', '--port', '3002',
+  'node_modules/next/dist/bin/next', 'dev', '--hostname', '127.0.0.1', '--port', '3003',
 ], {
   cwd: root, env: environment, stdio: ['inherit', 'pipe', 'inherit'],
 });
+let gateway;
 child.stdout.on('data', chunk => {
   process.stdout.write(chunk);
   if (/Ready in/.test(chunk.toString().replace(/\x1b\[[0-9;]*m/g, ''))) {
     try {
       // Next can announce Ready again after a config-triggered restart.
       restoreGeneratedFiles();
+      gateway ??= startLocalHttpAuthGateway({ onError(error) {
+        console.error('Local HTTP gateway could not start:', error.code ?? 'unavailable');
+        child.kill('SIGTERM');
+        process.exitCode = 1;
+      } });
       console.log(`Local fixture verified; .env.local and generated compiler files preserved. App: ${recipeOrigin}`);
       console.log(`Invitation transport: ${mailTransport}. Sending requires an explicit invitation in the app.`);
       console.log('Local HTTP only: no certificate, HTTPS listener or HTTP-to-HTTPS redirect.');
@@ -67,6 +74,7 @@ for (const file of watched) {
 }
 for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => child.kill(signal));
 child.on('exit', code => {
+  gateway?.close();
   for (const file of watched) fs.unwatchFile(file);
   try { restoreGeneratedFiles(); } catch (error) { console.error(error.message); process.exitCode = 1; }
   process.exitCode ??= code ?? 1;

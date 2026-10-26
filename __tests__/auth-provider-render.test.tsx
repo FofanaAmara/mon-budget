@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { beforeEach, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { AuthUIContext } from '@neondatabase/auth/react';
 import { AuthProviders } from '@/app/providers';
 
@@ -10,7 +10,11 @@ const state = vi.hoisted(() => ({
 vi.mock('next/navigation', () => ({ useRouter: () => state }));
 vi.mock('@/lib/auth/financial-visibility', () => ({ invalidateFinancialViews: state.invalidate }));
 
-beforeEach(() => vi.clearAllMocks());
+beforeEach(() => {
+  vi.clearAllMocks();
+  vi.stubGlobal('window', { location: { assign: state.push, replace: state.replace } });
+});
+afterEach(() => vi.unstubAllGlobals());
 
 it('renders the real Auth UI context and notifications without an inline theme script', async () => {
   let context: React.ContextType<typeof AuthUIContext> | undefined;
@@ -32,5 +36,7 @@ it('renders the real Auth UI context and notifications without an inline theme s
   expect(state.push).toHaveBeenCalledWith('/auth/sign-in');
   await context?.onSessionChange?.();
   expect(state.invalidate).toHaveBeenCalledWith({ notifyCurrent: false });
-  expect(state.refresh).toHaveBeenCalledOnce();
+  context?.replace('/invitation/opaque-return');
+  expect(state.replace).toHaveBeenCalledWith('/invitation/opaque-return');
+  expect(state.refresh).not.toHaveBeenCalled();
 });

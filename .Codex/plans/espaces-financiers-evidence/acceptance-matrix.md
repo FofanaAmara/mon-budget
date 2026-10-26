@@ -109,7 +109,7 @@ Références complémentaires dans resend-real-execution.md : **FIRST-ONBOARDING
 Gates encore ouverts :
 
 1. Nouvelle connexion explicite du compte historique pour ESP-002/AC-1. La session A existante revalidée et l’historique consulté ne sont pas présentés comme une nouvelle saisie Auth.
-2. Décision humaine HTTP-LOCAL-REAL : TLS local désactivé, confiance du certificat non requise pour ce profil. Service worker HTTP réellement activé/contrôleur présent ; purge d’un ancien cache privé encore non prouvée. Connexion Safari HTTP non validée, cookies Secure Neon inchangés.
+2. Décision humaine HTTP-LOCAL-REAL : TLS local désactivé, confiance du certificat non requise pour ce profil. Service worker HTTP réellement activé/contrôleur présent ; purge d’un ancien cache privé encore non prouvée. Profil cookies HTTP loopback et navigation Auth documentaire vérifiés sur WebKit26 et ChromiumMCP ; Safari natif utilisateur à confirmer. Cookies Neon de production inchangés.
 3. BFCACHE-PREFLIGHT-MCP : navigateur isolé lancé depuis le vrai MCP avec le drapeau de désactivation retiré et TLS intact ; navigation app refusée ERR_CERT_AUTHORITY_INVALID, contexte fermé. Le moyen de test est disponible sans changer la configuration globale ; depuis HTTP-LOCAL-REAL il reste à rejouer sur HTTP3002, sans blocage de certificat. Retour avec BFCache effectivement actif : retour documentaire réel après changement d’acteur =404 acquis ; motifs CDP montrent BFCache désactivé dans ce navigateur MCP, donc pas de preuve persisted=true.
 4. CI distante verte sur le SHA livré. Aucun push autorisé ni effectué ; qualité locale ne remplace pas ce gate. Origine/callback/variables de production restent à vérifier avant un déploiement autorisé.
 
@@ -117,4 +117,4 @@ Acquis globaux : deux parcours de destinataire depuis de vrais emails Resend re�
 
 Réconciliation d’envoi incertain : runbook et statement sur clone synthétique acquis ; aucune intervention réelle nécessaire en l’absence d’incident. Après23h, ne pas renvoyer aveuglément ; vérifier fournisseur/réception et autorisation.
 
-URL locale actuelle : http://localhost:3002 directement, sans redirection HTTPS. Runtime Resend58028 HTTP, copie spaces_work17. Aucune migration de production, aucun push/déploiement. Ancien audit delivery-current-audit.md reste un relevé historique au5101fa5 ; l’état courant est cette matrice et resend-real-execution.md.
+URL locale actuelle : http://localhost:3002 directement, sans redirection HTTPS. Runtime Resend61868 HTTP, copie spaces_work17. Aucune migration de production, aucun push/déploiement. Ancien audit delivery-current-audit.md reste un relevé historique au5101fa5 ; l’état courant est cette matrice et resend-real-execution.md.

@@ -71,3 +71,17 @@ Le parent rapporte la recette réelle achevée : panne SMTP et erreur/reprise vi
 ## Audit de couverture complémentaire — 26 octobre
 
 Instance distincte financial_spaces_review : revue des critères littéraux et preuves composées, sans nouvelle mutation de code ni test revendiqué. Avis initial28/30AC, puis confirmation29/30 après LEGACY-HISTORY-REAL : consultation Chrome A/CUA du compte réellement mappé, historique et compteurs SQL cohérents complètent ESP002/AC2 avec PG/MIG. ESP002/AC1 reste partiel : une session revalidée ne remplace pas une nouvelle connexion. Aucun autre test financier nécessaire pour cette tranche, aucun défaut de code supplémentaire identifié.17exigences littérales vérifiables ; DoD/CI/SW/BFCache restent des gates distincts et ouverts. Cet avis de couverture ne constitue pas une approbation de release.
+
+## Complément Safari HTTP — instance distincte financial_spaces_review
+
+Gatewaylocal : aucunfindingbloquant, portéeimportsrunnertestsuniquement, bindloopback/Hostborné/upstreamlocal/ancienscookiesHTTPSfiltrés, valeurs/HttpOnly/SameSite/expiration/chunkspréservés.3testsciblésréellementverts aprèsreprisehôte de listenEPERM sandbox ; aucunfichiermodifiéparreviewer.
+
+Provider : avisfavorable sansnouveaufinding, SDKuseOnSuccessTransitionrevurefetchSession→awaitonSessionChange→navigate. Suppressionrefreshretirecourse ;retourinvitationvalidé/linksSSRinchangés, nouveauxdocuments etmasquageancienscontenusconservés, storageinvalidationautresongletsmaintenue. OnSessionChangepasunrefreshgénéralprofilperdu ;multiSessionfalse.15testsprovider/retourréellementverts. WebKitGREENetqualitéglobaleconstatésparparent, pasrevendiquéscommeexécutésparreviewer.
+
+Empreintes des sources revues et testées :
+
+- scripts/financial-spaces/dev.mjs : d800be59b71791900383492a4e7ad86724e0fa406d1f8e2ed8852e4426b83ea4
+- scripts/financial-spaces/local-http-auth.mjs : ea53b3f51b97475091f52dd7dfe7da913e96ae0a6e8de9e93c17f67d368d6d43
+- __tests__/delivery/local-http-auth.test.mjs : 756dfa53afb2a8190903818d08a004ee401e6c84b133ed6269cd242c7f363928
+- app/providers.tsx : c41909a536d0c2aec342ff6096fd4001b247b40eec5d86c375894772d3f01400
+- __tests__/auth-provider-render.test.tsx : 8daa92cd59ce56801063b30fb206459bbb21b18c9b26ed162ffbe708b6943063

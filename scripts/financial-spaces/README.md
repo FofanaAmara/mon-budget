@@ -223,9 +223,12 @@ starts an HTTPS listener or redirects HTTP to3443. APP_ORIGIN is HTTP for new
 invitations. Existing emailed HTTPS links retain their old origin; replace only
 the origin with http://localhost:3002 for local testing. No mail is sent at startup.
 
-Neon Auth still issues Secure/__Secure cookies. WebKit rejection on HTTP was
-previously reproduced, so Safari login remains unverified/unresolved under this
-profile. No cookies are renamed or downgraded, and production HSTS remains intact.
+Neon Auth still issues Secure/__Secure cookies upstream. The local runner now
+uses a loopback-only HTTP cookie profile on3002 (Next internally on3003): local
+cookie names, host-only, HttpOnly/Lax, unchanged values/expiry; canonical Neon
+names restored upstream. Production Auth/cookies/HSTS remain unchanged. Existing
+HTTPS cookies are not reused: sign in again. Real WebKit26 login/reload/navigation/
+sign-out and Chromium MCP were verified; native user Safari is not claimed.
 See docs/local-https.md for the current transport and historical HTTPS tools.
 
 `npm run test:auth:render` builds an isolated Next production fixture under `.local/`, using the real Auth reader/error component and a synthetic HTTPS Auth upstream. It proves one read per RSC request, fresh separate requests/users, recovery after upstream failure and a working full-page retry button. No hosted Auth or financial database is used. Successful fixture source/build files are removed before CI typegen; failed fixtures and logs remain private for diagnosis.

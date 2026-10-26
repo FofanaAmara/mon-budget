@@ -134,3 +134,13 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Vérifier réponse, rendu et service worker | runtimeHTTP | COMPLETED :200 sansLocation/HSTS,3443sanslistener, captureMCP inspectée, SWactivated/contrôleur présent |
 | Contrôles existants | vérifications | COMPLETED :nodecheck et11delivery0 ; tranche à commiter localement sanspush |
 | Connexion Safari en HTTP | cookiesNeonSecure | NON VALIDÉE : aucune modification de cookies ; ancien rejetWebKit reste pertinent |
+
+## Correction connexion Safari HTTP — 26 octobre
+
+| Tâche | Dépendance | État |
+|---|---|---|
+| Reproduire les deux défauts WebKit | HTTP demandé | COMPLETED : Secure rejeté puis sessionvalidemaisnavigationfigée |
+| Transport HTTP local et transitionsAuth documentaires | causesreproduites | COMPLETED : gatewaydevloopback, SDK/prodinchangés ; concurrence refreshsupprimée |
+| Recette et garde de régression | correction | COMPLETED : WebKitlogin/reload/depenses/signout0cookie, MCPChromiumlogin/reload/signout/relogin |
+| Qualité et revue | sourcescourantes | COMPLETED :266unit/14delivery/build/types/lint0 ; revueindépendante3+15testsverts |
+| Confirmation Safari natif | humainSafari | À CONFIRMER : moteurWebKitprouvé, pasnavigateurSafarihumain piloté |

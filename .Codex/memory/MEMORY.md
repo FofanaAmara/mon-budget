@@ -47,3 +47,5 @@
 
 - [Portée des consignes d’un outil](feedback_tool_policy_scope.md) — distinguer la règle de l’outil actif d’une interdiction globale ; blocage de recette erroné corrigé.
 - [Revalidation de l’onboarding](feedback_onboarding_revalidation.md) — conserver le parcours de récupération déjà monté, sans figer l’identité ni les autorisations.
+
+- [Navigation Auth et refresh concurrents](feedback_auth_navigation_race.md) — distinguer session API valide et arrivée réelle ; transitions Auth documentaires, invalidation des autres onglets conservée.

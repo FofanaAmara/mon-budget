@@ -12,12 +12,20 @@ de recette existant, remplacer uniquement cette origine par
 Les liens déjà envoyés ne sont pas réécrits et aucune invitation n’est renvoyée
 automatiquement.
 
-**Limite connue :** Neon Auth 0.6.0-beta utilise des cookies `__Secure-*` avec
-`Secure`. Le rejet de ces cookies en HTTP local par WebKit a été reproduit ;
-ce retour HTTP ne prouve donc pas la correction de la connexion Safari.
-Les cookies Auth ne sont ni renommés ni réécrits pour retirer `Secure`.
+Le runner fournit un profil de cookies compatible HTTP : une passerelle liée
+uniquement à127.0.0.1:3002 transmet vers Next sur127.0.0.1:3003. Elle utilise
+un nom de cookie propre au profil local, sansSecure et sansDomain, en conservant
+HttpOnly, SameSite=Lax, la valeur signée et son expiration. Les noms attendus
+par Neon sont restaurés côté serveur. Le SDK et les cookies de production ne
+sont pas modifiés. Ne pas utiliser directement le port interne3003.
+
+Une nouvelle connexion est nécessaire : les anciens cookies HTTPS ne sont pas
+repris implicitement. Le parcours connexion/rechargement/navigation/déconnexion
+a été exécuté sur WebKit26 et ChromiumMCP ; WebKit ne constitue pas un test du
+Safari natif de l’utilisateur. Les transitions Auth chargent un nouveau document
+pour éviter la concurrence entre navigation et rafraîchissement RSC.
 
 Les anciens outils HTTPS restent disponibles pour diagnostic explicite, mais
 le runner ne génère plus de certificat et ne configure aucune confiance.
 Aucun changement de trousseau, aucune suppression de clé/certificat et aucune
-modification des cookies ou du HTTPS de production ne sont effectués.
+modification des cookies de production ou de son HTTPS ne sont effectués.
