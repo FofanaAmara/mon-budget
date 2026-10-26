@@ -122,4 +122,5 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Invitation émise par membre noncréateur et deux acceptations | droits égaux/idempotence | COMPLETED : B→C reçueMailpit/SQLsansaccès ; deuxPOST UI concurrentsE/deuxconfirmations/uneadhésion, Resend16831rétabli |
 
 | Consultation historique du compte migré | mapping legacy et session A réelle | COMPLETED : dashboard,15dépenses/2revenus mars, SQLREADONLY et trois captures inspectées ; nouvelle connexion stricte reste ouverte |
-| Consolidation matrice et revue | preuves des parcours actuels | IN_PROGRESS :17exigences/29AC vérifiés ; CI/SW/BFCache et nouvelle connexion historique restent ouverts |
+| Consolidation matrice et revue | preuves des parcours actuels | COMPLETED :17exigences/29AC vérifiés et commitéd3d3e96 ; CI/SW/BFCache et nouvelle connexion historique restent ouverts |
+| Préparer navigateur BFCache depuis MCP | outil et profil durable isolé | COMPLETED enabler : lancement sans drapeau de désactivation, sandbox actif ; navigation refusée TLS, pas de BFCache effectif revendiqué |
