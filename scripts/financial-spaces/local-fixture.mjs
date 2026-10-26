@@ -4,6 +4,7 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import pg from 'pg';
+import { setTimeout as delay } from 'node:timers/promises';
 
 export const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const configuredDirectory = path.join(root, '.local/financial-spaces');
@@ -18,6 +19,17 @@ export const username = 'budget_test';
 export const password = 'local-fixture-only';
 export const databaseNames = ['spaces_baseline17', 'spaces_work17'];
 const verifiedClients = new WeakMap();
+
+/** Official image bootstrap exposes Unix before the final TCP server starts. */
+export async function waitForFixtureReady({ run = spawnSync, pause = delay } = {}) {
+  for (let attempt = 0; attempt < 40; attempt++) {
+    const result = run('docker', ['exec', container, 'pg_isready', '-h', '127.0.0.1',
+      '-p', '5432', '-U', username, '-d', 'postgres', '-t', '1'], { stdio: 'ignore' });
+    if (result.status === 0) return;
+    await pause(250);
+  }
+  throw new Error('Local PostgreSQL TCP fixture did not become ready.');
+}
 
 /** Test templates are fixed names; an arbitrary database/URL is never accepted. */
 export function testBaseline() {

@@ -12,11 +12,10 @@ import { spawn, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { setTimeout as delay } from 'node:timers/promises';
 import dotenv from 'dotenv';
 import pg from 'pg';
 import { root, directory, container, owner, image, port, username, password, databaseNames,
-  docker, assertOwned, localConnection } from './local-fixture.mjs';
+  docker, assertOwned, localConnection, waitForFixtureReady } from './local-fixture.mjs';
 const dumpFile = path.join(directory, 'source-public-pg17.dump');
 const manifestFile = path.join(directory, 'source-public-pg17.manifest.json');
 const env = dotenv.parse(fs.readFileSync(path.join(root, '.env.local')));
@@ -48,13 +47,7 @@ async function prepare() {
       '--env', `POSTGRES_USER=${username}`, '--env', `POSTGRES_PASSWORD=${password}`,
       '--mount', `type=bind,source=${directory},target=/fixture`, image]);
   }
-  let ready = false;
-  for (let attempt = 0; attempt < 40; attempt++) {
-    const result = spawnSync('docker', ['exec', container, 'pg_isready', '-U', username], { encoding: 'utf8' });
-    if (result.status === 0) { ready = true; break; }
-    await delay(250);
-  }
-  if (!ready) throw new Error('Local PostgreSQL fixture did not become ready.');
+  await waitForFixtureReady();
   const client = await localConnection();
   try {
     for (const name of databaseNames) {

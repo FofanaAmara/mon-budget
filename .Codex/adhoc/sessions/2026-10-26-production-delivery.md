@@ -29,3 +29,6 @@ Sauvegarde cohérente readonly et restore réelle sur nouvelle copie : toutes do
 
 ### Répétition candidate réussie
 Après commit638f3bd et assertion sources/SHA0, vraie nouvelle backup readonly et copie locale : restauration vérifiée,001–006 et rejeu0. Audit readonly supplémentaire des données/attributions/ledger0, puis revue indépendante des artefacts privés favorable. Certificat inéligible production (providerIDsnull), première et seconde archives/copies conservées. Aucun push, déploiement, mutation Neon ni accord automatiquement déduit. Les dépendances de publication/protection et session Vercel restent ouvertes ; ne pas refaire les suites déjà valides pour créer de l’activité.
+
+### PR et premier échec CI
+Accords explicites obtenus : main protégé et relu, branche b4fd027 publiée, PRdraft1 créée via CLI après capacité403 du connecteur, puis attachée. CI40409204080 qualitéSUCCESS, PGFAILprepare, aggregateFAIL : défaut de readiness Unix/TCP confirmé dans l’entrypoint officiel et reproduit par tests. Helper TCP finale partagée,3nouveauxguards,45DB/22delivery/lint0 et revue distincte favorable. Retour vert réel encore requis. Contrôle cache local réel terminé, artefacts privés et limites relus ; compte historique nouveau signin toujours manquant.

@@ -1,5 +1,7 @@
 # Mémoire projet
 
+- [Readiness PostgreSQL TCP](feedback_fixture_tcp_readiness.md) — le serveur Unix temporaire de l’image officielle ne prouve pas la disponibilité TCP finale.
+
 - [Identité des bascules de production](feedback_release_migration_identity.md) — phase/ledger, copies exposées, cible et sources exécutées, COMMIT incertain.
 
 - [Continuité des features avec la vraie app](feedback_feature_continuity.md) — correction humaine du 2026-10-22, à lire avant toute conception de feature.

@@ -3,8 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { setTimeout as delay } from 'node:timers/promises';
-import { root, directory, container, owner, image, port, username, password, docker, assertOwned, localConnection } from './local-fixture.mjs';
+import { root, directory, container, owner, image, port, username, password, docker, assertOwned, localConnection, waitForFixtureReady } from './local-fixture.mjs';
 import { legacyFingerprint } from './migrate.mjs';
 import { seedSyntheticLegacy } from './synthetic-seed.mjs';
 import { schemaFingerprint, verifySyntheticCertificate } from './synthetic-certificate.mjs';
@@ -22,12 +21,7 @@ if (found.status === 0) {
     '--env', `POSTGRES_PASSWORD=${password}`, '--mount', `type=bind,source=${directory},target=/fixture`, image]);
   assertOwned();
 }
-let ready = false;
-for (let attempt = 0; attempt < 40; attempt++) {
-  if (spawnSync('docker', ['exec', container, 'pg_isready', '-U', username], { stdio: 'ignore' }).status === 0) { ready = true; break; }
-  await delay(250);
-}
-if (!ready) throw new Error('Synthetic fixture did not become ready.');
+await waitForFixtureReady();
 const schema = fs.readFileSync(path.join(root, '__tests__/fixtures/financial-spaces/legacy-schema.sql'), 'utf8');
 const seed = fs.readFileSync(path.join(root, 'scripts/financial-spaces/synthetic-seed.mjs'), 'utf8');
 const checksum = createHash('sha256').update(schema).update(seed).digest('hex');
