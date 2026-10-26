@@ -3,6 +3,10 @@
 Date : 2026-10-22. Version : 1.1 (configuration mail actualisée, sans exécution). **Statut : proposé à validation humaine ; aucune implémentation commencée.**
 Skill : `agent-work-methodology:planning-methodology`. Mandat : plan du chantier complet, six stories ESP-001 à ESP-006. Assurance proposée : renforcée, risque critique sur isolation et conservation des finances.
 
+### Extension de correction — 26 octobre, échec SMTP réel à l’onboarding
+
+La recette SMTP locale reproduit une invitation enregistrée `failed` puis une sortie vers `/espaces`, sans message ni choix de reprise. L’espace est conservé. Corriger le garde d’entrée qui réévalue « possède un espace » pendant les revalidations des actions du formulaire : garder l’orientation d’entrée stable durant ce parcours, tout en redirigeant une vraie nouvelle visite d’un compte déjà équipé. Préserver Auth, acteur attendu, idempotence et garde des invitations reçues. Preuve : RED/GREEN dans le vrai MCP sur la même panne, avec erreur visible et poursuite/réessai sans doublon ; garder les tests de rendu réel de l’entrée pour les redirections à froid, l’identité et les invitations reçues. Captures avant/après375/desktop, qualité isolée et revue distincte du nouveau diff. Ne pas modifier les montants existants ni la DBsource. Le runtime SMTP de panne sera ensuite remplacé par le runner Resend normal.
+
 ## 1. Résumé exécutif
 
 Faire de l’espace financier le périmètre de toutes les données financières, en conservant l’authentification individuelle. Chaque membre a les mêmes droits. Livrer l’expérience React approuvée : question de partage pendant l’onboarding, invitation conditionnelle, page explicite avant connexion, sidebar limitée au sélecteur, gestion des espaces dans Réglages avec liste puis détail.

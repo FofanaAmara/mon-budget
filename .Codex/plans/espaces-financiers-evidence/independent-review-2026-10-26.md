@@ -39,3 +39,23 @@ Le parent a communiqué des essais MCP supplémentaires après le snapshot : fin
 - Le regard indépendant de code/migration est réalisé ici ; validation visuelle MCP intégrale et verdict de livraison restent à établir par les preuves et l’humain. Cette revue n’autorise ni push, ni migration de source, ni déploiement.
 
 Aucune optimisation facultative proposée comme obstacle. Aucun changement produit, environnement, DB ou configuration fait par ce reviewer ; seul ce rapport est ajouté, sans commit autonome.
+
+## Complément indépendant — DISC-ESP-017, reprise d’invitation à l’onboarding
+
+**Snapshot :** diff de travail au-dessus de `e7b1cd603cd6bb3bf30eb18ba6e891e112210595`, avant commit final. Empreintes SHA256 vérifiées le26octobre :
+
+| Fichier | SHA256 |
+|---|---|
+| `app/onboarding/page.tsx` | `c240817436566b10f40b58f0cdef2be762504392377ed488b8930b9444f05459` |
+| `components/spaces/OnboardingEntry.tsx` | `c16623becb27e73a285dbdf94b03ec075b52d46a968cfea6fa1d43e2df430d2e` |
+| `__tests__/private-entry-session.test.tsx` | `9ab0b60b322e4104ffdb0fd71b9e78b15f21fbc276ba034cd05832ea3447b230` |
+
+**Avis : favorable sur ce correctif, aucun nouveau défaut confirmé.** La destination d’entrée n’est plus une redirection serveur recalculée qui emporte le formulaire dès que l’espace est créé. OnboardingEntry garde la destination du montage ; une actualisation RSC du même acteur conserve les champs et la reprise d’envoi. Une nouvelle entrée monte un nouvel état et suit la destination calculée côté serveur. Le composant ne transporte ni identité client inventée ni nouveau privilège.
+
+Points relus : `OnboardingEntry.tsx:15`, `app/onboarding/page.tsx:9`, FinancialSessionBoundary et son sous-arbre `key={userId}`, FirstSpace/SpaceForm, actions createSpace/inviteToSpace avec expectedActorId. La frontière de session reste à l’extérieur du formulaire ; identité client absente/différente ou erreur => pas de formulaire privé rendu. Un acteur nouvellement autorisé remonte son propre sous-arbre. Le fait de figer une décision de navigation ne fige donc pas une autorisation serveur. Les destinations sont une union fermée de deux routes internes, sans redirection externe fournie par l’utilisateur.
+
+**Exécuté par ce reviewer :** `npx vitest run __tests__/private-entry-session.test.tsx`, cinq tests réussis, zéro échec/skip, exit0,14:00:50locale. Les cas couvrent l’occultation des entrées privées sous autre session/absence/panne, ainsi que les destinations d’une nouvelle visite avec espace existant ou invitation. Ce rendu serveur avec Auth/actions/navigation doublés n’exerce pas lui-même la persistance d’un montage React lors d’un vrai retour d’action Next.
+
+**Preuve navigateur distincte communiquée par le parent :** panne SMTP loopback reproduite avant correction (espace/invitation durables mais erreur/reprise perdus par redirection) ; après correction, vrai MCP sur nouveau compte reste sur /onboarding et affiche espace créé, erreur et boutons Réessayer/Continuer. Le parent poursuit les contrôles de reprise après rétablissement SMTP et sa qualité isolée. Ces étapes ne sont pas déclarées exécutées par le reviewer ni terminées par anticipation.
+
+L’avis sera rattaché au SHA final après comparaison de ces trois empreintes. La CI distante et le TLS local durable ne sont pas résolus par ce complément ; aucune donnée de recette, configuration ou source produit modifiée par cette instance.

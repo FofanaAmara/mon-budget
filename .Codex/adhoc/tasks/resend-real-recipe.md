@@ -113,4 +113,7 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Parcours financier B et mobile/clavier | B membre | IN_PROGRESS : revenus/allocation/patrimoine retrouvés, captures375/1200inspectées, drawerTab/ShiftTab/Escape etbascule vérifiés |
 | Horsligne/déconnexion et panne de bascule MCP | sessions réelles | COMPLETED : offline masque, online reste masqué jusqu’àreload ; autreonglet masqué aprèssignout ; POSTbascule aborté→erreur/contexteconservé puisretryréussi |
 | Revue indépendante actuelle | HEAD e7b1cd6 | COMPLETED : aviscode/modèlefavorable,265unit/20fichiers0échec/skip ; pasdefeuvertrelease |
-| Premier onboarding réel personnel/partagé | Auth réelle | IN_PROGRESS : deuxcomptesfictifsdédiés,10–15minestimées, servicesexistants/coutprécisindisponible |
+| Premier onboarding réel personnel/partagé | Auth réelle | COMPLETED : FIRST-ONBOARDING-REAL, questions/SQL et arrivéeB dansconfigurationexistante/contributions |
+| Correction017, panne SMTP et reprise | vrai échec loopback | COMPLETED : RED/GREEN MCP, erreur/continuer seul,7.89 conservés puisréessaiMailpit reçu sansdoublon |
+| Qualité et revue du correctif | correction017 | COMPLETED :266unit/20fichiers, build/types/lint/11delivery0 ; revue distincte favorable, SHAfinalàlier |
+| Rétablir mode de recette normal | SMTP terminé | COMPLETED : runtime20384Resend3443, .env.local etDBsource inchangés |

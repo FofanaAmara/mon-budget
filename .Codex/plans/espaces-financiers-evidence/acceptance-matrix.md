@@ -73,7 +73,7 @@ Référence **EXISTING-ACCOUNT-REAL** : resend-real-execution.md,26octobre ; Res
 | ESP-001/AC-2 | PARTIEL | UI création personnelle Non sans invitation | Rejouer depuis vrai onboarding actuel, invitation ultérieure |
 | ESP-001/AC-3 | VÉRIFIÉ | FIRST-ONBOARDING-REAL seul espace réel, optionunique désactivée desktop/mobile, fermeture clavier ; gestion absente | Gates globaux ouverts |
 | ESP-001/AC-4 | VÉRIFIÉ | PG noms invalides ; FIRST-ONBOARDING-REAL réponsecréation perdue, erreur visible et retry fonctionnel sans accès indu | Gates globaux ouverts |
-| ESP-001/AC-5 | PARTIEL | PG même clé et concurrence ; intent durable client | Interruption/recharge réelle après confirmation perdue |
+| ESP-001/AC-5 | VÉRIFIÉ | FIRST-ONBOARDING-REAL réponse200perdue puisretry sansdoublon ; SMTP-RECOVERY-MCP nouvellevisite/recharge retrouve même espace et7.89, SQLunicité | Gates globaux ouverts |
 | ESP-002/AC-1 | PARTIEL | MIG 703 lignes et attribution Mes finances | Reconnexion réelle puis consultation de l’historique |
 | ESP-002/AC-2 | PARTIEL | PG 78 actions/familles ; synthèses/contextes raccordés | Toutes pages et générations dans vraie app |
 | ESP-002/AC-3 | PARTIEL | Préflight ambiguïtés et SQL croisés, gardes membres | Deux comptes existants réels et refus via routes |
@@ -97,7 +97,7 @@ Référence **EXISTING-ACCOUNT-REAL** : resend-real-execution.md,26octobre ; Res
 | ESP-006/AC-1 | VÉRIFIÉ | FIRST-ONBOARDING-REAL nouveaucompte, Oui→email facultatif, Resend reçu Inbox depuis premier parcours ; reportUI/PG | Gates globaux ouverts |
 | ESP-006/AC-2 | VÉRIFIÉ | FIRST-ONBOARDING-REAL D configure32.10/reload et guide1/4 avant adhésion, SQL invitationpending | Gates globaux ouverts |
 | ESP-006/AC-3 | PARTIEL | UI Non saute invitation et espace personnel créé | Rejeu actuel depuis nouveau compte, réglages ultérieurs |
-| ESP-006/AC-4 | PARTIEL | PG panne/retry meme invitation/token ; UI-CURRENT seconde soumission sans doublon de mail ; intent durable | Panne SMTP/Resend injectée dans vraie app, correction/recharge sans doublon |
+| ESP-006/AC-4 | VÉRIFIÉ | SMTP-RECOVERY-MCP vraiSMTPindisponible, erreur/continuer visible aprèsfix017 ;7.89 conservés, SMTP rétabli/retry Mailpit reçu ; uneinvitation/espacedurable | CI/TLS/release restent ouverts |
 | ESP-006/AC-5 | VÉRIFIÉ | FIRST-ONBOARDING-REAL compteexistant retrouve32.10/guide1/4, contribue4.56vueparcréateur ; NEW-ACCOUNT-REAL nouveau retrouve financesconfigurées et contribue23.45 ; SQL pasdedoublons | Gates globaux ouverts |
 
 ## Gates globaux ouverts
@@ -131,3 +131,5 @@ Mise à jour MCP-INVITATION-ENTRY : après acceptation humaine de l’avertissem
 Situation après EXISTING-ACCOUNT-REAL : les deux trajets de destinataire sont exécutés depuis des invitations réellementreçues, deuxsessions etcontributionspersistantes acquises. Les anciennes mentions de MCPabsent/réceptionabsente/adhésionabsente sont historiques. Restent : étenduefinancière/config/automates complète àdeux, caches/offline/concurrenceUI, visuelMCPglobal/clavier, revueindépendante etCIexactSHA sanspushautorisé. TLSlocalnoncorrigédurablement : verifyTP_NOT_TRUSTED, installétroitpendingmacOS ; CSSréapparu parreload nefermepascepoint.
 
 Situation après FIRST-ONBOARDING-REAL et SESSION-MCP-REAL : premiers comptes/personnel/partagé acquis, email dès onboarding et usage pendantpending, adhésion sans remiseàzéro et contributioncommune ; offline/reprise et autreongletsignout masqués, pannebasculeretry, vraieRSCretardée aprèsintention et clavierdrawer acquis. Revueindépendante e7b1cd6 favorable,265unit/20fichiers0skip exécutés parreviewer. Trustinstall termineexit1autorisationannulée, pasdeconfianceTLS. PasdeBFCacheeffectif/SW ouCIverteprétendus. Panne réelle de transport d’invitation dans l’app encore ouverte ; test de réponseperdue après envoi n’en constitue pas la preuve. Détails et limites dans resend-real-execution.md.
+
+Situation après SMTP-RECOVERY-MCP : panne réelle d’envoi dans l’app et reprise sansdoublon acquises, découverte017 corrigée et vérifiée375/1200.266unit, build/types/lint/11delivery locaux verts et revue distincte du diff favorable. Resend20384 rétabli ; Mailpit ne remplace pas les réceptions externes déjà acquises. Rattacher le SHA final à la revue ; aucun run CI distant ni confianceTLS durable ajoutés. Les AC encore partiels restent tels quels.

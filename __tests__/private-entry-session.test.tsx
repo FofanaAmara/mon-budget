@@ -6,11 +6,12 @@ const state = vi.hoisted(() => ({
     data: { user: { id: string } } | null; isPending: boolean; error: Error | null;
   },
   spaces: [] as { id: string; name: string; memberCount: number; createdAt: string }[],
+  invitations: [] as { id: string }[],
 }));
 vi.mock('@/lib/auth/client', () => ({ authClient: { useSession: () => state.session, signOut: vi.fn() } }));
 vi.mock('@/lib/spaces/context', () => ({ requireIdentity: async () => ({ id: 'alice' }) }));
 vi.mock('@/lib/actions/spaces', () => ({ getSpaces: async () => state.spaces }));
-vi.mock('@/lib/actions/invitations', () => ({ getReceivedInvitations: async () => ({ invitations: [] }) }));
+vi.mock('@/lib/actions/invitations', () => ({ getReceivedInvitations: async () => ({ invitations: state.invitations }) }));
 vi.mock('@/components/spaces/SpaceEntry', () => ({
   FirstSpace: ({ actorKey }: { actorKey: string }) => <p>PRIVATE-DRAFT-{actorKey}</p>,
   ChooseSpace: ({ spaces }: { spaces: typeof state.spaces }) => <p>{spaces[0].name}</p>,
@@ -20,7 +21,7 @@ import Onboarding from '@/app/onboarding/page';
 import SpacesChoice from '@/app/espaces/page';
 import PrivateInvitationsLayout from '@/app/invitations/layout';
 
-afterEach(() => { state.session = { data: { user: { id: 'alice' } }, isPending: false, error: null }; state.spaces = []; });
+afterEach(() => { state.session = { data: { user: { id: 'alice' } }, isPending: false, error: null }; state.spaces = []; state.invitations = []; });
 
 describe('actual private entry pages bind rendered data to the server actor', () => {
   for (const entry of ['onboarding', 'spaces', 'invitations'] as const) {
@@ -52,6 +53,12 @@ describe('actual private entry pages bind rendered data to the server actor', ()
   }
   it('retains the existing redirect from onboarding once a space exists', async () => {
     state.spaces = [{ id: 'space-a', name: 'Alice', memberCount: 1, createdAt: '' }];
-    await expect(Onboarding()).rejects.toThrow('REDIRECT /espaces');
+    const page = await Onboarding();
+    expect(() => renderToStaticMarkup(page)).toThrow('REDIRECT /espaces');
+  });
+  it('opens received invitations instead of forcing a first space on a fresh visit', async () => {
+    state.invitations = [{ id: 'invitation-a' }];
+    const page = await Onboarding();
+    expect(() => renderToStaticMarkup(page)).toThrow('REDIRECT /invitations');
   });
 });
