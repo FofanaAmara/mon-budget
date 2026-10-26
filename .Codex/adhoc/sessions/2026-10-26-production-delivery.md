@@ -26,3 +26,6 @@ Commit bd6cc81 après cachedcheck0/auditcommit0/revue favorable. Assertion du co
 
 ### Restauration candidate et normalisation des CHECK
 Sauvegarde cohérente readonly et restore réelle sur nouvelle copie : toutes données identiques,8CHECK diffèrent par casts normalisés, autres groupes de catalogue identiques. Défaut de certification du nouvel outil, pas perte de données. Réemploi du principe déjà connu : reparsage des seuls CHECK sur TEMP de la copie certifiée, sans modifier le hash brut source.5PG pertinents,45DB/19delivery/lint0 et baseline existante inchangée ; revue distincte favorable avec hashes comparés. Première archive/copie conservées ; répétition nouvelle réelle après commit du correctif. Aucune mutation hébergée.
+
+### Répétition candidate réussie
+Après commit638f3bd et assertion sources/SHA0, vraie nouvelle backup readonly et copie locale : restauration vérifiée,001–006 et rejeu0. Audit readonly supplémentaire des données/attributions/ledger0, puis revue indépendante des artefacts privés favorable. Certificat inéligible production (providerIDsnull), première et seconde archives/copies conservées. Aucun push, déploiement, mutation Neon ni accord automatiquement déduit. Les dépendances de publication/protection et session Vercel restent ouvertes ; ne pas refaire les suites déjà valides pour créer de l’activité.

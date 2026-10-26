@@ -16,7 +16,7 @@ Runner de production distinct de migrate.mjs fixture-only : cible directe Neon/b
 
 Advisory lock sans attente indéfinie, verrous avant empreinte, timeouts et transaction atomique001–006.002 une seule fois par transaction. Ledger/phase stricts ; copies exposées et données historiques contrôlées avant premierready. COMMIT_UNKNOWN et échec de rapport après commit imposent réconciliation readonly, jamais restauration aveugle. La sauvegarde réelle et la TOC/extension de sa restauration restent **non exécutées** ; tests synthétiques et lecture de code ne les remplacent pas.
 
-Qualité contre Zod4.6.7 corrigé :19delivery,256unitaires/19fichiers,102servicesPG/6familles,40testsDB (dont11runner), typegen/types/lint/build et audit production0vulnérabilité. Bancs locaux AuthRSC, navigation6, sélection3, invitation7 verts. Logs privés sous `.local/production-release/quality/`. Ces bancs ne sont ni la recette MCP production ni la CI distante.
+Qualité contre Zod4.6.7 corrigé :19delivery,256unitaires/19fichiers,102servicesPG/6familles,45testsDB (dont11runner et5restauration), typegen/types/lint/build et audit production0vulnérabilité. Bancs locaux AuthRSC, navigation6, sélection3, invitation7 verts. Logs privés sous `.local/production-release/quality/`. Ces bancs ne sont ni la recette MCP production ni la CI distante.
 
 Audit initial RED : Zod4.5.4, advisory [GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5), correctif officiel≥4.6.6. Mise à jour ciblée4.6.7 avec override des consommateurs Auth ; aucun npm audit --force ni suppression de gate. Installation propre dans le worktree, dépendances du runtime humain inchangées.
 
@@ -28,7 +28,7 @@ Défauts de préparation reproduits/corrigés : entrée CLI sous chemin lié, re
 |---|---|
 | P1 cible et ordre | En cours : accès Vercel et identité provider à établir ; règles de bascule préparées, pas exécutées. |
 | P2 source/gates | Gates locaux ci-dessus ; revue indépendante de préparation, PR/CI distante encore à obtenir. |
-| P3 backup/répétition | Outil préparé ; sauvegarde réelle restaurée et récupération sur copie à démontrer. |
+| P3 backup/répétition | Répétition réelle de la candidate réussie au638f3bd : archive, restauration, conservation, six migrations et rejeu vérifiés. Association à la production et sauvegarde finale après arrêt des writers encore requises. |
 | P4 configuration | Présence locale connue, présence/portée réelle de production non vérifiées. |
 | P5 migration | Non exécutée en production. |
 | P6 révision servie | Ancien déploiement observé seulement ; aucun nouveau SHA livré. |
@@ -42,3 +42,14 @@ Prochaine unité : vérifications CLI de la préparation committée, cible/prote
 Publication de la PR : preview automatique de cette seule branche désactivée par git.deploymentEnabled (doc officielle Vercel vérifiée), test RED/GREEN ; main et cron inchangés. Cela ne règle pas la coordination de la publication de main. Scan des58patches locaux avant push :0token fournisseur,0URLNeonavecsecret,0cléprivée. Revue du diff demeure requise, ce scan ciblé ne prouve pas une absence universelle de secret.
 
 Revue distincte financial_spaces_review : favorable au commit local, inspection de sources uniquement, aucun feu vert apply. Empreintes vérifiées : production-migration1c5e3de9, release-backupcf28ce00, testPG791e9f91, vercel4cc50552. Voir journal pour contrôles et limites ; aucun besoin P1–P10 n’est déclaré livré par cette préparation.
+
+
+## Répétition réelle de la candidate —638f3bd
+
+La première archive candidate a été restaurée sans perte de données, puis refusée par un hash brut de catalogue :8CHECK ont des casts normalisés par PostgreSQL. Les sept autres groupes de catalogue sont identiques. Le correctif638f3bd conserve le hash source brut et compare tout le catalogue en reparsant uniquement les définitions CHECK sur des TEMP de la copie locale certifiée. Noms, états de validation et autres objets ne sont pas normalisés ni ignorés.
+
+La nouvelle exécution réelle a terminé0 : sauvegarde cohérente en lecture seule avec pg_dump17/TLSverify-full, restauration dans une nouvelle base appartenant au projet, comparaison canonique10CHECK, migration001–006 atomique et rejeu sans doublon. Audit readonly supplémentaire : archive SHA256 identique,18tables historiques conservées, attributions/copies exposées vérifiées, ledger6,phaseready. La première archive et sa copie de diagnostic sont préservées, ainsi que la nouvelle copie migrée.
+
+Preuves privées ignorées : `.local/production-release/candidate-638f3bd-public.dump`, son manifeste et `candidate-638f3bd-proof.json`. Revue distincte des artefacts et liens cryptographiques favorable, sans nouvelle exécution par le reviewer ; source SHA638f3bd5cccfe935ec28941cc97c6ec5e069ce5d, trois fichiers revus identiques.
+
+**Borne maintenue :** les identifiants Vercel/projetNeon/brancheNeon sontnull, volontairement non inventés. Ce certificat candidate est inéligible à l’apply production. Il prouve la répétition technique sur les données configurées ; il ne prouve pas encore l’identité du service publié, le gel des writers, la sauvegarde finale de bascule ou la disponibilité de la vraie production. Aucune écriture SQL hébergée, aucun push ni déploiement n’a été exécuté.
