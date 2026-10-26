@@ -97,7 +97,7 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Ouvrir personnel et couple dans la même session réelle | Auth créateur | COMPLETED :deux vrais onglets mêmeacteur |
 | Bascule, recharge et historique sans mélange | deux onglets | COMPLETED :personnel0/couple4, revalidationdocumentaire ; pasdepreuveBFCache |
 | Preuves et limites | observations | COMPLETED :preuveMULTITAB-REAL etSQLREADONLY,9deliveryverts |
-| Annulation puis confirmation de bascule avec brouillon | piloteChrome | IN_PROGRESS :confirmobservé, contrôleDOMperdu avantvérification ; aucune sauvegarde |
+| Annulation puis confirmation de bascule avec brouillon | piloteChrome | COMPLETED par EXISTING-ACCOUNT-REAL MCP : annuler conserve et accepter abandonne ; ancienne panne CUA distincte |
 
 
 ## Destinataire ayant déjà un compte — 26 octobre
@@ -115,5 +115,11 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Revue indépendante actuelle | HEAD e7b1cd6 | COMPLETED : aviscode/modèlefavorable,265unit/20fichiers0échec/skip ; pasdefeuvertrelease |
 | Premier onboarding réel personnel/partagé | Auth réelle | COMPLETED : FIRST-ONBOARDING-REAL, questions/SQL et arrivéeB dansconfigurationexistante/contributions |
 | Correction017, panne SMTP et reprise | vrai échec loopback | COMPLETED : RED/GREEN MCP, erreur/continuer seul,7.89 conservés puisréessaiMailpit reçu sansdoublon |
-| Qualité et revue du correctif | correction017 | COMPLETED :266unit/20fichiers, build/types/lint/11delivery0 ; revue distincte favorable, SHAfinalàlier |
-| Rétablir mode de recette normal | SMTP terminé | COMPLETED : runtime20384Resend3443, .env.local etDBsource inchangés |
+| Qualité et revue du correctif | correction017 | COMPLETED :266unit/20fichiers, build/types/lint/11delivery0 ; revue distincte favorable, SHA3b71827 rattaché |
+| Rétablir mode de recette normal | SMTP terminé | COMPLETED : runtime16831Resend3443, .env.local etDBsource inchangés |
+| Mauvais compte, fiche inactive et solo ultérieur | comptes existants réels | COMPLETED : refus/changementcompte/retour/adhésion, ficheC42 gardecontexteF, Csolo retrouveformulaireinvitation |
+| Historique après changement d’acteur | deux onglets réels | COMPLETED sur retourdocumentaire404 ; BFCache effectif nonexercé, désactivé parlignecommande du navigateur MCP |
+| Invitation émise par membre noncréateur et deux acceptations | droits égaux/idempotence | COMPLETED : B→C reçueMailpit/SQLsansaccès ; deuxPOST UI concurrentsE/deuxconfirmations/uneadhésion, Resend16831rétabli |
+
+| Consultation historique du compte migré | mapping legacy et session A réelle | COMPLETED : dashboard,15dépenses/2revenus mars, SQLREADONLY et trois captures inspectées ; nouvelle connexion stricte reste ouverte |
+| Consolidation matrice et revue | preuves des parcours actuels | IN_PROGRESS :17exigences/29AC vérifiés ; CI/SW/BFCache et nouvelle connexion historique restent ouverts |

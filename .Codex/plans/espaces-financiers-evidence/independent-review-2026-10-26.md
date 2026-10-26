@@ -59,3 +59,15 @@ Points relus : `OnboardingEntry.tsx:15`, `app/onboarding/page.tsx:9`, FinancialS
 **Preuve navigateur distincte communiquée par le parent :** panne SMTP loopback reproduite avant correction (espace/invitation durables mais erreur/reprise perdus par redirection) ; après correction, vrai MCP sur nouveau compte reste sur /onboarding et affiche espace créé, erreur et boutons Réessayer/Continuer. Le parent poursuit les contrôles de reprise après rétablissement SMTP et sa qualité isolée. Ces étapes ne sont pas déclarées exécutées par le reviewer ni terminées par anticipation.
 
 L’avis sera rattaché au SHA final après comparaison de ces trois empreintes. La CI distante et le TLS local durable ne sont pas résolus par ce complément ; aucune donnée de recette, configuration ou source produit modifiée par cette instance.
+
+### Rattachement final vérifié
+
+Les trois blobs extraits directement de **`3b71827ee0ab1fabee3330ad4b2f4127a02da47f`** ont été hachés par ce reviewer : leurs SHA256 sont exactement ceux du tableau ci-dessus. Les trois fichiers du checkout ne présentent aucun diff non commité. L’avis favorable DISC-ESP-017 est donc rattaché à ce SHA exact ; aucune nouvelle revue ni suite inchangée n’a été rejouée pour produire artificiellement une preuve supplémentaire.
+
+Le parent rapporte la recette réelle achevée : panne SMTP et erreur/reprise visibles375/1200, Continuer permet saisie7.89 et recharge, nouvelle visite onboarding redirige vers espaces ; SMTP rétabli puis retry depuis fiche, réception réellement lue dans Mailpit ; SQL constate un espace, un réglage, six catégories, une invitation, tentatives failed puis sent,7.89 conservés. Qualité isolée58790 build/types/lint/11delivery exit0 et266unit/20fichiers24555 exit0, fichiers identiques à la copie qualité. Ces résultats sont ceux du parent, non des exécutions additionnelles du reviewer ; consulter ses preuves pour les détails et captures. Mailpit prouve ce retry local, pas une nouvelle réception externeResend.
+
+**Conclusion indépendante : correctif approuvé sur `3b71827ee0ab1fabee3330ad4b2f4127a02da47f`, aucun finding nouveau. CI distante/TLS durable et critères globaux restants non clôturés ; pas de feu vert release.** Ce rattachement n’autorise aucun push/déploiement et n’a modifié que le rapport.
+
+## Audit de couverture complémentaire — 26 octobre
+
+Instance distincte financial_spaces_review : revue des critères littéraux et preuves composées, sans nouvelle mutation de code ni test revendiqué. Avis initial28/30AC, puis confirmation29/30 après LEGACY-HISTORY-REAL : consultation Chrome A/CUA du compte réellement mappé, historique et compteurs SQL cohérents complètent ESP002/AC2 avec PG/MIG. ESP002/AC1 reste partiel : une session revalidée ne remplace pas une nouvelle connexion. Aucun autre test financier nécessaire pour cette tranche, aucun défaut de code supplémentaire identifié.17exigences littérales vérifiables ; DoD/CI/SW/BFCache restent des gates distincts et ouverts. Cet avis de couverture ne constitue pas une approbation de release.
