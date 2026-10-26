@@ -6,7 +6,7 @@ import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import { directory, localConnection, port, username, password } from './local-fixture.mjs';
 import { legacyFingerprint, preflight } from './migrate.mjs';
-import { schemaFingerprint } from './synthetic-certificate.mjs';
+import { schemaInventory, schemaInventoryFingerprint, verifyRestoredSchema } from './synthetic-certificate.mjs';
 import { connectProduction, productionConnectionOptions, privateReleaseFile, readReleaseProfile,
   runProductionMigration, publicDataFingerprint } from './production-migration.mjs';
 
@@ -48,7 +48,8 @@ export async function backupAndRehearse(profile) {
     if (!ready && (await preflight(source)).length) throw new Error('Ownership preflight failed before backup.');
     const sourceFingerprint = await legacyFingerprint(source);
     const sourceState = await publicDataFingerprint(source);
-    const sourceSchema = await schemaFingerprint(source);
+    const sourceSchemaInventory = await schemaInventory(source);
+    const sourceSchema = schemaInventoryFingerprint(sourceSchemaInventory);
     const snapshot = (await source.query('SELECT pg_export_snapshot() AS snapshot')).rows[0].snapshot;
     const fd = fs.openSync(backup, 'wx', 0o600);
     fs.closeSync(fd);
@@ -60,7 +61,7 @@ export async function backupAndRehearse(profile) {
     if (bytes.length <= 5 || bytes.subarray(0, 5).toString() !== 'PGDMP') throw new Error('Invalid PostgreSQL backup.');
     manifest = { sha: profile.sha, target: profile.target, projectId: profile.projectId,
       neonProjectId: profile.neonProjectId, neonBranchId: profile.neonBranchId,
-      sourceFingerprint, sourceState, sourceSchema, backupSha256: checksum(backup), extensions,
+      sourceFingerprint, sourceState, sourceSchema, sourceSchemaInventory, backupSha256: checksum(backup), extensions,
       createdAt: new Date().toISOString(), scope: 'public schema only; Neon Auth is a separately managed service' };
     fs.writeFileSync(manifestFile, JSON.stringify(manifest, null, 2) + '\n', { mode: 0o600, flag: 'wx' });
     await source.query('ROLLBACK');
@@ -85,13 +86,17 @@ export async function backupAndRehearse(profile) {
     native('pg_restore', ['--exit-on-error', '--single-transaction', '--no-owner', '--no-acl', '--dbname=' + database, '--use-list=' + restoreList, backup], {
       ...cleanEnvironment(), PGHOST: '127.0.0.1', PGPORT: String(port), PGDATABASE: database, PGUSER: username, PGPASSWORD: password, PGSSLMODE: 'disable',
     });
+    const schemaVerification = await verifyRestoredSchema(copy, manifest.sourceSchemaInventory);
     const restored = await runProductionMigration(copy, { through: profile.through });
-    if (!same(restored.before, manifest.sourceFingerprint) || !same(restored.state, manifest.sourceState) || restored.schema !== manifest.sourceSchema) {
+    if (!same(restored.before, manifest.sourceFingerprint) || !same(restored.state, manifest.sourceState)) {
       throw new Error('Restored rows/schema differ; private backup and copy preserved for diagnosis.');
     }
     const proof = { ...manifest, restored: true, preserved: true, migrations: restored.files,
-      rehearsalDatabase: database, scope: manifest.scope };
-    const rehearsal = await runProductionMigration(copy, { through: profile.through, dryRun: false, writersStopped: true, proof });
+      schemaVerification, rehearsalDatabase: database, scope: manifest.scope };
+    // The source hash stays raw and immutable for freshness on Neon. Only the
+    // disposable copy uses its own normalized hash for its local rehearsal.
+    const rehearsal = await runProductionMigration(copy, { through: profile.through, dryRun: false,
+      writersStopped: true, proof: { ...proof, sourceSchema: restored.schema } });
     const replay = await runProductionMigration(copy, { through: profile.through });
     await runProductionMigration(copy, { through: profile.through, dryRun: false, writersStopped: true,
       proof: { ...proof, sourceFingerprint: replay.before, sourceState: replay.state, sourceSchema: replay.schema } });

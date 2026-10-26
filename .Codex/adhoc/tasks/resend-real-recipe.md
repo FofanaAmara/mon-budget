@@ -176,8 +176,8 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 
 | Séquence / résultat | État |
 |---|---|
-| P1 : cible, accès, protections et ordre de bascule réels | IN_PROGRESS : runtime guard PASS ; GitHub disponible hors sandbox, Vercel CLI sans credentials ; 58 commits locaux sur main à récupérer dans une branche de livraison |
-| P2–P5 : outil migration protégé, backup réel restauré, répétition et qualité/revue | IN_PROGRESS : runner atomique distinct,4guards/9PG verts ; copie réelle pas encore restaurée. Préflight qualité détecte vulnérabilité Zod, correctif ciblé et revalidation en cours |
+| P1 : cible, accès, protections et ordre de bascule réels | IN_PROGRESS : récupération durable et dry-run candidate Neon verts ; Vercel UI demande connexion GitHub, protection main et publication PR bloquées par revue automatique en attente des accords précis |
+| P2–P5 : outil migration protégé, backup réel restauré, répétition et qualité/revue | IN_PROGRESS : préparation commitbd6cc81,19delivery/256unit/102services/40DB/types/lint/build/audit/bancs verts, revue distincte et codeSHA vérifiés ; copie réelle pas encore restaurée, Zod corrigé4.6.7 |
 | P2/P4/P6 : PR/CI et configuration, bascule/migration/déploiement exact SHA | PENDING |
 | P7–P9 : recette production réelle, Resend, sessions/cache/WebKit | PENDING |
 | P10 : récupération et rapport final/backlog | PENDING |

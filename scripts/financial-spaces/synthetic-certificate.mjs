@@ -1,8 +1,9 @@
 /** Certify schema as well as rows; a stale fixture must never be silently repaired. */
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
+import { assertLocalFixtureClient } from './local-fixture.mjs';
 import { legacyFingerprint } from './migrate.mjs';
 
-export async function schemaFingerprint(client) {
+export async function schemaInventory(client) {
   const queries = {
     tables: `SELECT relname,relkind,relpersistence,relrowsecurity,relforcerowsecurity
       FROM pg_class WHERE relnamespace='public'::regnamespace AND relkind IN ('r','p','v','m','S')`,
@@ -22,13 +23,51 @@ export async function schemaFingerprint(client) {
     triggers: `SELECT c.relname,t.tgname,pg_get_triggerdef(t.oid) AS definition FROM pg_trigger t
       JOIN pg_class c ON c.oid=t.tgrelid WHERE c.relnamespace='public'::regnamespace AND NOT t.tgisinternal`,
   };
+  const inventory = {};
+  for (const [name, query] of Object.entries(queries)) inventory[name] = (await client.query(query)).rows;
+  return inventory;
+}
+
+export function schemaInventoryFingerprint(inventory) {
   const hash = createHash('sha256');
-  for (const [name, query] of Object.entries(queries)) {
-    const { rows } = await client.query(query);
+  for (const [name, rows] of Object.entries(inventory)) {
     hash.update(name + '\n');
     for (const row of rows.map(row => JSON.stringify(row)).sort()) hash.update(row + '\n');
   }
   return hash.digest('hex');
+}
+
+export async function schemaFingerprint(client) {
+  return schemaInventoryFingerprint(await schemaInventory(client));
+}
+
+/** Canonicalize source CHECKs only on an empty TEMP table in a verified copy.
+ * Every other catalog field remains strict, including validation state/name.
+ * The immutable source inventory/hash is never changed by this comparison.
+ */
+export async function verifyRestoredSchema(client, sourceInventory) {
+  const database = assertLocalFixtureClient(client);
+  if (!/^spaces_migration_test_[a-f0-9]{8}$/.test(database)) throw new Error('Restore verification requires a disposable verified copy.');
+  const expected = structuredClone(sourceInventory);
+  const quote = value => '"' + value.replaceAll('"', '""') + '"';
+  await client.query('BEGIN');
+  let checks = 0;
+  try {
+    await client.query("SET LOCAL statement_timeout='15s'");
+    await client.query("SET LOCAL lock_timeout='5s'");
+    await client.query("SET LOCAL search_path=public,pg_catalog");
+    for (const constraint of expected.constraints) {
+      if (constraint.contype !== 'c') continue;
+      const temporary = quote('restore_check_' + randomUUID().replaceAll('-', ''));
+      await client.query(`CREATE TEMP TABLE ${temporary} (LIKE public.${quote(constraint.relname)}) ON COMMIT DROP`);
+      await client.query(`ALTER TABLE ${temporary} ADD CONSTRAINT restore_expected ${constraint.definition}`);
+      constraint.definition = (await client.query('SELECT pg_get_constraintdef(oid) AS definition FROM pg_constraint WHERE conrelid=$1::regclass AND conname=$2', [temporary, 'restore_expected'])).rows[0].definition;
+      checks++;
+    }
+    const actual = await schemaInventory(client);
+    if (schemaInventoryFingerprint(actual) !== schemaInventoryFingerprint(expected)) throw new Error('Restored schema differs beyond PostgreSQL CHECK normalization.');
+    return { canonicalChecks: checks, matched: true, restoredSchema: schemaInventoryFingerprint(actual) };
+  } finally { await client.query('ROLLBACK'); }
 }
 
 export async function verifySyntheticCertificate(client, marker, checksum) {
