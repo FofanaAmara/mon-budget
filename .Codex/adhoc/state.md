@@ -1180,3 +1180,24 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Décisions prises :** acceptationdirectedu lienmail, sessionfraîchemêmeemail+hashsecret requisnonverified ; IDseulverifiedexistinginchangé. Expiration/statut/decline/replay/concurrenceprotégés. PasAuthverifiedforgé, profilvraiflag, déduplicationmembreunverifiedcorrigée. CodeNeonOTPplusappeléparceparcours. Userhumaindemandesuppressionfeature etpasjustetimerprioritaire surancienplan.
 **Prochaine étape :** commit aprèscachedcheck0 ; humainrechargemêmelienmail/compteetaccepte. PasdeSMTPNeon/demandevraieadresse/OTPàajouter. Autresgatesgoalglobalrestent, pasdepush.
 **Contexte pour reprise :** runtime82094MailpitHTTP3002gateway/Next3003inchangé etcopiework17. VraiMCPtab3C(QASolo)authfalseverified,membreF(e37…)aprèsclicUI ; Cpersonnelpréexistant+F=2espaces,F3membres. Userhumainraissa/famille47b39nonmodifié. InvitationQA9f0…accepted ; vraimailMailpitancienadaptéoriginHTTPseulement,qaurlprivée. Capturesmcp-no-otp-before-accept.pngetaccepted.pngvues. SQLreadonlyno-otp-membership-proof.json19:36:52UTC accepted/profilefalse/3membres/2espaces.256unit/19fichiers0(compteurbaisselégitimementtestsOTPexplicitementretirés),100PG/6familles0,14delivery0,banc7vraiscomposantsservicesmocked0,build/types/lint0isolé71054 ; dernierseultestSDKOTPretiré+unit256/lintciblé0. Reviewerfavorable3SSRindépendant, sourceshashesattachées. Aucunmotdepasse/jeton/code/logmailboiteenGit, sourceDB/env/providerAuth/trousseaupasmodifiés. Préexistantsserena/next-env/CSexclus. AnciengoalBLOCKEDpasclôturéparcettecorrection.
+
+---
+## [2026-10-26] — Guide initial masqué pour les membres qui rejoignent
+
+**Plan :** planespaces-financiers-implementation existant, correctionUXdemandée.
+**État :** IN_PROGRESS.
+**Tâche en cours :** guideinitialcréateuruniquement, preuvesMCPetqualitéfinale.
+**Décisions prises :** humain signaleguide4étapesinadaptéaucompteinvité. Choixminimal : pasd’assistantpourceluiquirejoint ; guideconservédansunespacequ’ilcréelui-même. createdByCurrentUserestunemetadataUIretournéeparrequireSpace(guardsinchangés), pasunrôle/droit. Progressionréellepartagéegardée, initialisationguidecréateurseul, visibilitéinvitéfalse etboutonrevoirsettingsmasqué. Pasd’UPDATEdismisspourtousmembres.13PGciblés/256unit0,diffreviewencours ; MCPF(QA Cinvité)guide0aprèsreload.
+**Prochaine étape :** MCPcomparerFsharedetCpersonnelcreator/settings ; qualitéisolée+102PGglobauxaprèsmodificationducontextepartagé,revue etcommitlocal.
+**Contexte pour reprise :** runtime82094MailpitHTTP3002gateway/Next3003, basework17pasreset ; MCPtab3CAuthnonverified membreF(e37…)etcreatorperso8de… depuisfcae61cOTPretiré. AnciencreenshotWebKitwebkit-http-authenticated.pngmontre1/4invitédansF ; prendreMCPaprès et vérifierpasdedéplacementcassé. Sources4fichiers+PGspace-settings-guide,propParametresClientshowSetupGuideexplicite. Préexistantsserena/next-env/CSpréservés. Pasproduction/providerAuth/env/sourceDB/permissionsmodifiés. Coûtprécisindisponible, aucunservicepayant, tranche5–10minestimée ; goalglobalpasfini.
+
+---
+## [2026-10-26] — Guide initial contextuel vérifié
+
+**Plan :** planespaces-financiersexistant, correctionUX guideinvité.
+**État :** correction vérifiée, commit local à créer ; goal global non terminé.
+**Tâche en cours :** clôture du guidecréateuruniquement.
+**Fichiers touchés :** contexteespaces,lectureguide,pageetclientRéglages,PGguide,suivisexistants.
+**Décisions prises :** aucunassistantconfigpourquiconquerejointespaceexistant ; guideconservédansespacequ’ilcrée. MetadataUIcreatedByCurrentUser,seulchampajoutéaucontextedemembership ; pasdroit/rôlenouveau. Guidesharedprogressconservéeetpasd’init/dismissinvité. Réglagesboutonrelancemasquéinvité.102PG/6familles,256unit/19fichiers,build/types/lint/14delivery0 ; revuehashesexactesfavorable.
+**Prochaine étape :** commitlocalaprèscachedcheck0, humainrechargeespaceinvité. AutresgatesglobalCI/anciencompte/BFCachehorscettecorrection,nedéclarerpasDONEglobal.
+**Contexte pour reprise :** app82094MailpitHTTP3002gateway/Next3003inchangée/copiework17 ; MCPtab3QA CinvitéFsurdepensesmobile375x812, guide0 ; Ccréateurperso8deguide1/reset1 etFreset0vérifiés. Screensmcp-invited-space-without-guide(-mobile).pngetmcp-creator-space-keeps-guide.pngtousvus. Avantguide1/4surFpourBdansancienwebkit-http-authenticated.pngpreuvehistoriqueautreidentité,pasavantMCPmêmeCfabriqué. Qualité12842isoléetPG36274terminé0 ; unit10495terminé0. PropParamClientshowSetupGuiderequise ; contextguardsmembership/rolloutetactionsinchangés. Préexistantsserena/next-env/CSnontrackésexclus. Pasmail/OTP/sourceDB/secret/provider/trousseau/pushmodifiés.

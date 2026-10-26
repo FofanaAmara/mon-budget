@@ -85,3 +85,7 @@ Plan technique dans `.Codex/plans/`, validation humaine avant implémentation. C
 ## Readiness
 
 Voir [examen de readiness](readiness.md) et [exigences](requirements.md). Les 6 stories sont rédigées avec 5 AC chacune. Aucune estimation de l’équipe n’a été obtenue : le PM n’invente ni points ni dates. ESP-002 et surtout ESP-003 présentent un risque de taille ; conception et estimation doivent confirmer une session ou conduire à un redécoupage par capacités utilisateur avant build.
+
+## Guide initial — décision humaine du26octobre
+
+Le membre qui rejoint un espace existant n’a pas l’assistant de création (revenu/dépense/génération/paiement). Le guide reste pour le créateur de chaque espace, avec progression calculée sur les données communes. Si une personne invitée crée ensuite un autre espace, son guide y reste disponible. Aucun droit financier différent entre membres ; le bouton Revoir de Réglages suit cette règle d’affichage.

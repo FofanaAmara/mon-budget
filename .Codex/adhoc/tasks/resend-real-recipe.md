@@ -154,3 +154,11 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Remplacer tests de fonctionnalité retirée | COMPLETED :3SSR/17PGinvites/banc7 ; totalité256unit/100PG/14delivery/build/types/lint0 |
 | Recette dans vraie app | COMPLETED : MCPQA Cfalseverified→lienmail→signin→acceptation→finances/reload ;404avant/2espacesaprès |
 | Revue et preuve durable | COMPLETED : instance distincte favorable,DEC005,preuvesetlimitesconsignées ; commitlocalàcréer |
+
+## Guide de démarrage après adhésion — correction demandée
+
+| Travail | État |
+|---|---|
+| Adapter l’affichage au créateur de l’espace, sans ajouter de rôle | COMPLETED : metadata serveur et visibilitéguide, progressshared/droitsinchangés |
+| Tester invité/créateur/multiespaces et absence d’init | COMPLETED :13PGciblés et256unit0 |
+| Vérifier dans la vraie app et qualité/revue | COMPLETED : MCPinvitéguide0/reset0, proprespacecrééguide1/reset1 ; desktop/mobileinspectés,102PG/256unit/build/types/lint/14delivery0, revuefavorable |

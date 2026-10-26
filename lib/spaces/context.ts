@@ -39,7 +39,7 @@ export async function requireSpace(spaceId: string) {
   if (!parsed.success)
     throw new SpaceAccessError("Cet espace est introuvable ou inaccessible.");
   const rows = await sql`
-    SELECT s.id, s.name FROM financial_spaces s
+    SELECT s.id, s.name, s.created_by FROM financial_spaces s
     JOIN space_memberships m ON m.space_id=s.id AND m.user_id=${identity.id}
     CROSS JOIN financial_space_rollout r
     WHERE s.id=${parsed.data} AND r.singleton AND r.phase='ready' AND EXISTS(SELECT 1 FROM financial_space_migrations WHERE name='006-invitations.sql')
@@ -50,5 +50,6 @@ export async function requireSpace(spaceId: string) {
     spaceId: rows[0].id as string,
     userId: identity.id,
     name: rows[0].name as string,
+    createdByCurrentUser: rows[0].created_by === identity.id,
   };
 }

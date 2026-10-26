@@ -127,11 +127,36 @@ describe("space settings and guide — shared finances, individual account", () 
     const complete = await finishedSpace("Démarrage commun");
     await native.query("INSERT INTO space_memberships(space_id,user_id) VALUES($1,$2)",[complete,b]);
     state.userId = b;
-    expect(await guide.getOrInitSetupGuideData(complete)).toMatchObject({stepsCompletion:{income:true,expense:true,generate:true,pay:true},isCompleted:true,isVisible:true});
+    expect(await guide.getOrInitSetupGuideData(complete)).toMatchObject({stepsCompletion:{income:true,expense:true,generate:true,pay:true},isCompleted:true,isVisible:false});
     await guide.completeSetupGuide(complete);await guide.dismissSetupGuide(complete);
     state.userId = a;
     expect(await guide.getOrInitSetupGuideData(complete)).toMatchObject({isCompleted:true,isVisible:false});
     expect(await guide.getOrInitSetupGuideData(personal)).toMatchObject({isCompleted:false,isVisible:true});
+  });
+
+  test("joining members skip initial setup without changing the creator guide or losing financial rights", async () => {
+    const before = await timestamps(common);
+    state.userId = b;
+    expect(await guide.getOrInitSetupGuideData(common)).toMatchObject({ isVisible: false });
+    expect(await timestamps(common)).toEqual(before);
+    await settings.updateSettings(common, { default_currency: "CAD" });
+    const own = await space("Nouvel espace du membre invité");
+    expect(await guide.getOrInitSetupGuideData(own)).toMatchObject({ isVisible: true });
+    state.userId = a;
+    expect(await guide.getOrInitSetupGuideData(common)).toMatchObject({ isVisible: true });
+    expect(await timestamps(common)).toEqual(before);
+  });
+
+  test("an invited member never initializes a missing guide in an existing space", async () => {
+    const id = await space("Espace existant sans guide");
+    await native.query("INSERT INTO space_memberships(space_id,user_id) VALUES($1,$2)",[id,b]);
+    await native.query("DELETE FROM space_setup_guide WHERE space_id=$1",[id]);
+    state.userId = b;
+    expect(await guide.getOrInitSetupGuideData(id)).toMatchObject({ isVisible: false });
+    expect(await timestamps(id)).toBeUndefined();
+    state.userId = a;
+    expect(await guide.getOrInitSetupGuideData(id)).toMatchObject({ isVisible: true });
+    expect(await timestamps(id)).toBeDefined();
   });
 
   test("savings pots do not complete the expense step, but active expense templates do", async () => {

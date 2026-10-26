@@ -7,9 +7,9 @@ import { revalidateSpace } from "@/lib/spaces/financial";
 import type { GuideData } from "@/lib/spaces/guide";
 export type { GuideData, GuideStepCompletion } from "@/lib/spaces/guide";
 
-/** Run only after resolving the explicit space. Step progress is shared by all members. */
+/** Progress is shared; the initial setup assistant is shown only to the space creator. */
 export async function getOrInitSetupGuideData(spaceId: string): Promise<GuideData> {
-  await requireSpace(spaceId);
+  const { createdByCurrentUser } = await requireSpace(spaceId);
   const month = currentMonth();
   const rows = await sql`WITH progress AS (
     SELECT EXISTS(SELECT 1 FROM incomes WHERE space_id=${spaceId} AND is_active) AS income,
@@ -18,7 +18,7 @@ export async function getOrInitSetupGuideData(spaceId: string): Promise<GuideDat
       EXISTS(SELECT 1 FROM monthly_expenses WHERE space_id=${spaceId} AND month=${month} AND status='PAID') AS pay
   ), initialized AS (
     INSERT INTO space_setup_guide(space_id)
-    SELECT ${spaceId} FROM progress WHERE NOT (income AND expense AND generate AND pay)
+    SELECT ${spaceId} FROM progress WHERE ${createdByCurrentUser} AND NOT (income AND expense AND generate AND pay)
     ON CONFLICT(space_id) DO NOTHING RETURNING space_id,dismissed_at,completed_at
   ) SELECT p.*,
     COALESCE(g.space_id,i.space_id) IS NOT NULL AS has_guide,
@@ -29,7 +29,7 @@ export async function getOrInitSetupGuideData(spaceId: string): Promise<GuideDat
   const stepsCompletion = { income: Boolean(row.income), expense: Boolean(row.expense),
     generate: Boolean(row.generate), pay: Boolean(row.pay) };
   const isCompleted = Object.values(stepsCompletion).every(Boolean);
-  return { stepsCompletion, isCompleted, isVisible: !row.dismissed_at && (Boolean(row.has_guide) || !isCompleted) };
+  return { stepsCompletion, isCompleted, isVisible: createdByCurrentUser && !row.dismissed_at && (Boolean(row.has_guide) || !isCompleted) };
 }
 
 export async function completeSetupGuide(spaceId: string): Promise<void> {

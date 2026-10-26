@@ -95,3 +95,15 @@ Sources principales revues et éprouvées :
 - lib/actions/invitations.ts : 8f3c20322814459a5748344a05bb6c5eddf35105b77bdcd7ffac826c6afa80ed
 - components/spaces/InvitationResponse.tsx : aa32aee53026b8bc3a0cc5fa88a08a2aa59ab98c5e6704cdb3749c721f6084f2
 - app/invitation/[token]/page.tsx : 191824a548d3843e176ae55c14a9483536e248beb9975b8eae95171b9fe28847
+
+## Guide initial et membres invités — avis distinct
+
+financial_spaces_review : favorable,aucunfinding. createdByCurrentUsermétadonnéeUI ; requireSpacejointuremembership/gaterolloutinchangés,toutesactionsfinancièresaccessiblesàtoutmembre. Lectureguideinvité n’initialiseetn’affichepasguide,nemodifiepasprogresspartagée ; effetsautocomplete/dismisspréexistantsprotégésparisVisible. Réglages masqueuniquementboutonRevoir ; propreespacecrééparinvitéconservé.13PGciblés/102servicesetvraiescapturesconstatésparparent, pasprétendusréexécutésparreviewer.
+
+Empreintes revues et identiques à la copie de qualité :
+
+- lib/spaces/context.ts : eaaed6408e1046dc53ace2344aa2113ede4ea7f2a25ee8a0c4dc3675667fbcd0
+- lib/actions/financial/setup-guide.ts : 612bc1c536bc61d282d1499ff8ef82e5be7f40b85d3f1783b9090726473927a3
+- app/espaces/[spaceId]/parametres/page.tsx : a0d8f5624188963bab90efbe9fe9b90b23b029ddc78b7aa519ade940dff24c5a
+- components/ParametresClient.tsx : 56a87445e234da31e9b2f14e3ae4fab1f21f6c30cedf7f01214020e450c872c0
+- __tests__/integration/space-settings-guide.db.ts : a1903ad8d3db9270c5524ce94036ec472cf33970e4093cb38aa9b6d70e314a51

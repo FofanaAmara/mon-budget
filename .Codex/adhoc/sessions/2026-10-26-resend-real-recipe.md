@@ -65,3 +65,7 @@ Le modeResend61868 étaitrestéactif, humainattendaitMailpit pouradressefictive.
 ### 15:37 — OTP retiré à la demande de l’humain
 
 Instructionhumaine changelebesoin : aucun code de vérification dans le parcours. DEC005supersèdeDEC004, source/modules/testsOTPretirés, lienmail+sessionmêmeemailremplacentflagverifiedpouracceptation ; IDseulseulementAuthverified etpasdejetonexposélisteunverified. Profilvraiflagpréservé, dedupmembrefalsecorrigée.256unit/100PG/14delivery/build/types/lint0 ; banc7checkscomposant repenséacceptation, pasdeskip. Revuedistinctefavorable3SSRverts. VraiMCP compteQA Cfalseverified, retourlienMailpit/connexion/acceptationdistincte/confimation/finances/reload,404avant,2espacesetflagfauxaprès. SQLreadonly19:36:52UTCconfirme. Aucuncompte/invitationhumainmodifié, pasde nouveau mail ni configNeon. CapturesMCPvues. Runtime82094MailpitHTTP3002conservé ; commitlocalnécessaire, paspush.
+
+### Guide des membres invités — correction vérifiée
+
+Demandehumaine : petitassistant4étapesinadaptéàl’adhésion. Guideinitialvisiblecréateurseulementdanscetespace ; invitédanspropreespaceconserveguide. BoutonrelanceRéglagessuitvisibilité. Aucunrôle/droitfinanciernouveau,nidismissglobal.13PGciblés/102services/256unit/build/types/lint/14deliveryverts,revuefavorablehashesexactes. VraiMCP CinvitéF→guide0/settingsreset0, Ccréateurperso→guide1/reset1,retourF0 ; capturesdesktop/mobileinspectées. SourceDB/env/Auth/SMTPinchangés,runtime82094Mailpitconservé,pasdepush. Commitlocalàfaire.

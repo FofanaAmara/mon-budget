@@ -200,7 +200,7 @@ function LinkRow({
   );
 }
 
-export default function ParametresClient({ hasData }: { hasData: boolean }) {
+export default function ParametresClient({ hasData, showSetupGuide }: { hasData: boolean; showSetupGuide: boolean }) {
   const { spaceId } = useFinancialSpace();
   const router = useRouter();
 
@@ -395,8 +395,8 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
               gap: "10px",
             }}
           >
-            {/* Reset guide */}
-            <button
+            {/* Initial setup belongs to the person who created this space. */}
+            {showSetupGuide && <button
               onClick={handleResetGuide}
               disabled={isPendingReset || guideResetDone}
               style={{
@@ -421,7 +421,7 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
                 : guideResetDone
                   ? "✓ Guide relancé !"
                   : "Revoir le guide de configuration"}
-            </button>
+            </button>}
 
             {/* Load demo */}
             <button

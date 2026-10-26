@@ -40,3 +40,5 @@ Aucun rôle différencié ni parcours destructeur ajouté. Les30AC restent incha
 ## Décision produit actuelle — sans OTP
 
 L’humain retire le26octobre touteétape de code de vérification dans l’acceptation. INVITATION-LINK-NO-OTP-REAL/DEC005supersèdent les référencesOTP historiques : connexion/inscription→retourlien→acceptationdirecte. CompteAuthnonverifiedadmissiblesi sessionmêmeemail etjetonoriginalsecret ; aucunflagAuthfabriqué, listeprivée n’exposepasdejeton.256unit/100PG/14delivery/build/types/lint etrevuefavorable, vraiMCPfalseverified→acceptation/reload acquis. Stories/goalglobalrestentencours, pasdeCI/push/déploiementnouveau.
+
+Guideinitialinvité : INVITEE-GUIDE-REALcorrigeaffichage, créateurseulvoitassistantetboutonrelance ; invitéconservetousdroits/progressioncréateurinchangée, propreespaceguidevisible.102PG/256unit/14delivery/build/types/lintverts etMCPdesktop/mobileinspectés, revuefavorable. PasdeclôtureglobaleCI/stories.
