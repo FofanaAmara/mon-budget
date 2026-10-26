@@ -162,3 +162,12 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Adapter l’affichage au créateur de l’espace, sans ajouter de rôle | COMPLETED : metadata serveur et visibilitéguide, progressshared/droitsinchangés |
 | Tester invité/créateur/multiespaces et absence d’init | COMPLETED :13PGciblés et256unit0 |
 | Vérifier dans la vraie app et qualité/revue | COMPLETED : MCPinvitéguide0/reset0, proprespacecrééguide1/reset1 ; desktop/mobileinspectés,102PG/256unit/build/types/lint/14delivery0, revuefavorable |
+
+## Goal de livraison production — rédaction demandée
+
+| Travail | État |
+|---|---|
+| Reprendre sources/risques réels et décisions récentes | COMPLETED : migrationfixture-only/autopublish/rollbackidentifiés,aucuneactionprod |
+| Rédiger contrat de production et condition native | COMPLETED : P1–P10,sources/preuves/limitesexplicites,3405caractèrescadreintact |
+| Vérifier gabarit et revue indépendante | COMPLETED : test-s/check0,référencesaccessibles,revuefinalefavorable |
+| Exécuter la livraison | NON LANCÉ : activationhumainefuturedugoal,aucunpush/déploiementactuel |
