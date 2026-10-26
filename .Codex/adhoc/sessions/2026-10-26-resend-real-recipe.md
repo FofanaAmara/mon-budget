@@ -14,3 +14,8 @@ La consigne de cua_repl avait été généralisée à tort àPlaywright : correc
 
 ### Compte déjà existant — en cours
 Depuis Réglages/liste, AChrome crée «RecetteResend—Compteexistant» (735d15ed-7d14-49a3-b170-2e7b4af62eae), partagéOui, invitationinitiale laisséevide. Puis fiche → invitation de l’adresse déjà inscrite/vérifiée ; UIannonceenvoiconfirmé et1membreavantacceptation. B n’a pasencorejointcenouvelespace. Prochaineétape : recevoircourriel, retrouverinvitationdanscompteMCP, adhésiondistincte puisisolationentredeuxespaces. Pasdepush ; pleinobjectifresteouvert.
+
+### Compte existant, isolation, brouillon et reconnexion acquis
+Resend reçuInbox12:58 ; lien et listeprivée MCP,404avantacceptation puis2membres. B crée45.67danssecond, reload etAChromevoit. Bswitch conserve23.45premier/45.67second sansmélange. DialogueMCP : annulerconservebrouillon/espace, accepterabandonne ; nomSQLinchangé. Signout/signin réels reprennent735d, SQLREADONLY17:18:01UTCconfirme5/1expenses/préférence. PreuveEXISTING-ACCOUNT-REAL. Aucun scriptCLI substitué au MCP.
+
+CSS perdu en navigation, captures avant inspectées ; ressource200avecCAprojet maisERRRETRYnavigateur. Reloadnormal rétablitstyles, capturesfinalesinspectées. MacOS nefaitpasconfiancecertificat ; installSSLlocalhost utilisateur19589pending, processussecurity/SecurityAgent observés ; outilrefuselectureUIcom.apple.SecurityAgent. Pasdeconfianceinstallée revendiquée niTLSdésactivé. Continuer autres contrôles.

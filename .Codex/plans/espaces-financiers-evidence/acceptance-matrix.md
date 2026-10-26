@@ -1,6 +1,6 @@
 # Matrice de recette — 17 exigences et 30 critères
 
-État au 2026-10-23, après e990b5d, 1c9bef8, de4115e et extension des entrées privées. **Le goal n’est pas atteint.**
+État courant au 2026-10-26 ; preuves historiques conservées et complétées par deux parcours réels de destinataire. **Le goal n’est pas atteint.**
 
 Sources : requirements.md et six stories dans `.app-factory/backlog/epics/finances-partagees/features/espaces-financiers/`. Maquettes approuvées : `cs-design/mes-finances/features/espaces-financiers-essai-02/`, commit 7aaec6d.
 
@@ -43,6 +43,8 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 
 ## Exigences
 
+Référence **EXISTING-ACCOUNT-REAL** : resend-real-execution.md,26octobre ; Resend reçuInbox, landing/listeprivée,404avantconsentement, acceptationMCP compteconnecté ; deuxappartenancespréservées. B45.67danssecond etAvoit, premierB23.45isolé ; vrai dialoguebrouilloncancel/accept ; signin reprenddernierespace etSQLREADONLYconcordant. TLSdurable/gatesglobauxouverts.
+
 | ID | État | Preuves disponibles | Preuve restante pour clôture |
 |---|---|---|---|
 | FR-001 | PARTIEL | PG création atomique/idempotente ; UI création nommée solo/couple | Nouveau compte réel, suite de configuration et finances desktop/mobile après mise à niveau |
@@ -50,7 +52,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | FR-003 | PARTIEL | PG espaces distincts ; UI personnel puis couple vide | Deux espaces sur toutes les pages avec recharge, vrai compte |
 | FR-004 | PARTIEL | NAV sélecteur seul et préférence ; PG dernier espace | UI-ACCESS prouve option unique désactivée et création mobile ; connexion/reconnexion reste ouverte |
 | FR-005 | PARTIEL | 78 actions contextualisées, PG toutes familles ; FIN-REAL revenu/rappels et REF-REAL références/abonnement et PATRIMOINE-REAL épargne/dette et TRANSFER-GUIDE-REAL transfert/guide isolés en vraie UI | Tour E2E de toutes fonctions et automatismes sur deux contextes |
-| FR-006 | PARTIEL | MAIL local, MAIL-REAL réception externe et lien, PG acceptation ; UI landing explicite et mauvais compte | UI-VERIFY parcours de vérification raccordé ; réception OTP/externe, acceptation et contribution à deux sessions restent à prouver |
+| FR-006 | PARTIEL | MAIL-REAL,NEW-ACCOUNT-REAL etEXISTING-ACCOUNT-REAL : réception externe,OTPnouveau,acceptations etcontributionsdeuxsessions | Autrescasreprise/échec etgatesglobauxouverts |
 | FR-007 | VÉRIFIÉ | NEW-ACCOUNT-REAL : page explicite, signup/OTP réels, retour et acceptationdistincte, pas de personnelimposé | Gate global visuel/revue/CI reste ouvert |
 | FR-008 | PARTIEL | UI Non saute et Oui propose invitation ; même service | Nouveau compte réel, report d’envoi et reprise mobile/desktop |
 | FR-009 | PARTIEL | PG membre B modifie/renomme/invite sans rôle créateur | Deux sessions réelles contribuent et gèrent après recharge |
@@ -79,11 +81,11 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | ESP-002/AC-5 | PARTIEL | SQL interruption/rollback/checksum/gel ; garde rollout | Erreur visible sur vraie page et reprise valide |
 | ESP-003/AC-1 | PARTIEL | UI liste puis création couple sans copie ; PG | Rejouer liste actuelle, données des deux espaces après recharge |
 | ESP-003/AC-2 | PARTIEL | NAV préférence/contexte ; PG configurations séparées | UI-RESP depenses/reload/racine acquis ; autres pages et prochaine connexion reelles |
-| ESP-003/AC-3 | PARTIEL | UI renommage B sous A ; PG membre sans privilège | Sélecteur actualisé et données conservées sur sessions réelles |
-| ESP-003/AC-4 | PARTIEL | NAV brouillon, confirmation refusée et réponse tardive ; SESSION verrouille le document | MULTITAB-REAL acquis pour contexts/recharge ; brouillon, late-RSC et échec réseau ouverts |
+| ESP-003/AC-3 | VÉRIFIÉ | NEW-ACCOUNT-REAL : B renomme, fiche/sélecteur changent, Avoitaprèsreload, nomrestauré etfinancesconservées | Gatesglobauxouverts |
+| ESP-003/AC-4 | PARTIEL | NAV/SESSION/MULTITAB-REAL ; EXISTING-ACCOUNT-REAL dialogueMCP annulerconserve,confirmerabandonne sanssauvegarder | late-RSC,échecdebascule etofflineouverts |
 | ESP-003/AC-5 | PARTIEL | PG refus tiers/objets croisés et SQL FK | Tests directs HTTP/UI puis accès valide |
-| ESP-004/AC-1 | PARTIEL | UI-CURRENT Mailpit et MAIL-REAL réception externe/lien fonctionnel/mauvais compte refusé ; aucun accès avant acceptation PG | Courriel externe reçu ; liste privée chez destinataire après authentification reste à prouver |
-| ESP-004/AC-2 | À PROUVER | Landing/auth/retour/confirmation implémentés ; PG | Connexion existante puis acceptation réelle et sélecteur |
+| ESP-004/AC-1 | VÉRIFIÉ | EXISTING-ACCOUNT-REAL : réceptionexterne, landing/listeprivée identifientespace, accèspréalable404 | Gatesglobauxouverts |
+| ESP-004/AC-2 | VÉRIFIÉ | EXISTING-ACCOUNT-REAL : alternativecompteconnecté, consentementdistinct,2membres,autreespacepréservé,sélecteur/reconnexion | Gatesglobauxouverts |
 | ESP-004/AC-3 | PARTIEL | PG contribution, renommage, invitation par B | Deux sessions membres réelles et persistance après recharge |
 | ESP-004/AC-4 | PARTIEL | PG mauvais compte/non vérifié/préacceptation ; UI mauvais compte | Tiers et invité réel via routes/actions avant adhésion |
 | ESP-004/AC-5 | PARTIEL | PG triple acceptation concurrente, rollback et confirmation privée | Reprise d’échec et double confirmation via vraie UI |
@@ -125,3 +127,5 @@ ALLOCATION-PROGRESSIVE-REAL : allocation250/275.50, uniqueachat3.99/200, consomm
 Mise à jour MCP-INVITATION-ENTRY : après acceptation humaine de l’avertissement, vraiMCPPlaywright accède à la page explicite d’invitation et suitCréeruncompte avec retourconservé. Deux captures desktop privées inspectées, formulaireprérempli et motdepassevide/handoff. Anciennes mentions d’outilMCPabsent sont historiques ; validationvisuelleglobale et mobile, inscription etadhésion restentouvertes. Aucune confianceTLSdurable ouofflineprouvée. Voir resend-real-execution.md.
 
 État du26octobre : le blocage d’inscription est levé par NEW-ACCOUNT-REAL. Les anciens paragraphes évoquant absence de nouveaucompte/adhésion sont historiques ; la livraison globale reste nonacquise.
+
+Situation après EXISTING-ACCOUNT-REAL : les deux trajets de destinataire sont exécutés depuis des invitations réellementreçues, deuxsessions etcontributionspersistantes acquises. Les anciennes mentions de MCPabsent/réceptionabsente/adhésionabsente sont historiques. Restent : étenduefinancière/config/automates complète àdeux, caches/offline/concurrenceUI, visuelMCPglobal/clavier, revueindépendante etCIexactSHA sanspushautorisé. TLSlocalnoncorrigédurablement : verifyTP_NOT_TRUSTED, installétroitpendingmacOS ; CSSréapparu parreload nefermepascepoint.

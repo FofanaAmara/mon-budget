@@ -105,6 +105,8 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Tâche | Dépendance | État |
 |---|---|---|
 | A crée un espace vide et invite depuis la fiche | compte B réel existant | COMPLETED :735d…, envoi confirméUI et1membre |
-| Réception, liste privée et adhésion distincte B | invitation | IN_PROGRESS |
-| Deux espaces B, contribution et absence de mélange | adhésion | PENDING |
-| Contrôle du brouillon via vrai dialogue MCP | deuxespaces | PENDING |
+| Réception, liste privée et adhésion distincte B | invitation | COMPLETED : Resend reçu Inbox, accès préalable404, acceptation MCP et2membres |
+| Deux espaces B, contribution et absence de mélange | adhésion | COMPLETED : B45.67danssecond/B23.45danspremier, recharges etAvoit45.67 |
+| Contrôle du brouillon via vrai dialogue MCP | deuxespaces | COMPLETED : annulerconserve, confirmerabandonne sanssauvegarder |
+| Reconnexion et dernier espace | bascule | COMPLETED : signout/signin MCP etSQLconcordant17:18:01UTC |
+| ConfianceTLS durable | macOS | IN_PROGRESS : install19589pending, verifyTPNOTTRUSTED ; accèsUISecurityAgentrefusé |
