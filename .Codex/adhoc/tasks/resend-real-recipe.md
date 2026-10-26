@@ -109,4 +109,8 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Deux espaces B, contribution et absence de mélange | adhésion | COMPLETED : B45.67danssecond/B23.45danspremier, recharges etAvoit45.67 |
 | Contrôle du brouillon via vrai dialogue MCP | deuxespaces | COMPLETED : annulerconserve, confirmerabandonne sanssauvegarder |
 | Reconnexion et dernier espace | bascule | COMPLETED : signout/signin MCP etSQLconcordant17:18:01UTC |
-| ConfianceTLS durable | macOS | IN_PROGRESS : install19589pending, verifyTPNOTTRUSTED ; accèsUISecurityAgentrefusé |
+| ConfianceTLS durable | macOS | IN_PROGRESS : install19589exit1, autorisation annulée côté macOS ; verifyTPNOTTRUSTED, aucune confiance installée |
+| Parcours financier B et mobile/clavier | B membre | IN_PROGRESS : revenus/allocation/patrimoine retrouvés, captures375/1200inspectées, drawerTab/ShiftTab/Escape etbascule vérifiés |
+| Horsligne/déconnexion et panne de bascule MCP | sessions réelles | COMPLETED : offline masque, online reste masqué jusqu’àreload ; autreonglet masqué aprèssignout ; POSTbascule aborté→erreur/contexteconservé puisretryréussi |
+| Revue indépendante actuelle | HEAD e7b1cd6 | COMPLETED : aviscode/modèlefavorable,265unit/20fichiers0échec/skip ; pasdefeuvertrelease |
+| Premier onboarding réel personnel/partagé | Auth réelle | IN_PROGRESS : deuxcomptesfictifsdédiés,10–15minestimées, servicesexistants/coutprécisindisponible |

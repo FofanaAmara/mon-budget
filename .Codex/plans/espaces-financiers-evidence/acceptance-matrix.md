@@ -47,20 +47,20 @@ Référence **EXISTING-ACCOUNT-REAL** : resend-real-execution.md,26octobre ; Res
 
 | ID | État | Preuves disponibles | Preuve restante pour clôture |
 |---|---|---|---|
-| FR-001 | PARTIEL | PG création atomique/idempotente ; UI création nommée solo/couple | Nouveau compte réel, suite de configuration et finances desktop/mobile après mise à niveau |
+| FR-001 | VÉRIFIÉ | FIRST-ONBOARDING-REAL : deux nouveaux comptes, nom, questionOui/Non, solo sans invitation ; usage et SQL réel | Gates globaux ouverts |
 | FR-002 | PARTIEL | MIG/SQL conservation exacte, backfill Mes finances et map stable | Reconnexion navigateur du compte existant avec toutes pages ; release cible autorisée |
 | FR-003 | PARTIEL | PG espaces distincts ; UI personnel puis couple vide | Deux espaces sur toutes les pages avec recharge, vrai compte |
-| FR-004 | PARTIEL | NAV sélecteur seul et préférence ; PG dernier espace | UI-ACCESS prouve option unique désactivée et création mobile ; connexion/reconnexion reste ouverte |
+| FR-004 | VÉRIFIÉ | FIRST-ONBOARDING-REAL optionunique désactivée desktop/mobile ; EXISTING-ACCOUNT-REAL signin reprend dernierespace ; SESSION-MCP-REAL sélecteur seul | Gates globaux ouverts |
 | FR-005 | PARTIEL | 78 actions contextualisées, PG toutes familles ; FIN-REAL revenu/rappels et REF-REAL références/abonnement et PATRIMOINE-REAL épargne/dette et TRANSFER-GUIDE-REAL transfert/guide isolés en vraie UI | Tour E2E de toutes fonctions et automatismes sur deux contextes |
-| FR-006 | PARTIEL | MAIL-REAL,NEW-ACCOUNT-REAL etEXISTING-ACCOUNT-REAL : réception externe,OTPnouveau,acceptations etcontributionsdeuxsessions | Autrescasreprise/échec etgatesglobauxouverts |
+| FR-006 | VÉRIFIÉ | EXISTING-ACCOUNT-REAL listeprivée/acceptation ; FIRST-ONBOARDING-REAL email→landing→signin→retour→acceptation distincte | Reprises fournisseur et gates globaux traités séparément |
 | FR-007 | VÉRIFIÉ | NEW-ACCOUNT-REAL : page explicite, signup/OTP réels, retour et acceptationdistincte, pas de personnelimposé | Gate global visuel/revue/CI reste ouvert |
-| FR-008 | PARTIEL | UI Non saute et Oui propose invitation ; même service | Nouveau compte réel, report d’envoi et reprise mobile/desktop |
+| FR-008 | VÉRIFIÉ | FIRST-ONBOARDING-REAL : premierSoloNon sansemail, premierPartagéOui propose email facultatif ; UIreport etPGcomplètent | Échec fournisseur réel reste ouvert dansESP006/AC4 |
 | FR-009 | PARTIEL | PG membre B modifie/renomme/invite sans rôle créateur | Deux sessions réelles contribuent et gèrent après recharge |
 | FR-010 | PARTIEL | UI liste/création/détail ; renommer B sous A actif | Rejouer interface actuelle, liste des membres et sélecteur actualisé |
 | NFR-001 | PARTIEL | PG tiers/IDs croisés ; SQL FK composites et space_id obligatoire | UI-ACCESS prouve refus de pages étrangères dans deux sessions réelles ; compléter endpoints et autres familles |
 | NFR-002 | PARTIEL | MIG/SQL exacts ; PG génération et acceptation concurrentes | Recharge navigateur/multisession et reprise réelle sans mélange |
 | NFR-003 | PARTIEL | NAV requêtes tardives et brouillons ; PG concurrence ; SESSION masquage et invalidation | MULTITAB-REAL acquis pour deux onglets mêmeacteur ; réponses RSC tardives, brouillon, échec de bascule et offline restent ouverts |
-| UXR-001 | PARTIEL | NAV et UI sélecteur/sidebar/drawer | UI-RESP fiches/depenses375et1280 acquis ; UI-ACCESS optionunique acquis ; MCP et claviercomplet restent ouverts |
+| UXR-001 | VÉRIFIÉ | SESSION-MCP-REAL tiroir375Tab/ShiftTab/Escape/focus/bascule, desktop sélecteur seul ; FIRST-ONBOARDING-REAL optionunique désactivée | Gates globaux ouverts |
 | UXR-002 | PARTIEL | Maquettes React intégrées à la vraie app ; UI avant mise à niveau | UI-RESP montants3.99/1450etnomlong acquis surdepenses ; MCP et autrespagesentieres restent ouverts |
 | TR-001 | PARTIEL | Stack conservée ; coûts non engagés ; Resend existant vérifié en lecture | Quota/coût applicable à la recette externe et origine publique autorisée |
 | TR-002 | PARTIEL | Plan accepté, tests PG/MIG, test préexistant corrigé, revue de tranches | CI distante, revue globale et Playwright MCP ; validation complète |
@@ -69,10 +69,10 @@ Référence **EXISTING-ACCOUNT-REAL** : resend-real-execution.md,26octobre ; Res
 
 | ID | État | Preuves disponibles | Observation restante |
 |---|---|---|---|
-| ESP-001/AC-1 | PARTIEL | PG création membre/defaults atomique ; UI nom et partage | Nouveau compte réel sans espace, configuration puis finances |
+| ESP-001/AC-1 | VÉRIFIÉ | FIRST-ONBOARDING-REAL deux premiers espaces réels, configuration/usage, SQL unicité et même contexte | Gates globaux ouverts |
 | ESP-001/AC-2 | PARTIEL | UI création personnelle Non sans invitation | Rejouer depuis vrai onboarding actuel, invitation ultérieure |
-| ESP-001/AC-3 | PARTIEL | Sélecteur désactivé si unique ; NAV/UI bornés | Compte réel à un espace, mobile/desktop/clavier MCP |
-| ESP-001/AC-4 | PARTIEL | PG noms invalides et rollback ; formulaire erreur | Erreur réseau et correction dans vraie interface |
+| ESP-001/AC-3 | VÉRIFIÉ | FIRST-ONBOARDING-REAL seul espace réel, optionunique désactivée desktop/mobile, fermeture clavier ; gestion absente | Gates globaux ouverts |
+| ESP-001/AC-4 | VÉRIFIÉ | PG noms invalides ; FIRST-ONBOARDING-REAL réponsecréation perdue, erreur visible et retry fonctionnel sans accès indu | Gates globaux ouverts |
 | ESP-001/AC-5 | PARTIEL | PG même clé et concurrence ; intent durable client | Interruption/recharge réelle après confirmation perdue |
 | ESP-002/AC-1 | PARTIEL | MIG 703 lignes et attribution Mes finances | Reconnexion réelle puis consultation de l’historique |
 | ESP-002/AC-2 | PARTIEL | PG 78 actions/familles ; synthèses/contextes raccordés | Toutes pages et générations dans vraie app |
@@ -94,11 +94,11 @@ Référence **EXISTING-ACCOUNT-REAL** : resend-real-execution.md,26octobre ; Res
 | ESP-005/AC-3 | PARTIEL | UI mauvais compte ; PG refus ; SESSION changement de compte conserve retour et refuse erreur signout | Mauvais compte après inscription puis bon compte réel |
 | ESP-005/AC-4 | VÉRIFIÉ | NEW-ACCOUNT-REAL : après signup/vérification, poursuivre versfinances reste404avantacceptation ; retourinvitationchoixconservé | Pas de course réseau tardive prétendue ; gatecacheglobal ouvert |
 | ESP-005/AC-5 | VÉRIFIÉ | NEW-ACCOUNT-REAL : B23.45 créée/rechargée, A voitB dans autre session ; SQLauteursdistincts etespacepersonnelAisolé | Pas de réserve propre au scénario exécuté ; gatesglobaux ouverts |
-| ESP-006/AC-1 | PARTIEL | UI Oui propose email facultatif, création espace réutilisée | Véritable premier onboarding, report et émission externe |
-| ESP-006/AC-2 | PARTIEL | Formulaire continue sans attendre ; espace durable PG | Utilisation réelle pendant invitation en attente |
+| ESP-006/AC-1 | VÉRIFIÉ | FIRST-ONBOARDING-REAL nouveaucompte, Oui→email facultatif, Resend reçu Inbox depuis premier parcours ; reportUI/PG | Gates globaux ouverts |
+| ESP-006/AC-2 | VÉRIFIÉ | FIRST-ONBOARDING-REAL D configure32.10/reload et guide1/4 avant adhésion, SQL invitationpending | Gates globaux ouverts |
 | ESP-006/AC-3 | PARTIEL | UI Non saute invitation et espace personnel créé | Rejeu actuel depuis nouveau compte, réglages ultérieurs |
 | ESP-006/AC-4 | PARTIEL | PG panne/retry meme invitation/token ; UI-CURRENT seconde soumission sans doublon de mail ; intent durable | Panne SMTP/Resend injectée dans vraie app, correction/recharge sans doublon |
-| ESP-006/AC-5 | À PROUVER | PG guide/config communs ; acceptation ne provisionne rien | Conjoint existant et nouveau rejoignent l’espace déjà configuré |
+| ESP-006/AC-5 | VÉRIFIÉ | FIRST-ONBOARDING-REAL compteexistant retrouve32.10/guide1/4, contribue4.56vueparcréateur ; NEW-ACCOUNT-REAL nouveau retrouve financesconfigurées et contribue23.45 ; SQL pasdedoublons | Gates globaux ouverts |
 
 ## Gates globaux ouverts
 
@@ -129,3 +129,5 @@ Mise à jour MCP-INVITATION-ENTRY : après acceptation humaine de l’avertissem
 État du26octobre : le blocage d’inscription est levé par NEW-ACCOUNT-REAL. Les anciens paragraphes évoquant absence de nouveaucompte/adhésion sont historiques ; la livraison globale reste nonacquise.
 
 Situation après EXISTING-ACCOUNT-REAL : les deux trajets de destinataire sont exécutés depuis des invitations réellementreçues, deuxsessions etcontributionspersistantes acquises. Les anciennes mentions de MCPabsent/réceptionabsente/adhésionabsente sont historiques. Restent : étenduefinancière/config/automates complète àdeux, caches/offline/concurrenceUI, visuelMCPglobal/clavier, revueindépendante etCIexactSHA sanspushautorisé. TLSlocalnoncorrigédurablement : verifyTP_NOT_TRUSTED, installétroitpendingmacOS ; CSSréapparu parreload nefermepascepoint.
+
+Situation après FIRST-ONBOARDING-REAL et SESSION-MCP-REAL : premiers comptes/personnel/partagé acquis, email dès onboarding et usage pendantpending, adhésion sans remiseàzéro et contributioncommune ; offline/reprise et autreongletsignout masqués, pannebasculeretry, vraieRSCretardée aprèsintention et clavierdrawer acquis. Revueindépendante e7b1cd6 favorable,265unit/20fichiers0skip exécutés parreviewer. Trustinstall termineexit1autorisationannulée, pasdeconfianceTLS. PasdeBFCacheeffectif/SW ouCIverteprétendus. Panne réelle de transport d’invitation dans l’app encore ouverte ; test de réponseperdue après envoi n’en constitue pas la preuve. Détails et limites dans resend-real-execution.md.
