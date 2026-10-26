@@ -49,3 +49,5 @@
 - [Revalidation de l’onboarding](feedback_onboarding_revalidation.md) — conserver le parcours de récupération déjà monté, sans figer l’identité ni les autorisations.
 
 - [Navigation Auth et refresh concurrents](feedback_auth_navigation_race.md) — distinguer session API valide et arrivée réelle ; transitions Auth documentaires, invalidation des autres onglets conservée.
+
+- [Transport email effectif à la remise](feedback_recipe_transport_handoff.md) — laisser le runner en Mailpit après tests externes ; le défaut du code ne prouve pas le mode du processus actif.
