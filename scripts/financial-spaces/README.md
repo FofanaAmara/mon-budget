@@ -131,7 +131,7 @@ restart the default command to return to Mailpit. Do not blindly retry an
 uncertain delivery or reuse an old Mailpit invitation as proof of Resend receipt.
 
 The dev command verifies the owned fixture before starting Next on
-`https://localhost:3443` (the former `http://localhost:3002` redirects there). It preserves `.env.local`, removes inherited database
+`http://localhost:3002` directly, without a certificate or HTTPS redirect. It preserves `.env.local`, removes inherited database
 targets, and supplies only the dummy local credentials to the app process.
 Authentication still uses the existing Neon Auth service. Compiler outputs use
 `.next-spaces-dev`; generated changes to compiler configuration are restored.
@@ -216,12 +216,16 @@ multi-session Auth and Playwright MCP remain separate release requirements.
 The runtime profile is `.app-factory/docs/infra/financial-spaces-validation-profile.json`.
 
 
-## Safari-compatible local HTTPS
+## Local HTTP — user decision, 26 October
 
-The owned recipe now serves HTTPS on3443 and keeps3002 as a loopback-only redirect. This is required for Secure/__Secure Auth cookies in Safari26; Chromium accepts these cookies on HTTP localhost, which hid the issue. No Auth cookie protection is disabled. APP_ORIGIN is explicitly set to the HTTPS recipe origin for new local invitations; frozen older HTTP invitation links retain their path/query through the redirect.
+The owned recipe serves HTTP directly on3002. It no longer creates a certificate,
+starts an HTTPS listener or redirects HTTP to3443. APP_ORIGIN is HTTP for new
+invitations. Existing emailed HTTPS links retain their old origin; replace only
+the origin with http://localhost:3002 for local testing. No mail is sent at startup.
 
-The project generates a30day localhost leaf certificate/key under ignored `.local/financial-spaces/https/` using OpenSSL. Private directory/key permissions are restricted. No global root CA, keychain trust or browser setting is installed. On first browser visit, approve this local certificate to continue. Automated tests explicitly trust only this certificate or use isolated test-context certificate acceptance; they do not establish trust in the user's Safari profile.
-
-Expired, incomplete or mismatched certificates stop startup rather than overwrite existing key material. Stop the owned recipe and archive the pair before renewing by running dev:spaces again. Never commit or send the key. The local recipe omits HSTS because that policy applies to all ports of localhost and would break the old HTTP redirect port. Production HSTS is unchanged.
+Neon Auth still issues Secure/__Secure cookies. WebKit rejection on HTTP was
+previously reproduced, so Safari login remains unverified/unresolved under this
+profile. No cookies are renamed or downgraded, and production HSTS remains intact.
+See docs/local-https.md for the current transport and historical HTTPS tools.
 
 `npm run test:auth:render` builds an isolated Next production fixture under `.local/`, using the real Auth reader/error component and a synthetic HTTPS Auth upstream. It proves one read per RSC request, fresh separate requests/users, recovery after upstream failure and a working full-page retry button. No hosted Auth or financial database is used. Successful fixture source/build files are removed before CI typegen; failed fixtures and logs remain private for diagnosis.

@@ -14,7 +14,7 @@ Le précédent état du22octobre décrivait uniquement la préparation. Il est r
 - Conservation MIG/PG et historique ancien du compte réellement mappé consulté ; session A revalidée, nouvelle connexion stricte encore ouverte.
 -266tests unitaires, build/types/lint/11gardes locaux verts au3b71827 ; revue indépendante favorable sur SHA et couverture ; visuel MCP desktop/mobile inspecté. PG/MIG restent bornés aux runs documentés.
 
-Recette locale : http://localhost:3002 redirige vers https://localhost:3443 ; Mailpit http://localhost:8025. Copie locale isolée, Auth existante ; aucun push/déploiement ni modification financière de la source.
+Recette locale : http://localhost:3002 directement en HTTP, sans certificat ni redirection ; Mailpit http://localhost:8025. Copie locale isolée, Auth existante ; aucun push/déploiement ni modification financière de la source.
 
 ## Décisions produit et UX acquises
 
@@ -31,7 +31,7 @@ Ces décisions et l’approbation du design ne doivent pas être redemandées.
 ## Conditions de clôture restantes
 
 1. ESP002/AC1 : vraie nouvelle connexion du compte historique. Recharger sa session et consulter l’historique ne sont pas assimilés à une déconnexion/connexion.
-2. Certificat local toujours non approuvé après annulation d’autorisation macOS ; service worker réel/activation/purge ancien cache privé à valider après résolution TLS.
+2. Retour HTTP explicitement demandé : TLS désactivé, service worker réellement activé sur HTTP3002 ; purge ancien cache privé à vérifier. Connexion Safari en HTTP non validée avec les cookies Secure Neon inchangés.
 3. Retour avec BFCache réellement actif ; retour documentaire404 après changement d’acteur acquis, navigateur MCP BFCache désactivé donc aucune preuve persisted=true.
 4. CI distante entièrement verte sur SHA livré, après autorisation de push. Qualité/revue locales ne remplacent pas la CI. Aucun push/déploiement autorisé actuellement ; origine/callback production à vérifier avant release autorisée.
 

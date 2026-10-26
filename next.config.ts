@@ -13,8 +13,8 @@ const nextConfig: NextConfig = {
     root: path.resolve(__dirname),
   },
   async headers() {
-    // HSTS applies to every port of a host. Do not pin localhost while the
-    // recipe keeps a plain HTTP port solely to redirect old emailed links.
+    // HSTS applies to every port of a host. Keep the local HTTP recipe usable;
+    // production continues to send HSTS.
     const localRecipe = process.env.NODE_ENV === "development" &&
       process.env.MES_FINANCES_DB_DRIVER === "local-fixture";
     // CSP directives — report-only to observe before enforcing

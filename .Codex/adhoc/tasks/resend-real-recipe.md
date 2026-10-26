@@ -124,3 +124,13 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Consultation historique du compte migré | mapping legacy et session A réelle | COMPLETED : dashboard,15dépenses/2revenus mars, SQLREADONLY et trois captures inspectées ; nouvelle connexion stricte reste ouverte |
 | Consolidation matrice et revue | preuves des parcours actuels | COMPLETED :17exigences/29AC vérifiés et commitéd3d3e96 ; CI/SW/BFCache et nouvelle connexion historique restent ouverts |
 | Préparer navigateur BFCache depuis MCP | outil et profil durable isolé | COMPLETED enabler : lancement sans drapeau de désactivation, sandbox actif ; navigation refusée TLS, pas de BFCache effectif revendiqué |
+
+## Retour HTTP explicitement demandé — 26 octobre
+
+| Tâche | Dépendance | État |
+|---|---|---|
+| Désactiver HTTPS/redirect du runner et origine des nouvelles invitations | décision humaine | COMPLETED : HTTP3002 direct, anciens outils inactifs, APP_ORIGIN HTTP |
+| Redémarrer sur la même copie locale | arrêt propre16831 | COMPLETED : runtime58028Resend, gardeDB vérifiée, aucune émission au démarrage |
+| Vérifier réponse, rendu et service worker | runtimeHTTP | COMPLETED :200 sansLocation/HSTS,3443sanslistener, captureMCP inspectée, SWactivated/contrôleur présent |
+| Contrôles existants | vérifications | COMPLETED :nodecheck et11delivery0 ; tranche à commiter localement sanspush |
+| Connexion Safari en HTTP | cookiesNeonSecure | NON VALIDÉE : aucune modification de cookies ; ancien rejetWebKit reste pertinent |

@@ -5,7 +5,6 @@ import { spawn } from 'node:child_process';
 import dotenv from 'dotenv';
 import { restoreGeneratedConfigs } from './generated-config.mjs';
 import { root, localConnection, port, username, password } from './local-fixture.mjs';
-import { localHttpsCertificate, recipeHttpsOrigin, startRecipeHttpRedirect } from './local-https.mjs';
 
 const args = process.argv.slice(2);
 if (args.length && !(args.length === 1 && args[0] === '--resend'))
@@ -15,7 +14,7 @@ const client = await localConnection('spaces_work17');
 let identifier;
 try { identifier = (await client.query('SELECT system_identifier::text FROM pg_control_system()')).rows[0].system_identifier; }
 finally { await client.end(); }
-const certificate = localHttpsCertificate(root);
+const recipeOrigin = 'http://localhost:3002';
 
 const inherited = { ...process.env, ...dotenv.parse(fs.readFileSync(path.join(root, '.env.local'))) };
 const environment = Object.fromEntries(Object.entries(inherited).filter(([key]) =>
@@ -25,7 +24,7 @@ Object.assign(environment, {
   POSTGRES_URL: localUrl, POSTGRES_URL_NON_POOLING: localUrl,
   MES_FINANCES_DB_DRIVER: 'local-fixture', MES_FINANCES_LOCAL_SYSTEM_ID: identifier,
   MES_FINANCES_BUILD_DIR: '.next-spaces-dev', MES_FINANCES_MAIL_TRANSPORT: mailTransport,
-  APP_ORIGIN: recipeHttpsOrigin,
+  APP_ORIGIN: recipeOrigin,
 });
 if (mailTransport === 'resend' && !environment.RESEND_API_KEY)
   throw new Error('Explicit Resend recipe requires RESEND_API_KEY in the server environment.');
@@ -36,26 +35,19 @@ function restoreGeneratedFiles() {
 }
 
 const child = spawn(process.execPath, [
-  'node_modules/next/dist/bin/next', 'dev', '--hostname', '127.0.0.1', '--port', '3443',
-  '--experimental-https', '--experimental-https-key', certificate.key, '--experimental-https-cert', certificate.cert,
+  'node_modules/next/dist/bin/next', 'dev', '--hostname', '127.0.0.1', '--port', '3002',
 ], {
   cwd: root, env: environment, stdio: ['inherit', 'pipe', 'inherit'],
 });
-let redirectServer;
 child.stdout.on('data', chunk => {
   process.stdout.write(chunk);
   if (/Ready in/.test(chunk.toString().replace(/\x1b\[[0-9;]*m/g, ''))) {
     try {
       // Next can announce Ready again after a config-triggered restart.
       restoreGeneratedFiles();
-      redirectServer ??= startRecipeHttpRedirect(error => {
-        console.error('Legacy recipe redirect could not start:', error.message);
-        child.kill('SIGTERM');
-        process.exitCode = 1;
-      });
-      console.log(`Local fixture verified; .env.local and generated compiler files preserved. App: ${recipeHttpsOrigin}`);
+      console.log(`Local fixture verified; .env.local and generated compiler files preserved. App: ${recipeOrigin}`);
       console.log(`Invitation transport: ${mailTransport}. Sending requires an explicit invitation in the app.`);
-      console.log('HTTP localhost:3002 redirects to HTTPS. For macOS certificate setup, run npm run dev:spaces:trust and see docs/local-https.md.');
+      console.log('Local HTTP only: no certificate, HTTPS listener or HTTP-to-HTTPS redirect.');
     } catch (error) { console.error(error.message); child.kill('SIGTERM'); process.exitCode = 1; }
   }
 });
@@ -75,8 +67,6 @@ for (const file of watched) {
 }
 for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => child.kill(signal));
 child.on('exit', code => {
-  redirectServer?.close();
-  redirectServer?.closeAllConnections();
   for (const file of watched) fs.unwatchFile(file);
   try { restoreGeneratedFiles(); } catch (error) { console.error(error.message); process.exitCode = 1; }
   process.exitCode ??= code ?? 1;
