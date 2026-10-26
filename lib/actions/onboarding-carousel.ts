@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { sql } from "@/lib/db";
 import { requireAuth } from "@/lib/auth/helpers";
-import { auth } from "@/lib/auth/server";
+import { authSessionReader } from "@/lib/auth/server";
 
 /**
  * Checks whether the current user has already seen the onboarding carousel.
@@ -11,7 +11,7 @@ import { auth } from "@/lib/auth/server";
  * Uses safe auth pattern (no throw) since this is a read-only query called from a server page.
  */
 export async function hasSeenOnboarding(): Promise<boolean> {
-  const { data: session } = await auth.getSession();
+  const { data: session } = await authSessionReader.getSession();
   if (!session?.user?.id) return false;
   const userId = session.user.id;
 

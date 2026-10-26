@@ -1,115 +1,18 @@
+import { redirectToLastSpace } from "@/lib/spaces/page";
 export const dynamic = "force-dynamic";
-
-import {
-  getPlannedExpenses,
-  getMonthlySavingsSummary,
-} from "@/lib/actions/savings";
-import { getTotalDebtBalance } from "@/lib/actions/debts";
-import { getMonthlyDebtSummary } from "@/lib/actions/debt-transactions";
-import {
-  generateMonthlyExpenses,
-  getMonthlyExpenses,
-  getMonthSummary,
-  autoMarkOverdue,
-  autoMarkPaidForAutoDebit,
-} from "@/lib/actions/monthly-expenses";
-import { getMonthlySummaryBySection } from "@/lib/actions/expenses";
-import { getMonthlyIncomeTotal } from "@/lib/actions/incomes";
-import {
-  generateMonthlyIncomes,
-  getMonthlyIncomeSummary,
-  autoMarkReceivedForAutoDeposit,
-} from "@/lib/actions/monthly-incomes";
-import { hasOrphanedData, ensureDefaultSections } from "@/lib/actions/claim";
-import { currentMonth } from "@/lib/utils";
-import AccueilClient from "@/components/AccueilClient";
-import ClaimBanner from "@/components/ClaimBanner";
-import NotificationPermission from "@/components/NotificationPermission";
-import OnboardingCarouselWrapper from "@/components/onboarding/OnboardingCarouselWrapper";
-import { hasSeenOnboarding } from "@/lib/actions/onboarding-carousel";
-
-type PageProps = {
-  searchParams: Promise<{ month?: string }>;
-};
-
-export default async function AccueilPage({ searchParams }: PageProps) {
+export default async function Entry({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const params = await searchParams;
-  const month = params.month ?? currentMonth();
-
-  // Onboarding carousel: check before any data setup (carousel doesn't need sections)
-  const onboardingSeen = await hasSeenOnboarding();
-  if (!onboardingSeen) {
-    return <OnboardingCarouselWrapper />;
-  }
-
-  // Ensure new users have default sections
-  await ensureDefaultSections();
-
-  // Check for orphaned data (pre-auth migration)
-  const showClaimBanner = await hasOrphanedData();
-
-  // Ensure instances exist for this month (idempotent)
-  await generateMonthlyExpenses(month);
-  await generateMonthlyIncomes(month);
-
-  // Auto-mark statuses for current month only
-  if (month === currentMonth()) {
-    await autoMarkOverdue(month);
-    await autoMarkPaidForAutoDebit(month);
-    await autoMarkReceivedForAutoDeposit(month);
-  }
-
-  const [
-    expenses,
-    summary,
-    incomeSummary,
-    sectionSummary,
-    monthlyIncomeFromTemplates,
-    projets,
-    totalDebtBalance,
-    savingsSummary,
-    debtSummary,
-  ] = await Promise.all([
-    getMonthlyExpenses(month),
-    getMonthSummary(month),
-    getMonthlyIncomeSummary(month),
-    getMonthlySummaryBySection(),
-    getMonthlyIncomeTotal(),
-    getPlannedExpenses(),
-    getTotalDebtBalance(),
-    getMonthlySavingsSummary(month),
-    getMonthlyDebtSummary(month),
-  ]);
-
-  const totalMonthlyExpenses = sectionSummary.reduce(
-    (sum, s) => sum + Number(s.total),
-    0,
-  );
-
-  return (
-    <>
-      <NotificationPermission />
-      {showClaimBanner && (
-        <div style={{ padding: "20px 20px 0" }}>
-          <ClaimBanner />
-        </div>
-      )}
-      <AccueilClient
-        summary={summary}
-        incomeSummary={{
-          expectedTotal: incomeSummary.expectedTotal,
-          actualTotal: incomeSummary.actualTotal,
-        }}
-        expenses={expenses}
-        monthlyIncomes={incomeSummary.items}
-        month={month}
-        monthlyIncomeFromTemplates={monthlyIncomeFromTemplates}
-        totalMonthlyExpenses={totalMonthlyExpenses}
-        projets={projets}
-        totalDebtBalance={totalDebtBalance}
-        savingsSummary={savingsSummary}
-        debtSummary={debtSummary}
-      />
-    </>
-  );
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params))
+    for (const entry of Array.isArray(value)
+      ? value
+      : value === undefined
+        ? []
+        : [value])
+      query.append(key, entry);
+  await redirectToLastSpace("/" + (query.size ? "?" + query.toString() : ""));
 }

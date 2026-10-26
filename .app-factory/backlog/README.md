@@ -1,8 +1,24 @@
 # Backlog — Mes Finances
 
 Generated: 2026-03-04 by af-bootstrap-backlog
-Updated: 2026-03-07 by af-pm (feature coherence-design creee avec 6 stories DESIGN-001 a 006)
-Features: 22 existing (20 + guide-configuration + coherence-design) | Stories: 15 FIX + 15 AUDIT + 3 ONBOARD + 6 DESIGN | Status: READY
+Updated: 2026-10-22 by af-pm — espaces financiers, nouvelle priorité humaine immédiate
+Historique du dashboard : 22 features et compteurs du 2026-03-07 conservés ci-dessous ; non recertifiés.
+Ajout 2026-10-22 : 1 epic, 1 feature, 6 stories ESP. Statut de la nouvelle feature : DESIGN APPROUVÉ ; NOT READY pour build, ESP-001 prêt pour plan technique.
+
+## Prochaine priorité — Espaces financiers (décision humaine du 2026-10-22)
+
+« C’est la prochaine priorité, on le développe tout de suite. » Ce chantier passe avant les autres fonctionnalités. La préparation commence immédiatement ; plan technique à valider avant implémentation.
+
+- Epic : `finances-partagees` ; feature : [espaces-financiers](epics/finances-partagees/features/espaces-financiers/feature-brief.md).
+- Ordre : ESP-001 premier espace → ESP-002 conservation existants → ESP-003 création/bascule → ESP-004 invitation compte existant → ESP-005 inscription invitée → ESP-006 invitation onboarding.
+- [Readiness](epics/finances-partagees/features/espaces-financiers/readiness.md) : maquettes React approuvées ; premier incrément prêt pour plan technique, feature complète NOT READY pour build (dimensionnement, plan et sûreté de migration/isolation).
+- Source : `.Codex/inputs/espaces-financiers/input.md` ; [couverture](epics/finances-partagees/coverage-map.md).
+
+Les quatre décisions complémentaires sont validées : invitations par courriel et visibles après connexion ; nouvel invité rejoignant directement le commun sans espace personnel supplémentaire forcé ; reprise du dernier espace utilisé ; « Mes finances » modifiable pour les comptes existants. Les maquettes React corrigées ont été approuvées par l’humain. Onboarding avec partage conditionnel, invitation publique vers auth existante, sidebar sélecteur seul et gestion liste/détail dans réglages font partie des critères. Aucun build applicatif encore validé.
+
+### Avertissement sur les états historiques
+
+Les sections historiques suivantes restent conservées : leurs libellés « à faire »/« ready » ne certifient pas l’état actuel. Par exemple, `state/features/audit-remediation.yaml` indique done/complete, et les états/logs onboarding, guide et dépenses progressives montrent des travaux déjà entrepris. Aucun `state/current.yaml` n’existe au 2026-10-22. Un rapprochement spécifique sera nécessaire ; aucun statut de livraison existant n’est modifié arbitrairement ici.
 
 ## Priorite P0 — Features transversales actives
 
@@ -74,6 +90,7 @@ See: [feature-map.md](feature-map.md)
 
 | Epic | Features | Stories FIX |
 |------|----------|------------|
+| **finances-partagees** | 1 (espaces-financiers) | 6 nouvelles stories ESP-001 à ESP-006 |
 | core-financier | 4 | BLQ-001, BLQ-002, BLQ-003, MIN-001, MIN-002, MIN-003, MIN-004 |
 | patrimoine | 3 | BLQ-004, BLQ-005 |
 | configuration | 5 | BLQ-001 (shared), BLQ-006, MIN-005 |
@@ -90,13 +107,11 @@ See: [feature-map.md](feature-map.md)
 | FIX-BLQ-002 | Quarterly/yearly expenses generating every month | code_complete |
 | FIX-BLQ-006 | Stale monthly_expenses on template edit/delete | code_complete + validated |
 
-## Implementation Order
+## Implementation Order — actualisé le 2026-10-22
 
-1. **Immediat** : Feature `audit-remediation` (Waves 1-6 ci-dessus)
-2. **Ensuite** : Feature `coherence-design` (6 stories DESIGN, scope frontend) — peut etre intercale avec audit-remediation
-3. **Ensuite** : Feature `guide-configuration` (decomposer en stories puis implementer)
-4. **Ensuite** : Refonte onboarding (ONBOARD-001 -> 002 -> 003) — 3 stories, 11 pts
-5. **Plus tard** : Nouvelles features par epic
+1. **Maintenant : espaces-financiers** — préparer/valider le plan et arbitrages, puis ESP-001 → 002 → 003 → 004 → 005 → 006 selon readiness.
+2. **Ensuite : rapprochement des états historiques** avant de relancer audit-remediation, coherence-design, guide-configuration ou onboarding ; leurs travaux existants ne doivent pas être reproduits sur la seule foi de ce dashboard.
+3. **Plus tard : autres évolutions** selon nouvelle décision produit. Aucun item historique supprimé ou marqué terminé par cette priorisation.
 
 ## Quick Reference
 

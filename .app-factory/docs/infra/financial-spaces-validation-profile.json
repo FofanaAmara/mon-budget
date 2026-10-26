@@ -1,0 +1,90 @@
+{
+  "name": "financial-spaces-local-and-prepared-ci",
+  "requiredFiles": [
+    "package.json",
+    "package-lock.json",
+    "vitest.config.mts",
+    "vitest.spaces.config.mts",
+    ".github/workflows/financial-spaces.yml",
+    "scripts/financial-spaces/prepare-synthetic.mjs",
+    "scripts/financial-spaces/synthetic-certificate.mjs",
+    "__tests__/fixtures/financial-spaces/legacy-schema.sql",
+    ".Codex/plans/espaces-financiers-evidence/acceptance-matrix.md",
+    "scripts/financial-spaces/reconcile-confirmed-delivery.sql",
+    ".app-factory/docs/runbooks/invitation-delivery.md"
+  ],
+  "requiredScripts": [
+    "test:delivery",
+    "test:spaces:prepare",
+    "test:spaces:services",
+    "test:spaces:db",
+    "test:spaces:navigation",
+    "lint",
+    "build"
+  ],
+  "repository": "FofanaAmara/mon-budget",
+  "remoteEvidence": {
+    "pullRequest": "https://github.com/FofanaAmara/mon-budget/pull/1",
+    "initialRun": {
+      "id": 40409204080,
+      "sha": "b4fd0270cd2e05e753019b4d0d65ea5680f2a4fc",
+      "quality": "success",
+      "postgres": "failure",
+      "required": "failure"
+    },
+    "observedRun": {
+      "id": 40410705780,
+      "sha": "91f09b7d0aa177a5efb20352eed764e19db7ad76",
+      "status": "queued",
+      "observedAt": "2026-10-26T22:13:08Z"
+    },
+    "verifiedCodeRun": {
+      "id": 40410232726,
+      "sha": "a89406cf69afb88e1bf59f65bb159d05d39f276a",
+      "quality": "success",
+      "postgres": "success",
+      "required": "success"
+    },
+    "latestResultFile": ".local/production-release/github-ci-latest.json"
+  },
+  "requiredCheckPrepared": "Financial spaces required",
+  "branchProtection": {
+    "verifiedAt": "2026-10-26T22:10:31.727031+00:00",
+    "requiredCheck": "Financial spaces required",
+    "strict": true,
+    "enforceAdmins": true,
+    "conversationsResolved": true,
+    "forcePush": false,
+    "deletion": false,
+    "externalApprovals": 0,
+    "policy": "solo-maintainer"
+  },
+  "deployment": "Release branch preview disabled; production identity/config/order still unverified. No production migration or deployment executed.",
+  "proofOwners": {
+    "quality": [
+      "delivery-guards",
+      "unit",
+      "navigation-fixture",
+      "typegen",
+      "types",
+      "lint",
+      "webpack-build",
+      "production-audit"
+    ],
+    "postgres": [
+      "synthetic-template",
+      "services",
+      "migration-and-schema-certificate"
+    ]
+  },
+  "localHooks": "No hooks changed; explicit commands remain available.",
+  "pathSelection": "All paths run the full workflow; no classifier or skip.",
+  "concurrency": "Only superseded pull requests cancel; main run_id gives each run a distinct group.",
+  "metrics": {
+    "remoteSampleSize": 2,
+    "p50": null,
+    "p95": null,
+    "status": "insufficient-sample"
+  },
+  "release": "No release health, migration target or production approval inferred."
+}

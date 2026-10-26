@@ -1,0 +1,1556 @@
+{
+  "date": "2026-10-22",
+  "scope": "public schema metadata only; no business rows",
+  "readOnly": true,
+  "columns": [
+    {
+      "table_name": "allocation_sections",
+      "column_name": "allocation_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "allocation_sections",
+      "column_name": "section_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "cards",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "cards",
+      "column_name": "name",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "cards",
+      "column_name": "last_four",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "cards",
+      "column_name": "bank",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "cards",
+      "column_name": "color",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "cards",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "cards",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "cards",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "debt_transactions",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "debt_transactions",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "debt_transactions",
+      "column_name": "debt_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "debt_transactions",
+      "column_name": "type",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "debt_transactions",
+      "column_name": "amount",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "debt_transactions",
+      "column_name": "month",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "debt_transactions",
+      "column_name": "note",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "debt_transactions",
+      "column_name": "source",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "debt_transactions",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "debts",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "debts",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "debts",
+      "column_name": "name",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "debts",
+      "column_name": "original_amount",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "debts",
+      "column_name": "remaining_balance",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "debts",
+      "column_name": "interest_rate",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "debts",
+      "column_name": "payment_amount",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "debts",
+      "column_name": "payment_frequency",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "debts",
+      "column_name": "payment_day",
+      "data_type": "integer",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "debts",
+      "column_name": "auto_debit",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "debts",
+      "column_name": "card_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "debts",
+      "column_name": "section_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "debts",
+      "column_name": "notes",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "debts",
+      "column_name": "is_active",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "debts",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "debts",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expense_transactions",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "expense_transactions",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "expense_transactions",
+      "column_name": "monthly_expense_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "expense_transactions",
+      "column_name": "amount",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "expense_transactions",
+      "column_name": "note",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expense_transactions",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "name",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "amount",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "currency",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "type",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "section_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "card_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "recurrence_frequency",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "recurrence_day",
+      "data_type": "integer",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "auto_debit",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "due_date",
+      "data_type": "date",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "next_due_date",
+      "data_type": "date",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "reminder_offsets",
+      "data_type": "ARRAY",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "notify_push",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "notify_email",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "notify_sms",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "notes",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "is_active",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "target_amount",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "target_date",
+      "data_type": "date",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "saved_amount",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "spread_monthly",
+      "data_type": "boolean",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "expenses",
+      "column_name": "is_progressive",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "income_allocations",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "income_allocations",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "income_allocations",
+      "column_name": "label",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "income_allocations",
+      "column_name": "amount",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "income_allocations",
+      "column_name": "section_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "income_allocations",
+      "column_name": "project_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "income_allocations",
+      "column_name": "end_month",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "income_allocations",
+      "column_name": "color",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "income_allocations",
+      "column_name": "position",
+      "data_type": "integer",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "income_allocations",
+      "column_name": "is_active",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "income_allocations",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "income_allocations",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "incomes",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "incomes",
+      "column_name": "name",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "incomes",
+      "column_name": "amount",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "incomes",
+      "column_name": "frequency",
+      "data_type": "USER-DEFINED",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "incomes",
+      "column_name": "is_active",
+      "data_type": "boolean",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "incomes",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "incomes",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "incomes",
+      "column_name": "source",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "incomes",
+      "column_name": "estimated_amount",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "incomes",
+      "column_name": "notes",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "incomes",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "incomes",
+      "column_name": "pay_anchor_date",
+      "data_type": "date",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "incomes",
+      "column_name": "auto_deposit",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_allocations",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "monthly_allocations",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "monthly_allocations",
+      "column_name": "allocation_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "monthly_allocations",
+      "column_name": "month",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "monthly_allocations",
+      "column_name": "allocated_amount",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "monthly_allocations",
+      "column_name": "notes",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_allocations",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "expense_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "month",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "name",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "amount",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "due_date",
+      "data_type": "date",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "status",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "paid_at",
+      "data_type": "date",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "section_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "card_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "is_auto_charged",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "notes",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "is_planned",
+      "data_type": "boolean",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "debt_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "column_name": "paid_amount",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_incomes",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "monthly_incomes",
+      "column_name": "income_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_incomes",
+      "column_name": "month",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "monthly_incomes",
+      "column_name": "expected_amount",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_incomes",
+      "column_name": "actual_amount",
+      "data_type": "numeric",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_incomes",
+      "column_name": "status",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "monthly_incomes",
+      "column_name": "received_at",
+      "data_type": "date",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_incomes",
+      "column_name": "notes",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_incomes",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_incomes",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "monthly_incomes",
+      "column_name": "is_auto_deposited",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "monthly_incomes",
+      "column_name": "manually_edited",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "notification_log",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "notification_log",
+      "column_name": "expense_id",
+      "data_type": "uuid",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "notification_log",
+      "column_name": "channel",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "notification_log",
+      "column_name": "status",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "notification_log",
+      "column_name": "sent_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "notification_log",
+      "column_name": "error_message",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "notification_log",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "column_name": "endpoint",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "column_name": "p256dh",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "column_name": "auth",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "column_name": "user_agent",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "savings_contributions",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "savings_contributions",
+      "column_name": "expense_id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "savings_contributions",
+      "column_name": "amount",
+      "data_type": "numeric",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "savings_contributions",
+      "column_name": "note",
+      "data_type": "text",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "savings_contributions",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "savings_contributions",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sections",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sections",
+      "column_name": "name",
+      "data_type": "character varying",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sections",
+      "column_name": "icon",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "sections",
+      "column_name": "color",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "sections",
+      "column_name": "position",
+      "data_type": "integer",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sections",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "sections",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "sections",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "settings",
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "settings",
+      "column_name": "default_currency",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "settings",
+      "column_name": "default_reminder_offsets",
+      "data_type": "ARRAY",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "settings",
+      "column_name": "notify_push",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "settings",
+      "column_name": "notify_email",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "settings",
+      "column_name": "notify_sms",
+      "data_type": "boolean",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "settings",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "settings",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "settings",
+      "column_name": "email",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "settings",
+      "column_name": "phone",
+      "data_type": "character varying",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "settings",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "setup_guide",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "setup_guide",
+      "column_name": "completed_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "setup_guide",
+      "column_name": "dismissed_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "setup_guide",
+      "column_name": "reset_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "setup_guide",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "user_onboarding",
+      "column_name": "user_id",
+      "data_type": "text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "user_onboarding",
+      "column_name": "has_seen_onboarding",
+      "data_type": "boolean",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "user_onboarding",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES"
+    }
+  ],
+  "indexes": [
+    {
+      "tablename": "allocation_sections",
+      "indexname": "allocation_sections_pkey",
+      "indexdef": "CREATE UNIQUE INDEX allocation_sections_pkey ON public.allocation_sections USING btree (allocation_id, section_id)"
+    },
+    {
+      "tablename": "cards",
+      "indexname": "cards_pkey",
+      "indexdef": "CREATE UNIQUE INDEX cards_pkey ON public.cards USING btree (id)"
+    },
+    {
+      "tablename": "cards",
+      "indexname": "idx_cards_user_id",
+      "indexdef": "CREATE INDEX idx_cards_user_id ON public.cards USING btree (user_id)"
+    },
+    {
+      "tablename": "debt_transactions",
+      "indexname": "debt_transactions_pkey",
+      "indexdef": "CREATE UNIQUE INDEX debt_transactions_pkey ON public.debt_transactions USING btree (id)"
+    },
+    {
+      "tablename": "debt_transactions",
+      "indexname": "idx_debt_tx_debt",
+      "indexdef": "CREATE INDEX idx_debt_tx_debt ON public.debt_transactions USING btree (debt_id, created_at DESC)"
+    },
+    {
+      "tablename": "debt_transactions",
+      "indexname": "idx_debt_tx_month",
+      "indexdef": "CREATE INDEX idx_debt_tx_month ON public.debt_transactions USING btree (user_id, month)"
+    },
+    {
+      "tablename": "debts",
+      "indexname": "debts_pkey",
+      "indexdef": "CREATE UNIQUE INDEX debts_pkey ON public.debts USING btree (id)"
+    },
+    {
+      "tablename": "debts",
+      "indexname": "idx_debts_user_id",
+      "indexdef": "CREATE INDEX idx_debts_user_id ON public.debts USING btree (user_id)"
+    },
+    {
+      "tablename": "expense_transactions",
+      "indexname": "expense_transactions_pkey",
+      "indexdef": "CREATE UNIQUE INDEX expense_transactions_pkey ON public.expense_transactions USING btree (id)"
+    },
+    {
+      "tablename": "expense_transactions",
+      "indexname": "idx_expense_tx_monthly",
+      "indexdef": "CREATE INDEX idx_expense_tx_monthly ON public.expense_transactions USING btree (monthly_expense_id, created_at DESC)"
+    },
+    {
+      "tablename": "expenses",
+      "indexname": "expenses_pkey",
+      "indexdef": "CREATE UNIQUE INDEX expenses_pkey ON public.expenses USING btree (id)"
+    },
+    {
+      "tablename": "expenses",
+      "indexname": "idx_expenses_card_id",
+      "indexdef": "CREATE INDEX idx_expenses_card_id ON public.expenses USING btree (card_id)"
+    },
+    {
+      "tablename": "expenses",
+      "indexname": "idx_expenses_section_id",
+      "indexdef": "CREATE INDEX idx_expenses_section_id ON public.expenses USING btree (section_id)"
+    },
+    {
+      "tablename": "expenses",
+      "indexname": "idx_expenses_user_active",
+      "indexdef": "CREATE INDEX idx_expenses_user_active ON public.expenses USING btree (user_id, is_active) WHERE (is_active = true)"
+    },
+    {
+      "tablename": "expenses",
+      "indexname": "idx_expenses_user_id",
+      "indexdef": "CREATE INDEX idx_expenses_user_id ON public.expenses USING btree (user_id)"
+    },
+    {
+      "tablename": "income_allocations",
+      "indexname": "idx_income_allocations_project_id",
+      "indexdef": "CREATE INDEX idx_income_allocations_project_id ON public.income_allocations USING btree (project_id)"
+    },
+    {
+      "tablename": "income_allocations",
+      "indexname": "income_allocations_pkey",
+      "indexdef": "CREATE UNIQUE INDEX income_allocations_pkey ON public.income_allocations USING btree (id)"
+    },
+    {
+      "tablename": "incomes",
+      "indexname": "idx_incomes_user_id",
+      "indexdef": "CREATE INDEX idx_incomes_user_id ON public.incomes USING btree (user_id)"
+    },
+    {
+      "tablename": "incomes",
+      "indexname": "incomes_pkey",
+      "indexdef": "CREATE UNIQUE INDEX incomes_pkey ON public.incomes USING btree (id)"
+    },
+    {
+      "tablename": "monthly_allocations",
+      "indexname": "monthly_allocations_allocation_id_month_key",
+      "indexdef": "CREATE UNIQUE INDEX monthly_allocations_allocation_id_month_key ON public.monthly_allocations USING btree (allocation_id, month)"
+    },
+    {
+      "tablename": "monthly_allocations",
+      "indexname": "monthly_allocations_pkey",
+      "indexdef": "CREATE UNIQUE INDEX monthly_allocations_pkey ON public.monthly_allocations USING btree (id)"
+    },
+    {
+      "tablename": "monthly_expenses",
+      "indexname": "idx_me_month",
+      "indexdef": "CREATE INDEX idx_me_month ON public.monthly_expenses USING btree (month)"
+    },
+    {
+      "tablename": "monthly_expenses",
+      "indexname": "idx_me_month_status",
+      "indexdef": "CREATE INDEX idx_me_month_status ON public.monthly_expenses USING btree (month, status)"
+    },
+    {
+      "tablename": "monthly_expenses",
+      "indexname": "idx_me_section",
+      "indexdef": "CREATE INDEX idx_me_section ON public.monthly_expenses USING btree (section_id)"
+    },
+    {
+      "tablename": "monthly_expenses",
+      "indexname": "idx_me_user_month",
+      "indexdef": "CREATE INDEX idx_me_user_month ON public.monthly_expenses USING btree (user_id, month)"
+    },
+    {
+      "tablename": "monthly_expenses",
+      "indexname": "idx_monthly_expenses_card_id",
+      "indexdef": "CREATE INDEX idx_monthly_expenses_card_id ON public.monthly_expenses USING btree (card_id)"
+    },
+    {
+      "tablename": "monthly_expenses",
+      "indexname": "idx_monthly_expenses_user_id",
+      "indexdef": "CREATE INDEX idx_monthly_expenses_user_id ON public.monthly_expenses USING btree (user_id)"
+    },
+    {
+      "tablename": "monthly_expenses",
+      "indexname": "monthly_expenses_pkey",
+      "indexdef": "CREATE UNIQUE INDEX monthly_expenses_pkey ON public.monthly_expenses USING btree (id)"
+    },
+    {
+      "tablename": "monthly_expenses",
+      "indexname": "uq_debt_month",
+      "indexdef": "CREATE UNIQUE INDEX uq_debt_month ON public.monthly_expenses USING btree (debt_id, month) WHERE (debt_id IS NOT NULL)"
+    },
+    {
+      "tablename": "monthly_expenses",
+      "indexname": "uq_expense_month",
+      "indexdef": "CREATE UNIQUE INDEX uq_expense_month ON public.monthly_expenses USING btree (expense_id, month)"
+    },
+    {
+      "tablename": "monthly_incomes",
+      "indexname": "idx_mi_user_month",
+      "indexdef": "CREATE INDEX idx_mi_user_month ON public.monthly_incomes USING btree (user_id, month)"
+    },
+    {
+      "tablename": "monthly_incomes",
+      "indexname": "idx_monthly_incomes_user_id",
+      "indexdef": "CREATE INDEX idx_monthly_incomes_user_id ON public.monthly_incomes USING btree (user_id)"
+    },
+    {
+      "tablename": "monthly_incomes",
+      "indexname": "monthly_incomes_income_id_month_key",
+      "indexdef": "CREATE UNIQUE INDEX monthly_incomes_income_id_month_key ON public.monthly_incomes USING btree (income_id, month)"
+    },
+    {
+      "tablename": "monthly_incomes",
+      "indexname": "monthly_incomes_pkey",
+      "indexdef": "CREATE UNIQUE INDEX monthly_incomes_pkey ON public.monthly_incomes USING btree (id)"
+    },
+    {
+      "tablename": "notification_log",
+      "indexname": "idx_notification_log_expense_id",
+      "indexdef": "CREATE INDEX idx_notification_log_expense_id ON public.notification_log USING btree (expense_id)"
+    },
+    {
+      "tablename": "notification_log",
+      "indexname": "idx_notification_log_user_id",
+      "indexdef": "CREATE INDEX idx_notification_log_user_id ON public.notification_log USING btree (user_id)"
+    },
+    {
+      "tablename": "notification_log",
+      "indexname": "notification_log_pkey",
+      "indexdef": "CREATE UNIQUE INDEX notification_log_pkey ON public.notification_log USING btree (id)"
+    },
+    {
+      "tablename": "push_subscriptions",
+      "indexname": "idx_push_subscriptions_user_id",
+      "indexdef": "CREATE INDEX idx_push_subscriptions_user_id ON public.push_subscriptions USING btree (user_id)"
+    },
+    {
+      "tablename": "push_subscriptions",
+      "indexname": "push_subscriptions_endpoint_key",
+      "indexdef": "CREATE UNIQUE INDEX push_subscriptions_endpoint_key ON public.push_subscriptions USING btree (endpoint)"
+    },
+    {
+      "tablename": "push_subscriptions",
+      "indexname": "push_subscriptions_pkey",
+      "indexdef": "CREATE UNIQUE INDEX push_subscriptions_pkey ON public.push_subscriptions USING btree (id)"
+    },
+    {
+      "tablename": "savings_contributions",
+      "indexname": "idx_savings_contributions_expense",
+      "indexdef": "CREATE INDEX idx_savings_contributions_expense ON public.savings_contributions USING btree (expense_id, created_at DESC)"
+    },
+    {
+      "tablename": "savings_contributions",
+      "indexname": "idx_savings_contributions_user_id",
+      "indexdef": "CREATE INDEX idx_savings_contributions_user_id ON public.savings_contributions USING btree (user_id)"
+    },
+    {
+      "tablename": "savings_contributions",
+      "indexname": "savings_contributions_pkey",
+      "indexdef": "CREATE UNIQUE INDEX savings_contributions_pkey ON public.savings_contributions USING btree (id)"
+    },
+    {
+      "tablename": "sections",
+      "indexname": "idx_sections_user_id",
+      "indexdef": "CREATE INDEX idx_sections_user_id ON public.sections USING btree (user_id)"
+    },
+    {
+      "tablename": "sections",
+      "indexname": "sections_pkey",
+      "indexdef": "CREATE UNIQUE INDEX sections_pkey ON public.sections USING btree (id)"
+    },
+    {
+      "tablename": "settings",
+      "indexname": "idx_settings_user_id",
+      "indexdef": "CREATE UNIQUE INDEX idx_settings_user_id ON public.settings USING btree (user_id)"
+    },
+    {
+      "tablename": "settings",
+      "indexname": "settings_pkey",
+      "indexdef": "CREATE UNIQUE INDEX settings_pkey ON public.settings USING btree (id)"
+    },
+    {
+      "tablename": "setup_guide",
+      "indexname": "setup_guide_pkey",
+      "indexdef": "CREATE UNIQUE INDEX setup_guide_pkey ON public.setup_guide USING btree (user_id)"
+    },
+    {
+      "tablename": "user_onboarding",
+      "indexname": "user_onboarding_pkey",
+      "indexdef": "CREATE UNIQUE INDEX user_onboarding_pkey ON public.user_onboarding USING btree (user_id)"
+    }
+  ],
+  "constraints": [
+    {
+      "table_name": "allocation_sections",
+      "conname": "allocation_sections_allocation_id_fkey",
+      "definition": "FOREIGN KEY (allocation_id) REFERENCES income_allocations(id) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "allocation_sections",
+      "conname": "allocation_sections_pkey",
+      "definition": "PRIMARY KEY (allocation_id, section_id)"
+    },
+    {
+      "table_name": "allocation_sections",
+      "conname": "allocation_sections_section_id_fkey",
+      "definition": "FOREIGN KEY (section_id) REFERENCES sections(id) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "cards",
+      "conname": "cards_pkey",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "debt_transactions",
+      "conname": "debt_transactions_debt_id_fkey",
+      "definition": "FOREIGN KEY (debt_id) REFERENCES debts(id) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "debt_transactions",
+      "conname": "debt_transactions_pkey",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "debt_transactions",
+      "conname": "debt_transactions_type_check",
+      "definition": "CHECK (((type)::text = ANY ((ARRAY['PAYMENT'::character varying, 'CHARGE'::character varying])::text[])))"
+    },
+    {
+      "table_name": "debts",
+      "conname": "debts_card_id_fkey",
+      "definition": "FOREIGN KEY (card_id) REFERENCES cards(id) ON DELETE SET NULL"
+    },
+    {
+      "table_name": "debts",
+      "conname": "debts_payment_day_check",
+      "definition": "CHECK (((payment_day >= 1) AND (payment_day <= 31)))"
+    },
+    {
+      "table_name": "debts",
+      "conname": "debts_payment_frequency_check",
+      "definition": "CHECK (((payment_frequency)::text = ANY ((ARRAY['WEEKLY'::character varying, 'BIWEEKLY'::character varying, 'MONTHLY'::character varying, 'BIMONTHLY'::character varying, 'QUARTERLY'::character varying, 'YEARLY'::character varying])::text[])))"
+    },
+    {
+      "table_name": "debts",
+      "conname": "debts_pkey",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "debts",
+      "conname": "debts_section_id_fkey",
+      "definition": "FOREIGN KEY (section_id) REFERENCES sections(id) ON DELETE SET NULL"
+    },
+    {
+      "table_name": "expense_transactions",
+      "conname": "expense_transactions_monthly_expense_id_fkey",
+      "definition": "FOREIGN KEY (monthly_expense_id) REFERENCES monthly_expenses(id) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "expense_transactions",
+      "conname": "expense_transactions_pkey",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "expenses",
+      "conname": "expenses_card_id_fkey",
+      "definition": "FOREIGN KEY (card_id) REFERENCES cards(id) ON DELETE SET NULL"
+    },
+    {
+      "table_name": "expenses",
+      "conname": "expenses_pkey",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "expenses",
+      "conname": "expenses_recurrence_day_check",
+      "definition": "CHECK (((recurrence_day >= 1) AND (recurrence_day <= 31)))"
+    },
+    {
+      "table_name": "expenses",
+      "conname": "expenses_recurrence_frequency_check",
+      "definition": "CHECK (((recurrence_frequency)::text = ANY ((ARRAY['WEEKLY'::character varying, 'BIWEEKLY'::character varying, 'MONTHLY'::character varying, 'BIMONTHLY'::character varying, 'QUARTERLY'::character varying, 'YEARLY'::character varying])::text[])))"
+    },
+    {
+      "table_name": "expenses",
+      "conname": "expenses_section_id_fkey",
+      "definition": "FOREIGN KEY (section_id) REFERENCES sections(id) ON DELETE SET NULL"
+    },
+    {
+      "table_name": "expenses",
+      "conname": "expenses_type_check",
+      "definition": "CHECK (((type)::text = ANY ((ARRAY['RECURRING'::character varying, 'ONE_TIME'::character varying, 'PLANNED'::character varying])::text[])))"
+    },
+    {
+      "table_name": "income_allocations",
+      "conname": "income_allocations_pkey",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "income_allocations",
+      "conname": "income_allocations_project_id_fkey",
+      "definition": "FOREIGN KEY (project_id) REFERENCES expenses(id) ON DELETE SET NULL"
+    },
+    {
+      "table_name": "income_allocations",
+      "conname": "income_allocations_section_id_fkey",
+      "definition": "FOREIGN KEY (section_id) REFERENCES sections(id) ON DELETE SET NULL"
+    },
+    {
+      "table_name": "incomes",
+      "conname": "incomes_pkey",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "monthly_allocations",
+      "conname": "monthly_allocations_allocation_id_fkey",
+      "definition": "FOREIGN KEY (allocation_id) REFERENCES income_allocations(id) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "monthly_allocations",
+      "conname": "monthly_allocations_allocation_id_month_key",
+      "definition": "UNIQUE (allocation_id, month)"
+    },
+    {
+      "table_name": "monthly_allocations",
+      "conname": "monthly_allocations_pkey",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "conname": "monthly_expenses_card_id_fkey",
+      "definition": "FOREIGN KEY (card_id) REFERENCES cards(id) ON DELETE SET NULL"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "conname": "monthly_expenses_debt_id_fkey",
+      "definition": "FOREIGN KEY (debt_id) REFERENCES debts(id) ON DELETE SET NULL"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "conname": "monthly_expenses_expense_id_fkey",
+      "definition": "FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE SET NULL"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "conname": "monthly_expenses_pkey",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "conname": "monthly_expenses_section_id_fkey",
+      "definition": "FOREIGN KEY (section_id) REFERENCES sections(id) ON DELETE SET NULL"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "conname": "monthly_expenses_status_check",
+      "definition": "CHECK (((status)::text = ANY ((ARRAY['UPCOMING'::character varying, 'PAID'::character varying, 'OVERDUE'::character varying, 'DEFERRED'::character varying])::text[])))"
+    },
+    {
+      "table_name": "monthly_expenses",
+      "conname": "uq_expense_month",
+      "definition": "UNIQUE (expense_id, month)"
+    },
+    {
+      "table_name": "monthly_incomes",
+      "conname": "monthly_incomes_income_id_fkey",
+      "definition": "FOREIGN KEY (income_id) REFERENCES incomes(id) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "monthly_incomes",
+      "conname": "monthly_incomes_income_id_month_key",
+      "definition": "UNIQUE (income_id, month)"
+    },
+    {
+      "table_name": "monthly_incomes",
+      "conname": "monthly_incomes_pkey",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "monthly_incomes",
+      "conname": "monthly_incomes_status_check",
+      "definition": "CHECK (((status)::text = ANY ((ARRAY['EXPECTED'::character varying, 'RECEIVED'::character varying, 'PARTIAL'::character varying, 'MISSED'::character varying])::text[])))"
+    },
+    {
+      "table_name": "notification_log",
+      "conname": "notification_log_channel_check",
+      "definition": "CHECK (((channel)::text = ANY ((ARRAY['push'::character varying, 'email'::character varying, 'sms'::character varying])::text[])))"
+    },
+    {
+      "table_name": "notification_log",
+      "conname": "notification_log_expense_id_fkey",
+      "definition": "FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "notification_log",
+      "conname": "notification_log_pkey",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "notification_log",
+      "conname": "notification_log_status_check",
+      "definition": "CHECK (((status)::text = ANY ((ARRAY['sent'::character varying, 'failed'::character varying, 'pending'::character varying])::text[])))"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "conname": "push_subscriptions_endpoint_key",
+      "definition": "UNIQUE (endpoint)"
+    },
+    {
+      "table_name": "push_subscriptions",
+      "conname": "push_subscriptions_pkey",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "savings_contributions",
+      "conname": "savings_contributions_expense_id_fkey",
+      "definition": "FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "savings_contributions",
+      "conname": "savings_contributions_pkey",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "sections",
+      "conname": "sections_pkey",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "settings",
+      "conname": "settings_pkey",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "setup_guide",
+      "conname": "setup_guide_pkey",
+      "definition": "PRIMARY KEY (user_id)"
+    },
+    {
+      "table_name": "user_onboarding",
+      "conname": "user_onboarding_pkey",
+      "definition": "PRIMARY KEY (user_id)"
+    }
+  ]
+}

@@ -1,7 +1,9 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
 
 import React from "react";
-import { formatCAD } from "@/lib/utils";
+
 import type { Debt } from "@/lib/types";
 import StatusBadge from "@/components/StatusBadge";
 
@@ -31,6 +33,8 @@ function DebtCardComponent({
   onDelete,
   isFirst = false,
 }: DebtCardProps) {
+  const formatCAD = useSpaceCurrency();
+
   const remaining = Number(debt.remaining_balance);
 
   return (

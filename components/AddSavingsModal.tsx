@@ -1,9 +1,15 @@
 "use client";
+import {useSpaceDraftValues} from "@/components/spaces/SpaceContext";
+
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useRef, useEffect } from "react";
 
 import { IconClose } from "@/components/icons";
-import { formatCAD } from "@/lib/utils";
+
 
 type Props = {
   expenseId: string;
@@ -22,8 +28,14 @@ export default function AddSavingsModal({
   onDone,
   onClose,
 }: Props) {
+  const formatCAD = useSpaceCurrency();
+
+  const { spaceId } = useFinancialSpace();
+
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
+  useSpaceDraftValues({amount,note});
+
   const [loading, setLoading] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -44,8 +56,8 @@ export default function AddSavingsModal({
     if (isNaN(val) || val <= 0) return;
     setLoading(true);
     try {
-      const { addSavingsContribution } = await import("@/lib/actions/savings");
-      await addSavingsContribution(expenseId, val, note.trim() || null);
+      const { addSavingsContribution } = await import("@/lib/actions/financial/savings");
+      await addSavingsContribution(spaceId, expenseId, val, note.trim() || null);
       onDone();
     } catch {
       setLoading(false);

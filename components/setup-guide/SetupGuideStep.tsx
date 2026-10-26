@@ -81,7 +81,6 @@ const ARROW_COLORS: Record<StepState, string> = {
 export default function SetupGuideStep({
   title,
   description,
-  href,
   state,
   index,
   variant = "mobile",

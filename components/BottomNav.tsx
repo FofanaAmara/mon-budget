@@ -1,8 +1,10 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from "@/components/spaces/navigation";
+import {useFinancialPathname as usePathname} from "@/components/spaces/navigation";
 import { useState, useRef, useEffect } from "react";
+import SpaceSelector from "@/components/spaces/SpaceSelector";
+import { signOutAndClear } from "@/lib/auth/sign-out";
 import { authClient } from "@/lib/auth/client";
 
 type Tab = {
@@ -181,8 +183,7 @@ export default function BottomNav() {
   }, [desktopMenuOpen]);
 
   async function handleSignOut() {
-    await authClient.signOut();
-    window.location.href = "/auth/sign-in";
+    await signOutAndClear();
   }
 
   // Routes that belong to "Reglages" but don't start with /parametres
@@ -420,6 +421,8 @@ export default function BottomNav() {
             </span>
           </div>
         </div>
+
+        <SpaceSelector />
 
         {/* Nav items */}
         <nav

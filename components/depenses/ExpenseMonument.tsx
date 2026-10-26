@@ -1,6 +1,8 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
 
-import { formatCAD } from "@/lib/utils";
+
+
 import type { MonthSummary } from "@/lib/types";
 
 type Props = {
@@ -8,6 +10,8 @@ type Props = {
 };
 
 export default function ExpenseMonument({ summary }: Props) {
+  const formatCAD = useSpaceCurrency();
+
   const chargesFixes = summary.planned_total;
   const paidTotal = summary.paid_total;
   const progressPct =

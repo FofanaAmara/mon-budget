@@ -1,4 +1,7 @@
 import Link from 'next/link';
+import SignOutFlow from '@/components/auth/SignOutFlow';
+import { InvitationAuthNavigation } from '@/components/auth/InvitationAuthNavigation';
+import {validInvitationReturn} from '@/lib/invitations/security';
 import { AuthView } from '@neondatabase/auth/react';
 import type { AuthLocalization } from '@neondatabase/auth/react';
 
@@ -47,10 +50,13 @@ const frLocalization: Partial<AuthLocalization> = {
 
 export default async function AuthPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ path: string }>;
+  searchParams: Promise<{redirectTo?:string|string[]}>;
 }) {
   const { path } = await params;
+  const returnPath=validInvitationReturn((await searchParams).redirectTo)??'/';
   const isSignIn = path === 'sign-in';
 
 
@@ -368,11 +374,15 @@ export default async function AuthPage({
         <div className="auth-form-panel">
           <div className="auth-form-card">
 
-              {/* AuthView — unchanged. It renders its own title + description via frLocalization */}
-            <AuthView pathname={`/auth/${path}`} localization={frLocalization} />
+              {/* Session-changing sign-out uses the same guarded path as financial pages. */}
+            {path === 'sign-out'
+              ? <SignOutFlow key={returnPath} returnTo={returnPath} />
+              : <InvitationAuthNavigation returnTo={returnPath}>
+                  <AuthView pathname={`/auth/${path}`} localization={frLocalization} redirectTo={returnPath} callbackURL={returnPath} />
+                </InvitationAuthNavigation>}
 
             {/* Terms — signup only */}
-            {!isSignIn && (
+            {path === 'sign-up' && (
               <p
                 style={{
                   fontSize: '12px',

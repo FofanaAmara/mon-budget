@@ -1,7 +1,9 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
 
 import { useState } from "react";
-import { formatCAD } from "@/lib/utils";
+
 import { GROUP_LABELS } from "@/lib/constants";
 import ExpenseTrackingRow from "@/components/ExpenseTrackingRow";
 import type { MonthlyExpense, ExpenseGroupKey } from "@/lib/types";
@@ -24,6 +26,8 @@ export default function StatusGroupSection({
   onAction,
   onOpenActions,
 }: Props) {
+  const formatCAD = useSpaceCurrency();
+
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
     new Set(),
   );
@@ -79,27 +83,29 @@ export default function StatusGroupSection({
                 </span>
               </div>
               <div
-                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                style={{ display: "flex", alignItems: "center", gap: "12px" }}
               >
                 <span style={{ fontVariantNumeric: "tabular-nums" }}>
                   {formatCAD(groupTotal)}
                 </span>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  style={{
-                    transition: "transform 0.25s ease",
-                    transform: isCollapsed ? "rotate(0deg)" : "rotate(180deg)",
-                  }}
-                >
-                  <polyline points="18 15 12 9 6 15" />
-                </svg>
+                <span className="expense-action-slot">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{
+                      transition: "transform 0.25s ease",
+                      transform: isCollapsed ? "rotate(0deg)" : "rotate(180deg)",
+                    }}
+                  >
+                    <polyline points="18 15 12 9 6 15" />
+                  </svg>
+                </span>
               </div>
             </div>
 

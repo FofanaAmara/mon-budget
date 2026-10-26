@@ -1,10 +1,13 @@
 "use client";
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useTransition, useRef, useEffect } from "react";
-import Link from "next/link";
-import { authClient } from "@/lib/auth/client";
-import { loadDemoData, clearAllUserData } from "@/lib/actions/demo-data";
-import { resetSetupGuide } from "@/lib/actions/setup-guide";
+import Link from "@/components/spaces/navigation";
+import { signOutAndClear } from "@/lib/auth/sign-out";
+import { loadDemoData, clearAllUserData } from "@/lib/actions/financial/demo-data";
+import { resetSetupGuide } from "@/lib/actions/financial/setup-guide";
 
 const PREFERENCE_ITEMS = [
   {
@@ -197,7 +200,10 @@ function LinkRow({
   );
 }
 
-export default function ParametresClient({ hasData }: { hasData: boolean }) {
+export default function ParametresClient({ hasData, showSetupGuide }: { hasData: boolean; showSetupGuide: boolean }) {
+  const { spaceId } = useFinancialSpace();
+  const router = useRouter();
+
   const [showClearModal, setShowClearModal] = useState(false);
   const [isPendingLoad, startLoadTransition] = useTransition();
   const [isPendingClear, startClearTransition] = useTransition();
@@ -214,7 +220,7 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
 
   function handleResetGuide() {
     startResetTransition(async () => {
-      await resetSetupGuide();
+      await resetSetupGuide(spaceId);
       setGuideResetDone(true);
     });
   }
@@ -222,9 +228,9 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
   function handleLoadDemo() {
     setFeedback(null);
     startLoadTransition(async () => {
-      const result = await loadDemoData();
+      const result = await loadDemoData(spaceId);
       if (result.success) {
-        window.location.reload();
+        router.refresh();
       } else {
         setFeedback(result.error ?? "Erreur");
       }
@@ -234,9 +240,9 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
   function handleClearAll() {
     setFeedback(null);
     startClearTransition(async () => {
-      const result = await clearAllUserData();
+      const result = await clearAllUserData(spaceId);
       if (result.success) {
-        window.location.href = "/";
+        router.push("/");
       } else {
         setFeedback(result.error ?? "Erreur");
         setShowClearModal(false);
@@ -348,6 +354,8 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
           ))}
         </div>
 
+        <Link href="/parametres/espace" className="space-settings-row" style={{marginBottom:16}}><span aria-hidden="true">▱</span><span><strong>Espaces et membres</strong><small>Gérer tes espaces financiers</small></span><span aria-hidden="true">›</span></Link>
+
         {/* Preferences */}
         <div className="list-card">
           <div style={{ padding: "16px 20px 8px" }}>
@@ -387,8 +395,8 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
               gap: "10px",
             }}
           >
-            {/* Reset guide */}
-            <button
+            {/* Initial setup belongs to the person who created this space. */}
+            {showSetupGuide && <button
               onClick={handleResetGuide}
               disabled={isPendingReset || guideResetDone}
               style={{
@@ -413,7 +421,7 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
                 : guideResetDone
                   ? "✓ Guide relancé !"
                   : "Revoir le guide de configuration"}
-            </button>
+            </button>}
 
             {/* Load demo */}
             <button
@@ -489,8 +497,7 @@ export default function ParametresClient({ hasData }: { hasData: boolean }) {
         {/* Sign out */}
         <button
           onClick={async () => {
-            await authClient.signOut();
-            window.location.href = "/auth/sign-in";
+            await signOutAndClear();
           }}
           style={{
             width: "100%",
