@@ -33,6 +33,23 @@ L’apply prend un advisory lock sans attente indéfinie et les verrous des18tab
 
 Publier/promouvoir seulement la révision validée et compatible. Vérifier domaine/SHA/health/logs, puis rouvrir écritures et crons appropriés. Production : HTTPS valide, cookies Secure, Neon et Resend réels, APP_ORIGIN public, secret d’invitation stable (`INVITATION_TOKEN_SECRET` ou secret Auth existant), expéditeur vérifié ; aucun EMAIL_TO forcé, Mailpit, gateway HTTP local ou fixture.
 
+## Circuit existant vérifié le 26 octobre 2026
+
+Le projet Vercel `mon-budget` (`prj_nDXmq3vVVNRK4ryS2im8Z5R63UdK`) est lié à `FofanaAmara/mon-budget`, branche de production `main`. Le tableau de bord confirme le déploiement automatique au push de main. Réutiliser ce circuit ; aucune publication CLI ou préproduction supplémentaire nécessaire. Domaine canonique HTTPS vérifié : `https://www.mesfinances.app` (l’apex y redirige).
+
+Neon intégré : projet `wispy-breeze-86800451`, branche `main` / `br-bold-union-aivpl4jf`, explicitement identifiée comme production dans la console SSO. La base/rôle/endpoint affichés correspondent aux credentials directs existants. Les identifiants ne dispensent pas du contrôle de cible par le runner.
+
+Séquence opérationnelle avant toute mutation :
+
+1. Terminer la configuration serveur de production (Auth existant, Resend, expéditeur et origine canonique), vérifier les gates de la PR et garder le schéma public inchangé.
+2. Utiliser **Settings > General > Pause Project** sur ce seul projet, mécanisme existant et réversible. Vérifier le refus du trafic de production sur domaine canonique et URL de l’ancien déploiement. Vérifier le drainage des transactions applicatives et les writers/cron avant d’attester `writersStopped=true`. Ne pas laisser la production arrêtée pour résoudre des prérequis qui pouvaient être traités avant.
+3. Prendre une nouvelle sauvegarde après gel et restaurer/répéter avec le SHA alors courant. La préparation avec `writersStopped=false` n’est pas cette sauvegarde finale.
+4. Appliquer001–006 avec le profil final certifié ; vérifier ledger, phase et conservation. Si échec ou résultat COMMIT incertain, appliquer la procédure d’incident, sans merge aveugle.
+5. Merger la PR protégée : Vercel déploie automatiquement main. Attendre build Vercel sain et CI entière sur le SHA main exact ; vérifier que la pause reste effective pendant cette attente. Aucun retour au code historique après cutover.
+6. Reprendre le projet seulement sur la version compatible, contrôler domaine/SHA, Auth et logs ; commencer les parcours QA de production. Contrôler le rétablissement des crons existants sans les déclencher globalement comme test.
+
+Cette séquence reste à exécuter. La capacité de pause a été vue dans l’UI existante et son effet503 est documenté par [Vercel](https://vercel.com/docs/projects/managing-projects#pausing-a-project). La pause réelle et le drainage doivent être observés avant l’apply ; aucune attestation n’est présumée vraie.
+
 ## Incident et récupération
 
 - Échec avant commit : transaction annulée ; conserver archive/rapport, diagnostiquer la cause et comparer phase/ledger en lecture seule avant reprise.

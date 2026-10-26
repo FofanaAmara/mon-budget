@@ -35,3 +35,6 @@ Accords explicites obtenus : main protégé et relu, branche b4fd027 publiée, P
 
 ### CI complète verte et publication des preuves
 Run40410232726 sur a89406cf69afb88e1bf59f65bb159d05d39f276a : trois jobs SUCCESS, incluant démarrage froid PostgreSQL corrigé. Documentation91f09b7 publiée, PR1 toujours Draft. Le run précédent a terminé avant ce push : aucune annulation observée à ce stade. Dernier résultat distant conservé dans .local/production-release/github-ci-latest.json. Main protégé et accords publication/protection acquis. Vercel encore formulaire GitHub, sans credential connu ; demande de connexion humaine déjà ouverte, pas nouvelle permission.
+
+### Identité distante et répétition production
+Console Vercel puisSSONeon ont identifié la cible et le circuit main. Préflightreadonly0 etbackup/restauration22859exit0 surSHA013a21b,18tables703lignesconservées,sixmigrations/replaylocalready. Revueindépendantefavorable. P3préparationprouvé ; finalaprèsgelpasfait. Importserveur4variablesrefusépuisaccordobtenu,extensionfileURLsmanquant ; humaindemandeCLI. CLIlogin15264 attend,whoami sanscredentials. Ne pas confondrepermissionavecconnexion. RunbookconcrétiseséquencePauseProjectexistante→backupfinale→apply→mergeautodeploy→CI/SHA→resume/QA ; pasnouveausystèmedepublication.

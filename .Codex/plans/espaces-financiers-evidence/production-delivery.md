@@ -53,3 +53,11 @@ La nouvelle exécution réelle a terminé0 : sauvegarde cohérente en lecture se
 Preuves privées ignorées : `.local/production-release/candidate-638f3bd-public.dump`, son manifeste et `candidate-638f3bd-proof.json`. Revue distincte des artefacts et liens cryptographiques favorable, sans nouvelle exécution par le reviewer ; source SHA638f3bd5cccfe935ec28941cc97c6ec5e069ce5d, trois fichiers revus identiques.
 
 **Borne maintenue :** les identifiants Vercel/projetNeon/brancheNeon sontnull, volontairement non inventés. Ce certificat candidate est inéligible à l’apply production. Il prouve la répétition technique sur les données configurées ; il ne prouve pas encore l’identité du service publié, le gel des writers, la sauvegarde finale de bascule ou la disponibilité de la vraie production. Aucune écriture SQL hébergée, aucun push ni déploiement n’a été exécuté.
+
+## Identité production et répétition réelle — 26 octobre, SHA013a21b
+
+Accès Vercel humain rétabli : projetmon-budget/prj_nDXmq3vVVNRK4ryS2im8Z5R63UdK, dépôtFofanaAmara/mon-budget, main d0980ec Ready, autodeploymain confirmé par l’UI. Domaine canonique `https://www.mesfinances.app` (HEADapex307verswww, www307verslanding). Neon SSO : wispy-breeze-86800451/br-bold-union-aivpl4jf, main explicitementproduction ; endpoint/base/rôle correspondent aux credentials directs existants. Aucun secret affiché ou publié.
+
+Nouvelle archive production-013a21b-preparation.dump, manifeste, préflight et proof privés sous.local/production-release. Runnerdryrun0readonly : phaselegacy,18tables/703lignes,0problèmeattribution. Vraie sauvegarde restaurée dans nouvellecopie58f5aa0e ;6migrations/ready/replay/conservationvérifiés. SHAarchive et liensidentité/SHA concordants, sourcehashbrut gardé. Revue indépendantefinancial_spaces_review favorable,sansfindingnécessaire ; lectureartefacts, pasrerunSQLrevendiqué.
+
+Limite : writersStopped=false, donc préparation de P3 ; sauvegarde finale après gel toujours due. Aucun SQL hébergé muté. ConfigurationVercel Resend/EMAIL_FROM/APP_ORIGIN/transport préparée en fichier privé ; premieruploadrefusé, accordhumainobtenu ensuite mais accèsfichierextensionmanquant. Instructionhumaine suivante : utiliserCLI, pasactiverextension. LoginCLI15264 attendjeton ; whoami sanssession, aucuncontournement. CircuitdéploiementGitHubconservé ; pasdenouveauCLIdeploy.

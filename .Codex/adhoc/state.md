@@ -1308,3 +1308,25 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Décisions prises :** consolidation utile du rapport courant, profil distant et journal ; publication de cette correction documentaire pendant la CI pour vérifier annulation stalePR. Résultat final exact conservé dans .local/production-release/github-ci-latest.json et présenté à l’humain. Pas de nouveau code ni nouvelle recette locale nécessaire.
 **Prochaine étape :** observer CI exacte, puis Vercel/auth/config/cible/backup finale avant toute bascule. Connexion GitHub humaine dans Chrome1730267730 toujours requise ; question existante ouverte.
 **Contexte pour reprise :** PR1 Draft https://github.com/FofanaAmara/mon-budget/pull/1 ; main protégé, push autorisé. Local primaire préservé ; worktree release seul checkout de livraison. Aucune migration hébergée, aucun merge/deploy. Les preuves caches locales ne valent pas P9prod.
+
+---
+## [2026-10-26] — Accès Vercel rétabli, circuit GitHub conservé
+
+**Plan :** livraison P1–P10 existante.
+**État :** IN_PROGRESS.
+**Tâche en cours :** P1/P4 identité production et configuration, puis sauvegarde finale et bascule.
+**Décisions prises :** connexion humaine Vercel vérifiée ; UI projetmon-budget/dépôtFofanaAmara/mon-budget, productiond0980ec8Ready, domainewww.mesfinances.app/mesfinances.app et aliasmon-budget-seven.vercel.app. UI confirmeautodeploymain ; conservercircuit PR→CI→merge→Vercel. PasdeCLI nécessaireaudéclenchement ; essailoginCLIrestéenattente(boutonofficieldésactivé), processus88158interrompu pour respecterlechoixhumain. Aucunepublicationapp/migration/distancesecretmodifié.
+**Preuves :** CI013a21b terminalSUCCESS, ancienrun91f09b7cancelledréel. VariablesUIproductionAuth/VAPID/Neonprésentes ; Resend/APP_ORIGINabsentsdelalistecourante,compléterdansmandataprèsidentité vérifiée. Cadreindex+7fiches relus.
+**Prochaine étape :** intégrationNeonexistanteetparamètrescible ; planifier concrètementarrêtwriters/sauvegardefinale/ordremerge sansajouternouveausystème.
+**Contexte pour reprise :** worktreerelease013a21b ; checkoutprimairepréservé. OngletChrome3/1730267737configVercel ; ancien1730267730ferméparcleanup. Goalprécédemmentblockedpourlogin,dépendancelevée,nepasréutilisercompteurancien. AucuncomptefinancierQAprodcréé,nouvelleconfigurationserveurencoredue.
+
+---
+## [2026-10-26] — Répétition production certifiée et configuration CLI demandée
+
+**Plan :** livraison existanteP1–P10, circuitGitHub→Vercelconservé.
+**État :** IN_PROGRESS.
+**Tâche en cours :** configuration email viaCLI, puis gel/sauvegardefinale/migration/merge/recetteproduction.
+**Preuves :** targetNeonwispy-breeze-86800451/br-bold-union-aivpl4jfidentifiéeSSOproduction ; endpointsdirectsbase/rôlematch. Préflight50184exit0,backup/restauration22859exit0,18tables703lignes,sixmigrationsreadyreplaytrue,empreintearchiveetidentité/SHAcohérents. Nouvellecopie58f5aa0epréservée ; revue distinctefavorable. Sourcehébergéeinchangée,writersStoppedfalse,pasbackupfinaleaprèsgel.
+**Décisions prises :** import4variablesVercelrefuséoutil,puisaccordhumainobtenu ; extensionrequirefileURLs,surquoiutilisateurordonneCLI. Neplusessayeruploadbrowser ni modifierextension. CLIlogin15264vivant maisjetonpasencoreémis,whoamiexit1 ; codeWPWH-RZLZ,Chrome1730267743AuthorizeAppresteboutondésactivé. Réponsehumaine«ConnexionCLIautorisée»reçue,sessionnonprouvée. Pasfairesemblantcredentialsdisponibles. SettingsGeneralPauseProjectcapacitévue,aucunepauseappliquée.
+**Prochaine étape :** terminerauthCLIetconfigproduction,commitpreuves/gates,attendreCIexacte ; ensuitepauseVercelvérifiée+drainwriters,backupfinalerestaurée,applyprotégé,mergeprotégéautodeploymain,puisrecetteP7–P9.
+**Contexte pour reprise :** worktree013a21b,docsdesuivimodifiéesseulement ; fichierprivéresend-production.env4clésuniquementsanssecretGit. Canoniquehttps://www.mesfinances.app. Pasdéploiementoumutationbaseproduction ; pasnouveaupérimètre. QuestionconnexionCLIrépondue,nepasredemanderpermission déjàaccordée ; interventiontechniqueeffectivemanquante.
