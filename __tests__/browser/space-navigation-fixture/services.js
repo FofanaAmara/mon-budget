@@ -26,3 +26,8 @@ export async function createSpace(input) {
 export async function inviteToSpace() {
   return { ok: true, data: { deliveryStatus: "sent" } };
 }
+
+export function respondToInvitation(id, response, token) {
+  window.invitationResponseCalls.push({ id, response, token });
+  return new Promise(resolve => { window.resolveInvitationResponse = resolve; });
+}

@@ -144,3 +144,13 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Recette et garde de régression | correction | COMPLETED : WebKitlogin/reload/depenses/signout0cookie, MCPChromiumlogin/reload/signout/relogin |
 | Qualité et revue | sourcescourantes | COMPLETED :266unit/14delivery/build/types/lint0 ; revueindépendante3+15testsverts |
 | Confirmation Safari natif | humainSafari | À CONFIRMER : moteurWebKitprouvé, pasnavigateurSafarihumain piloté |
+
+## Suppression OTP — instruction humaine du26octobre
+
+| Travail | État et preuve |
+|---|---|
+| Retirer code/attente et appels OTP | COMPLETED : composant/actions/modulesretirés, publicpageacceptationdirecte |
+| Conserver preuve du destinataire | COMPLETED : sessionfraîche+hashjetonoriginalpournonverified, IDseulrefusé, pasflagAuthfabriqué |
+| Remplacer tests de fonctionnalité retirée | COMPLETED :3SSR/17PGinvites/banc7 ; totalité256unit/100PG/14delivery/build/types/lint0 |
+| Recette dans vraie app | COMPLETED : MCPQA Cfalseverified→lienmail→signin→acceptation→finances/reload ;404avant/2espacesaprès |
+| Revue et preuve durable | COMPLETED : instance distincte favorable,DEC005,preuvesetlimitesconsignées ; commitlocalàcréer |

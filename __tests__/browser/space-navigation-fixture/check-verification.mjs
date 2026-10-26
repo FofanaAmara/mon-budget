@@ -21,55 +21,45 @@ try {
   const page = await browser.newPage();
   page.setDefaultTimeout(5000);
   page.on('pageerror', (error) => errors.push(error.message));
-  const open = async () => {
-    await page.goto(origin + '/verification.html');
-    await page.getByRole('button', { name: 'Recevoir un code de vérification', exact: true }).waitFor();
+  const open = async (query = '') => {
+    await page.goto(origin + '/verification.html' + query);
+    await page.getByRole('button', { name: 'Accepter l’invitation', exact: true }).waitFor();
   };
-  const settle = async (result) => {
-    await page.evaluate((value) => window.resolveVerification(value), result);
+  const settle = async result => {
+    await page.evaluate(value => window.resolveInvitationResponse(value), result);
     await page.getByRole('button', { name: 'En cours…', exact: true }).waitFor({ state: 'hidden' });
   };
+  const id = '11111111-1111-4111-8111-111111111111';
+  const token = id + '.' + 'a'.repeat(43);
   await open();
-  expect(await page.evaluate(() => window.verificationCalls)).toEqual([]);
-  await page.getByRole('button', { name: 'J’ai déjà un code', exact: true }).click();
-  const code = page.getByRole('textbox', { name: 'Code reçu par courriel', exact: true });
-  const verify = page.getByRole('button', { name: 'Vérifier mon adresse', exact: true });
-  await code.fill('123'); await expect(verify).toBeDisabled();
-  await code.fill(' 123456 '); await expect(code).toHaveValue('123456');
-  await expect(verify).toBeEnabled();
-  await verify.click();
+  expect(await page.evaluate(() => window.invitationResponseCalls)).toEqual([]);
+  expect(await page.getByRole('textbox').count()).toBe(0);
+  await page.getByRole('button', { name: 'Accepter l’invitation', exact: true }).click();
   await expect(page.getByRole('button', { name: 'En cours…', exact: true })).toBeDisabled();
-  expect(await page.evaluate(() => window.verificationCalls)).toHaveLength(1);
-  await settle({ ok: false, error: 'Code incorrect ou expiré.' });
-  await expect(page.getByRole('alert')).toContainText('Code incorrect');
-  expect(page.url()).toBe(origin + '/verification.html');
+  await expect(page.getByRole('button', { name: 'Refuser', exact: true })).toBeDisabled();
+  expect(await page.evaluate(() => window.invitationResponseCalls)).toEqual([{ id, response: 'accept', token }]);
+  await settle({ ok: false, error: 'Invitation indisponible pour ce compte.' });
+  await expect(page.getByRole('alert')).toContainText('indisponible');
+  await page.getByRole('button', { name: 'Accepter l’invitation', exact: true }).click();
+  expect(await page.evaluate(() => window.invitationResponseCalls)).toHaveLength(2);
+  await settle({ ok: true, data: { accepted: true, spaceId: 'shared', spaceName: 'Notre couple' } });
+  await expect(page.getByText('Tu as rejoint « Notre couple ».')).toBeVisible();
+  expect(await page.evaluate(() => window.acceptanceNavigation)).toEqual(['/invitations/' + id]);
+  await page.screenshot({ path: path.join(evidence, 'accepted-without-otp.png') });
+
+  await open('?inbox');
+  await page.getByRole('button', { name: 'Refuser', exact: true }).click();
+  expect(await page.evaluate(() => window.invitationResponseCalls)).toEqual([{ id, response: 'decline' }]);
+  await settle({ ok: true, data: { accepted: false, spaceId: 'shared', spaceName: 'Notre couple' } });
+  await expect(page.getByText('Invitation refusée. Aucun accès à cet espace n’a été ajouté.')).toBeVisible();
 
   await open();
-  await page.getByRole('button', { name: 'Recevoir un code de vérification', exact: true }).click();
-  await settle({ ok: false, error: 'Envoi non confirmé : un courriel peut arriver.' });
-  await expect(page.getByRole('alert')).toContainText('non confirmé');
-  await expect(page.getByRole('button', { name: /Renvoyer un code dans/ })).toBeDisabled();
-  await expect(page.getByRole('textbox', { name: 'Code reçu par courriel', exact: true })).toBeEnabled();
-  expect(await page.evaluate(() => window.verificationCalls)).toHaveLength(1);
-
-  for (const action of ['Fermer la vérification', 'Changer la session de test']) {
-    await open();
-    await page.getByRole('button', { name: 'Recevoir un code de vérification', exact: true }).click();
-    await page.getByRole('button', { name: action, exact: true }).click();
-    await settle({ ok: true, status: 'verified' });
-    expect(page.url()).toBe(origin + '/verification.html');
-    if (action.startsWith('Changer')) await expect(page.getByRole('alert')).toContainText('session');
-  }
-
-  await open();
-  const destination = '/invitation/11111111-1111-4111-8111-111111111111.' + 'a'.repeat(43);
-  await page.route('**/invitation/**', (route) => route.fulfill({ contentType: 'text/html', body: '<main>Invitation à accepter explicitement</main>' }));
-  await page.getByRole('button', { name: 'Recevoir un code de vérification', exact: true }).click();
-  await page.evaluate(() => window.resolveVerification({ ok: true, status: 'verified' }));
-  await page.waitForURL(origin + destination);
-  await expect(page.getByRole('main')).toContainText('accepter explicitement');
+  await page.getByRole('button', { name: 'Accepter l’invitation', exact: true }).click();
+  await page.getByRole('button', { name: 'Fermer l’invitation', exact: true }).click();
+  await page.evaluate(() => window.resolveInvitationResponse({ ok: true, data: { accepted: true, spaceId: 'shared', spaceName: 'Notre couple' } }));
+  expect(await page.evaluate(() => window.acceptanceNavigation)).toEqual([]);
   if (errors.length) throw Error(errors.join('\n'));
-  const report = { passed: true, scope: 'Real InvitationVerification in Chromium; Auth/action responses and final destination simulated. No OTP email, membership, full app E2E or Playwright MCP proof.', checks: ['no send on mount', 'short/trimmed code and pending controls', 'failed verification stays on invitation', 'uncertain delivery allows code entry and enforces UI cooldown', 'late completion after unmount cannot navigate', 'late completion after actor change cannot navigate', 'verified response reloads the exact invitation without accepting it'], pageErrors: errors };
+  const report = { passed: true, scope: 'Real InvitationResponse in Chromium; action responses and router simulated. No OTP, Auth email, full-app E2E or Playwright MCP claim.', checks: ['no response on mount and no code field', 'original mail token submitted on explicit acceptance', 'only in-flight controls disabled', 'failure permits retry', 'private-inbox response without token remains server-authorized', 'confirmation and decline', 'late response after unmount cannot navigate'], pageErrors: errors };
   writeFileSync(reportFile, JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report));
 } catch (error) {

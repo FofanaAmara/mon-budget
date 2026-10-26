@@ -118,3 +118,5 @@ Acquis globaux : deux parcours de destinataire depuis de vrais emails Resend re�
 Réconciliation d’envoi incertain : runbook et statement sur clone synthétique acquis ; aucune intervention réelle nécessaire en l’absence d’incident. Après23h, ne pas renvoyer aveuglément ; vérifier fournisseur/réception et autorisation.
 
 URL locale actuelle : http://localhost:3002 directement, sans redirection HTTPS. Runtime Resend61868 HTTP, copie spaces_work17. Aucune migration de production, aucun push/déploiement. Ancien audit delivery-current-audit.md reste un relevé historique au5101fa5 ; l’état courant est cette matrice et resend-real-execution.md.
+
+DécisionhumaineactuelleINVITATION-LINK-NO-OTP-REAL/DEC005 : aucunOTPdansl’acceptation ; lespreuvesOTPplushautrestenthistoriques. NouveaucontratvérifiéPG/MCP : sessiondestinataire+jetonoriginal pournonverified, acceptationdistincte, Authflagnonfabriqué. Les17exigences/30ACproduitrestentlesmêmes ; cette suppression d’uneétape technique additionnelle ne vaut pas clôture de la DoD/CI. Qualitéactuelle256unit/100PG/14delivery/build/types/lint0 ; preuvesréellesetchangementdécisionconsignésdansresend-real-execution.md.

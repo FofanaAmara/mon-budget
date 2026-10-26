@@ -1,7 +1,7 @@
 # DEC-004 : Vérifier le destinataire par l’API OTP dédiée
 
 **Date :** 2026-10-23
-**Status :** Active
+**Status :** Superseded by DEC-005
 
 ## Contexte
 La recette réelle a trouvé deux comptes Auth non vérifiés. La page d’invitation empêchait correctement l’adhésion mais ne permettait pas de demander un nouveau message. Le SMTP Resend/Mailpit de l’application transporte les invitations ; la vérification d’identité appartient à NeonAuth. La console de gestion affiche une connexion et sa configuration n’a pas été lue.

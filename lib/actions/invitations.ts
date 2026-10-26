@@ -143,7 +143,7 @@ export async function inviteToSpace(
         INSERT INTO space_invitations(id,space_id,recipient_email,invited_by,token_nonce,token_hash,origin,space_name_snapshot,inviter_name_snapshot,mail_from)
         SELECT ${id},${spaceId},${email},${identity.id},${nonce},${hashToken(token)},${origin},s.name,${identity.name || "Un membre"},${sender} FROM financial_spaces s
         WHERE s.id=${spaceId} AND NOT EXISTS(SELECT 1 FROM existing)
-          AND NOT EXISTS(SELECT 1 FROM space_memberships m JOIN user_display_profiles p ON p.user_id=m.user_id WHERE m.space_id=${spaceId} AND p.email_verified AND lower(btrim(p.email))=${email})
+          AND NOT EXISTS(SELECT 1 FROM space_memberships m JOIN user_display_profiles p ON p.user_id=m.user_id WHERE m.space_id=${spaceId} AND lower(btrim(p.email))=${email})
           AND (SELECT count(*) FROM space_invitations WHERE invited_by=${identity.id} AND created_at>now()-interval '1 hour')<20
         ON CONFLICT(space_id,recipient_email) WHERE status='pending' DO NOTHING RETURNING id
       ) SELECT id FROM inserted UNION ALL SELECT id FROM existing`,
@@ -261,17 +261,20 @@ export async function retryInvitationDelivery(
 export async function respondToInvitation(
   invitationId: string,
   response: "accept" | "decline",
+  token?: string,
 ): Promise<
   InvitationResult<{ spaceId: string; spaceName: string; accepted: boolean }>
 > {
   const identity = await requireIdentity({ fresh: true });
   await requireSpacesReady();
-  if (!identity.emailVerified || !identity.email)
-    return {
-      ok: false,
-      error:
-        "Vérifie l’adresse courriel de ton compte avant de répondre à cette invitation.",
-    };
+  if (!identity.email) return { ok: false, error: invalid };
+  // A verified account may use its private inbox. Otherwise the original
+  // secret email link proves possession; an invitation ID alone never does.
+  if (!identity.emailVerified && !token)
+    return { ok: false, error: "Ouvre le lien du courriel d’invitation pour y répondre." };
+  if (token !== undefined && !/^[a-f0-9-]{36}\.[A-Za-z0-9_-]{43}$/.test(token))
+    return { ok: false, error: invalid };
+  const tokenHash = token ? hashToken(token) : null;
   if (
     !idSchema.safeParse(invitationId).success ||
     !["accept", "decline"].includes(response)
@@ -280,7 +283,8 @@ export async function respondToInvitation(
   const email = InvitationEmail.parse(identity.email),
     status = response === "accept" ? "accepted" : "declined";
   const rows = await sql`WITH target AS MATERIALIZED (
-    SELECT * FROM space_invitations WHERE id=${invitationId} AND recipient_email=${email} FOR UPDATE
+    SELECT * FROM space_invitations WHERE id=${invitationId} AND recipient_email=${email}
+      AND (${identity.emailVerified === true} OR token_hash=${tokenHash}) FOR UPDATE
   ), changed AS (
     UPDATE space_invitations i SET status=${status},responded_by=${identity.id},responded_at=now()
     FROM target t WHERE i.id=t.id AND t.status='pending' AND t.expires_at>now() RETURNING i.*
@@ -289,8 +293,8 @@ export async function respondToInvitation(
     ON CONFLICT(space_id,user_id) DO NOTHING
   ), profile AS (
     INSERT INTO user_display_profiles(user_id,display_name,email,email_verified)
-    SELECT ${identity.id},${identity.name},${identity.email},true FROM changed WHERE status='accepted'
-    ON CONFLICT(user_id) DO UPDATE SET display_name=EXCLUDED.display_name,email=EXCLUDED.email,email_verified=true,updated_at=now()
+    SELECT ${identity.id},${identity.name},${identity.email},${identity.emailVerified === true} FROM changed WHERE status='accepted'
+    ON CONFLICT(user_id) DO UPDATE SET display_name=EXCLUDED.display_name,email=EXCLUDED.email,email_verified=EXCLUDED.email_verified,updated_at=now()
   ), result AS (
     SELECT space_id FROM changed
     UNION ALL SELECT space_id FROM target WHERE status=${status} AND responded_by=${identity.id}
@@ -308,12 +312,11 @@ export async function respondToInvitation(
   };
 }
 
-/** Confirmation survives refresh and is visible only to the responding verified account. */
+/** Confirmation survives refresh and remains private to the responding account. */
 export async function getInvitationResponse(invitationId: string) {
   const identity = await requireIdentity({ readOnly: true });
   await requireSpacesReady();
   if (
-    !identity.emailVerified ||
     !identity.email ||
     !idSchema.safeParse(invitationId).success
   )

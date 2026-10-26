@@ -14,8 +14,7 @@ export default async function InvitationsPage() {
         <h1>Tes invitations.</h1>
         {!verified ? (
           <p className="space-info">
-            Vérifie l’adresse courriel de ton compte pour retrouver et accepter
-            tes invitations.
+            Ouvre le lien du courriel d’invitation pour rejoindre l’espace.
           </p>
         ) : invitations.length === 0 ? (
           <>

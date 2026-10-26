@@ -36,3 +36,7 @@ Ces décisions et l’approbation du design ne doivent pas être redemandées.
 4. CI distante entièrement verte sur SHA livré, après autorisation de push. Qualité/revue locales ne remplacent pas la CI. Aucun push/déploiement autorisé actuellement ; origine/callback production à vérifier avant release autorisée.
 
 Aucun rôle différencié ni parcours destructeur ajouté. Les30AC restent inchangés ; aucune story DONE tant que sa DoD manque.
+
+## Décision produit actuelle — sans OTP
+
+L’humain retire le26octobre touteétape de code de vérification dans l’acceptation. INVITATION-LINK-NO-OTP-REAL/DEC005supersèdent les référencesOTP historiques : connexion/inscription→retourlien→acceptationdirecte. CompteAuthnonverifiedadmissiblesi sessionmêmeemail etjetonoriginalsecret ; aucunflagAuthfabriqué, listeprivée n’exposepasdejeton.256unit/100PG/14delivery/build/types/lint etrevuefavorable, vraiMCPfalseverified→acceptation/reload acquis. Stories/goalglobalrestentencours, pasdeCI/push/déploiementnouveau.

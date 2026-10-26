@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import InvitationVerification from '@/components/spaces/InvitationVerification';
-import { VerificationSession } from './verification-auth.jsx';
-window.verificationCalls = [];
+import InvitationResponse from '@/components/spaces/InvitationResponse';
+import { Navigation } from './router.jsx';
+window.invitationResponseCalls = [];
+window.acceptanceNavigation = [];
+window.preferenceRequests = [];
 function Fixture() {
-  const [actor, setActor] = useState('alice');
   const [open, setOpen] = useState(true);
-  return <VerificationSession.Provider value={{ data: { user: { id: actor } }, isPending: false, error: null }}>
-    <button onClick={() => setActor('bob')}>Changer la session de test</button>
-    <button onClick={() => setOpen(false)}>Fermer la vérification</button>
-    {open && <InvitationVerification token={'11111111-1111-4111-8111-111111111111.' + 'a'.repeat(43)} actorId="alice" />}
-  </VerificationSession.Provider>;
+  const token = new URLSearchParams(window.location.search).has('inbox') ? undefined : '11111111-1111-4111-8111-111111111111.' + 'a'.repeat(43);
+  return <Navigation.Provider value={{ pathname: '/invitation/fixture', router: {
+    replace: href => window.acceptanceNavigation.push(href),
+    push: href => window.acceptanceNavigation.push(href),
+  } }}>
+    <button onClick={() => setOpen(false)}>Fermer l’invitation</button>
+    {open && <InvitationResponse id="11111111-1111-4111-8111-111111111111" token={token} />}
+  </Navigation.Provider>;
 }
 createRoot(document.getElementById('root')).render(<Fixture />);

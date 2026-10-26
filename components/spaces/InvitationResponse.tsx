@@ -5,7 +5,7 @@ import { respondToInvitation } from "@/lib/actions/invitations";
 import { OpenSpaceButton } from "./SpaceEntry";
 import { useFinancialRouter } from "./navigation";
 
-export default function InvitationResponse({ id }: { id: string }) {
+export default function InvitationResponse({ id, token }: { id: string; token?: string }) {
   const [pending, start] = useTransition();
   const [error, setError] = useState("");
   const [result, setResult] = useState<{
@@ -18,7 +18,7 @@ export default function InvitationResponse({ id }: { id: string }) {
     setError("");
     start(async () => {
       try {
-        const answer = await respondToInvitation(id, response);
+        const answer = await respondToInvitation(id, response, token);
         if (!answer.ok) {
           setError(answer.error);
           return;

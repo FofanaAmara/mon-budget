@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { getPublicInvitation } from "@/lib/actions/invitations";
 import InvitationResponse from "@/components/spaces/InvitationResponse";
-import InvitationVerification from "@/components/spaces/InvitationVerification";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -79,10 +78,8 @@ export default async function InvitationPage({
                       Changer de compte
                     </Link>
                   </>
-                ) : !invitation.verified ? (
-                  <InvitationVerification key={invitation.actorId} token={token} actorId={invitation.actorId ?? ""} />
                 ) : (
-                  <InvitationResponse id={invitation.id} />
+                  <InvitationResponse id={invitation.id} token={token} />
                 )}
               </>
             ) : (

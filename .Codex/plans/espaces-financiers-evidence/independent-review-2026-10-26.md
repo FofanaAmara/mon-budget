@@ -85,3 +85,13 @@ Empreintes des sources revues et testées :
 - __tests__/delivery/local-http-auth.test.mjs : 756dfa53afb2a8190903818d08a004ee401e6c84b133ed6269cd242c7f363928
 - app/providers.tsx : c41909a536d0c2aec342ff6096fd4001b247b40eec5d86c375894772d3f01400
 - __tests__/auth-provider-render.test.tsx : 8daa92cd59ce56801063b30fb206459bbb21b18c9b26ed162ffbe708b6943063
+
+## Retrait OTP — revue distincte du nouveau contrat
+
+financial_spaces_review : avisdesign/difffavorable, aucunfindingbloquant. Jeton+sessionmêmeemailprotègentcompteAuthnonverified ; IDseulverifiedexistantconservé. HashciblédansSELECTFORUPDATEpouraccept/decline/replay, profilvraiflagAuth, confirmationresponded_by+email, déduplicationmembrefalsecorrigée. TestsPGdesrefus/concurrence/deduprelus,3SSRexécutés0parreviewer ; pasdeDB/MCPprétendusexécutésparlui. Banc7composantsactionsimuléesgardesportéeexplicites. ProductionAuth/providerpasdésactivés ; OTPappretiréàdemandehumaine, pasdecontrôleignoré.
+
+Sources principales revues et éprouvées :
+
+- lib/actions/invitations.ts : 8f3c20322814459a5748344a05bb6c5eddf35105b77bdcd7ffac826c6afa80ed
+- components/spaces/InvitationResponse.tsx : aa32aee53026b8bc3a0cc5fa88a08a2aa59ab98c5e6704cdb3749c721f6084f2
+- app/invitation/[token]/page.tsx : 191824a548d3843e176ae55c14a9483536e248beb9975b8eae95171b9fe28847
