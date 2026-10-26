@@ -30,7 +30,7 @@ export function certificateTrustPlan(root, home, platform = process.platform) {
   };
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && fs.realpathSync(path.resolve(process.argv[1])) === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
   if (args.length > 1 || (args.length === 1 && args[0] !== '--install'))
     throw new Error('Only --install is accepted. Without it, no trust setting is changed.');

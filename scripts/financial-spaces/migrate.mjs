@@ -50,7 +50,7 @@ export async function preflight(client) {
   return issues;
 }
 
-function migrationFiles(through) {
+export function migrationFiles(through) {
   const names = ['001-expand.sql', '002-backfill.sql', '003-isolation.sql', '004-variable-income.sql', '005-financial-operations.sql', '006-invitations.sql'];
   const last = names.findIndex(name => name.startsWith(through + '-'));
   if (last < 0) throw new Error('Unknown migration target.');

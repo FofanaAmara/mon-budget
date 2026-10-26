@@ -11,7 +11,7 @@
     "lint": "eslint",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:spaces:db": "node --test __tests__/integration/financial-spaces-migration.test.mjs __tests__/integration/synthetic-baseline.test.mjs __tests__/integration/delivery-reconciliation.test.mjs",
+    "test:spaces:db": "node --test __tests__/integration/production-migration.test.mjs __tests__/integration/financial-spaces-migration.test.mjs __tests__/integration/synthetic-baseline.test.mjs __tests__/integration/delivery-reconciliation.test.mjs",
     "test:spaces:services": "vitest run --config vitest.spaces.config.mts",
     "test:spaces:navigation": "node __tests__/browser/space-navigation-fixture/check.mjs",
     "test:spaces:selection": "node __tests__/browser/space-navigation-fixture/check-selection.mjs",
@@ -31,7 +31,7 @@
     "react-dom": "19.2.3",
     "sonner": "2.0.8",
     "web-push": "^3.6.7",
-    "zod": "^4.3.6"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
@@ -52,6 +52,7 @@
     "vitest": "4.1.12"
   },
   "overrides": {
+    "zod": "$zod",
     "@neondatabase/auth": {
       "better-auth": "1.7.6",
       "@better-auth/core": "1.7.6",

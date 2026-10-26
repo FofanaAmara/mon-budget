@@ -3,6 +3,19 @@
 Date : 2026-10-22. Version : 1.1 (configuration mail actualisée, sans exécution). **Statut : proposé à validation humaine ; aucune implémentation commencée.**
 Skill : `agent-work-methodology:planning-methodology`. Mandat : plan du chantier complet, six stories ESP-001 à ESP-006. Assurance proposée : renforcée, risque critique sur isolation et conservation des finances.
 
+### Extension de livraison — 26 octobre, goal production activé
+
+Contrat stable : `.Codex/goals/espaces-financiers-production.md`, P1–P10. Reprendre les preuves applicables ; ne pas confondre ancienne date/statut du plan avec état courant.
+
+1. Établir la cible distante, les droits, la protection et le déclenchement Vercel, puis réconcilier les 58 commits locaux sur main dans une branche de livraison sans perdre les modifications humaines. Aucun push direct sur main.
+2. Préparer l’exécuteur de migration de production protégé et son runbook ; vérifier refus de mauvaise cible, dry-run, conservation, verrou/timeouts, ledger et reprise. Gardes locales conservées.
+3. Sauvegarder la production, restaurer sur copie isolée et répéter migration/conservation/récupération compatible. Aucun reset de données réelles.
+4. Terminer les preuves sessions/cache/historique nécessaires, contrôler la qualité et faire relire la livraison indépendamment. PR protégée et CI réelle.
+5. Configurer les ressources de production, coordonner suspension des anciens writers/crons, migration et déploiement exact SHA. Rouvrir seulement lorsque code et schéma sont cohérents.
+6. Recette réelle production QA : Resend reçu, ancien/nouveau compte, adhésion, deux contributions, séparation, sessions/cache, desktop/mobile MCP et régression WebKit. Clôturer rapport/matrice/backlog avec preuves P1–P10.
+
+Première tranche estimée : 20–40 minutes pour préflight distant et préparation de la migration ; coût fournisseur non mesuré, aucun nouveau service payant. Réévaluer au premier obstacle concret. Le suivi reste `.Codex/adhoc/tasks/resend-real-recipe.md` et `.Codex/adhoc/state.md`.
+
 ### Extension de correction — 26 octobre, échec SMTP réel à l’onboarding
 
 La recette SMTP locale reproduit une invitation enregistrée `failed` puis une sortie vers `/espaces`, sans message ni choix de reprise. L’espace est conservé. Corriger le garde d’entrée qui réévalue « possède un espace » pendant les revalidations des actions du formulaire : garder l’orientation d’entrée stable durant ce parcours, tout en redirigeant une vraie nouvelle visite d’un compte déjà équipé. Préserver Auth, acteur attendu, idempotence et garde des invitations reçues. Preuve : RED/GREEN dans le vrai MCP sur la même panne, avec erreur visible et poursuite/réessai sans doublon ; garder les tests de rendu réel de l’entrée pour les redirections à froid, l’identité et les invitations reçues. Captures avant/après375/desktop, qualité isolée et revue distincte du nouveau diff. Ne pas modifier les montants existants ni la DBsource. Le runtime SMTP de panne sera ensuite remplacé par le runner Resend normal.

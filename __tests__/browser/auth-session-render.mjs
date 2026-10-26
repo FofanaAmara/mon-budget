@@ -12,6 +12,9 @@ const root=process.cwd();
 const evidence=path.join(root,'.local/safari-auth');
 fs.mkdirSync(evidence,{recursive:true});
 const fixture=fs.mkdtempSync(path.join(evidence,'rsc-fixture-'));
+// A shared private evidence directory can live outside a durable worktree.
+// Resolve React and Next from this checkout, never from a second parent install.
+fs.symlinkSync(path.join(root,'node_modules'),path.join(fixture,'node_modules'),'dir');
 const certificate=localHttpsCertificate(root);
 const requests=new Map();
 let fail=true;

@@ -73,3 +73,10 @@ tsconfig.tsbuildinfo
 
 # Test coverage
 coverage/
+
+# Durable project worktrees
+worktrees/
+
+# Shared dependencies/private artifacts may be symlinks in durable worktrees.
+/node_modules
+/.local

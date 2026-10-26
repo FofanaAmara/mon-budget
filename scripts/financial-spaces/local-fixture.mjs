@@ -1,11 +1,15 @@
 /** All SQL writes from migration tooling must pass this local-server identity guard. */
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
+import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import pg from 'pg';
 
 export const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-export const directory = path.join(root, '.local/financial-spaces');
+const configuredDirectory = path.join(root, '.local/financial-spaces');
+// Durable worktrees may share the owned fixture through an ignored symlink.
+// Compare the real mount path, retaining port/label/system-identifier checks.
+export const directory = fs.existsSync(configuredDirectory) ? fs.realpathSync(configuredDirectory) : configuredDirectory;
 export const container = 'mon-budget-spaces-test-01a165b5';
 export const owner = 'financial-spaces-01a165b5';
 export const image = 'postgres:17-alpine';

@@ -1,4 +1,9 @@
 {
+  "git": {
+    "deploymentEnabled": {
+      "feature/financial-spaces-production": false
+    }
+  },
   "crons": [
     {
       "path": "/api/cron/push",
