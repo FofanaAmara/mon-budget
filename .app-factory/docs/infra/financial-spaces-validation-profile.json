@@ -23,10 +23,35 @@
     "build"
   ],
   "repository": "FofanaAmara/mon-budget",
-  "remoteEvidence": "NOT_RUN_NO_PUSH_AUTHORIZATION",
+  "remoteEvidence": {
+    "pullRequest": "https://github.com/FofanaAmara/mon-budget/pull/1",
+    "initialRun": {
+      "id": 40409204080,
+      "sha": "b4fd0270cd2e05e753019b4d0d65ea5680f2a4fc",
+      "quality": "success",
+      "postgres": "failure",
+      "required": "failure"
+    },
+    "observedRun": {
+      "id": 40410232726,
+      "sha": "a89406cf69afb88e1bf59f65bb159d05d39f276a",
+      "status": "in_progress",
+      "observedAt": "2026-10-26T22:10:31.727031+00:00"
+    }
+  },
   "requiredCheckPrepared": "Financial spaces required",
-  "branchProtection": "NOT_VERIFIED",
-  "deployment": "NOT_CONFIGURED_BY_THIS_WORKFLOW",
+  "branchProtection": {
+    "verifiedAt": "2026-10-26T22:10:31.727031+00:00",
+    "requiredCheck": "Financial spaces required",
+    "strict": true,
+    "enforceAdmins": true,
+    "conversationsResolved": true,
+    "forcePush": false,
+    "deletion": false,
+    "externalApprovals": 0,
+    "policy": "solo-maintainer"
+  },
+  "deployment": "Release branch preview disabled; production identity/config/order still unverified. No production migration or deployment executed.",
   "proofOwners": {
     "quality": [
       "delivery-guards",
@@ -48,7 +73,7 @@
   "pathSelection": "All paths run the full workflow; no classifier or skip.",
   "concurrency": "Only superseded pull requests cancel; main run_id gives each run a distinct group.",
   "metrics": {
-    "remoteSampleSize": 0,
+    "remoteSampleSize": 1,
     "p50": null,
     "p95": null,
     "status": "insufficient-sample"

@@ -176,8 +176,8 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 
 | Séquence / résultat | État |
 |---|---|
-| P1 : cible, accès, protections et ordre de bascule réels | IN_PROGRESS : récupération durable et dry-run candidate Neon verts ; Vercel UI demande connexion GitHub, protection main et publication PR bloquées par revue automatique en attente des accords précis |
+| P1 : cible, accès, protections et ordre de bascule réels | IN_PROGRESS : main protégé avec accord explicite, branche publiée et PRdraft1 ; Vercel UI attend toujours la connexion GitHub, cible production à établir |
 | P2–P5 : outil migration protégé, backup réel restauré, répétition et qualité/revue | IN_PROGRESS : commitsbd6cc81/638f3bd,19delivery/256unit/102services/45DB et autres gates verts ; vraie sauvegarde candidate restaurée/migrée/rejouée et revue. Association production et sauvegarde finale après gel encore requises |
-| P2/P4/P6 : PR/CI et configuration, bascule/migration/déploiement exact SHA | PENDING |
-| P7–P9 : recette production réelle, Resend, sessions/cache/WebKit | PENDING |
+| P2/P4/P6 : PR/CI et configuration, bascule/migration/déploiement exact SHA | IN_PROGRESS : CI initialeFAILPG/qualitéSUCCESS, correction TCP a89406c en nouvelle CI40410232726 ; pas de bascule |
+| P7–P9 : recette production réelle, Resend, sessions/cache/WebKit | IN_PROGRESS : HTTP-PRIVACY-MCP local consolidé, exclusions BFCache/purge SW explicite ; recette production toujours due |
 | P10 : récupération et rapport final/backlog | PENDING |
