@@ -33,11 +33,19 @@
       "required": "failure"
     },
     "observedRun": {
+      "id": 40410705780,
+      "sha": "91f09b7d0aa177a5efb20352eed764e19db7ad76",
+      "status": "queued",
+      "observedAt": "2026-10-26T22:13:08Z"
+    },
+    "verifiedCodeRun": {
       "id": 40410232726,
       "sha": "a89406cf69afb88e1bf59f65bb159d05d39f276a",
-      "status": "in_progress",
-      "observedAt": "2026-10-26T22:10:31.727031+00:00"
-    }
+      "quality": "success",
+      "postgres": "success",
+      "required": "success"
+    },
+    "latestResultFile": ".local/production-release/github-ci-latest.json"
   },
   "requiredCheckPrepared": "Financial spaces required",
   "branchProtection": {
@@ -73,7 +81,7 @@
   "pathSelection": "All paths run the full workflow; no classifier or skip.",
   "concurrency": "Only superseded pull requests cancel; main run_id gives each run a distinct group.",
   "metrics": {
-    "remoteSampleSize": 1,
+    "remoteSampleSize": 2,
     "p50": null,
     "p95": null,
     "status": "insufficient-sample"

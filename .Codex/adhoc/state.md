@@ -1297,3 +1297,14 @@ Checkpoint avant commit : build final23001 terminé sortie0, routesAuth/layout c
 **Preuves utiles consolidées :** HTTP-PRIVACY-MCP documenté,mêmeslimitesvalidéesparreviewer ;29/30AClocauxnonchangés carfreshsigninAmanque.6capturesvues,anciencacheprivésynthétiquepurgéaprèsactivationexpliciteQA,mêmesbytessw,paspersistedtrue. QAcontextferméetpreuveprivéeignorée, aucunsecret enGit.
 **Prochaine étape :** commitdocumentaireutile+pushpendantCI40410232726activepouréprouverannulationstalePRcommeimposéparskill ; observernouveaurunetannulationréelle, jamaisannulermain/prod. Siancienruntermineavantpush, nepaspromettreannulationnonvue. VercelChromeGHubloginencoreàterminerparhumain(questionstatutouverte), authdéjàautorisée.
 **Contexte pour reprise :** featurefinancialproduction suitremote,headcodea89406c. ProtectionsmainPASS, premierCIterminalFAILPG/qualitéSUCCESS,fixTCPlocal3tests+45DB/22deliveryverts. BrancheVercelpreviewdésactivéedansconfig ; applicationprod/SQLnonchangés. Nouvellepreuvepasreclasséeprod. PartagerCIURLetbesoinconnexionVercel,nepasredemanderpush/protectiondéjàaccordés. Coûtnonmesuré,pasnouveauservicepayant.
+
+---
+## [2026-10-26] — CI du code entièrement verte
+
+**Plan :** livraison existante P1–P10.
+**État :** IN_PROGRESS.
+**Tâche en cours :** terminer la preuve CI du dernier SHA et accéder à Vercel.
+**Preuves :** run40410232726/a89406c terminalSUCCESS pour les trois jobs ; readiness TCP validée en vrai CI froide. Commit documentaire91f09b7 poussé après cachedcheck0/runtime0/auditcommit0/auditpush0 ; run40410705780 démarré. Ancien run déjà fini avant push : ne pas prétendre annulation.
+**Décisions prises :** consolidation utile du rapport courant, profil distant et journal ; publication de cette correction documentaire pendant la CI pour vérifier annulation stalePR. Résultat final exact conservé dans .local/production-release/github-ci-latest.json et présenté à l’humain. Pas de nouveau code ni nouvelle recette locale nécessaire.
+**Prochaine étape :** observer CI exacte, puis Vercel/auth/config/cible/backup finale avant toute bascule. Connexion GitHub humaine dans Chrome1730267730 toujours requise ; question existante ouverte.
+**Contexte pour reprise :** PR1 Draft https://github.com/FofanaAmara/mon-budget/pull/1 ; main protégé, push autorisé. Local primaire préservé ; worktree release seul checkout de livraison. Aucune migration hébergée, aucun merge/deploy. Les preuves caches locales ne valent pas P9prod.

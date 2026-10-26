@@ -32,3 +32,6 @@ Après commit638f3bd et assertion sources/SHA0, vraie nouvelle backup readonly e
 
 ### PR et premier échec CI
 Accords explicites obtenus : main protégé et relu, branche b4fd027 publiée, PRdraft1 créée via CLI après capacité403 du connecteur, puis attachée. CI40409204080 qualitéSUCCESS, PGFAILprepare, aggregateFAIL : défaut de readiness Unix/TCP confirmé dans l’entrypoint officiel et reproduit par tests. Helper TCP finale partagée,3nouveauxguards,45DB/22delivery/lint0 et revue distincte favorable. Retour vert réel encore requis. Contrôle cache local réel terminé, artefacts privés et limites relus ; compte historique nouveau signin toujours manquant.
+
+### CI complète verte et publication des preuves
+Run40410232726 sur a89406cf69afb88e1bf59f65bb159d05d39f276a : trois jobs SUCCESS, incluant démarrage froid PostgreSQL corrigé. Documentation91f09b7 publiée, PR1 toujours Draft. Le run précédent a terminé avant ce push : aucune annulation observée à ce stade. Dernier résultat distant conservé dans .local/production-release/github-ci-latest.json. Main protégé et accords publication/protection acquis. Vercel encore formulaire GitHub, sans credential connu ; demande de connexion humaine déjà ouverte, pas nouvelle permission.

@@ -1,6 +1,6 @@
 # Livraison production — preuves en cours
 
-26 octobre2026. Contrat `.Codex/goals/espaces-financiers-production.md`, inchangé. **IN_PROGRESS : aucune migration ni publication production exécutée.**
+26 octobre2026. État courant : main protégé, PR brouillon #1 publiée ; CI complète verte sur a89406c (run40410232726), CI documentaire suivante en cours. Vercel reste au login GitHub ; aucune bascule production. Les observations datées ci-dessous gardent leur contexte historique. Contrat `.Codex/goals/espaces-financiers-production.md`, inchangé. **IN_PROGRESS : aucune migration ni publication production exécutée.**
 
 ## Préparation vérifiée
 
