@@ -4,7 +4,7 @@
 
 Sources : requirements.md et six stories dans `.app-factory/backlog/epics/finances-partagees/features/espaces-financiers/`. Maquettes approuvées : `cs-design/mes-finances/features/espaces-financiers-essai-02/`, commit 7aaec6d.
 
-PARTIEL signifie code et preuves bornées présents, mais preuve de bout en bout insuffisante. À PROUVER signifie trajet demandé non exécuté. Aucun statut ne transforme un mock en preuve Auth ou email réel.
+VÉRIFIÉ signifie exigence ou critère observé dans la recette réelle indiquée ; cela ne clôture ni une story ni les gates globaux. PARTIEL signifie code et preuves bornées présents, mais preuve de bout en bout insuffisante. À PROUVER signifie trajet demandé non exécuté. Aucun statut ne transforme un mock en preuve Auth ou email réel.
 
 ## Références des preuves
 
@@ -39,6 +39,8 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 
 - **MULTITAB-REAL** : multitab-current-execution.md ; deux onglets Chrome, même identité, personnel0dépense/couple4, bascule du second et retourSPA, recharge du premier et retourdocumentaire revalidé sans mélange. Captures privées et SQLREADONLY confirment4/1achat contre0/0 ; brouillon non enregistré. Dialogueconfirm déclenché mais annulationUI non vérifiée après panne du pilote. Ni BFCache ni offline ni seconde identité prouvés.
 
+- **NEW-ACCOUNT-REAL** : resend-real-execution.md,26octobre ; inscription réelleMCP, OTPNeon reçuGmail, vérification, consentementdistinct, refus404avantacceptation,2membres etaucunpersonnelimposé. B23.45 ajoutée/rechargée viaMCP, A12.34 etB vues dans les deuxsessions, SQLREADONLY confirmeauteursdistincts/isolation. B renomme puisrestaure, A voit le changement ; personnelArefuséB etlienaccepténonrejouable. CapturesMCPdesktop/mobileinspectées. Parcourscompteexistant etgatesglobauxrestentouverts.
+
 ## Exigences
 
 | ID | État | Preuves disponibles | Preuve restante pour clôture |
@@ -49,7 +51,7 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | FR-004 | PARTIEL | NAV sélecteur seul et préférence ; PG dernier espace | UI-ACCESS prouve option unique désactivée et création mobile ; connexion/reconnexion reste ouverte |
 | FR-005 | PARTIEL | 78 actions contextualisées, PG toutes familles ; FIN-REAL revenu/rappels et REF-REAL références/abonnement et PATRIMOINE-REAL épargne/dette et TRANSFER-GUIDE-REAL transfert/guide isolés en vraie UI | Tour E2E de toutes fonctions et automatismes sur deux contextes |
 | FR-006 | PARTIEL | MAIL local, MAIL-REAL réception externe et lien, PG acceptation ; UI landing explicite et mauvais compte | UI-VERIFY parcours de vérification raccordé ; réception OTP/externe, acceptation et contribution à deux sessions restent à prouver |
-| FR-007 | À PROUVER | Routes publiques/auth/confirmation implémentées ; AUTH et PG bornés | Inscription réelle, réception/confirmation OTP, retour et acceptation sans espace imposé ; UI-VERIFY ne couvre que le raccordement et les tests bornés |
+| FR-007 | VÉRIFIÉ | NEW-ACCOUNT-REAL : page explicite, signup/OTP réels, retour et acceptationdistincte, pas de personnelimposé | Gate global visuel/revue/CI reste ouvert |
 | FR-008 | PARTIEL | UI Non saute et Oui propose invitation ; même service | Nouveau compte réel, report d’envoi et reprise mobile/desktop |
 | FR-009 | PARTIEL | PG membre B modifie/renomme/invite sans rôle créateur | Deux sessions réelles contribuent et gèrent après recharge |
 | FR-010 | PARTIEL | UI liste/création/détail ; renommer B sous A actif | Rejouer interface actuelle, liste des membres et sélecteur actualisé |
@@ -85,11 +87,11 @@ Les références *.md ci-dessus sont dans ce même dossier de preuves, sauf DEC-
 | ESP-004/AC-3 | PARTIEL | PG contribution, renommage, invitation par B | Deux sessions membres réelles et persistance après recharge |
 | ESP-004/AC-4 | PARTIEL | PG mauvais compte/non vérifié/préacceptation ; UI mauvais compte | Tiers et invité réel via routes/actions avant adhésion |
 | ESP-004/AC-5 | PARTIEL | PG triple acceptation concurrente, rollback et confirmation privée | Reprise d’échec et double confirmation via vraie UI |
-| ESP-005/AC-1 | À PROUVER | Landing explicite et AuthView existant raccordés | Inscription réelle conserve le lien et n’accepte pas automatiquement |
-| ESP-005/AC-2 | À PROUVER | PG acceptation sans espace personnel ; identité fraîche | Compte créé/vérifié réel rejoint explicitement |
+| ESP-005/AC-1 | VÉRIFIÉ | NEW-ACCOUNT-REAL : page publique explicite et signup réelMCP, retourconservé, pas d’adhésionautomatique | Pas de réserve propre au scénario exécuté ; gatesglobaux ouverts |
+| ESP-005/AC-2 | VÉRIFIÉ | NEW-ACCOUNT-REAL : OTPGmailNeon, acceptationdistincte,2membres,1seuleappartenanceB,0personnelimposé | Pas de réserve propre au scénario exécuté ; gatesglobaux ouverts |
 | ESP-005/AC-3 | PARTIEL | UI mauvais compte ; PG refus ; SESSION changement de compte conserve retour et refuse erreur signout | Mauvais compte après inscription puis bon compte réel |
-| ESP-005/AC-4 | À PROUVER | Lien durable, liste invitations et choix sans espace implémentés | Interruption/reprise signup/auth sans adhésion automatique |
-| ESP-005/AC-5 | À PROUVER | PG contributions communes et persistance | Nouvel inscrit ajoute puis recharge, autre session retrouve la dépense |
+| ESP-005/AC-4 | VÉRIFIÉ | NEW-ACCOUNT-REAL : après signup/vérification, poursuivre versfinances reste404avantacceptation ; retourinvitationchoixconservé | Pas de course réseau tardive prétendue ; gatecacheglobal ouvert |
+| ESP-005/AC-5 | VÉRIFIÉ | NEW-ACCOUNT-REAL : B23.45 créée/rechargée, A voitB dans autre session ; SQLauteursdistincts etespacepersonnelAisolé | Pas de réserve propre au scénario exécuté ; gatesglobaux ouverts |
 | ESP-006/AC-1 | PARTIEL | UI Oui propose email facultatif, création espace réutilisée | Véritable premier onboarding, report et émission externe |
 | ESP-006/AC-2 | PARTIEL | Formulaire continue sans attendre ; espace durable PG | Utilisation réelle pendant invitation en attente |
 | ESP-006/AC-3 | PARTIEL | UI Non saute invitation et espace personnel créé | Rejeu actuel depuis nouveau compte, réglages ultérieurs |
@@ -121,3 +123,5 @@ ALLOCATION-PROGRESSIVE-REAL : allocation250/275.50, uniqueachat3.99/200, consomm
 
 
 Mise à jour MCP-INVITATION-ENTRY : après acceptation humaine de l’avertissement, vraiMCPPlaywright accède à la page explicite d’invitation et suitCréeruncompte avec retourconservé. Deux captures desktop privées inspectées, formulaireprérempli et motdepassevide/handoff. Anciennes mentions d’outilMCPabsent sont historiques ; validationvisuelleglobale et mobile, inscription etadhésion restentouvertes. Aucune confianceTLSdurable ouofflineprouvée. Voir resend-real-execution.md.
+
+État du26octobre : le blocage d’inscription est levé par NEW-ACCOUNT-REAL. Les anciens paragraphes évoquant absence de nouveaucompte/adhésion sont historiques ; la livraison globale reste nonacquise.

@@ -44,3 +44,5 @@
 - [Prédicats métier du guide](feedback_guide_domain_predicates.md) — une ligne dans expenses peut être un pot technique, pas une dépense configurée.
 
 - [Diagnostic des dialogues Chrome](feedback_browser_dialog_recovery.md) — distinguer onglet manquant, dialogue fermé et état UI non vérifié ; aucune panne globale déduite d’un seul handle.
+
+- [Portée des consignes d’un outil](feedback_tool_policy_scope.md) — distinguer la règle de l’outil actif d’une interdiction globale ; blocage de recette erroné corrigé.

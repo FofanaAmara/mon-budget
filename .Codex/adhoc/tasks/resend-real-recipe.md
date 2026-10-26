@@ -7,8 +7,8 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Vérifier boîte et session réelles | aucune | COMPLETED : Chrome/Gmail et créateur accessibles |
 | Runner local Resend explicite et vérifié | accès | COMPLETED : opt-in Resend,9delivery et3refusCLI, runtime68803 |
 | Créer espace dédié et recevoir invitation externe | runner | COMPLETED : Gmail reçu/spam, Resenddelivered, lien anonyme fonctionnel |
-| Inscription/vérification/acceptation explicite | réception | IN_PROGRESS : formulaire préparé, handoff mot de passe/conditions |
-| Contributions à deux, séparation, recharges | adhésion | IN_PROGRESS : A12.34 persistante/isolée prouvée, contributionB après adhésion reste à faire |
+| Inscription/vérification/acceptation explicite | réception | COMPLETED :26octobre, signup réelMCP +OTP GmailNeon +acceptationdistincte,2membres |
+| Contributions à deux, séparation, recharges | adhésion | COMPLETED :A12.34/B23.45 auteursdistincts, BcrééeMCP/reload etvueparAChrome, personnel0SQL |
 | Matrice/preuves/checks/commit | recette | IN_PROGRESS : tranche réception commise2c7776a, preuvesA enregistrées ; clôture à deux reste ouverte |
 
 
@@ -98,3 +98,13 @@ Plan : `.Codex/plans/espaces-financiers-session-and-delivery.md`, extension du23
 | Bascule, recharge et historique sans mélange | deux onglets | COMPLETED :personnel0/couple4, revalidationdocumentaire ; pasdepreuveBFCache |
 | Preuves et limites | observations | COMPLETED :preuveMULTITAB-REAL etSQLREADONLY,9deliveryverts |
 | Annulation puis confirmation de bascule avec brouillon | piloteChrome | IN_PROGRESS :confirmobservé, contrôleDOMperdu avantvérification ; aucune sauvegarde |
+
+
+## Destinataire ayant déjà un compte — 26 octobre
+
+| Tâche | Dépendance | État |
+|---|---|---|
+| A crée un espace vide et invite depuis la fiche | compte B réel existant | COMPLETED :735d…, envoi confirméUI et1membre |
+| Réception, liste privée et adhésion distincte B | invitation | IN_PROGRESS |
+| Deux espaces B, contribution et absence de mélange | adhésion | PENDING |
+| Contrôle du brouillon via vrai dialogue MCP | deuxespaces | PENDING |
