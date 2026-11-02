@@ -54,14 +54,16 @@
   "overrides": {
     "zod": "$zod",
     "@neondatabase/auth": {
-      "better-auth": "1.7.6",
-      "@better-auth/core": "1.7.6",
-      "@better-auth/passkey": "1.7.6",
-      "@better-auth/telemetry": "1.7.6",
-      "@better-auth/api-key": "1.7.6",
+      "better-auth": "1.7.7",
+      "@better-auth/core": "1.7.7",
+      "@better-auth/passkey": "1.7.7",
+      "@better-auth/telemetry": "1.7.7",
+      "@better-auth/api-key": "1.7.7",
       "@better-auth/utils@^0.4.0": "0.4.2",
       "@better-fetch/fetch": "1.3.2",
-      "better-call": "1.4.0"
+      "better-call": "1.4.0",
+      "@better-auth/oauth-provider": "1.7.7",
+      "@react-email/render": "2.2.0"
     }
   }
 }
