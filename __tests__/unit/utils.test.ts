@@ -29,7 +29,6 @@ function makeExpense(
     id: "test-id",
     user_id: "user-1",
     name: "Test expense",
-    amount: overrides.amount,
     original_amount: null,
     type: overrides.type ?? "RECURRING",
     section_id: null,

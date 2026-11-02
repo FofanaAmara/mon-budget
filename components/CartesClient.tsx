@@ -1,11 +1,13 @@
 "use client";
+import {useSpaceDraft} from "@/components/spaces/SpaceContext";
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import SheetCloseButton from "@/components/SheetCloseButton";
-import { createCard, updateCard, deleteCard } from "@/lib/actions/cards";
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
+import { createCard, updateCard, deleteCard } from "@/lib/actions/financial/cards";
 import type { Card } from "@/lib/types";
-import Link from "next/link";
+import Link from "@/components/spaces/navigation";
 import Breadcrumb from "@/components/Breadcrumb";
 
 /* ─── Constants ──────────────────────────────────────── */
@@ -183,6 +185,8 @@ function BankCardVisual({
 /* ─── Component ──────────────────────────────────────── */
 
 export default function CartesClient({ cards: initial }: { cards: Card[] }) {
+  const { spaceId } = useFinancialSpace();
+
   const router = useRouter();
   const [modal, setModal] = useState<ModalState>({ mode: "closed" });
   const [deleting, setDeleting] = useState<string | null>(null);
@@ -194,6 +198,9 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
   const [color, setColor] = useState(CARD_COLORS[0].value);
 
   /* ── Handlers ── */
+
+  const draftOriginal=modal.mode==="edit"?modal.card:null;
+  useSpaceDraft(modal.mode!=="closed" && (name !== (draftOriginal?.name ?? "") || lastFour !== (draftOriginal?.last_four ?? "") || bank !== (draftOriginal?.bank ?? "") || color !== (draftOriginal?.color ?? CARD_COLORS[0].value)));
 
   function openCreate() {
     setName("");
@@ -215,14 +222,14 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
     if (!name.trim()) return;
     startTransition(async () => {
       if (modal.mode === "create") {
-        await createCard({
+        await createCard(spaceId, {
           name: name.trim(),
           last_four: lastFour || undefined,
           bank: bank || undefined,
           color,
         });
       } else if (modal.mode === "edit") {
-        await updateCard(modal.card.id, {
+        await updateCard(spaceId, modal.card.id, {
           name: name.trim(),
           last_four: lastFour || undefined,
           bank: bank || undefined,
@@ -236,7 +243,7 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
 
   function handleDelete(id: string) {
     startTransition(async () => {
-      await deleteCard(id);
+      await deleteCard(spaceId, id);
       setDeleting(null);
       router.refresh();
     });
@@ -748,7 +755,6 @@ export default function CartesClient({ cards: initial }: { cards: Card[] }) {
           >
             {/* Handle */}
             <div className="sheet-handle" />
-            <SheetCloseButton onClose={() => setModal({ mode: "closed" })} />
 
             {/* Sheet header */}
             <div

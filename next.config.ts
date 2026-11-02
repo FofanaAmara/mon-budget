@@ -2,10 +2,21 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
+  // Keep verification builds separate from an already-running local dev server.
+  distDir: process.env.MES_FINANCES_BUILD_DIR ?? ".next",
+  // The development badge overlaps the carousel's bottom-left skip control.
+  devIndicators: false,
+  // Project instructions are maintained explicitly, outside Next dev generation.
+  agentRules: false,
+  logging: { incomingRequests: { ignore: [/^\/invitation\//, /^\/auth\//] } },
   turbopack: {
     root: path.resolve(__dirname),
   },
   async headers() {
+    // HSTS applies to every port of a host. Keep the local HTTP recipe usable;
+    // production continues to send HSTS.
+    const localRecipe = process.env.NODE_ENV === "development" &&
+      process.env.MES_FINANCES_DB_DRIVER === "local-fixture";
     // CSP directives — report-only to observe before enforcing
     const cspDirectives = [
       "default-src 'self'",
@@ -27,16 +38,30 @@ const nextConfig: NextConfig = {
         headers: [
           { key: "X-Frame-Options", value: "DENY" },
           { key: "X-Content-Type-Options", value: "nosniff" },
-          {
+          ...(!localRecipe ? [{
             key: "Strict-Transport-Security",
             value: "max-age=63072000; includeSubDomains",
-          },
+          }] : []),
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=(), payment=()",
           },
           { key: "Content-Security-Policy-Report-Only", value: cspDirectives },
+        ],
+      },
+      {
+        source: "/invitation/:path*",
+        headers: [
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "Cache-Control", value: "private, no-store" },
+        ],
+      },
+      {
+        source: "/auth/:path*",
+        headers: [
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "Cache-Control", value: "private, no-store" },
         ],
       },
       {

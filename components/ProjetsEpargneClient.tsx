@@ -1,9 +1,11 @@
 "use client";
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { deleteExpense } from "@/lib/actions/expenses";
-import { deleteDebt } from "@/lib/actions/debts";
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
+import { deleteExpense } from "@/lib/actions/financial/expenses";
+import { deleteDebt } from "@/lib/actions/financial/debts";
 import ProjectModal from "@/components/ProjectModal";
 import DebtModal from "@/components/DebtModal";
 import AddSavingsModal from "@/components/AddSavingsModal";
@@ -33,18 +35,27 @@ export default function ProjetsEpargneClient({
   debts,
   totalDebtBalance,
 }: Props) {
+  const { spaceId } = useFinancialSpace();
+
   const router = useRouter();
   const [, startTransition] = useTransition();
   const [createModal, setCreateModal] = useState(false);
   const [debtModal, setDebtModal] = useState(false);
-  const [editDebt, setEditDebt] = useState<Debt | null>(null);
-  const [extraPayDebt, setExtraPayDebt] = useState<Debt | null>(null);
-  const [chargeDebt, setChargeDebt] = useState<Debt | null>(null);
-  const [savingsModal, setSavingsModal] = useState<Expense | null>(null);
-  const [historyModal, setHistoryModal] = useState<Expense | null>(null);
-  const [transferModal, setTransferModal] = useState<Expense | null>(null);
+  const [editDebtId, setEditDebtId] = useState<string | null>(null);
+  const [extraPayDebtId, setExtraPayDebtId] = useState<string | null>(null);
+  const [chargeDebtId, setChargeDebtId] = useState<string | null>(null);
+  const [savingsModalId, setSavingsModalId] = useState<string | null>(null);
+  const [historyModalId, setHistoryModalId] = useState<string | null>(null);
+  const [transferModalId, setTransferModalId] = useState<string | null>(null);
 
   const allPots = [freeSavings, ...projets];
+  // Keep an open sheet aligned with server refreshes without replacing its draft.
+  const editDebt = debts.find((debt) => debt.id === editDebtId) ?? null;
+  const extraPayDebt = debts.find((debt) => debt.id === extraPayDebtId);
+  const chargeDebt = debts.find((debt) => debt.id === chargeDebtId);
+  const savingsModal = allPots.find((pot) => pot.id === savingsModalId);
+  const historyModal = allPots.find((pot) => pot.id === historyModalId);
+  const transferModal = allPots.find((pot) => pot.id === transferModalId);
 
   const freeSaved = Number(freeSavings.saved_amount ?? 0);
   const projectsSaved = projets.reduce(
@@ -56,7 +67,7 @@ export default function ProjetsEpargneClient({
   function handleDeleteProject(id: string) {
     if (confirm("Supprimer cet objectif ?")) {
       startTransition(async () => {
-        await deleteExpense(id);
+        await deleteExpense(spaceId, id);
         router.refresh();
       });
     }
@@ -65,24 +76,24 @@ export default function ProjetsEpargneClient({
   function handleDeleteDebt(id: string) {
     if (confirm("Supprimer cette dette ?")) {
       startTransition(async () => {
-        await deleteDebt(id);
+        await deleteDebt(spaceId, id);
         router.refresh();
       });
     }
   }
 
   function handleSavingsDone() {
-    setSavingsModal(null);
+    setSavingsModalId(null);
     router.refresh();
   }
 
   function handleCreateDebt() {
-    setEditDebt(null);
+    setEditDebtId(null);
     setDebtModal(true);
   }
 
   function handleEditDebt(debt: Debt) {
-    setEditDebt(debt);
+    setEditDebtId(debt.id);
     setDebtModal(true);
   }
 
@@ -99,17 +110,17 @@ export default function ProjetsEpargneClient({
         freeSavings={freeSavings}
         projets={projets}
         onCreateProject={() => setCreateModal(true)}
-        onAddSavings={(projet) => setSavingsModal(projet)}
-        onTransfer={(projet) => setTransferModal(projet)}
-        onHistory={(projet) => setHistoryModal(projet)}
+        onAddSavings={(projet) => setSavingsModalId(projet.id)}
+        onTransfer={(projet) => setTransferModalId(projet.id)}
+        onHistory={(projet) => setHistoryModalId(projet.id)}
         onDeleteProject={handleDeleteProject}
       />
 
       <DettesSection
         debts={debts}
         onCreateDebt={handleCreateDebt}
-        onPay={(debt) => setExtraPayDebt(debt)}
-        onCharge={(debt) => setChargeDebt(debt)}
+        onPay={(debt) => setExtraPayDebtId(debt.id)}
+        onCharge={(debt) => setChargeDebtId(debt.id)}
         onEdit={handleEditDebt}
         onDelete={handleDeleteDebt}
       />
@@ -124,14 +135,14 @@ export default function ProjetsEpargneClient({
           }}
         />
       )}
-      {debtModal && (
+      {debtModal && (editDebtId === null || editDebt) && (
         <DebtModal
           sections={sections}
           cards={cards}
           debt={editDebt}
           onClose={() => {
             setDebtModal(false);
-            setEditDebt(null);
+            setEditDebtId(null);
             router.refresh();
           }}
         />
@@ -139,13 +150,13 @@ export default function ProjetsEpargneClient({
       {extraPayDebt && (
         <ExtraPaymentSheet
           debt={extraPayDebt}
-          onClose={() => setExtraPayDebt(null)}
+          onClose={() => setExtraPayDebtId(null)}
         />
       )}
       {chargeDebt && (
         <ChargeDebtSheet
           debt={chargeDebt}
-          onClose={() => setChargeDebt(null)}
+          onClose={() => setChargeDebtId(null)}
         />
       )}
       {savingsModal && (
@@ -159,7 +170,7 @@ export default function ProjetsEpargneClient({
               : null
           }
           onDone={handleSavingsDone}
-          onClose={() => setSavingsModal(null)}
+          onClose={() => setSavingsModalId(null)}
         />
       )}
       {transferModal && (
@@ -167,10 +178,10 @@ export default function ProjetsEpargneClient({
           source={transferModal}
           allPots={allPots}
           onDone={() => {
-            setTransferModal(null);
+            setTransferModalId(null);
             router.refresh();
           }}
-          onClose={() => setTransferModal(null)}
+          onClose={() => setTransferModalId(null)}
         />
       )}
       {historyModal && (
@@ -184,7 +195,7 @@ export default function ProjetsEpargneClient({
               : null
           }
           onClose={() => {
-            setHistoryModal(null);
+            setHistoryModalId(null);
             router.refresh();
           }}
         />

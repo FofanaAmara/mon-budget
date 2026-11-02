@@ -1,24 +1,34 @@
 'use client';
 
+import {useSpaceDraft} from "@/components/spaces/SpaceContext";
+import {useFinancialRouter} from "@/components/spaces/navigation";
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
+
 import { useState, useTransition } from 'react';
 import Breadcrumb from '@/components/Breadcrumb';
-import { updateSettings } from '@/lib/actions/settings';
+import { updateSettings } from "@/lib/actions/financial/settings";
 
 const CURRENCIES = ['CAD', 'USD', 'EUR'];
 
 type Props = {
-  settingsId: string;
   currentCurrency: string;
 };
 
-export default function DeviseClient({ settingsId, currentCurrency }: Props) {
+export default function DeviseClient({ currentCurrency }: Props) {
+  const { spaceId } = useFinancialSpace();
+
   const [isPending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
   const [currency, setCurrency] = useState(currentCurrency);
 
+  useSpaceDraft(currency !== currentCurrency);
+  const router = useFinancialRouter();
+
   function handleSave() {
     startTransition(async () => {
-      await updateSettings(settingsId, { default_currency: currency });
+      await updateSettings(spaceId, { default_currency: currency });
+      router.refresh();
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     });

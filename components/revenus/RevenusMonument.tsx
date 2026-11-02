@@ -1,6 +1,8 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
 
-import { formatCAD } from "@/lib/utils";
+
+
 
 type MonumentStatus = {
   type: "over" | "complete" | "partial" | "expected";
@@ -13,6 +15,8 @@ type Props = {
 };
 
 export default function RevenusMonument({ actualTotal, expectedTotal }: Props) {
+  const formatCAD = useSpaceCurrency();
+
   const progressPct =
     expectedTotal > 0 ? (actualTotal / expectedTotal) * 100 : 0;
   const isComplete = progressPct >= 100 && expectedTotal > 0;

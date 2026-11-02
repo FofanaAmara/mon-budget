@@ -1,13 +1,12 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState } from "react";
-import { deleteIncome } from "@/lib/actions/incomes";
-import {
-  calcMonthlyIncome,
-  formatCAD,
-  formatShortDate,
-  getNextBiweeklyPayDate,
-} from "@/lib/utils";
+import { deleteIncome } from "@/lib/actions/financial/incomes";
+import {calcMonthlyIncome,formatShortDate,getNextBiweeklyPayDate} from "@/lib/utils";
 import type { Income, IncomeFrequency, IncomeSource } from "@/lib/types";
 import IncomeModal from "./IncomeModal";
 import StatusBadge from "@/components/StatusBadge";
@@ -55,10 +54,6 @@ const SOURCE_META: Record<
 };
 
 /** Format monthly amount for display on source card. */
-function formatMonthlyDisplay(amount: number): string {
-  return formatCAD(amount);
-}
-
 /** Compute next pay date label for a given income. */
 function getNextDateLabel(inc: Income): string | null {
   if (inc.frequency === "VARIABLE") return null;
@@ -83,6 +78,8 @@ type Props = {
 // ── Main component ────────────────────────────────────────────────────────────
 
 export default function IncomeTemplateManager({ incomes }: Props) {
+  const { spaceId } = useFinancialSpace();
+
   const [showModal, setShowModal] = useState(false);
   const [editIncome, setEditIncome] = useState<Income | undefined>(undefined);
 
@@ -103,7 +100,7 @@ export default function IncomeTemplateManager({ incomes }: Props) {
 
   async function handleDelete(id: string) {
     if (confirm("Supprimer ce revenu ?")) {
-      await deleteIncome(id);
+      await deleteIncome(spaceId, id);
     }
   }
 
@@ -226,6 +223,8 @@ function SourceCard({
   onEdit: (inc: Income) => void;
   onDelete: (id: string) => void;
 }) {
+  const formatCAD = useSpaceCurrency();
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   const srcMeta = SOURCE_META[inc.source ?? "OTHER"];
@@ -534,7 +533,7 @@ function SourceCard({
           }}
         >
           {isVariable ? "~" : ""}
-          {formatMonthlyDisplay(monthly)}
+          {formatCAD(monthly)}
           <span
             style={{
               fontSize: "0.4em",

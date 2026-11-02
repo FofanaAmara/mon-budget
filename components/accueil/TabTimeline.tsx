@@ -1,6 +1,8 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
 
-import { formatCAD } from "@/lib/utils";
+
+
 import { IconCheck } from "@/components/icons";
 import type { MonthlyExpense, MonthlyIncome } from "@/lib/types";
 import {
@@ -137,6 +139,8 @@ function EventIcon({ variant }: { variant: TimelineIconVariant }) {
 }
 
 export default function TabTimeline({ expenses, monthlyIncomes }: Props) {
+  const formatCAD = useSpaceCurrency();
+
   // Build unified timeline
   const events: TimelineEvent[] = [];
 

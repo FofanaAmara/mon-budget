@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
 import ExpenseModal from '@/components/ExpenseModal';
 import type { Expense, Section, Card } from '@/lib/types';
 

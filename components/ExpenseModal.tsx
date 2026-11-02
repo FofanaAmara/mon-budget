@@ -1,8 +1,12 @@
 "use client";
+import {useSpaceDraftValues} from "@/components/spaces/SpaceContext";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useTransition, useRef, useEffect } from "react";
 
-import { createExpense, updateExpense } from "@/lib/actions/expenses";
+import { createExpense, updateExpense } from "@/lib/actions/financial/expenses";
 import type {
   Expense,
   ExpenseType,
@@ -35,6 +39,8 @@ export default function ExpenseModal({
   onClose,
   onSuccess,
 }: Props) {
+  const { spaceId } = useFinancialSpace();
+
   const [isPending, startTransition] = useTransition();
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -60,6 +66,8 @@ export default function ExpenseModal({
   const [cardId, setCardId] = useState(expense?.card_id ?? "");
   const [dueDate, setDueDate] = useState(expense?.due_date ?? "");
   const [notes, setNotes] = useState(expense?.notes ?? "");
+  useSpaceDraftValues({name,amount,type,frequency,day,autoDebit,spreadMonthly,isProgressive,sectionId,cardId,dueDate,notes});
+
 
   const isValid = name.trim() && amount && parseFloat(amount) > 0;
 
@@ -87,9 +95,9 @@ export default function ExpenseModal({
       };
 
       if (expense) {
-        await updateExpense(expense.id, data);
+        await updateExpense(spaceId, expense.id, data);
       } else {
-        await createExpense(data);
+        await createExpense(spaceId, data);
       }
       onSuccess();
       onClose();

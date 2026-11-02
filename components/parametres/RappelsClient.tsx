@@ -1,20 +1,29 @@
 'use client';
 
+import {useSpaceDraft} from "@/components/spaces/SpaceContext";
+import {useFinancialRouter} from "@/components/spaces/navigation";
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
+
 import { useState, useTransition } from 'react';
 import Breadcrumb from '@/components/Breadcrumb';
-import { updateSettings } from '@/lib/actions/settings';
+import { updateSettings } from "@/lib/actions/financial/settings";
 
 const REMINDER_OPTIONS = [1, 3, 7, 14, 30];
 
 type Props = {
-  settingsId: string;
   currentReminders: number[];
 };
 
-export default function RappelsClient({ settingsId, currentReminders }: Props) {
+export default function RappelsClient({ currentReminders }: Props) {
+  const { spaceId } = useFinancialSpace();
+
   const [isPending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
   const [reminders, setReminders] = useState<number[]>(currentReminders);
+
+  useSpaceDraft(JSON.stringify([...reminders].sort()) !== JSON.stringify([...currentReminders].sort()));
+  const router = useFinancialRouter();
 
   function toggleReminder(day: number) {
     setReminders((prev) =>
@@ -24,7 +33,8 @@ export default function RappelsClient({ settingsId, currentReminders }: Props) {
 
   function handleSave() {
     startTransition(async () => {
-      await updateSettings(settingsId, { default_reminder_offsets: reminders });
+      await updateSettings(spaceId, { default_reminder_offsets: reminders });
+      router.refresh();
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     });

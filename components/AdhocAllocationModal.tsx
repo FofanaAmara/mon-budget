@@ -1,9 +1,15 @@
 "use client";
+import {useSpaceDraftValues} from "@/components/spaces/SpaceContext";
+
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useRef, useEffect } from "react";
 import SheetCloseButton from "@/components/SheetCloseButton";
-import { createAdhocMonthlyAllocation } from "@/lib/actions/allocations";
-import { formatCAD } from "@/lib/utils";
+import { createAdhocMonthlyAllocation } from "@/lib/actions/financial/allocations";
+
 import type { Section, Expense } from "@/lib/types";
 
 const PRESET_COLORS = [
@@ -32,6 +38,10 @@ export default function AdhocAllocationModal({
   projects,
   onClose,
 }: Props) {
+  const formatCAD = useSpaceCurrency();
+
+  const { spaceId } = useFinancialSpace();
+
   const dialogRef = useRef<HTMLDivElement>(null);
   const [label, setLabel] = useState("");
   const [amount, setAmount] = useState("");
@@ -39,6 +49,8 @@ export default function AdhocAllocationModal({
   const [sectionIds, setSectionIds] = useState<string[]>([]);
   const [projectId, setProjectId] = useState("");
   const [color, setColor] = useState(PRESET_COLORS[0]);
+  useSpaceDraftValues({label,amount,linkType,sectionIds,projectId,color});
+
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -51,7 +63,7 @@ export default function AdhocAllocationModal({
     if (!label.trim() || amtNum <= 0) return;
     setSaving(true);
     try {
-      await createAdhocMonthlyAllocation(month, {
+      await createAdhocMonthlyAllocation(spaceId, month, {
         label: label.trim(),
         amount: amtNum,
         section_ids: linkType === "charges" ? sectionIds : [],

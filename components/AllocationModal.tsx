@@ -1,9 +1,15 @@
 "use client";
+import {useSpaceDraftValues} from "@/components/spaces/SpaceContext";
+
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useRef, useEffect } from "react";
 import SheetCloseButton from "@/components/SheetCloseButton";
-import { createAllocation, updateAllocation } from "@/lib/actions/allocations";
-import { formatCAD } from "@/lib/utils";
+import { createAllocation, updateAllocation } from "@/lib/actions/financial/allocations";
+
 import type { IncomeAllocation, Section, Expense } from "@/lib/types";
 
 const PRESET_COLORS = [
@@ -36,6 +42,10 @@ export default function AllocationModal({
   currentTotalAllocated,
   onClose,
 }: Props) {
+  const formatCAD = useSpaceCurrency();
+
+  const { spaceId } = useFinancialSpace();
+
   const isEdit = !!allocation;
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -52,6 +62,8 @@ export default function AllocationModal({
   const [projectId, setProjectId] = useState(allocation?.project_id ?? "");
   const [endMonth, setEndMonth] = useState(allocation?.end_month ?? "");
   const [color, setColor] = useState(allocation?.color ?? PRESET_COLORS[0]);
+  useSpaceDraftValues({label,amount,linkType,sectionIds,projectId,endMonth,color});
+
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -93,9 +105,9 @@ export default function AllocationModal({
         color,
       };
       if (isEdit) {
-        await updateAllocation(allocation.id, data);
+        await updateAllocation(spaceId, allocation.id, data);
       } else {
-        await createAllocation(data);
+        await createAllocation(spaceId, data);
       }
       onClose();
     } finally {

@@ -1,0 +1,27 @@
+OBJECTIF : Livrer les espaces financiers dans la vraie production Mes Finances, avec anciennes finances préservées et invitations Resend permettant de gérer ensemble des données persistantes.
+
+DONE QUAND (preuves affichées) :
+- Besoin complet du contrat .Codex/goals/espaces-financiers-production.md, P1–P10, 6 stories/17 exigences/30 AC démontrés, sans OTP ni guide initial pour l’invité.
+- Tests requis, revue indépendante et CI entière verts sur le SHA publié ; manques sessions/caches/historique levés.
+- Sauvegarde réelle restaurée sur copie ; migration prod protégée, conservation et reprise prouvées ; bascule et récupération compatibles avec le schéma.
+- URL HTTPS de production saine, SHA vérifié, Neon/Auth/Resend configurés ; aucun profil local en prod.
+- Vrais parcours en prod, compte existant et nouveau : email reçu, lien public, acceptation distincte, contributions à deux persistantes et refus étrangers. MCP desktop/mobile et régression WebKit ; caches/retour/hors ligne sans fuite.
+- Rapport final avec preuves par critère, logs de recette et état/backlog actualisés ; aucune condition nécessaire non résolue.
+
+SOURCES DU BESOIN :
+Contrat intégral .Codex/goals/espaces-financiers-production.md et ses sources produit, code, migrations, CI, runbooks et preuves. Base inspectée0e0deb8 ; détails distants à vérifier.
+
+LIMITES ET BORNES :
+Mandat de livraison : push/PR/merge, migration contrôlée, déploiement et recette QA en prod. Ni préproduction imposée, ni destruction de données réelles, ni secret exposé. Aucun nouveau service payant sans accord.
+
+REPRISE ET MÉTHODE IMPOSÉE :
+Reprendre suivi/plan existants et preuves valides ; orchestration/delivery adaptés, sans cycle AWM imposé. Déclenchement auto Vercel et runner migration local-only à traiter avant bascule. Verdict final humain.
+
+CADRE D’EXÉCUTION OBLIGATOIRE :
+Avant d’agir, puis à chaque reprise, lis /Users/amarafofana/.codex/plugins/cache/kiyali-plugins/agent-work-methodology/4.3.7/skills/goal-authoring/references/principes/README.md et toutes les fiches qu’il impose. Applique-les pendant tout le mandat : leurs règles font partie de ce goal. Si une référence est inaccessible, signale le manque sans prétendre l’avoir lue ou en avoir satisfait les exigences.
+Livre le besoin entier par une solution minimale de qualité, sans changer le périmètre. Les compléments restent proposés, sans exécution automatique.
+Garde stables les critères et vérifications convenus. Traite les manques nécessaires, défauts ou risques concrets pertinents ; consigne les autres cas en discoveries et avance sans attente. Critères satisfaits et vérifications requises réussies : clos l’unité, sans ajouter de condition.
+Prends les moyens nécessaires autorisés. Trace les obstacles et poursuis l’indépendant ; un blocage global exige l’absence vérifiée de toute autre action utile autorisée.
+Termine une unité cohérente utilisable et vérifiée avant d’en ouvrir une autre, sauf blocage réel ; conserve son état et réévalue sa reprise.
+Pour les interfaces développées ou modifiées, exécute manuellement le parcours utilisateur dans l’application réelle et inspecte visuellement les pages ; sans ces essais, le point reste non terminé.
+Affiche les preuves du résultat et obtiens une revue distincte pour le non-trivial. Estime et surveille l’effort ; réévalue sans progrès utile et respecte les limites fixées. L’humain garde le verdict final.

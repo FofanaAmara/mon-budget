@@ -216,16 +216,17 @@ body {
   background: var(--surface-ground);
   color: var(--text-primary);
   min-height: 100dvh;
-  padding-bottom: calc(var(--nav-height) + var(--safe-bottom));
+  padding-bottom: 0;
   overscroll-behavior: none;
   font-feature-settings: "ss01", "ss02", "cv01";
   line-height: var(--leading-normal);
 }
 
-/* ── Mobile header spacing ────────────────────────────── */
+/* ── Mobile navigation spacing ────────────────────────── */
 @media (max-width: 767px) {
-  body {
+  body:has(.space-product-content) {
     padding-top: calc(var(--header-height) + var(--safe-top));
+    padding-bottom: calc(var(--nav-height) + var(--safe-bottom));
   }
 }
 
@@ -296,6 +297,14 @@ body {
   font-weight: 600;
   line-height: var(--leading-snug);
   letter-spacing: var(--tracking-wide);
+}
+
+/* Shared rail keeps expense group totals aligned with every row amount. */
+.expense-action-slot {
+  flex: 0 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ── FAB — the anchor of every page ───────────────────── */

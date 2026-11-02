@@ -9,11 +9,17 @@ const eslintConfig = defineConfig([
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
+    ".next-*/**",
     "out/**",
     "build/**",
     "next-env.d.ts",
     // Vercel output and local env
     ".vercel/**",
+    // Design previews, private evidence and generated tooling are not app sources.
+    "cs-design/**",
+    ".tmp/**",
+    ".local/**",
+    ".Codex/**",
     // Migration scripts (CommonJS — intentionally use require)
     "scripts/**",
   ]),

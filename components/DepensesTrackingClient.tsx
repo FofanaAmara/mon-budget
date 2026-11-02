@@ -1,8 +1,10 @@
 "use client";
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { markAsPaid, markAsUpcoming } from "@/lib/actions/monthly-expenses";
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
+import { markAsPaid, markAsUpcoming } from "@/lib/actions/financial/monthly-expenses";
 import { currentMonthKey } from "@/lib/month-utils";
 import { GROUP_ORDER } from "@/lib/constants";
 import MonthNavigator from "@/components/MonthNavigator";
@@ -30,8 +32,11 @@ export default function DepensesTrackingClient({
   cards,
   month,
 }: Props) {
+  const { spaceId } = useFinancialSpace();
+
   const router = useRouter();
   const [, startTransition] = useTransition();
+  const [paymentError,setPaymentError] = useState("");
 
   // Filters
   const [typeFilter, setTypeFilter] = useState<"all" | "planned" | "unplanned">(
@@ -70,9 +75,12 @@ export default function DepensesTrackingClient({
     if (expense?.is_progressive) return;
 
     startTransition(async () => {
-      if (action === "paid") await markAsPaid(id);
-      else await markAsUpcoming(id);
-      router.refresh();
+      setPaymentError("");
+      try {
+        if (action === "paid") await markAsPaid(spaceId, id);
+        else {const result=await markAsUpcoming(spaceId,id);if(!result.ok){setPaymentError(result.error);return;}}
+        router.refresh();
+      }catch{setPaymentError("Le paiement n’a pas pu être modifié. Actualise cet espace avant de réessayer.");}
     });
   }
 
@@ -83,6 +91,7 @@ export default function DepensesTrackingClient({
       <MonthNavigator month={month} basePath="/depenses" />
 
       <ExpenseMonument summary={summary} />
+      {paymentError&&<p className="space-error" role="alert" style={{padding:"0 20px"}}>{paymentError}</p>}
 
       <ExpenseFilters
         typeFilter={typeFilter}
@@ -94,7 +103,7 @@ export default function DepensesTrackingClient({
         sections={sections}
       />
 
-      {/* Section header with desktop-only add button */}
+      {/* Keep the add action in the flow so it never covers expense amounts. */}
       <div
         style={{
           display: "flex",
@@ -117,11 +126,12 @@ export default function DepensesTrackingClient({
         </p>
         {isCurrentMonth && (
           <button
+            type="button"
             onClick={() => setAdhocModal(true)}
-            className="btn-desktop-only"
             style={{
               alignItems: "center",
               gap: "6px",
+              minHeight: "44px",
               padding: "8px 16px",
               background: "#0F766E",
               color: "white",
@@ -196,29 +206,6 @@ export default function DepensesTrackingClient({
       />
 
       {expenses.length > 0 && <ExpenseSummaryStats summary={summary} />}
-
-      {/* ====== FAB ====== */}
-      {isCurrentMonth && (
-        <button
-          onClick={() => setAdhocModal(true)}
-          aria-label="Ajouter une dépense imprévue"
-          className="fab fab-mobile-only"
-        >
-          <svg
-            width="26"
-            height="26"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
-        </button>
-      )}
 
       {/* ====== BACKDROP ====== */}
       {anySheetOpen && (

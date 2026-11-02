@@ -1,10 +1,15 @@
 "use client";
+import {useSpaceDraftValues} from "@/components/spaces/SpaceContext";
+
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { makeExtraPayment } from "@/lib/actions/debts";
-import { formatCAD } from "@/lib/utils";
-import SheetCloseButton from "@/components/SheetCloseButton";
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
+import { makeExtraPayment } from "@/lib/actions/financial/debts";
+
 import type { Debt } from "@/lib/types";
 
 const FREQ_LABELS: Record<string, string> = {
@@ -24,16 +29,22 @@ export default function ExtraPaymentSheet({
   debt,
   onClose,
 }: ExtraPaymentSheetProps) {
+  const formatCAD = useSpaceCurrency();
+
+  const { spaceId } = useFinancialSpace();
+
   const router = useRouter();
   const [, startTransition] = useTransition();
   const [amount, setAmount] = useState("");
   const [payType, setPayType] = useState<"regular" | "extra">("regular");
+  useSpaceDraftValues({amount,payType});
+
 
   async function handleSubmit() {
     const amt = parseFloat(amount);
     if (isNaN(amt) || amt <= 0) return;
     startTransition(async () => {
-      await makeExtraPayment(debt.id, amt);
+      await makeExtraPayment(spaceId, debt.id, amt);
       onClose();
       router.refresh();
     });
@@ -56,7 +67,6 @@ export default function ExtraPaymentSheet({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sheet-handle" />
-        <SheetCloseButton onClose={onClose} />
         {/* Sheet header */}
         <div
           style={{

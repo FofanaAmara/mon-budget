@@ -3,7 +3,8 @@ import {
   idSchema,
   nameSchema,
   positiveAmountSchema,
-  nonNegativeAmountSchema,
+  largePositiveAmountSchema,
+  largeNonNegativeAmountSchema,
   debtFrequencySchema,
   dayOfMonthSchema,
   notesSchema,
@@ -12,8 +13,8 @@ import {
 // ─── CreateDebt ─────────────────────────────────────────────────────────────
 export const CreateDebtSchema = z.object({
   name: nameSchema,
-  original_amount: positiveAmountSchema,
-  remaining_balance: nonNegativeAmountSchema,
+  original_amount: largePositiveAmountSchema,
+  remaining_balance: largeNonNegativeAmountSchema,
   interest_rate: z.number().min(0).max(100).nullable().optional(),
   payment_amount: positiveAmountSchema,
   payment_frequency: debtFrequencySchema,

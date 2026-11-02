@@ -1,15 +1,17 @@
 "use client";
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
+import Link from "@/components/spaces/navigation";
 import {
   markIncomeReceived,
   markIncomeAsExpected,
   deleteMonthlyIncome,
   updateMonthlyIncomeAmount,
   markVariableIncomeReceived,
-} from "@/lib/actions/monthly-incomes";
+} from "@/lib/actions/financial/monthly-incomes";
 import {
   IncomeInstanceRow,
   VariableIncomeRow,
@@ -31,6 +33,8 @@ export default function IncomeTrackingTab({
   month,
   isCurrentMonth,
 }: IncomeTrackingTabProps) {
+  const { spaceId } = useFinancialSpace();
+
   const router = useRouter();
   const [, startTransition] = useTransition();
 
@@ -70,7 +74,7 @@ export default function IncomeTrackingTab({
 
   function handleMarkExpected(id: string) {
     startTransition(async () => {
-      await markIncomeAsExpected(id);
+      await markIncomeAsExpected(spaceId, id);
       router.refresh();
     });
   }
@@ -82,7 +86,7 @@ export default function IncomeTrackingTab({
   function confirmDelete() {
     if (!deleteModal) return;
     startTransition(async () => {
-      await deleteMonthlyIncome(deleteModal.id);
+      await deleteMonthlyIncome(spaceId, deleteModal.id);
       setDeleteModal(null);
       router.refresh();
     });
@@ -98,7 +102,7 @@ export default function IncomeTrackingTab({
     const amt = parseFloat(updateAmount);
     if (isNaN(amt) || amt < 0) return;
     startTransition(async () => {
-      await updateMonthlyIncomeAmount(updateAmountModal.id, amt);
+      await updateMonthlyIncomeAmount(spaceId, updateAmountModal.id, amt);
       setUpdateAmountModal(null);
       setUpdateAmount("");
       router.refresh();
@@ -111,9 +115,9 @@ export default function IncomeTrackingTab({
     if (isNaN(amt) || amt <= 0) return;
     startTransition(async () => {
       if (receiveModal.income) {
-        await markIncomeReceived(receiveModal.income.id, amt);
+        await markIncomeReceived(spaceId, receiveModal.income.id, amt);
       } else if (receiveModal.variableIncome) {
-        await markVariableIncomeReceived(
+        await markVariableIncomeReceived(spaceId,
           receiveModal.variableIncome.id,
           month,
           amt,

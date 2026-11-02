@@ -1,7 +1,9 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
 
 import React from "react";
-import { formatCAD, calcMonthlySuggested, formatDate } from "@/lib/utils";
+import {calcMonthlySuggested,formatDate} from "@/lib/utils";
 import type { Expense } from "@/lib/types";
 import StatusBadge from "@/components/StatusBadge";
 
@@ -26,6 +28,8 @@ function SavingsProjectCardComponent({
   isFreeSavings = false,
   isFirst = false,
 }: SavingsProjectCardProps) {
+  const formatCAD = useSpaceCurrency();
+
   const saved = Number(projet.saved_amount ?? 0);
   const target = Number(projet.target_amount ?? 0);
   const progress = target > 0 ? Math.min((saved / target) * 100, 100) : 0;

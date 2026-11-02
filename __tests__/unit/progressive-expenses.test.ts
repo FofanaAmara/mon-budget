@@ -143,8 +143,9 @@ describe("getStatusBadge (IN_PROGRESS)", () => {
   it("returns En cours badge for IN_PROGRESS status", () => {
     const badge = getStatusBadge("IN_PROGRESS");
     expect(badge.label).toBe("En cours");
-    expect(badge.bg).toBe("var(--teal-50)");
-    expect(badge.color).toBe("var(--teal-700)");
+    // DESIGN-006 uses the shared positive pill palette, distinct from icon colors.
+    expect(badge.bg).toBe("#ECFDF5");
+    expect(badge.color).toBe("#059669");
   });
 
   it("preserves existing badges", () => {

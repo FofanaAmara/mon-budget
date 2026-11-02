@@ -1,9 +1,14 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
+import Link from "@/components/spaces/navigation";
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { updateMonthlyAllocation } from "@/lib/actions/allocations";
-import { formatCAD } from "@/lib/utils";
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
+import { updateMonthlyAllocation } from "@/lib/actions/financial/allocations";
+
 import AdhocAllocationModal from "@/components/AdhocAllocationModal";
 import SheetCloseButton from "@/components/SheetCloseButton";
 import type { MonthlyAllocation, Section, Expense } from "@/lib/types";
@@ -31,6 +36,10 @@ export default function AllocationTrackingTab({
   sections,
   projects,
 }: AllocationTrackingTabProps) {
+  const formatCAD = useSpaceCurrency();
+
+  const { spaceId } = useFinancialSpace();
+
   const router = useRouter();
   const [, startTransition] = useTransition();
 
@@ -53,7 +62,7 @@ export default function AllocationTrackingTab({
     const amt = parseFloat(overrideAmount);
     if (isNaN(amt) || amt < 0) return;
     startTransition(async () => {
-      await updateMonthlyAllocation(
+      await updateMonthlyAllocation(spaceId,
         overrideModal.id,
         amt,
         overrideNote || null,
@@ -249,7 +258,7 @@ export default function AllocationTrackingTab({
           >
             Aucune enveloppe configurée
           </p>
-          <a
+          <Link
             href="/parametres/allocation"
             style={{
               fontSize: "13px",
@@ -259,7 +268,7 @@ export default function AllocationTrackingTab({
             }}
           >
             → Configurer dans les Réglages
-          </a>
+          </Link>
         </div>
       ) : (
         <div
@@ -765,31 +774,17 @@ export default function AllocationTrackingTab({
         </p>
       </div>
 
-      {/* Link to settings */}
-      <div style={{ textAlign: "center" as const, marginTop: "24px" }}>
-        <a
-          href="/parametres/allocation"
-          style={{
-            fontSize: "13px",
-            fontWeight: 500,
-            color: "var(--slate-400, #94A3B8)",
-            textDecoration: "none",
-          }}
-        >
-          Gérer les enveloppes dans les Réglages →
-        </a>
-      </div>
-
-      {/* Adhoc allocation FAB — current month only */}
+      {/* Adhoc allocation action — current month only */}
       {isCurrentMonth && (
         <button
           onClick={() => setAdhocAllocModal(true)}
-          className="fab"
+          className="btn-primary"
+          style={{ marginTop: "24px", width: "100%" }}
           aria-label="Ajouter une allocation ponctuelle"
         >
           <svg
-            width="24"
-            height="24"
+            width="20"
+            height="20"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -799,8 +794,24 @@ export default function AllocationTrackingTab({
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
+          Ajouter une allocation ponctuelle
         </button>
       )}
+
+      {/* Link to settings */}
+      <div style={{ textAlign: "center" as const, marginTop: "24px" }}>
+        <Link
+          href="/parametres/allocation"
+          style={{
+            fontSize: "13px",
+            fontWeight: 500,
+            color: "var(--slate-400, #94A3B8)",
+            textDecoration: "none",
+          }}
+        >
+          Gérer les enveloppes dans les Réglages →
+        </Link>
+      </div>
 
       {/* ── Modals ────────────────────────────────────────────────────────── */}
 

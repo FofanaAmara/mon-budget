@@ -4,36 +4,64 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:spaces": "node scripts/financial-spaces/dev.mjs",
+    "dev:spaces:trust": "node scripts/financial-spaces/trust-local-https.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:spaces:db": "node --test __tests__/integration/restored-schema.test.mjs __tests__/integration/production-migration.test.mjs __tests__/integration/financial-spaces-migration.test.mjs __tests__/integration/synthetic-baseline.test.mjs __tests__/integration/delivery-reconciliation.test.mjs",
+    "test:spaces:services": "vitest run --config vitest.spaces.config.mts",
+    "test:spaces:navigation": "node __tests__/browser/space-navigation-fixture/check.mjs",
+    "test:spaces:selection": "node __tests__/browser/space-navigation-fixture/check-selection.mjs",
+    "test:spaces:verification": "node __tests__/browser/space-navigation-fixture/check-verification.mjs",
+    "test:auth:render": "node __tests__/browser/auth-session-render.mjs",
+    "test:delivery": "node --test __tests__/delivery/*.test.mjs",
+    "test:spaces:prepare": "node scripts/financial-spaces/prepare-synthetic.mjs"
   },
   "dependencies": {
-    "@neondatabase/auth": "^0.2.0-beta.1",
+    "@neondatabase/auth": "0.6.0-beta",
     "@neondatabase/serverless": "^1.0.2",
     "@types/web-push": "^3.6.4",
-    "next": "16.1.6",
+    "next": "16.4.2",
+    "nodemailer": "^10.2.1",
+    "pg": "^8.19.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "sonner": "2.0.8",
     "web-push": "^3.6.7",
-    "zod": "^4.3.6"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/nodemailer": "^8.0.2",
     "@types/pg": "^8.16.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@vitest/coverage-v8": "^4.0.18",
+    "@vitest/coverage-v8": "4.1.12",
+    "ajv": "^8.20.0",
     "dotenv": "^17.3.1",
     "eslint": "^9",
-    "eslint-config-next": "16.1.6",
-    "pg": "^8.19.0",
+    "eslint-config-next": "16.4.2",
+    "js-yaml": "4.3.2",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.0.18"
+    "vitest": "4.1.12"
+  },
+  "overrides": {
+    "zod": "$zod",
+    "@neondatabase/auth": {
+      "better-auth": "1.7.6",
+      "@better-auth/core": "1.7.6",
+      "@better-auth/passkey": "1.7.6",
+      "@better-auth/telemetry": "1.7.6",
+      "@better-auth/api-key": "1.7.6",
+      "@better-auth/utils@^0.4.0": "0.4.2",
+      "@better-fetch/fetch": "1.3.2",
+      "better-call": "1.4.0"
+    }
   }
 }

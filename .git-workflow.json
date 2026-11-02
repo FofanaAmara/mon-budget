@@ -1,0 +1,16 @@
+{
+  "worktreeDirectory": "worktrees",
+  "reviewPolicy": "solo-maintainer",
+  "retainedWorktrees": [
+    {
+      "path": "Mon Budget",
+      "branch": "codex/financial-spaces-production",
+      "issues": [
+        "dirty-worktree",
+        "branch-without-upstream"
+      ],
+      "owner": "user-local-recipe",
+      "reason": "Primary checkout serves the local human recipe. Preexisting Serena/next-env/CS and original recovery files must remain untouched; production continues in its durable worktree."
+    }
+  ]
+}

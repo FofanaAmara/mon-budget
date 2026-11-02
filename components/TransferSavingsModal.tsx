@@ -1,9 +1,15 @@
 "use client";
+import {useSpaceDraftValues} from "@/components/spaces/SpaceContext";
+
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useRef, useEffect } from "react";
 
 import { IconClose } from "@/components/icons";
-import { formatCAD } from "@/lib/utils";
+
 import type { Expense } from "@/lib/types";
 
 type Props = {
@@ -19,9 +25,15 @@ export default function TransferSavingsModal({
   onDone,
   onClose,
 }: Props) {
+  const formatCAD = useSpaceCurrency();
+
+  const { spaceId } = useFinancialSpace();
+
   const destinations = allPots.filter((p) => p.id !== source.id);
   const [destId, setDestId] = useState(destinations[0]?.id ?? "");
   const [amount, setAmount] = useState("");
+  useSpaceDraftValues({destId,amount});
+
   const [loading, setLoading] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -46,8 +58,8 @@ export default function TransferSavingsModal({
     if (isNaN(val) || val <= 0 || val > sourceBalance || !dest) return;
     setLoading(true);
     try {
-      const { transferSavings } = await import("@/lib/actions/savings");
-      await transferSavings({
+      const { transferSavings } = await import("@/lib/actions/financial/savings");
+      await transferSavings(spaceId, {
         fromId: source.id,
         toId: dest.id,
         amount: val,

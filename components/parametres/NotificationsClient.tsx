@@ -1,11 +1,13 @@
 "use client";
 
+import {useSpaceDraft} from "@/components/spaces/SpaceContext";
+import {useFinancialRouter} from "@/components/spaces/navigation";
+
 import { useState, useTransition } from "react";
 import Breadcrumb from "@/components/Breadcrumb";
-import { updateSettings } from "@/lib/actions/settings";
+import { updateAccountSettings } from "@/lib/actions/account-settings";
 
 type Props = {
-  settingsId: string;
   currentEmail: string;
   currentPhone: string;
   currentNotifyPush: boolean;
@@ -13,7 +15,6 @@ type Props = {
 };
 
 export default function NotificationsClient({
-  settingsId,
   currentEmail,
   currentPhone,
   currentNotifyPush,
@@ -27,14 +28,18 @@ export default function NotificationsClient({
   const [email, setEmail] = useState(currentEmail);
   const [phone, setPhone] = useState(currentPhone);
 
+  useSpaceDraft(email !== currentEmail || phone !== currentPhone || notifyPush !== currentNotifyPush || notifyEmail !== currentNotifyEmail);
+  const router = useFinancialRouter();
+
   function handleSave() {
     startTransition(async () => {
-      await updateSettings(settingsId, {
+      await updateAccountSettings({
         email: email.trim() || null,
         phone: phone.trim() || null,
         notify_push: notifyPush,
         notify_email: notifyEmail,
       });
+      router.refresh();
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     });

@@ -1,4 +1,8 @@
 "use client";
+import {useSpaceDraftValues} from "@/components/spaces/SpaceContext";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useRef, useEffect } from "react";
 import type { Section, Card } from "@/lib/types";
@@ -16,12 +20,16 @@ export default function AdhocExpenseModal({
   month,
   onClose,
 }: Props) {
+  const { spaceId } = useFinancialSpace();
+
   const [mode, setMode] = useState<"upcoming" | "paid">("upcoming");
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [sectionId, setSectionId] = useState(sections[0]?.id ?? "");
   const [dueDate, setDueDate] = useState("");
   const [cardId, setCardId] = useState("");
+  useSpaceDraftValues({mode,name,amount,sectionId,dueDate,cardId});
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -44,8 +52,8 @@ export default function AdhocExpenseModal({
     setError("");
     try {
       const { createAdhocExpense } =
-        await import("@/lib/actions/monthly-expenses");
-      await createAdhocExpense({
+        await import("@/lib/actions/financial/monthly-expenses");
+      await createAdhocExpense(spaceId, {
         name: name.trim(),
         amount: parseFloat(amount),
         sectionId,

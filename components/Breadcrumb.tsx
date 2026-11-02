@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from "@/components/spaces/navigation";
 
 type Crumb = {
   label: string;

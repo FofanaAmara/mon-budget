@@ -1,6 +1,8 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
 
-import { formatCAD } from "@/lib/utils";
+
+
 
 type Props = {
   totalEpargne: number;
@@ -15,6 +17,8 @@ export default function PatrimoineMonument({
   projetsCount,
   debtsCount,
 }: Props) {
+  const formatCAD = useSpaceCurrency();
+
   const valeurNette = totalEpargne - totalDebtBalance;
   const isPositive = valeurNette >= 0;
 

@@ -22,13 +22,21 @@ export const shortNameSchema = z
   .max(100, "Le nom ne peut pas depasser 100 caracteres");
 
 // ─── Money ──────────────────────────────────────────────────────────────────
-export const positiveAmountSchema = z
-  .number()
-  .positive("Le montant doit etre positif");
+function currencyAmount(maximum: number) {
+  return z.number().min(-maximum).max(maximum).refine(value => {
+    const cents = value * 100;
+    // Accept binary floating-point noise (0.1 + 0.2), never a fraction of a cent.
+    return Math.abs(cents - Math.round(cents)) <= Number.EPSILON * Math.max(1, Math.abs(cents)) * 4;
+  }, "Le montant doit avoir au plus deux décimales.")
+    .transform(value => Math.round(value * 100) / 100);
+}
 
-export const nonNegativeAmountSchema = z
-  .number()
-  .nonnegative("Le montant ne peut pas etre negatif");
+// Match PostgreSQL NUMERIC(10,2); debt principal/balance use NUMERIC(12,2).
+export const monetaryAmountSchema = currencyAmount(99_999_999.99);
+export const positiveAmountSchema = monetaryAmountSchema.refine(value => value > 0, "Le montant doit etre positif");
+export const nonNegativeAmountSchema = monetaryAmountSchema.refine(value => value >= 0, "Le montant ne peut pas etre negatif");
+export const largePositiveAmountSchema = currencyAmount(9_999_999_999.99).refine(value => value > 0, "Le montant doit etre positif");
+export const largeNonNegativeAmountSchema = currencyAmount(9_999_999_999.99).refine(value => value >= 0, "Le montant ne peut pas etre negatif");
 
 // ─── Color ──────────────────────────────────────────────────────────────────
 export const hexColorSchema = z

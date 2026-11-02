@@ -1,19 +1,25 @@
 "use client";
+import {useSpaceDraftValues} from "@/components/spaces/SpaceContext";
+
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import React, { useState, useTransition, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import {useFinancialRouter as useRouter} from "@/components/spaces/navigation";
 import {
   markAsPaid,
   markAsUpcoming,
   deleteMonthlyExpense,
   updateMonthlyExpenseAmount,
   deferExpenseToMonth,
-} from "@/lib/actions/monthly-expenses";
+} from "@/lib/actions/financial/monthly-expenses";
 import {
   addExpenseTransaction,
   getExpenseTransactions,
-} from "@/lib/actions/expense-transactions";
-import { formatCAD } from "@/lib/utils";
+} from "@/lib/actions/financial/expense-transactions";
+
 import type { MonthlyExpense, ExpenseTransaction } from "@/lib/types";
 
 type ExpenseActionSheetProps = {
@@ -31,8 +37,13 @@ export default function ExpenseActionSheet({
   month,
   onClose,
 }: ExpenseActionSheetProps) {
+  const formatCAD = useSpaceCurrency();
+
+  const { spaceId } = useFinancialSpace();
+
   const router = useRouter();
   const [, startTransition] = useTransition();
+  const [paymentError,setPaymentError] = useState("");
 
   // Sub-sheet state
   const [view, setView] = useState<
@@ -50,6 +61,8 @@ export default function ExpenseActionSheet({
   // Progressive expense state
   const [transactionAmount, setTransactionAmount] = useState("");
   const [transactionNote, setTransactionNote] = useState("");
+  useSpaceDraftValues({deferTargetMonth,editAmountValue,transactionAmount,transactionNote});
+
   const [transactions, setTransactions] = useState<ExpenseTransaction[]>([]);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
 
@@ -95,17 +108,19 @@ export default function ExpenseActionSheet({
 
   function handleToggle(action: "paid" | "upcoming") {
     startTransition(async () => {
-      if (action === "paid") await markAsPaid(expense.id);
-      else await markAsUpcoming(expense.id);
-      onClose();
-      router.refresh();
+      setPaymentError("");
+      try {
+        if (action === "paid") await markAsPaid(spaceId, expense.id);
+        else {const result=await markAsUpcoming(spaceId,expense.id);if(!result.ok){setPaymentError(result.error);return;}}
+        onClose();router.refresh();
+      }catch{setPaymentError("Le paiement n’a pas pu être modifié. Actualise cet espace avant de réessayer.");}
     });
   }
 
   function confirmDefer() {
     if (!deferTargetMonth) return;
     startTransition(async () => {
-      await deferExpenseToMonth(expense.id, deferTargetMonth);
+      await deferExpenseToMonth(spaceId, expense.id, deferTargetMonth);
       onClose();
       router.refresh();
     });
@@ -115,7 +130,7 @@ export default function ExpenseActionSheet({
     const amt = parseFloat(editAmountValue);
     if (isNaN(amt) || amt < 0) return;
     startTransition(async () => {
-      await updateMonthlyExpenseAmount(expense.id, amt);
+      await updateMonthlyExpenseAmount(spaceId, expense.id, amt);
       onClose();
       router.refresh();
     });
@@ -123,7 +138,7 @@ export default function ExpenseActionSheet({
 
   function confirmDelete() {
     startTransition(async () => {
-      await deleteMonthlyExpense(expense.id);
+      await deleteMonthlyExpense(spaceId, expense.id);
       onClose();
       router.refresh();
     });
@@ -133,7 +148,7 @@ export default function ExpenseActionSheet({
     const amt = parseFloat(transactionAmount);
     if (isNaN(amt) || amt <= 0) return;
     startTransition(async () => {
-      await addExpenseTransaction(expense.id, amt, transactionNote || null);
+      await addExpenseTransaction(spaceId, expense.id, amt, transactionNote || null);
       onClose();
       router.refresh();
     });
@@ -141,7 +156,7 @@ export default function ExpenseActionSheet({
 
   async function loadHistory() {
     setIsLoadingHistory(true);
-    const txns = await getExpenseTransactions(expense.id);
+    const txns = await getExpenseTransactions(spaceId, expense.id);
     setTransactions(txns);
     setIsLoadingHistory(false);
   }
@@ -663,6 +678,7 @@ export default function ExpenseActionSheet({
 
   return (
     <SheetWrapper onClose={onClose} titleId="action-sheet-title">
+      {paymentError&&<p className="space-error" role="alert">{paymentError}</p>}
       <SheetHandle />
       {/* Header */}
       <div

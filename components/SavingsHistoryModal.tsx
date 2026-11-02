@@ -1,9 +1,12 @@
 "use client";
+import {useSpaceCurrency} from "@/components/spaces/useCurrency";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useEffect, useRef, useState } from "react";
-import SheetCloseButton from "@/components/SheetCloseButton";
 import { IconClose } from "@/components/icons";
-import { formatCAD } from "@/lib/utils";
+
 import type { SavingsContribution } from "@/lib/types";
 
 type Props = {
@@ -30,6 +33,10 @@ export default function SavingsHistoryModal({
   targetAmount,
   onClose,
 }: Props) {
+  const formatCAD = useSpaceCurrency();
+
+  const { spaceId } = useFinancialSpace();
+
   const [contributions, setContributions] = useState<SavingsContribution[]>([]);
   const [loading, setLoading] = useState(true);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -41,8 +48,8 @@ export default function SavingsHistoryModal({
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const { getSavingsContributions } = await import("@/lib/actions/savings");
-      const data = await getSavingsContributions(expenseId);
+      const { getSavingsContributions } = await import("@/lib/actions/financial/savings");
+      const data = await getSavingsContributions(spaceId, expenseId);
       if (!cancelled) {
         setContributions(data);
         setLoading(false);
@@ -52,7 +59,7 @@ export default function SavingsHistoryModal({
     return () => {
       cancelled = true;
     };
-  }, [expenseId]);
+  }, [spaceId, expenseId]);
 
   return (
     <div
@@ -72,7 +79,6 @@ export default function SavingsHistoryModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sheet-handle" />
-        <SheetCloseButton onClose={onClose} />
         <div style={{ padding: "8px 24px 32px" }}>
           {/* Header */}
           <div

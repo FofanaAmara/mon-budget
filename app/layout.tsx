@@ -1,10 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import "./spaces.css";
 import { AuthProviders } from "./providers";
-import LayoutShell from "@/components/LayoutShell";
 import ServiceWorkerInit from "@/components/ServiceWorkerInit";
-import { getOrInitSetupGuideData } from "@/lib/actions/setup-guide";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -42,8 +41,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Safe fetch — returns null if not authenticated
-  const guideData = await getOrInitSetupGuideData().catch(() => null);
 
   return (
     <html lang="fr" className={plusJakarta.variable} suppressHydrationWarning>
@@ -55,7 +52,7 @@ export default async function RootLayout({
       </head>
       <body className="font-[family-name:var(--font-jakarta)] antialiased">
         <AuthProviders>
-          <LayoutShell guideData={guideData}>{children}</LayoutShell>
+          {children}
         </AuthProviders>
         <ServiceWorkerInit />
       </body>

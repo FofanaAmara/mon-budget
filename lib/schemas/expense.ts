@@ -4,6 +4,7 @@ import {
   nameSchema,
   nonNegativeAmountSchema,
   positiveAmountSchema,
+  monetaryAmountSchema,
   currencySchema,
   expenseTypeSchema,
   recurrenceFrequencySchema,
@@ -43,11 +44,19 @@ export const CreateExpenseSchema = z.object({
 });
 
 export type CreateExpenseInput = z.infer<typeof CreateExpenseSchema>;
+export const UpdateExpenseDataSchema = CreateExpenseSchema.partial().extend({
+  section_id: idSchema.nullable().optional(),
+  card_id: idSchema.nullable().optional(),
+  recurrence_frequency: recurrenceFrequencySchema.nullable().optional(),
+  recurrence_day: dayOfMonthSchema.nullable().optional(),
+  due_date: isoDateSchema.nullable().optional(),
+});
+export type UpdateExpenseData = z.infer<typeof UpdateExpenseDataSchema>;
 
 // ─── UpdateExpense ──────────────────────────────────────────────────────────
 export const UpdateExpenseSchema = z.object({
   id: idSchema,
-  data: CreateExpenseSchema.partial(),
+  data: UpdateExpenseDataSchema,
 });
 
 export type UpdateExpenseInput = z.infer<typeof UpdateExpenseSchema>;
@@ -56,7 +65,7 @@ export type UpdateExpenseInput = z.infer<typeof UpdateExpenseSchema>;
 // amount can be negative (corrections/reversals), so we only reject zero.
 export const AddSavingsContributionSchema = z.object({
   expenseId: idSchema,
-  amount: z.number().refine((n) => n !== 0, "Le montant ne peut pas etre zero"),
+  amount: monetaryAmountSchema.refine((n) => n !== 0, "Le montant ne peut pas etre zero"),
   note: z.string().max(500).nullable().optional(),
 });
 

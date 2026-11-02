@@ -19,8 +19,6 @@ export default function ExpenseFilters({
   onTypeFilterChange,
   selectedSection,
   onSectionChange,
-  plannedCount,
-  unplannedCount,
   sections,
 }: Props) {
   return (

@@ -1,4 +1,8 @@
 "use client";
+import {useSpaceDraftValues} from "@/components/spaces/SpaceContext";
+
+import { useFinancialSpace } from "@/components/spaces/SpaceContext";
+
 
 import { useState, useRef, useEffect } from "react";
 import SheetCloseButton from "@/components/SheetCloseButton";
@@ -17,9 +21,13 @@ const SOURCES: { value: IncomeSource; label: string; icon: string }[] = [
 ];
 
 export default function AdhocIncomeModal({ month, onClose }: Props) {
+  const { spaceId } = useFinancialSpace();
+
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [source, setSource] = useState<IncomeSource>("OTHER");
+  useSpaceDraftValues({name,amount,source});
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -37,8 +45,8 @@ export default function AdhocIncomeModal({ month, onClose }: Props) {
     setLoading(true);
     setError("");
     try {
-      const { createAdhocIncome } = await import("@/lib/actions/incomes");
-      await createAdhocIncome(name.trim(), parseFloat(amount), source, month);
+      const { createAdhocIncome } = await import("@/lib/actions/financial/incomes");
+      await createAdhocIncome(spaceId, name.trim(), parseFloat(amount), source, month);
       onClose();
     } catch {
       setError("Erreur lors de la création");

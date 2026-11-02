@@ -12,7 +12,7 @@ import {
 } from "./common";
 
 // ─── CreateIncome ───────────────────────────────────────────────────────────
-export const CreateIncomeSchema = z.object({
+const IncomeFieldsSchema = z.object({
   name: nameSchema,
   source: incomeSourceSchema,
   amount: positiveAmountSchema.nullable(),
@@ -23,12 +23,18 @@ export const CreateIncomeSchema = z.object({
   notes: notesSchema,
 });
 
+export const CreateIncomeSchema = IncomeFieldsSchema.refine(
+  income => income.frequency === "VARIABLE" || (income.amount !== null && income.amount > 0),
+  { message: "Un revenu fixe doit avoir un montant positif.", path: ["amount"] },
+);
+export const UpdateIncomeDataSchema = IncomeFieldsSchema.partial();
+
 export type CreateIncomeInput = z.infer<typeof CreateIncomeSchema>;
 
 // ─── UpdateIncome ───────────────────────────────────────────────────────────
 export const UpdateIncomeSchema = z.object({
   id: idSchema,
-  data: CreateIncomeSchema.partial(),
+  data: UpdateIncomeDataSchema,
 });
 
 export type UpdateIncomeInput = z.infer<typeof UpdateIncomeSchema>;

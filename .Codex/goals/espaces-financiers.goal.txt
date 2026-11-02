@@ -1,0 +1,22 @@
+OBJECTIF : Livrer les espaces financiers dans la vraie app Mes Finances : je crée mes espaces, invite mon conjoint par email et nous gérons les mêmes finances persistantes après son adhésion.
+
+SOURCES (racine du projet) :
+- .app-factory/backlog/epics/finances-partagees/features/espaces-financiers/ : 6 stories, 17 exigences, 30 AC.
+- cs-design/mes-finances/features/espaces-financiers-essai-02/ : maquettes React approuvées, commit 7aaec6d.
+- .Codex/plans/espaces-financiers-implementation.md : plan complet, gates et décisions restantes.
+Respecter ces sources ; le prototype simulé ne prouve pas la livraison.
+
+DONE QUAND les preuves suivantes sont AFFICHÉES dans la conversation :
+1. Premier espace nommé ; question partagé Oui/Non ; Non saute l’invitation, Oui la propose. Création d’autres espaces dans Réglages > Espaces et membres, liste puis fiche pour renommer/voir membres/inviter. Sidebar : sélecteur seul, option unique sans bascule. Montrer parcours E2E et captures mobile/desktop conformes aux maquettes.
+2. Bascule personnelle/couple effective dans toutes les fonctions financières, configurations et automatismes du backlog. Recharge conserve les données et reprise du dernier espace. Montrer tests persistants sur DB réelle isolée, deux espaces distincts et URL de recette accessible à l’humain.
+3. Depuis la fiche, invitation réellement reçue par email, avec lien ouvrable par le destinataire vers une page disant explicitement que le destinataire est invité. Boutons vers connexion/inscription existantes ; après auth, acceptation distincte puis accès au bon espace, sans espace personnel imposé au nouvel invité. Montrer un trajet existant et un trajet nouveau compte avec deux sessions et preuve de réception anonymisée, pas un log seul.
+4. Les deux membres ont tous les droits et retrouvent leurs contributions communes après recharge ; leurs autres espaces restent séparés. Montrer tests négatifs du tiers/mauvais compte et des IDs croisés ; aucun accès avant acceptation, double acceptation = une appartenance.
+5. Données existantes conservées dans « Mes finances », sans perte/doublon ni changement des montants/relations. Montrer comparaison avant/après, reprise de migration et restauration sur copie ; concurrence/générations/saisies/caches/offline ne mélangent aucun espace.
+6. Montrer tests unitaires/intégration/E2E, types, lint, build et CI requis tous verts, revue indépendante et validation visuelle Playwright MCP du plan. Résoudre l’échec unitaire préexistant ; ne pas ignorer un test ou remplacer ce critère par inspection de code/CLI/CUA. Montrer matrice des 17 exigences/30 AC et les preuves, commits et reprise.
+
+EMAIL : Resend pour l’envoi réel, Mailpit pour les tests locaux. Configurer secrets serveur, expéditeur autorisé, coût/quotas et reprise sans doublon ; ne pas imposer EMAIL_TO comme destinataire. Mailpit seul ne suffit pas : prouver une réception externe via Resend.
+
+HORS-SCOPE : rôles différenciés, banque/remboursements, temps réel, conversion de devises, Storybook/bibliothèque et parcours destructeurs non validés. Pas de push/déploiement prod sans demande ; pas de test destructeur sur données réelles.
+
+INVARIANTS : verdict honnête fondé sur preuves affichées ; vérifier avant livraison et regard neuf ; chiffrer l’effort/coût avant chaque tranche, suivre puis réévaluer (budget temps/jetons non fixé, coût indisponible déclaré, aucun service payant sans accord). Tracer hypothèses et décisions ; poursuivre les travaux indépendants si un outil manque. L’humain garde le verdict de livraison et les décisions irréversibles.
+ÉCHAPPATOIRE : après 3 tours sans progrès ou plafond approuvé atteint, réévaluer les alternatives puis escalader avec faits, blocage et options, sans faux DONE. Pilotage ultérieur : goal-orchestration et awm-usage selon besoin ; goal rédigé, non lancé.
